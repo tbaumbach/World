@@ -3,11 +3,12 @@
   <groupId>spaceraze</groupId>
   <artifactId>world</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>SapceRaze World</name>
+  <name>SpaceRaze World</name>
   <description>SpaceRaze world obejcts</description>
   <properties>
-  	<maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>13</maven.compiler.target>
+      <maven.compiler.source>13</maven.compiler.source>
+      <maven.complier.release>13</maven.complier.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
