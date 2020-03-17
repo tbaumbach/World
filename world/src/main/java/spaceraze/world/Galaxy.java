@@ -12,10 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import spaceraze.util.general.Functions;
 import spaceraze.util.general.Logger;
-import spaceraze.util.move.FindPlanetCriterium;
+import spaceraze.util.move.FindPlanetCriterion;
 import spaceraze.world.diplomacy.Diplomacy;
 import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyState;
@@ -1527,7 +1528,7 @@ public class Galaxy implements Serializable {
 		for (int i = 0; i < planets.size(); i++) {
 			Planet aPlanet = (Planet) planets.get(i);
 			List<VIP> vipsAtPlanet = findAllVIPsOnPlanetOrShipsOrTroops(aPlanet);
-			List<VIP> v = Functions.cloneList(vipsAtPlanet);
+			List<VIP> v = vipsAtPlanet.stream().collect(Collectors.toList());
 			Collections.shuffle(v);
 			if (v.size() > 1) {
 				checkAssassins(aPlanet, 0, v.size() - 1, v);
@@ -2613,10 +2614,10 @@ public class Galaxy implements Serializable {
 		// 2019-12-25 add possible planets to retreat to. Changed is made to remove the Galaxy object from battleHandler.
 		if(aPlayer != null) { //Only players ship can retreat
 			tf.addClosestFriendlyPlanets(SpaceshipRange.LONG, findClosestPlanets(aPlanet, aPlayer, SpaceshipRange.LONG,
-					FindPlanetCriterium.OWN_PLANET_NOT_BESIEGED, null));
+					FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED, null));
 			
 			tf.addClosestFriendlyPlanets(SpaceshipRange.SHORT, findClosestPlanets(aPlanet, aPlayer, SpaceshipRange.SHORT,
-					FindPlanetCriterium.OWN_PLANET_NOT_BESIEGED, null));
+					FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED, null));
 		}
 		
 		return tf;
@@ -3717,12 +3718,12 @@ public class Galaxy implements Serializable {
 	}
 
 	public Planet findClosestOwnPlanetFromShip(Planet aLocation, Player aPlayer, Spaceship aSpaceship) {
-		return findClosestPlanet(aLocation, aPlayer, aSpaceship.getRange(), FindPlanetCriterium.OWN_PLANET_NOT_BESIEGED,
+		return findClosestPlanet(aLocation, aPlayer, aSpaceship.getRange(), FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED,
 				null);
 	}
 	
 	private List<Planet> findClosestPlanets(Planet aLocation, Player aPlayer, SpaceshipRange aSpaceshipRange,
-			FindPlanetCriterium aCriterium, List<String> visitedPlanets) {
+											FindPlanetCriterion aCriterium, List<String> visitedPlanets) {
 		Logger.finer("findClosestOwnPlanetFromShip: " + aLocation.getName());
 		List<Planet> foundPlanets = new ArrayList<Planet>();
 		List<Planet> edgePlanets = new ArrayList<Planet>(); // de planeter som var på gränsen till det genomsökta
@@ -3777,7 +3778,7 @@ public class Galaxy implements Serializable {
 					alreadyVisited = true;
 				}
 				if (!alreadyVisited) {
-					if (aCriterium == FindPlanetCriterium.OWN_PLANET_NOT_BESIEGED) {
+					if (aCriterium == FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED) {
 						// kolla om planeten tillhör eftersökt spelare
 						if (tempPlanet.getPlayerInControl() == aPlayer) {// om planeter tillhör eftersökt spelare
 							// om den dessutom ej är belägrad, sätt in den i foundPlanets
@@ -3786,17 +3787,17 @@ public class Galaxy implements Serializable {
 								Logger.finest("adding to found: " + tempPlanet.getName());
 							}
 						}
-					} else if (aCriterium == FindPlanetCriterium.CLOSED) { // only planets not belonging to the player
+					} else if (aCriterium == FindPlanetCriterion.CLOSED) { // only planets not belonging to the player
 						if ((tempPlanet.getPlayerInControl() != aPlayer) & (!tempPlanet.isOpen())) {
 							foundPlanets.add(tempPlanet);
 						}
-					} else if (aCriterium == FindPlanetCriterium.HOSTILE_ASSASSIN_OPEN) {
+					} else if (aCriterium == FindPlanetCriterion.HOSTILE_ASSASSIN_OPEN) {
 						if (tempPlanet.isOpen() & tempPlanet.getPlayerInControl() != null) {
 							if (diplomacy.hostileAssassin(tempPlanet.getPlayerInControl(), aPlayer)) {
 								foundPlanets.add(tempPlanet);
 							}
 						}
-					} else if (aCriterium == FindPlanetCriterium.NEUTRAL_UNTOUCHED) {
+					} else if (aCriterium == FindPlanetCriterion.NEUTRAL_UNTOUCHED) {
 						if (tempPlanet.isOpen() & tempPlanet.getPlayerInControl() == null) { // open neutral
 							foundPlanets.add(tempPlanet);
 						} else { // if closed since the beginning, and assumed neutral
@@ -3813,7 +3814,7 @@ public class Galaxy implements Serializable {
 								foundPlanets.add(tempPlanet);
 							}
 						}
-					} else if (aCriterium == FindPlanetCriterium.EMPTY_VIP_TRANSPORT_WITHOUT_ORDERS) { // very specific
+					} else if (aCriterium == FindPlanetCriterion.EMPTY_VIP_TRANSPORT_WITHOUT_ORDERS) { // very specific
 																										// criterium
 																										// used by Droid
 																										// GW
@@ -3863,7 +3864,7 @@ public class Galaxy implements Serializable {
 
 	// aPlayer kan vara null för att leta efter neutrala planeter
 	private Planet findClosestPlanet(Planet aLocation, Player aPlayer, SpaceshipRange aSpaceshipRange,
-			FindPlanetCriterium aCriterium, List<String> visitedPlanets) {
+									 FindPlanetCriterion aCriterium, List<String> visitedPlanets) {
 		Logger.finer("findClosestOwnPlanetFromShip: " + aLocation.getName());
 		Planet foundPlanet = null;
 		List<Planet> foundPlanets = findClosestPlanets(aLocation, aPlayer, aSpaceshipRange,
