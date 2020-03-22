@@ -35,6 +35,7 @@ import spaceraze.world.report.spacebattle.SpaceBattleReport;
  */
 public class TaskForce implements Serializable, Cloneable { // serialiseras denna någonsin??
 	static final long serialVersionUID = 1L;
+	private static final String FIGHTING = "fighting";
 	//private List<Spaceship> allShips = null, destroyedShips, retreatedShips;
 	private List<TaskForceSpaceShip> allShips = null, destroyedShips, retreatedShips;
 	//private Player player;
@@ -260,7 +261,7 @@ public class TaskForce implements Serializable, Cloneable { // serialiseras denn
 	}
 
 	public String getStatus() {
-		String status = "fighting";
+		String status = FIGHTING;
 		if (isDestroyed) {
 			status = "destroyed";
 		} else if (allShips.size() == 0) {
@@ -321,7 +322,7 @@ public class TaskForce implements Serializable, Cloneable { // serialiseras denn
 
 		// returnera "destroyed" om inga skepp finns kvar i tf:n
 		// returnera annars "fighting"
-		String statusString = "fighting";
+		String statusString = FIGHTING;
 		TaskForceSpaceShip targetShip = null;
 		
 		
