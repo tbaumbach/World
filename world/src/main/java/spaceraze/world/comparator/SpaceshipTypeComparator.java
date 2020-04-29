@@ -46,7 +46,7 @@ public class SpaceshipTypeComparator implements Comparator<SpaceshipType> {
 		}
 		// else smallest first
 		if (diff == 0){
-			diff = sst1.getTonnage() - sst2.getTonnage();
+			diff = sst1.getSize().getCompareSize() - sst2.getSize().getCompareSize();
 		}
 		// else lowest build cost first
 		if (diff == 0){

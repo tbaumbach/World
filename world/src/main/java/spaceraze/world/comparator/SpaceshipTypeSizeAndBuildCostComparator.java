@@ -20,7 +20,7 @@ public class SpaceshipTypeSizeAndBuildCostComparator implements Comparator<Space
     static final long serialVersionUID = 1L;
 
 	public int compare(SpaceshipType sst1, SpaceshipType sst2) {
-		int diff = sst2.getTonnage() - sst1.getTonnage();
+		int diff = sst2.getSize().getCompareSize() - sst1.getSize().getCompareSize();
 		if (diff == 0){
 			SpaceshipTypeBuildCostComparator stbcc = new SpaceshipTypeBuildCostComparator();
 			diff = stbcc.compare(sst1,sst2);

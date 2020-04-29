@@ -9,18 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import spaceraze.world.enums.HighlightType;
 import spaceraze.util.general.Logger;
-import spaceraze.world.BuildingType;
-import spaceraze.world.Corruption;
-import spaceraze.world.Player;
-import spaceraze.world.ResearchAdvantage;
-import spaceraze.world.ResearchUpgradeBuilding;
-import spaceraze.world.ResearchUpgradeShip;
-import spaceraze.world.ResearchUpgradeTroop;
-import spaceraze.world.ResearchUpgradeVIP;
-import spaceraze.world.SpaceshipType;
-import spaceraze.world.TroopType;
-import spaceraze.world.TurnInfo;
-import spaceraze.world.VIPType;
 
 public class ResearchAdvantage implements Serializable, Cloneable  {
 	static final long serialVersionUID = 1L;
@@ -54,43 +42,43 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public ResearchAdvantage(String name, String description) {
 	    this.name = name;
 	    this.description = description;
-	    children = new ArrayList<ResearchAdvantage>();
-		parents = new ArrayList<ResearchAdvantage>();
-		ships = new ArrayList<SpaceshipType>();
-		replaceShips = new ArrayList<SpaceshipType>();
-		troops = new ArrayList<TroopType>();
-		replaceTroops = new ArrayList<TroopType>();
-		vips = new ArrayList<VIPType>();
-		replaceVIPs = new ArrayList<VIPType>();
-		buildings = new ArrayList<BuildingType>();
-		replaceBuildings = new ArrayList<BuildingType>();
+	    children = new ArrayList<>();
+		parents = new ArrayList<>();
+		ships = new ArrayList<>();
+		replaceShips = new ArrayList<>();
+		troops = new ArrayList<>();
+		replaceTroops = new ArrayList<>();
+		vips = new ArrayList<>();
+		replaceVIPs = new ArrayList<>();
+		buildings = new ArrayList<>();
+		replaceBuildings = new ArrayList<>();
 		//corruption = new Corruption();
-		researchUpgradeShip =  new ArrayList<ResearchUpgradeShip>();
-		researchUpgradeTroop = new ArrayList<ResearchUpgradeTroop>();
-		researchUpgradeVIP = new ArrayList<ResearchUpgradeVIP>();
-		researchUpgradeBuilding = new ArrayList<ResearchUpgradeBuilding>();
+		researchUpgradeShip =  new ArrayList<>();
+		researchUpgradeTroop = new ArrayList<>();
+		researchUpgradeVIP = new ArrayList<>();
+		researchUpgradeBuilding = new ArrayList<>();
 	}
 
 	public ResearchAdvantage clone(){
 		
 		try {
 			ResearchAdvantage temp = (ResearchAdvantage)super.clone();
-			temp.children = new ArrayList<ResearchAdvantage>();
-			temp.parents = new ArrayList<ResearchAdvantage>();
-			temp.researchUpgradeShip = new ArrayList<ResearchUpgradeShip>(); 
+			temp.children = new ArrayList<>();
+			temp.parents = new ArrayList<>();
+			temp.researchUpgradeShip = new ArrayList<>();
 			for(int i=0;i<researchUpgradeShip.size();i++){
 				temp.researchUpgradeShip.add(researchUpgradeShip.get(i));
 			}
-			temp.researchUpgradeTroop = new ArrayList<ResearchUpgradeTroop>(); 
+			temp.researchUpgradeTroop = new ArrayList<>();
 			for(int i=0;i<researchUpgradeTroop.size();i++){
 				temp.researchUpgradeTroop.add(researchUpgradeTroop.get(i));
 			}
 			
-			temp.researchUpgradeVIP = new ArrayList<ResearchUpgradeVIP>(); 
+			temp.researchUpgradeVIP = new ArrayList<>();
 			for(int i=0;i<researchUpgradeVIP.size();i++){
 				temp.researchUpgradeVIP.add(researchUpgradeVIP.get(i));
 			}
-			temp.researchUpgradeBuilding = new ArrayList<ResearchUpgradeBuilding>(); 
+			temp.researchUpgradeBuilding = new ArrayList<>();
 			for(int i=0;i<researchUpgradeBuilding.size();i++){
 				temp.researchUpgradeBuilding.add(researchUpgradeBuilding.get(i));
 			}
@@ -101,148 +89,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
             throw new InternalError(e.toString());
         }
 	}
-	
-	public void research(TurnInfo ti,Player p){
-		if(!developed){
-			String researchInfoText="";
-			Logger.finer("count up researchedTurns from " + researchedTurns);
-			researchedTurns++;
-			// The research is done and it's time to add the results.
-			if(researchedTurns >= timeToResearch){
-				researchInfoText="The reaserch on " + getName() + " is fineshed and gives you this:\n";
-				// update Player with all new objects and bonus.
-				
-	
-				
-				
-				if(openPlanetBonus > 0){
-					p.setOpenPlanetBonus(p.getOpenPlanetBonus() + openPlanetBonus);
-					researchInfoText+="Open planet bonus is now: " + p.getOpenPlanetBonus() + "\n";
-				}
-				if(closedPlanetBonus > 0){
-					p.setClosedPlanetBonus(p.getClosedPlanetBonus() + closedPlanetBonus);
-					researchInfoText+="Closed planet bonus is now: " + p.getClosedPlanetBonus() + "\n";
-				}
-				if(resistanceBonus > 0){
-					p.setResistanceBonus(p.getResistanceBonus() + resistanceBonus);
-					researchInfoText+="Resistance bonus is now: " + p.getResistanceBonus() + "\n";
-				}
-			
-				if(techBonus > 0){
-					p.setTechBonus(p.getTechBonus() + techBonus);
-					researchInfoText+="Tech bonus is now: " + p.getTechBonus() + "%\n";
-				}
-				if(canReconstruct){
-					p.setCanReconstruct(canReconstruct);
-					researchInfoText+="You can now reconstruct planets\n";
-				}
-				if(reconstructCostBase > 0){
-					p.setReconstructCostBase(p.getReconstructCostBase() - reconstructCostBase);
-					researchInfoText+="Reconstruct cost base is now: " + p.getReconstructCostBase() + "\n";
-				}
-				if(corruption != null){
-					
-					p.setCorruption(corruption);
-					researchInfoText+="Corruption is now: " + p.getCorruptionDescription() + "\n";
-				}
-				
-				// adding ships to the player
-				for(int i=0;i < ships.size();i++ ){
-					
-//					ships.get(i).setAvailableToBuild(true);
-					p.findSpaceshipType(ships.get(i).getName()).setAvailableToBuild(true);
-				//	p.removeSpaceshipType(p.findSpaceshipType(ships.get(i).getName()));
-				//	p.addSpaceshipType(ships.get(i));
-					Logger.finer("adding a new ship typ : " + ships.get(i).getName());
-					researchInfoText+= "A new ship type: " + ships.get(i).getName() + ".\n";
-				}
-								
-				//	removing old ships models from the player
-				for(int i=0;i < replaceShips.size();i++ ){
-//					replaceShips.get(i).setAvailableToBuild(false);
-					p.findSpaceshipType(replaceShips.get(i).getName()).setAvailableToBuild(false);
-					//p.removeSpaceshipType(replaceShips.get(i)); old
-					Logger.finer("Removing old ship typ : " + replaceShips.get(i).getName());
-					researchInfoText+= "The ship type: " + replaceShips.get(i).getName() + " was removed.\n";
-				}
 
-				// adding troops to the player
-				for (TroopType aTroopType : troops) {
-					p.findTroopType(aTroopType.getUniqueName()).setCanBuild(true);
-					Logger.finer("adding a new troop type: " + aTroopType.getUniqueName());
-					researchInfoText += "A new troop type: " + aTroopType.getUniqueName() + ".\n";
-				}
-								
-				//	removing old troop types from the player
-				for(TroopType aTroopType : replaceTroops){
-					p.findTroopType(aTroopType.getUniqueName()).setCanBuild(false);
-					Logger.finer("Removing old troop type : " + aTroopType.getUniqueName());
-					researchInfoText += "The troop type: " + aTroopType.getUniqueName() + " was removed.\n";
-				}
-				
-				// adding VIPs to the player
-				for (VIPType aVIPType : vips) {
-					p.findVIPType(aVIPType.getName()).setAvailableToBuild(true);
-					Logger.finer("adding a new VIP type: " + aVIPType.getName());
-					researchInfoText += "A new VIP type: " + aVIPType.getName() + ".\n";
-				}
-								
-				//	removing old VIPs types from the player
-				for (VIPType aVIPType : replaceVIPs) {
-					p.findVIPType(aVIPType.getName()).setAvailableToBuild(false);
-					Logger.finer("Removing old VIP type: " + aVIPType.getName());
-					researchInfoText += "The VIP type: " + aVIPType.getName() + " was removed.\n";
-				}
-				
-				//adding Buildings to the player
-				for (BuildingType aBuildingType : buildings) {
-					p.findBuildingType(aBuildingType.getName()).setDeveloped(true);
-					Logger.finer("adding a new building type: " + aBuildingType.getName());
-					researchInfoText += "A new building type: " + aBuildingType.getName() + ".\n";
-				}
-				
-				//removing Buildings to the player
-				for (BuildingType aBuildingType : replaceBuildings) {
-					p.findBuildingType(aBuildingType.getName()).setDeveloped(false);
-					Logger.finer("Removing old building type: " + aBuildingType.getName());
-					researchInfoText += "The building type: " + aBuildingType.getName() + " was removed.\n";
-				}
-				
-				
-				developed = true;
-				
-				// check if a childe researchAdvantage have timeToResearch = 0 and ready to be research().
-				
-				for(int i=0; i < children.size();i++){
-					if(children.get(i).getTimeToResearch() == 0 && children.get(i).isReadyToBeResearchedOn()){
-						//TODO (Tobbe) add researchText.
-						children.get(i).research(ti, p);
-					}
-				}
-				
-				for(int i=0;i<researchUpgradeShip.size();i++){
-					researchInfoText+= researchUpgradeShip.get(i).doResearch(p.findSpaceshipType(researchUpgradeShip.get(i).getName()));
-				}
-
-				for (ResearchUpgradeTroop aResearchUpgradeTroop : researchUpgradeTroop) {
-					researchInfoText += aResearchUpgradeTroop.doResearch(p.findTroopType(aResearchUpgradeTroop.getName()));
-				}
-				for (ResearchUpgradeVIP aResearchUpgradeVIP : researchUpgradeVIP) {
-					researchInfoText += aResearchUpgradeVIP.doResearch(p.findVIPType(aResearchUpgradeVIP.getName()));
-				}
-				for (ResearchUpgradeBuilding aResearchUpgradeBuilding : researchUpgradeBuilding) {
-					researchInfoText += aResearchUpgradeBuilding.doResearch(p.findBuildingType(aResearchUpgradeBuilding.getName()));
-				}
-		    	p.addToHighlights(name,HighlightType.TYPE_RESEARCH_DONE);
-			}
-			else{
-				researchInfoText = "Research have been performed on " + getName() + " and will continue if you don't change the research orders";
-			}
-			ti.addToLatestResearchReport(researchInfoText);
-		}
-		
-	}
-	
 	@JsonIgnore
 	public String getResearchText(){
     	String text;

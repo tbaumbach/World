@@ -1,153 +1,123 @@
 package spaceraze.world;
 
-import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import spaceraze.world.enums.SpaceshipRange;
-import spaceraze.world.SpaceshipType;
 
-public class ResearchUpgradeShip implements Serializable{
+public class ResearchUpgradeShip extends SpaceshipImprovements {
 	static final long serialVersionUID = 1L;
-	
-	String name;
-    int shields,upkeep,buildCost,bombardment,increaseInitiative,initDefence;
-//    int siegeBonus;
-    private SpaceshipRange range;
-    boolean changeTroops =  false,ChangeNoRetreat = false,changeInitSupport = false;
-//    boolean troops = false;
-    boolean noRetreat = false,initSupport = false;
-    private int weaponsStrengthSmall,weaponsStrengthMedium,weaponsStrengthLarge,weaponsStrengthHuge;
-    private int weaponsMaxSalvoesMedium,weaponsMaxSalvoesLarge,weaponsMaxSalvoesHuge; // if Integer.MAX then treat as infinite
-    private int armorSmall,armorMedium,armorLarge,armorHuge;
-    private int supply = 0; // 0 - 4 max size of ship that can be resupplied
-    private int weaponsStrengthSquadron,squadronCapacity;
-    private String description,history,shortDescription,advantages,disadvantages;
-    private int incEnemyClosedBonus,incNeutralClosedBonus,incFrendlyClosedBonus,incOwnClosedBonus;
-    private int incEnemyOpenBonus,incNeutralOpenBonus,incFrendlyOpenBonus,incOwnOpenBonus;
-    private boolean changePlanetarySurvey,changeCanAttackScreenedShips;
-    private boolean planetarySurvey,canAttackScreenedShips;
-    private boolean changelookAsCivilian = false;
-    private boolean lookAsCivilian = false;
-    private boolean changeCanBlockPlanet = false;
-    private boolean canBlockPlanet = true;
-    private boolean changeVisibleOnMap = false;
-    private boolean visibleOnMap = true;
-    private int psychWarfare;
-    private int troopCarrier;
+
     
-    public ResearchUpgradeShip(String name){
-    	this.name = name;
+    public ResearchUpgradeShip(String typeId){
+    	super(typeId);
     }
-    
+
+    //TODO 2020-04-19 Change this to update players PlayerSpaceshipType instead of the SpaceshipType
     public String doResearch(SpaceshipType ship){
     	String text;
-    	text = "\nThe ship model " + getName() + " have been upgrade";
+    	text = "\nThe ship model " + ship.getName() + " have been upgrade";
     	
-    	if(shields > 0){
-    		ship.setShields(ship.getShields() + shields);
+    	if(getShields() != 0){
+    		ship.setShields(ship.getShields() + getShields());
     	}
-    	if(upkeep > 0){
-    		ship.setUpkeep(ship.getUpkeep() + upkeep);
+    	if(getUpkeep() != 0){
+    		ship.setUpkeep(ship.getUpkeep() + getUpkeep());
     	}
-    	if(buildCost > 0){
-    		ship.setBuildCost(ship.getBuildCost(null) + buildCost);
+    	if(getBuildCost() != 0){
+    		ship.setBuildCost(ship.getBuildCost(null) + getBuildCost());
     	}
-    	if(bombardment > 0){
-    		ship.setBombardment(ship.getBombardment() + bombardment);
+    	if(getBombardment() != 0){
+    		ship.setBombardment(ship.getBombardment() + getBombardment());
     	}
-    	if(increaseInitiative > 0){
-    		ship.setIncreaseInitiative(ship.getIncreaseInitiative() + increaseInitiative);
+    	if(getIncreaseInitiative() > 0){
+    		ship.setIncreaseInitiative(ship.getIncreaseInitiative() + getIncreaseInitiative());
     	}
-    	if(initDefence > 0){
-    		ship.setInitDefence(ship.getInitDefence() + initDefence);
+    	if(getInitDefence() != 0){
+    		ship.setInitDefence(ship.getInitDefence() + getInitDefence());
     	}
-    	if(psychWarfare > 0){
-    		ship.setPsychWarfare(ship.getPsychWarfare() + psychWarfare);
+    	if(getPsychWarfare() != 0){
+    		ship.setPsychWarfare(ship.getPsychWarfare() + getPsychWarfare());
     	}
-    	if(range != null){
-    		ship.setSpaceshipRange(range);
+    	if(getRange() != null){
+    		ship.setSpaceshipRange(getRange());
     	}
-/*    	if(changeTroops){
-    		ship.setTroops(troops);
-    	}*/
-    	if(ChangeNoRetreat){
-    		ship.setNoRetreat(noRetreat);
+    	if(isChangeNoRetreat()){
+    		ship.setNoRetreat(isNoRetreat());
     	}
-    	if(changeInitSupport){
-    		ship.setInitSupport(initSupport);
+    	if(isChangeInitSupport()){
+    		ship.setInitSupport(isInitSupport());
     	}
-    	if(weaponsStrengthSmall > 0){
-    		ship.setWeaponsStrengthSmall(ship.getWeaponsStrengthSmall() + weaponsStrengthSmall);
+    	if(getWeaponsStrengthSmall() != 0){
+    		ship.setWeaponsStrengthSmall(ship.getWeaponsStrengthSmall() + getWeaponsStrengthSmall());
     	}
-    	if(weaponsStrengthMedium > 0){
-    		ship.setWeaponsStrengthMedium(ship.getWeaponsStrengthMedium() + weaponsStrengthMedium);
+    	if(getWeaponsStrengthMedium() != 0){
+    		ship.setWeaponsStrengthMedium(ship.getWeaponsStrengthMedium() + getWeaponsStrengthMedium());
     	}
-    	if(weaponsStrengthLarge > 0){
-    		ship.setWeaponsStrengthLarge(ship.getWeaponsStrengthLarge() + weaponsStrengthLarge);
+    	if(getWeaponsStrengthLarge() != 0){
+    		ship.setWeaponsStrengthLarge(ship.getWeaponsStrengthLarge() + getWeaponsStrengthLarge());
     	}
-    	if(weaponsStrengthHuge > 0){
-    		ship.setWeaponsStrengthHuge(ship.getWeaponsStrengthHuge() + weaponsStrengthHuge);
+    	if(getWeaponsStrengthHuge() != 0){
+    		ship.setWeaponsStrengthHuge(ship.getWeaponsStrengthHuge() + getWeaponsStrengthHuge());
     	}
-    	if(weaponsMaxSalvoesMedium > 0){
-    		ship.setWeaponsMaxSalvoesMedium(ship.getWeaponsMaxSalvoesMedium() + weaponsMaxSalvoesMedium);
+    	if(getWeaponsMaxSalvosMedium() != 0){
+    		ship.setWeaponsMaxSalvoesMedium(ship.getWeaponsMaxSalvoesMedium() + getWeaponsMaxSalvosMedium());
     	}
-    	if(weaponsMaxSalvoesLarge > 0){
-    		ship.setWeaponsMaxSalvoesLarge(ship.getWeaponsMaxSalvoesLarge() + weaponsMaxSalvoesLarge);
+    	if(getWeaponsMaxSalvosLarge() != 0){
+    		ship.setWeaponsMaxSalvoesLarge(ship.getWeaponsMaxSalvoesLarge() + getWeaponsMaxSalvosLarge());
     	}
-    	if(weaponsMaxSalvoesHuge > 0){
-    		ship.setWeaponsMaxSalvoesHuge(ship.getWeaponsMaxSalvoesHuge() + weaponsMaxSalvoesHuge);
+    	if(getWeaponsMaxSalvosHuge() != 0){
+    		ship.setWeaponsMaxSalvoesHuge(ship.getWeaponsMaxSalvoesHuge() + getWeaponsMaxSalvosHuge());
     	}
-    	if(armorSmall > 0){
-    		ship.setArmorSmall(ship.getArmorSmall() + armorSmall);
+    	if(getArmorSmall() != 0){
+    		ship.setArmorSmall(ship.getArmorSmall() + getArmorSmall());
     	}
-    	if(armorMedium > 0){
-    		ship.setArmorMedium(ship.getArmorMedium() + armorMedium);
+    	if(getArmorMedium() != 0){
+    		ship.setArmorMedium(ship.getArmorMedium() + getArmorMedium());
     	}
-    	if(armorLarge > 0){
-    		ship.setArmorLarge(ship.getArmorLarge() + armorLarge);
+    	if(getArmorLarge() != 0){
+    		ship.setArmorLarge(ship.getArmorLarge() + getArmorLarge());
     	}
-    	if(armorHuge > 0){
-    		ship.setArmorHuge(ship.getArmorHuge() + armorHuge);
+    	if(getArmorHuge() != 0){
+    		ship.setArmorHuge(ship.getArmorHuge() + getArmorHuge());
     	}
-    	if(supply > 0){
-    		ship.setSupply(supply);
+    	if(getSupply() != null){
+    		ship.setSupply(getSupply());
     	}
-    	if(weaponsStrengthSquadron > 0){
-    		ship.setWeaponsStrengthSquadron(ship.getWeaponsStrengthSquadron() + weaponsMaxSalvoesHuge);
+    	if(getWeaponsStrengthSquadron() != 0){
+    		ship.setWeaponsStrengthSquadron(ship.getWeaponsStrengthSquadron() + getWeaponsStrengthSquadron());
     	}
-    	if(squadronCapacity > 0){
-    		ship.setSquadronCapacity(ship.getSquadronCapacity() + squadronCapacity);
+    	if(getSquadronCapacity() != 0){
+    		ship.setSquadronCapacity(ship.getSquadronCapacity() + getSquadronCapacity());
     	}
-    	if(incEnemyClosedBonus > 0){
-    		ship.setIncEnemyClosedBonus(ship.getIncEnemyClosedBonus() + incEnemyClosedBonus);
+    	if(getIncEnemyClosedBonus() != 0){
+    		ship.setIncEnemyClosedBonus(ship.getIncEnemyClosedBonus() + getIncEnemyClosedBonus());
     	}
-    	if(incNeutralClosedBonus > 0){
-    		ship.setIncNeutralClosedBonus(ship.getIncNeutralClosedBonus() + incNeutralClosedBonus);
+    	if(getIncNeutralClosedBonus() != 0){
+    		ship.setIncNeutralClosedBonus(ship.getIncNeutralClosedBonus() + getIncNeutralClosedBonus());
     	}
-    	if(incFrendlyClosedBonus > 0){
-    		ship.setIncFrendlyClosedBonus(ship.getIncFrendlyClosedBonus() + incFrendlyClosedBonus);
+    	if(getIncFriendlyClosedBonus() != 0){
+    		ship.setIncFriendlyClosedBonus(ship.getIncFriendlyClosedBonus() + getIncFriendlyClosedBonus());
     	}
-    	if(incOwnClosedBonus > 0){
-    		ship.setIncOwnClosedBonus(ship.getIncOwnClosedBonus() + incOwnClosedBonus);
+    	if(getIncOwnClosedBonus() != 0){
+    		ship.setIncOwnClosedBonus(ship.getIncOwnClosedBonus() + getIncOwnClosedBonus());
     	}
-    	if(incEnemyOpenBonus > 0){
-    		ship.setIncEnemyOpenBonus(ship.getIncEnemyOpenBonus() + incEnemyOpenBonus);
+    	if(getIncEnemyOpenBonus() != 0){
+    		ship.setIncEnemyOpenBonus(ship.getIncEnemyOpenBonus() + getIncEnemyOpenBonus());
     	}
-    	if(incNeutralOpenBonus > 0){
-    		ship.setIncNeutralOpenBonus(ship.getIncNeutralOpenBonus() + incNeutralOpenBonus);
+    	if(getIncNeutralOpenBonus() != 0){
+    		ship.setIncNeutralOpenBonus(ship.getIncNeutralOpenBonus() + getIncNeutralOpenBonus());
     	}
-    	if(incFrendlyOpenBonus > 0){
-    		ship.setIncFrendlyOpenBonus(ship.getIncFrendlyOpenBonus() + incFrendlyOpenBonus);
+    	if(getIncFriendlyOpenBonus() != 0){
+    		ship.setIncFriendlyOpenBonus(ship.getIncFriendlyOpenBonus() + getIncFriendlyOpenBonus());
     	}
-    	if(incOwnOpenBonus > 0){
-    		ship.setIncOwnOpenBonus(ship.getIncOwnOpenBonus() + incOwnOpenBonus);
+    	if(getIncOwnOpenBonus() != 0){
+    		ship.setIncOwnOpenBonus(ship.getIncOwnOpenBonus() + getIncOwnOpenBonus());
     	}
-    	if(description != null){
-    		ship.setDescription(description);
+    	if(getDescription() != null){
+    		ship.setDescription(getDescription());
     	}
-    	if(history != null){
-    		ship.setHistory(history);
+    	if(getHistory() != null){
+    		ship.setHistory(getHistory());
     	}
     /*	if(shortDescription != null){
     		ship.setShortDescription(shortDescription);
@@ -158,27 +128,24 @@ public class ResearchUpgradeShip implements Serializable{
     	if(disadvantages != null){
     		ship.setDisadvantages(disadvantages);
     	}*/
-    	if(changePlanetarySurvey){
-    		ship.setPlanetarySurvey(planetarySurvey);
+    	if(isChangePlanetarySurvey()){
+    		ship.setPlanetarySurvey(isPlanetarySurvey());
     	}
-    	if(changeCanAttackScreenedShips){
-    		ship.setCanAttackScreenedShips(canAttackScreenedShips);
+    	if(isCanAttackScreenedShips()){
+    		ship.setCanAttackScreenedShips(isCanAttackScreenedShips());
     	}
-    	if(changelookAsCivilian){
-    		ship.setLookAsCivilian(lookAsCivilian);
+    	if(isLookAsCivilian()){
+    		ship.setLookAsCivilian(isLookAsCivilian());
     	}
-    	if(changeCanBlockPlanet){
-    		ship.setCanBlockPlanet(canBlockPlanet);
+    	if(isChangeCanBlockPlanet()){
+    		ship.setCanBlockPlanet(isCanBlockPlanet());
     	}
-    	if(changeVisibleOnMap){
-    		ship.setVisibleOnMap(visibleOnMap);
+    	if(isChangeVisibleOnMap()){
+    		ship.setVisibleOnMap(isVisibleOnMap());
     	}
-    	if(troopCarrier > 0){
-    		ship.setTroopCapacity(ship.getTroopCapacity() + troopCarrier);
+    	if(getTroopCarrier() != 0){
+    		ship.setTroopCapacity(ship.getTroopCapacity() + getTroopCarrier());
     	}
-    /*	if(troopDownload > 0){
-    		ship.setTroopLaunchCapacity(ship.getTroopLaunchCapacity() +troopDownload);
-    	}*/
     	
     	return text;
     }
@@ -187,119 +154,114 @@ public class ResearchUpgradeShip implements Serializable{
     public String getResearchText(){
     	String text;
     	
-    	text= "Change propertys for the ship model: " + name;
+    	text= "Change propertys for the ship model: " + getTypeId();
     	
-    	if(shields > 0){
-    		text+="\n-Shields: " + addplus(shields);
+    	if(getShields() != 0){
+    		text+="\n-Shields: " + addplus(getShields());
     	}
-    	if(upkeep > 0){
-    		text+="\n-Upkeep: " + addplus(upkeep);
+    	if(getUpkeep() != 0){
+    		text+="\n-Upkeep: " + addplus(getUpkeep());
     	}
-    	if(buildCost > 0){
-    		text+="\n-Build cost: " + addplus(buildCost);
+    	if(getBuildCost() != 0){
+    		text+="\n-Build cost: " + addplus(getBuildCost());
     	}
-    	if(bombardment > 0){
-    		text+="\n-Bombardment: " + addplus(bombardment);
+    	if(getBombardment() != 0){
+    		text+="\n-Bombardment: " + addplus(getBombardment());
     	}
-    	if(increaseInitiative > 0){
-    		text+="\n-IncreaseInitiative: " + addplus(increaseInitiative);
+    	if(getIncreaseInitiative() != 0){
+    		text+="\n-IncreaseInitiative: " + addplus(getIncreaseInitiative());
     	}
-    	if(initDefence > 0){
-    		text+="\n-InitDefence: " + addplus(initDefence);
+    	if(getInitDefence() != 0){
+    		text+="\n-InitDefence: " + addplus(getInitDefence());
     	}
-    	if(psychWarfare > 0){
-    		text+="\n-psychWarfare: " + addplus(psychWarfare);
+    	if(getPsychWarfare() != 0){
+    		text+="\n-psychWarfare: " + addplus(getPsychWarfare());
     	}
-    	if(range != null){
-    		text+="\n-Range: " + range.toString();
+    	if(getRange() != null){
+    		text+="\n-Range: " + getRange().toString();
     	}
-/*    	if(changeTroops){
-    		text+="\n-Troops: " + addYesOrNo(troops);
+    	if(isChangeNoRetreat()){
+    		text+="\n-No Retreat: " + addYesOrNo(isNoRetreat());
     	}
-*/    	if(ChangeNoRetreat){
-    		text+="\n-No Retreat: " + addYesOrNo(noRetreat);
+    	if(isChangeInitSupport()){
+    		text+="\n-InitSupport: " + addYesOrNo(isInitSupport());
     	}
-    	if(changeInitSupport){
-    		text+="\n-InitSupport: " + addYesOrNo(initSupport);
+		if(getWeaponsStrengthSquadron() != 0){
+			text+="\n-Weapons strength squadron: " + addplus(getWeaponsStrengthSquadron());
+		}
+    	if(getWeaponsStrengthSmall() != 0){
+    		text+="\n-Weapons strength small: " + addplus(getWeaponsStrengthSmall());
     	}
-    	if(weaponsStrengthSmall > 0){
-    		text+="\n-Weapons strength small: " + addplus(weaponsStrengthSmall);
+    	if(getWeaponsStrengthMedium() != 0){
+    		text+="\n-Weapons strength medium: " + addplus(getWeaponsStrengthMedium());
     	}
-    	if(weaponsStrengthMedium > 0){
-    		text+="\n-Weapons strength medium: " + addplus(weaponsStrengthMedium);
+    	if(getWeaponsStrengthLarge() != 0){
+    		text+="\n-Weapons strength large: " + addplus(getWeaponsStrengthLarge());
     	}
-    	if(weaponsStrengthLarge > 0){
-    		text+="\n-Weapons strength large: " + addplus(weaponsStrengthLarge);
+    	if(getWeaponsStrengthHuge() != 0){
+    		text+="\n-Weapons strength huge: " + addplus(getWeaponsStrengthHuge());
     	}
-    	if(weaponsStrengthHuge > 0){
-    		text+="\n-Weapons strength huge: " + addplus(weaponsStrengthHuge);
+    	if(getArmorSmall() != 0){
+    		text+="\n-Armor Small: " + addplus(getArmorSmall());
     	}
-    	if(armorSmall > 0){
-    		text+="\n-Armor Small: " + addplus(armorSmall);
+    	if(getArmorMedium() != 0){
+    		text+="\n-Armor Medium: " + addplus(getArmorMedium());
     	}
-    	if(armorMedium > 0){
-    		text+="\n-Armor Medium: " + addplus(armorMedium);
+    	if(getArmorLarge() != 0){
+    		text+="\n-Armor Large: " + addplus(getArmorLarge());
     	}
-    	if(armorLarge > 0){
-    		text+="\n-Armor Large: " + addplus(armorLarge);
+    	if(getArmorHuge() != 0){
+    		text+="\n-Armor Huge: " + addplus(getArmorHuge());
     	}
-    	if(armorHuge > 0){
-    		text+="\n-Armor Huge: " + addplus(armorHuge);
+    	if(getSupply() != null){
+    		text+="\n-Supply ships size: " + getSupply().getName();
     	}
-    	if(supply > 0){
-    		text+="\n-Supply ships size: " + getShipSize(supply);
+
+    	if(getSquadronCapacity() != 0){
+    		text+="\n-Squadron carrier capacity: " + addplus(getSquadronCapacity());
     	}
-    	if(weaponsStrengthSquadron > 0){
-    		text+="\n-Weapons strength squadron: " + addplus(weaponsStrengthSquadron);
+    	if(getIncEnemyClosedBonus() != 0){
+    		text+="\n-Incom enemy closed bonus: " + addplus(getIncEnemyClosedBonus());
     	}
-    	if(squadronCapacity > 0){
-    		text+="\n-Squadron carrier capacity: " + addplus(squadronCapacity);
+    	if(getIncNeutralClosedBonus() != 0){
+    		text+="\n-Incom neutral closed bonus: " + addplus(getIncNeutralClosedBonus());
     	}
-    	if(incEnemyClosedBonus > 0){
-    		text+="\n-Incom enemy closed bonus: " + addplus(incEnemyClosedBonus);
+    	if(getIncFriendlyClosedBonus() != 0){
+    		text+="\n-Incom frendly closed bonus: " + addplus(getIncFriendlyClosedBonus());
     	}
-    	if(incNeutralClosedBonus > 0){
-    		text+="\n-Incom neutral closed bonus: " + addplus(incNeutralClosedBonus);
+    	if(getIncOwnClosedBonus() != 0){
+    		text+="\n-Incom own closed bonus: " + addplus(getIncOwnClosedBonus());
     	}
-    	if(incFrendlyClosedBonus > 0){
-    		text+="\n-Incom frendly closed bonus: " + addplus(incFrendlyClosedBonus);
+    	if(getIncEnemyOpenBonus() != 0){
+    		text+="\n-Incom enemy open bonus: " + addplus(getIncEnemyOpenBonus());
     	}
-    	if(incOwnClosedBonus > 0){
-    		text+="\n-Incom own closed bonus: " + addplus(incOwnClosedBonus);
+    	if(getIncNeutralOpenBonus() != 0){
+    		text+="\n-Incom neutral open bonus: " + addplus(getIncNeutralOpenBonus());
     	}
-    	if(incEnemyOpenBonus > 0){
-    		text+="\n-Incom enemy open bonus: " + addplus(incEnemyOpenBonus);
+    	if(getIncFriendlyOpenBonus() != 0){
+    		text+="\n-Incom frendly open Bbnus: " + addplus(getIncFriendlyOpenBonus());
     	}
-    	if(incNeutralOpenBonus > 0){
-    		text+="\n-Incom neutral open bonus: " + addplus(incNeutralOpenBonus);
+    	if(getIncOwnOpenBonus() != 0){
+    		text+="\n-Incom own open bonus: " + addplus(getIncOwnOpenBonus());
     	}
-    	if(incFrendlyOpenBonus > 0){
-    		text+="\n-Incom frendly open Bbnus: " + addplus(incFrendlyOpenBonus);
+    	if(isChangePlanetarySurvey()){
+    		text+="\n-Planetary survey: " + addYesOrNo(isPlanetarySurvey());
     	}
-    	if(incOwnOpenBonus > 0){
-    		text+="\n-Incom own open bonus: " + addplus(incOwnOpenBonus);
+    	if(isChangeCanAttackScreenedShips()){
+    		text+="\n-Can attack screened ships: " + addYesOrNo(isCanAttackScreenedShips());
     	}
-    	if(changePlanetarySurvey){
-    		text+="\n-Planetary survey: " + addYesOrNo(planetarySurvey);
+    	if(isChangelookAsCivilian()){
+    		text+="\n-Look as civilian: " + addYesOrNo(isLookAsCivilian());
     	}
-    	if(changeCanAttackScreenedShips){
-    		text+="\n-Can attack screened ships: " + addYesOrNo(canAttackScreenedShips);
+    	if(isChangeCanBlockPlanet()){
+    		text+="\n-Can block planet: " + addYesOrNo(isCanBlockPlanet());
     	}
-    	if(changelookAsCivilian){
-    		text+="\n-Look as civilian: " + addYesOrNo(lookAsCivilian);
+    	if(isChangeVisibleOnMap()){
+    		text+="\n-Visible on nap: " + addYesOrNo(isVisibleOnMap());
     	}
-    	if(changeCanBlockPlanet){
-    		text+="\n-Can block planet: " + addYesOrNo(canBlockPlanet);
+    	if(getTroopCarrier() != 0){
+    		text+="\n-Troop Capacity: " + addplus(getTroopCarrier());
     	}
-    	if(changeVisibleOnMap){
-    		text+="\n-Visible on nap: " + addYesOrNo(visibleOnMap);
-    	}
-    	if(troopCarrier > 0){
-    		text+="\n-Troop Capacity: " + addplus(troopCarrier);
-    	}
-    /*	if(troopDownload > 0){
-    		text+="\n-Troop download: " + addplus(troopDownload);
-    	}*/
     	
     	
     	return text;
@@ -309,7 +271,7 @@ public class ResearchUpgradeShip implements Serializable{
     	if(number > 0){
     		return "+" +number;
     	}
-    	return new Integer(number).toString();
+    	return Integer.toString(number);
     }
     private String addYesOrNo(boolean test){
     	if(test){
@@ -317,313 +279,40 @@ public class ResearchUpgradeShip implements Serializable{
     	}
     	return "No";
     }
-    
-    private String getShipSize(int size){
-    	if(size==1){
-    		return "Samll";
-    	}else if(size==2){
-    		return "Medium";
-    	}else if(size==3){
-    		return "Large";
-    	}else if(size==4){
-    		return "Huge";
-    	}
-    	return "Non";
-    }
-    
-	public String getAdvantages() {
-		return advantages;
-	}
-	public void setAdvantages(String advantages) {
-		this.advantages = advantages;
-	}
-	public int getArmorHuge() {
-		return armorHuge;
-	}
-	public void setArmorHuge(int armorHuge) {
-		this.armorHuge = armorHuge;
-	}
-	public int getArmorLarge() {
-		return armorLarge;
-	}
-	public void setArmorLarge(int armorLarge) {
-		this.armorLarge = armorLarge;
-	}
-	public int getArmorMedium() {
-		return armorMedium;
-	}
-	public void setArmorMedium(int armorMedium) {
-		this.armorMedium = armorMedium;
-	}
-	public int getArmorSmall() {
-		return armorSmall;
-	}
-	public void setArmorSmall(int armorSmall) {
-		this.armorSmall = armorSmall;
-	}
-	public int getBombardment() {
-		return bombardment;
-	}
-	public void setBombardment(int bombardment) {
-		this.bombardment = bombardment;
-	}
-	public int getBuildCost() {
-		return buildCost;
-	}
-	public void setBuildCost(int buildCost) {
-		this.buildCost = buildCost;
-	}
-	public boolean isCanAttackScreenedShips() {
-		return canAttackScreenedShips;
-	}
+
 	public void setCanAttackScreenedShips(boolean canAttackScreenedShips) {
-		this.changeCanAttackScreenedShips = true;
-		this.canAttackScreenedShips = canAttackScreenedShips;
+		this.setChangeCanAttackScreenedShips(true);
+		super.setCanAttackScreenedShips(canAttackScreenedShips);
 	}
-	public boolean isCanBlockPlanet() {
-		return canBlockPlanet;
-	}
+
 	public void setCanBlockPlanet(boolean canBlockPlanet) {
-		this.changeCanBlockPlanet =  true;
-		this.canBlockPlanet = canBlockPlanet;
+		this.setChangeCanBlockPlanet(true);
+		super.setCanBlockPlanet(canBlockPlanet);
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getDisadvantages() {
-		return disadvantages;
-	}
-	public void setDisadvantages(String disadvantages) {
-		this.disadvantages = disadvantages;
-	}
-	public String getHistory() {
-		return history;
-	}
-	public void setHistory(String history) {
-		this.history = history;
-	}
-	public int getIncEnemyClosedBonus() {
-		return incEnemyClosedBonus;
-	}
-	public void setIncEnemyClosedBonus(int incEnemyClosedBonus) {
-		this.incEnemyClosedBonus = incEnemyClosedBonus;
-	}
-	public int getIncEnemyOpenBonus() {
-		return incEnemyOpenBonus;
-	}
-	public void setIncEnemyOpenBonus(int incEnemyOpenBonus) {
-		this.incEnemyOpenBonus = incEnemyOpenBonus;
-	}
-	public int getIncFrendlyClosedBonus() {
-		return incFrendlyClosedBonus;
-	}
-	public void setIncFrendlyClosedBonus(int incFrendlyClosedBonus) {
-		this.incFrendlyClosedBonus = incFrendlyClosedBonus;
-	}
-	public int getIncFrendlyOpenBonus() {
-		return incFrendlyOpenBonus;
-	}
-	public void setIncFrendlyOpenBonus(int incFrendlyOpenBonus) {
-		this.incFrendlyOpenBonus = incFrendlyOpenBonus;
-	}
-	public int getIncNeutralClosedBonus() {
-		return incNeutralClosedBonus;
-	}
-	public void setIncNeutralClosedBonus(int incNeutralClosedBonus) {
-		this.incNeutralClosedBonus = incNeutralClosedBonus;
-	}
-	public int getIncNeutralOpenBonus() {
-		return incNeutralOpenBonus;
-	}
-	public void setIncNeutralOpenBonus(int incNeutralOpenBonus) {
-		this.incNeutralOpenBonus = incNeutralOpenBonus;
-	}
-	public int getIncOwnClosedBonus() {
-		return incOwnClosedBonus;
-	}
-	public void setIncOwnClosedBonus(int incOwnClosedBonus) {
-		this.incOwnClosedBonus = incOwnClosedBonus;
-	}
-	public int getIncOwnOpenBonus() {
-		return incOwnOpenBonus;
-	}
-	public void setIncOwnOpenBonus(int incOwnOpenBonus) {
-		this.incOwnOpenBonus = incOwnOpenBonus;
-	}
-	public int getIncreaseInitiative() {
-		return increaseInitiative;
-	}
-	public void setIncreaseInitiative(int increaseInitiative) {
-		this.increaseInitiative = increaseInitiative;
-	}
-	public int getInitDefence() {
-		return initDefence;
-	}
-	public void setInitDefence(int initDefence) {
-		this.initDefence = initDefence;
-	}
-	public boolean isInitSupport() {
-		return initSupport;
-	}
+
 	public void setInitSupport(boolean initSupport) {
-		this.changeInitSupport = true;
-		this.initSupport = initSupport;
+		this.setChangeInitSupport(true);
+		super.setInitSupport(initSupport);
 	}
-	public boolean isLookAsCivilian() {
-		return lookAsCivilian;
-	}
+
 	public void setLookAsCivilian(boolean lookAsCivilian) {
-		this.changelookAsCivilian = true;
-		this.lookAsCivilian = lookAsCivilian;
+		this.setChangelookAsCivilian(true);
+		super.setLookAsCivilian(lookAsCivilian);
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public boolean isNoRetreat() {
-		return noRetreat;
-	}
+
 	public void setNoRetreat(boolean noRetreat) {
-		this.ChangeNoRetreat = true;
-		this.noRetreat = noRetreat;
+		this.setChangeNoRetreat(true);
+		super.setNoRetreat(noRetreat);
 	}
-	public boolean isPlanetarySurvey() {
-		return planetarySurvey;
-	}
+
 	public void setPlanetarySurvey(boolean planetarySurvey) {
-		this.changePlanetarySurvey =  true;
-		this.planetarySurvey = planetarySurvey;
+		this.setChangePlanetarySurvey(true);
+		super.setPlanetarySurvey(planetarySurvey);
 	}
-	public SpaceshipRange getRange() {
-		return range;
-	}
-	public void setRange(SpaceshipRange range) {
-		this.range = range;
-	}
-	public int getShields() {
-		return shields;
-	}
-	public void setShields(int shields) {
-		this.shields = shields;
-	}
-	public String getShortDescription() {
-		return shortDescription;
-	}
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
-	public int getPsychWarfare(){
-		return psychWarfare;
-	}
-	public void setPsychWarfare(int newPsychWarfare) {
-		this.psychWarfare = newPsychWarfare;
-	}
-/*	public int getSiegeBonus() {
-		return siegeBonus;
-	}
-	public void setSiegeBonus(int siegeBonus) {
-		this.siegeBonus = siegeBonus;
-	}
-*/	public int getSquadronCapacity() {
-		return squadronCapacity;
-	}
-	public void setSquadronCapacity(int squadronCapacity) {
-		this.squadronCapacity = squadronCapacity;
-	}
-	public int getSupply() {
-		return supply;
-	}
-	public void setSupply(int supply) {
-		this.supply = supply;
-	}
-	public int getUpkeep() {
-		return upkeep;
-	}
-	public void setUpkeep(int upkeep) {
-		this.upkeep = upkeep;
-	}
-/*	public boolean isTroops() {
-		return troops;
-	}
-	public void setTroops(boolean troops) {
-		this.changeTroops = true;
-		this.troops = troops;
-	}
-*/	public int getWeaponsMaxSalvoesHuge() {
-		return weaponsMaxSalvoesHuge;
-	}
-	public void setWeaponsMaxSalvoesHuge(int weaponsMaxSalvoesHuge) {
-		this.weaponsMaxSalvoesHuge = weaponsMaxSalvoesHuge;
-	}
-	public int getWeaponsMaxSalvoesLarge() {
-		return weaponsMaxSalvoesLarge;
-	}
-	public void setWeaponsMaxSalvoesLarge(int weaponsMaxSalvoesLarge) {
-		this.weaponsMaxSalvoesLarge = weaponsMaxSalvoesLarge;
-	}
-	public int getWeaponsMaxSalvoesMedium() {
-		return weaponsMaxSalvoesMedium;
-	}
-	public void setWeaponsMaxSalvoesMedium(int weaponsMaxSalvoesMedium) {
-		this.weaponsMaxSalvoesMedium = weaponsMaxSalvoesMedium;
-	}
-	public int getWeaponsStrengthHuge() {
-		return weaponsStrengthHuge;
-	}
-	public void setWeaponsStrengthHuge(int weaponsStrengthHuge) {
-		this.weaponsStrengthHuge = weaponsStrengthHuge;
-	}
-	public int getWeaponsStrengthLarge() {
-		return weaponsStrengthLarge;
-	}
-	public void setWeaponsStrengthLarge(int weaponsStrengthLarge) {
-		this.weaponsStrengthLarge = weaponsStrengthLarge;
-	}
-	public int getWeaponsStrengthMedium() {
-		return weaponsStrengthMedium;
-	}
-	public void setWeaponsStrengthMedium(int weaponsStrengthMedium) {
-		this.weaponsStrengthMedium = weaponsStrengthMedium;
-	}
-	public int getWeaponsStrengthSmall() {
-		return weaponsStrengthSmall;
-	}
-	public void setWeaponsStrengthSmall(int weaponsStrengthSmall) {
-		this.weaponsStrengthSmall = weaponsStrengthSmall;
-	}
-	public int getWeaponsStrengthSquadron() {
-		return weaponsStrengthSquadron;
-	}
-	public void setWeaponsStrengthSquadron(int weaponsStrengthSquadron) {
-		this.weaponsStrengthSquadron = weaponsStrengthSquadron;
-	}
-	public boolean isVisibleOnMap() {
-		return visibleOnMap;
-	}
+
 	public void setVisibleOnMap(boolean visibleOnMap) {
-		this.changeVisibleOnMap = true;
-		this.visibleOnMap = visibleOnMap;
+		this.setChangeVisibleOnMap(true);
+		super.setVisibleOnMap(visibleOnMap);
 	}
-
-	public int getTroopCarrier() {
-		return troopCarrier;
-	}
-
-	public void setTroopCarrier(int troopCarrier) {
-		this.troopCarrier = troopCarrier;
-	}
-/*
-	public int getTroopDownload() {
-		return troopDownload;
-	}
-
-	public void setTroopDownload(int troopDownload) {
-		this.troopDownload = troopDownload;
-	}*/
 
 }

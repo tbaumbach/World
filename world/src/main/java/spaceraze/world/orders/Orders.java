@@ -8,7 +8,6 @@ package spaceraze.world.orders;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
@@ -27,16 +26,12 @@ import spaceraze.world.Spaceship;
 import spaceraze.world.SpaceshipType;
 import spaceraze.world.Troop;
 import spaceraze.world.TroopType;
-import spaceraze.world.TurnInfo;
 import spaceraze.world.VIP;
 import spaceraze.world.VIPType;
 import spaceraze.world.diplomacy.Diplomacy;
 import spaceraze.world.diplomacy.DiplomacyChange;
-import spaceraze.world.diplomacy.DiplomacyChangeLevelComparator;
 import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyOffer;
-import spaceraze.world.diplomacy.DiplomacyState;
-import spaceraze.world.enums.HighlightType;
 
 public class Orders implements Serializable {
   static final long serialVersionUID = 1L;
@@ -59,8 +54,6 @@ public class Orders implements Serializable {
   private List<Integer> VIPSelfDestructs;
   private List<TaxChange> taxChanges;
   private List<PlanetNotesChange> planetNotesChanges;
-  
-  private int cost = 0;
 
   public Orders(){
     expenses = new ArrayList<Expense>();
@@ -196,404 +189,6 @@ public class Orders implements Serializable {
 	  }
   }
 
-  public void performOrders(TurnInfo ti, Player p){
-	Galaxy g = p.getGalaxy();
-    for (int i = 0; i < expenses.size(); i++){
-      Expense tempExpense = (Expense)expenses.get(i);
-      tempExpense.performExpense(ti,p,this);
-    }
-    // perform VIP moves
-    for (int i = 0; i < VIPMoves.size(); i++){
-      VIPMovement tempVIPMove = VIPMoves.get(i);
-      tempVIPMove.performMove(ti, g);
-    }
-    // perform troop to carrier
-    for (TroopToCarrierMovement aTroopToCarrierMovement : troopToCarrierMoves) {
-    	Logger.finest("aTroopToCarrierMovement: " + aTroopToCarrierMovement.toString());
-		aTroopToCarrierMovement.performMove(ti, g);
-	}
-    // perform troop to planet moves (was spaceship moves)
-    for (TroopToPlanetMovement aTroopToPlanetMovement : troopToPlanetMoves) {
-    	Logger.finest("aTroopToPlanetMovement: " + aTroopToPlanetMovement.toString());
-		aTroopToPlanetMovement.performMove(ti, g);
-	}
-    // perform squadrons to carrier moves
-    for (int i = 0; i < shipToCarrierMoves.size(); i++){
-	  Logger.finest("shipMoves.size(): " + shipMoves.size() + " i: " + i);
-      ShipToCarrierMovement tempShipToCarrierMove = (ShipToCarrierMovement)shipToCarrierMoves.get(i);
-      tempShipToCarrierMove.performMove(ti, g);
-    }
-    // perform spaceship moves
-    for (int i = 0; i < shipMoves.size(); i++){
-      Logger.finest("shipMoves.size(): " + shipMoves.size() + " i: " + i);
-      ShipMovement tempShipMove = (ShipMovement)shipMoves.get(i);
-      tempShipMove.performMove(ti, p.getGalaxy());
-    }
-    for (int i = 0; i < planetVisibilities.size(); i++){
-      Planet temp = (Planet)g.getPlanet(planetVisibilities.get(i));
-      temp.reverseVisibility();
-      String openString = "closed";
-      if (temp.isOpen()){
-        openString = "open";
-      }
-      ti.addToLatestGeneralReport(temp.getName() + " is now " + openString + ".");
-    }
-    // abandon planets
-    for (int i = 0; i < abandonPlanets.size(); i++){
-    	Planet tempPlanet = g.getPlanet(abandonPlanets.get(i));
-    	Player tempPlayer = tempPlanet.getPlayerInControl();
-    	g.checkVIPsOnAbandonedPlanet(tempPlanet,tempPlayer);
-    	tempPlanet.setPlayerInControl(null);
-    	tempPlayer.getPlanetOrderStatuses().setAttackIfNeutral(false,tempPlanet.getName());
-    	if (p.isAlien()){
-    		tempPlanet.setRazed();
-    		g.removeBuildingsOnPlanet(tempPlanet);
-    		tempPlayer.getPlanetInfos().setLastKnownOwner(tempPlanet.getName(),"Neutral",tempPlayer.getGalaxy().turn + 1);
-    		tempPlayer.getPlanetInfos().setLastKnownProdRes(tempPlanet.getName(),0,0);
-    		tempPlayer.getPlanetInfos().setRazed(true,tempPlanet.getName());
-    		ti.addToLatestGeneralReport("You have abandoned " + tempPlanet.getName() + ". It is now razed and uninhabited.");
-    	}else{
-    		tempPlayer.getPlanetInfos().setLastKnownOwner(tempPlanet.getName(),"Neutral",tempPlayer.getGalaxy().turn + 1);
-    		tempPlayer.getPlanetInfos().setLastKnownProdRes(tempPlanet.getName(),tempPlanet.getPopulation(),tempPlanet.getResistance());
-    		ti.addToLatestGeneralReport("You have abandoned " + tempPlanet.getName() + ". It is now neutral.");
-    	}
-    }
-    for (int i = 0; i < shipSelfDestructs.size(); i++){
-      Spaceship tempss = g.findSpaceship(shipSelfDestructs.get(i));
-      Logger.finest("shipSelfDestructs: " + shipSelfDestructs.get(i));
-      if(tempss != null){
-	      g.removeShip(tempss);
-	      g.checkVIPsInSelfDestroyedShips(tempss,p);
-	      // remove any troops in selfdestructed ship
-	      List<Troop> troopsInShip = g.findAllTroopsOnShip(tempss);
-	      for (Troop troop : troopsInShip) {
-	          g.removeTroop(troop);
-	          ti.addToLatestGeneralReport("When " + tempss.getName() + " was scuttled your troop " + troop.getUniqueName() + " has also been destroyed.");
-	      }
-	      ti.addToLatestGeneralReport("On your command " + tempss.getName() + " has been scuttled by its crew.");
-      }
-    }
-    for (int i = 0; i < buildingSelfDestructs.size(); i++){
-    	Building tempBuilding = g.findBuilding(buildingSelfDestructs.get(i), p);
-    	if(tempBuilding != null){
-    		tempBuilding.getLocation().removeBuilding(tempBuilding.getUniqueId());
-    		ti.addToLatestGeneralReport("On your command " + tempBuilding.getBuildingType().getName() + " at " + tempBuilding.getLocation().getName() + " has been destroyed.");
-    	}
-    }
-    for (int i = 0; i < VIPSelfDestructs.size(); i++){
-        VIP tempVIP = g.findVIP(VIPSelfDestructs.get(i));
-//        Player tempPlayer = tempow.getLocation().getPlayerInControl();
-        g.getAllVIPs().remove(tempVIP);
-        ti.addToLatestGeneralReport("On your command " + tempVIP.getName() + " at " + tempVIP.getLocation().getName() + " has been retired.");
-    }
-    
-    for (int i = 0; i < screenedShips.size(); i++){
-    	Spaceship tempss = g.findSpaceship(screenedShips.get(i));
-    	//      Player tempPlayer = tempss.getOwner();
-    	if(tempss != null){
-    		tempss.setScreened(!tempss.getScreened());
-    		ti.addToLatestGeneralReport("Your ship " + tempss.getName() + " has changed screened status to: " + tempss.getScreened());
-    	}
-    }
-    // preform troop selfdestructs
-    for (int aTroopId : troopSelfDestructs) {
-    	Troop aTroop = g.findTroop(aTroopId);
-    	if(aTroop != null){
-	        g.removeTroop(aTroop);
-	        g.checkVIPsInSelfDestroyedTroops(aTroop,p);
-	        ti.addToLatestGeneralReport("On your command " + aTroop.getUniqueName() + " has been disbanded.");
-    	}
-	}
-    
-    // perform research
-    for(int i=0;i < researchOrder.size(); i++){    	
-    	ResearchOrder tempReserachOrder = researchOrder.get(i);
-    	Logger.fine("(orders.java) researchOrder.size() " + researchOrder.size() + " tempReserachOrder.getAdvantageName() " + tempReserachOrder.getAdvantageName());
-    	tempReserachOrder.performResearch(ti, p);
-//    	tempReserachOrder.addToHighlights(p,HighlightType.TYPE_RESEARCH_DONE);
-    }
-   
-    // perform tax changes
-    for (TaxChange aTaxChange : taxChanges) {
-    	// first find the other player
-    	Player vassal = g.getPlayer(aTaxChange.getPlayerName());
-		// perform tax change
-    	DiplomacyState state = g.getDiplomacyState(vassal, p);
-    	state.setTax(aTaxChange.getAmount());
-	}
-    // perform new notes text changes
-    for (PlanetNotesChange aPlanetNotesChange : planetNotesChanges) {
-    	aPlanetNotesChange.performPlanetNotes(p);
-	}
-    
-  }
-
-  // diplomacy changes
-  public void performDiplomacyOrders(Player p){
-	Logger.fine("performDiplomacyOrders: " + p.getGovenorName());
-	Galaxy g = p.getGalaxy();
-	// first sort changes so that lower (ex. ewar) comes before higher (ex. conf) levels
-	Collections.sort(diplomacyChanges, new DiplomacyChangeLevelComparator<DiplomacyChange>());
-	List<Player> confPlayers = g.getDiplomacy().getConfederacyPlayers(p);
-    for (DiplomacyChange aChange : diplomacyChanges) {
-//    	Player thePlayer = aChange.getThePlayer(g);
-    	Player otherPlayer = aChange.getOtherPlayer(g);
-		DiplomacyState aState = g.getDiplomacyState(p,otherPlayer);
-		if (aState.isChangedThisTurn()){ // state have already changed due to conflicts, offer is no longer valid
-			aChange.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to the changed diplomatic state between you and Governor " + aChange.getOtherPlayer(g).getGovenorName() + " the change to " + aChange.getNewLevel() + " is no longer valid.");
-			aChange.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to the changed diplomatic state between you and Governor " + aChange.getThePlayer(g).getGovenorName() + " the change to " + aChange.getNewLevel() + " is no longer valid.");
-		}else
-		if (aChange.isResponseToPreviousOffer()){ // if the change is a response to an earlier offer
-			if (aChange.getNewLevel() == DiplomacyLevel.LORD){
-				aState.setCurrentLevel(DiplomacyLevel.LORD);
-				Player aPlayer = aChange.getOtherPlayer(g);
-				Logger.fine("aChange.getOtherPlayerName(): " + aChange.getOtherPlayerName() + " aPlayer: " + aPlayer);
-				aState.setLord(aPlayer); // newLevel g�ller alltid den andra spelaren
-				aChange.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for vassalship and he is now your lord");
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for vassalship and is now your vassal");
-				aChange.getThePlayer(g).getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + DiplomacyLevel.LORD, HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + DiplomacyLevel.VASSAL, HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-			}else
-			if (aChange.getNewLevel() == DiplomacyLevel.VASSAL){
-				aState.setCurrentLevel(DiplomacyLevel.LORD);
-				Player aPlayer = aChange.getThePlayer(g);
-				Logger.fine("aChange.getThePlayerName(): " + aChange.getThePlayerName() + " aPlayer: " + aPlayer);
-				aState.setLord(aPlayer);  // newLevel g�ller alltid den andra spelaren, och i detta fall skall thePlayer vara lord om den andra �r vasall
-				aChange.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for lordship and he is now your vassal");
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for lordship and is now your lord");
-				aChange.getThePlayer(g).getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + DiplomacyLevel.VASSAL, HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + DiplomacyLevel.LORD, HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-			}else
-			if (aChange.getNewLevel() == DiplomacyLevel.CONFEDERACY){
-				// check if p is in a confederacy
-//				List<Player> confPlayers = g.getDiplomacy().getConfederacyPlayers(p);
-				if (confPlayers.size() > 0){ // p is in a confederacy
-					// check (in Galaxy) if all other players in the confederacy also have a change with p
-					boolean allInConf = g.checkAllInConfederacyOrder(otherPlayer,confPlayers);
-					if (allInConf){ // all have change
-						// perform change
-						Logger.fine("aChange.getNewLevel()" + aChange.getNewLevel());
-						aState.setCurrentLevel(aChange.getNewLevel()); 
-						p.getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for " + aChange.getNewLevel());
-						otherPlayer.getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for " + aChange.getNewLevel());
-						p.getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-						otherPlayer.getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-					}else{ // not all have change
-						// do not perform change, message about incomplete answer
-						p.getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for " + aChange.getNewLevel() + ", but since not all members of your confederacy have done so the acceptance is incomplete and have no effect.");
-						otherPlayer.getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for " + aChange.getNewLevel() + ", but since not all members of his confederacy have done so the acceptance is incomplete and have no effect.");
-						p.getTurnInfo().addToLatestHighlights(" to " + otherPlayer.getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_CHANGE);
-						otherPlayer.getTurnInfo().addToLatestHighlights(" from " + p.getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_CHANGE);
-					}
-				}else{// p is not in a confederacy
-					// check if otherPlayer is in a confederacy
-						// otherPlayer is in a conf
-							// perform change
-						// otherPlayer is not in a conf 
-							// perform change
-					Logger.fine("aChange.getNewLevel()" + aChange.getNewLevel());
-					aState.setCurrentLevel(aChange.getNewLevel()); 
-					p.getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for " + aChange.getNewLevel());
-					otherPlayer.getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for " + aChange.getNewLevel());
-					p.getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-					otherPlayer.getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-				}
-			}else{ // response to other offer (not lord/vassal/conf)
-				Logger.fine("aChange.getNewLevel()" + aChange.getNewLevel());
-				aState.setCurrentLevel(aChange.getNewLevel()); 
-				aChange.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have accepted Governor " + aChange.getOtherPlayer(g).getGovenorName() + " offer for " + aChange.getNewLevel());
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have accepted your offer for " + aChange.getNewLevel());
-				aChange.getThePlayer(g).getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-				aChange.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-			}
-		}else{ // if it isn't a response
-			Logger.fine("aChange.getNewLevel()" + aChange.getNewLevel());
-			aState.setCurrentLevel(aChange.getNewLevel()); 
-			aChange.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have changed your diplomatic status to Governor " + aChange.getOtherPlayer(g).getGovenorName() + " to " + aChange.getNewLevel());
-			aChange.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + aChange.getThePlayer(g).getGovenorName() + " have changed his diplomatic status to you to " + aChange.getNewLevel());
-			aChange.getThePlayer(g).getTurnInfo().addToLatestHighlights(aChange.getOtherPlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_OWN);
-			aChange.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(aChange.getThePlayer(g).getGovenorName() + ";" + aChange.getNewLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_OTHER);
-		}
-		aState.setChangedThisTurn(true);
-	}
-    // diplomacy offers
-    for (DiplomacyOffer anOffer : diplomacyOffers) {
-    	Player otherPlayer = anOffer.getOtherPlayer(g);
-		DiplomacyState aState = g.getDiplomacyState(anOffer.getThePlayer(g),anOffer.getOtherPlayer(g));
-		if (aState.isChangedThisTurn()){ // state have already changed due to conflicts, offer is no longer valid
-			anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to the changed diplomatic state between you and Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " your offer for " + anOffer.getSuggestedLevel() + " is no longer valid.");
-			anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have made an offer for " + anOffer.getSuggestedLevel() + ", but it is no longer valid since the change in diplomatic state between you.");
-			anOffer.setOfferPerformed(true);
-		}else
-    	if (!anOffer.isOfferPerformed()){
-    		// first check if the other player also have made an offer
-    		DiplomacyOffer otherPlayersOffer = anOffer.getOtherPlayer(g).getDiplomacyOffer(p);
-    		if (otherPlayersOffer != null){ // if there is an offer
-    			boolean lordVassall = checkLordVassall(anOffer.getSuggestedLevel(),otherPlayersOffer.getSuggestedLevel());
-    			if (lordVassall){ // players are now lord and vassall
-    				if (anOffer.getSuggestedLevel() == DiplomacyLevel.LORD){
-    					Logger.fine("anOffer.getSuggestedLevel()" + anOffer.getSuggestedLevel());
-    					aState.setCurrentLevel(anOffer.getSuggestedLevel());
-    					aState.setLord(anOffer.getThePlayer(g));
-    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " is now your vassal!");
-    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " is now your lord!");
-    					anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getOtherPlayer(g).getGovenorName() + ";" + otherPlayersOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-    					anOffer.setOfferPerformed(true);
-    					otherPlayersOffer.setOfferPerformed(true);    					
-    				}else{
-    					Logger.fine("anOffer.getSuggestedLevel()" + anOffer.getSuggestedLevel());
-    					aState.setCurrentLevel(anOffer.getSuggestedLevel());
-    					aState.setLord(anOffer.getOtherPlayer(g));
-    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " is now your vassal!");
-    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " is now your lord!");
-    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-    					anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getOtherPlayer(g).getGovenorName() + ";" + otherPlayersOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_LORD_VASSAL);
-    					anOffer.setOfferPerformed(true);
-    					otherPlayersOffer.setOfferPerformed(true);
-    				}
-    			}else{
-    				if (anOffer.getSuggestedLevel() == otherPlayersOffer.getSuggestedLevel()){ // both players suggest the same non-lord/vassall diplomacy level
-    					List<Player> confPlayers2 = g.getDiplomacy().getConfederacyPlayers(otherPlayer);
-    					if ((anOffer.getSuggestedLevel() == DiplomacyLevel.CONFEDERACY) & ((confPlayers.size() > 0) | (confPlayers2.size() > 0))){ // that both are in conf can not happen
-    						if (confPlayers.size() > 0){ // player is in a conf, check if all members of the conf have made offers
-    							boolean allOfferConf = g.checkAllInConfederacyOffer(otherPlayer,confPlayers);
-    							if (allOfferConf){
-    		    					// perform change
-    		    					Logger.fine("multiple anOffer.getSuggestedLevel(): " + anOffer.getSuggestedLevel());
-//    		    					aState.setCurrentLevel(anOffer.getSuggestedLevel());
-    		    					g.addPostConfList(aState);
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getOtherPlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getThePlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getOtherPlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-    		    					anOffer.setOfferPerformed(true);
-    		    					otherPlayersOffer.setOfferPerformed(true);
-    							}else{ // offer invalid
-    		    					// not all members in conf have made offers, offer is not performed
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You and governor " + otherPlayer.getGovenorName() + " have made simultaneous offers for confederacy, but since not all members of your confederacy have made offers for confederacy, the offers are invalid and no change is performed.");
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("You and governor " + p.getGovenorName() + " have made simultaneous offers for confederacy, but since not all members of governor " + p.getGovenorName() + " confederacy have made offers for confederacy, the offers are invalid and no change is performed.");
-    	    						anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(" with " + anOffer.getOtherPlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-    	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(" with " + anOffer.getThePlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-    		    					anOffer.setOfferPerformed(true);
-    		    					otherPlayersOffer.setOfferPerformed(true);
-    							}
-    						}else{ // otherPlayer is in a conf, check if all members of otherPlayers conf have made offers
-    							boolean allOfferConf = g.checkAllInConfederacyOffer(p,confPlayers2);
-    							if (allOfferConf){
-    		    					// perform change
-    		    					Logger.fine("multiple anOffer.getSuggestedLevel(): " + anOffer.getSuggestedLevel());
-//    		    					aState.setCurrentLevel(anOffer.getSuggestedLevel()); 
-    		    					g.addPostConfList(aState);
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getOtherPlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getThePlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getOtherPlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-    		    					anOffer.setOfferPerformed(true);
-    		    					otherPlayersOffer.setOfferPerformed(true);
-    							}else{ // offer invalid
-    		    					// not all members in conf have made offers, offer is not performed
-    		    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You and governor " + otherPlayer.getGovenorName() + " have made simultaneous offers for confederacy, but since not all members of governor " + p.getGovenorName() + " confederacy have made offers for confederacy, the offers are invalid and no change is performed.");
-    		    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("You and governor " + p.getGovenorName() + " have made simultaneous offers for confederacy, but since not all members of your confederacy have made offers for confederacy, the offers are invalid and no change is performed.");
-    	    						anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(" with " + anOffer.getOtherPlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-    	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(" with " + anOffer.getThePlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-    		    					anOffer.setOfferPerformed(true);
-    		    					otherPlayersOffer.setOfferPerformed(true);
-    							}
-    						}
-    					}else{
-	    					// perform change
-	    					Logger.fine("anOffer.getSuggestedLevel(): " + anOffer.getSuggestedLevel());
-	    					aState.setCurrentLevel(anOffer.getSuggestedLevel()); 
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getOtherPlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous offers you and governor " + anOffer.getThePlayer(g).getGovenorName() + " now have " + anOffer.getSuggestedLevel());
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getOtherPlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_BOTH);
-	    					anOffer.setOfferPerformed(true);
-	    					otherPlayersOffer.setOfferPerformed(true);
-    					}
-    				}else{
-    					// different suggested levels, no change is performed
-    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous different offers no change is performed between you and governor " + anOffer.getOtherPlayer(g).getGovenorName());
-    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to simultaneous different offers no change is performed between you and governor " + anOffer.getThePlayer(g).getGovenorName());
-    					anOffer.setOfferPerformed(true);
-    					otherPlayersOffer.setOfferPerformed(true);
-    				}
-    			}
-    		}else{ // if there is only one offer
-    			// check if the other player have made a change
-    			DiplomacyChange otherPlayersChange = anOffer.getOtherPlayer(g).getDiplomacyChange(p);
-    			if (otherPlayersChange != null){ // if there is a change
-    				// the offer is not performed...
-        			anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("Due to governor " + anOffer.getOtherPlayer(g).getGovenorName() + " change in status to you your offer for " + anOffer.getSuggestedLevel() + " is no longer valid.");
-        			anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have made an offer for " + anOffer.getSuggestedLevel() + " but it is no longer valid since you have changed your status to him.");
-        			anOffer.setOfferPerformed(true);
-    			}else{ // if there is no change
-    				if (anOffer.getSuggestedLevel() == DiplomacyLevel.CONFEDERACY){
-						List<Player> confPlayers2 = g.getDiplomacy().getConfederacyPlayers(otherPlayer);
-						Logger.fine("confPlayers2: " + confPlayers2.size());
-						boolean otherConfOffer = false;
-						if (confPlayers2.size() > 0){
-							otherConfOffer = g.checkConfederacyOfferExist(p,confPlayers2);
-						}
-						Logger.fine("otherConfOffer: " + otherConfOffer);
-	    				// check if p is in a conf
-	    				if (confPlayers.size() > 0){ // p is in a confederacy
-	    					// check (in Galaxy) if all other players in the confederacy also have an offer with otherplayer
-	    					boolean allInConf = g.checkAllInConfederacyOffer(otherPlayer,confPlayers);
-	    					if (allInConf){ // all have change
-	    	    				// add offer to other player
-	    	    				anOffer.getOtherPlayer(g).addDiplomacyOffer(anOffer);
-	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_OFFER);
-	    	    				anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for " + anOffer.getSuggestedLevel());
-	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer for " + anOffer.getSuggestedLevel());
-	    	    				anOffer.setOfferPerformed(true);
-	    					}else{
-	    						// offer incomplete
-	    						anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(" to " + anOffer.getOtherPlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(" from " + anOffer.getThePlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-	    	    				anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for " + anOffer.getSuggestedLevel() + ", but since not all members of your confederacy have done so the offer is incomplete and is discarded.");
-	    	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer for " + anOffer.getSuggestedLevel() + ", but since not all members of his confederacy have done so the offer is incomplete and is discarded.");
-	    	    				anOffer.setOfferPerformed(true);
-	    					}
-	    				}else
-	    				if ((confPlayers2.size() > 0) & otherConfOffer){ // otherPlayer is in a confederacy and there exist at least one offer from another member of his conf
-	    					// not all members in conf have made offers, offer is not performed
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have made an offer for confederacy to governor " + otherPlayer.getGovenorName() + " but since only some members of their confederacy have made offers to you, the offers are invalid and no change is performed.");
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + p.getGovenorName() + " have made an offer for confederacy to you, but since only some members of your confederacy have made offers to governor " + p.getGovenorName() + ", the offers are invalid and no change is performed.");
-							anOffer.getThePlayer(g).getTurnInfo().addToLatestHighlights(" to " + anOffer.getOtherPlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-		    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(" from " + anOffer.getThePlayer(g).getGovenorName(), HighlightType.TYPE_DIPLOMACY_INCOMPLETE_CONF_OFFER);
-	    					anOffer.setOfferPerformed(true);
-	    				}else{ // neither is in a conf, add offer
-		    				anOffer.getOtherPlayer(g).addDiplomacyOffer(anOffer);
-		    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_OFFER);
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for " + anOffer.getSuggestedLevel());
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer for " + anOffer.getSuggestedLevel());
-		    				anOffer.setOfferPerformed(true);
-	    				}
-    				}else{
-	    				// add offer to other player
-	    				anOffer.getOtherPlayer(g).addDiplomacyOffer(anOffer);
-	    				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestHighlights(anOffer.getThePlayer(g).getGovenorName() + ";" + anOffer.getSuggestedLevel(), HighlightType.TYPE_DIPLOMACY_CHANGE_OFFER);
-	    				if (anOffer.getSuggestedLevel() == DiplomacyLevel.LORD){
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for him to become your Lord and you his vassal");
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer to become his lord and he your vassal");
-	    				}else
-	    				if (anOffer.getSuggestedLevel() == DiplomacyLevel.VASSAL){
-	        				anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for him to become your vassal and you his lord" + anOffer.getSuggestedLevel());
-	        				anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer to become his vassal and he your lord");
-	    				}else{
-	    					anOffer.getThePlayer(g).getTurnInfo().addToLatestDiplomacyReport("You have sent an offer to Governor " + anOffer.getOtherPlayer(g).getGovenorName() + " for " + anOffer.getSuggestedLevel());
-	    					anOffer.getOtherPlayer(g).getTurnInfo().addToLatestDiplomacyReport("Governor " + anOffer.getThePlayer(g).getGovenorName() + " have sent you an offer for " + anOffer.getSuggestedLevel());
-	    				}
-	    				anOffer.setOfferPerformed(true);
-    				}
-    			}
-    		}
-    	}
-	}
-  }
-  
   public boolean haveConfOrder(Player anotherPlayer){
 	  return checkDiplomacyChange(anotherPlayer, DiplomacyLevel.CONFEDERACY);
   }
@@ -602,13 +197,11 @@ public class Orders implements Serializable {
 	  return checkDiplomacyOffer(anotherPlayer, DiplomacyLevel.CONFEDERACY);
   }
 
-  private void addExpenses(Expense aExpense, Galaxy aGalaxy){
-	  cost = cost + aExpense.getCost(this, aGalaxy);
+  private void addExpenses(Expense aExpense){
 	  expenses.add(aExpense);
   }
   
-  private void removeExpense(Expense aExpense , Galaxy aGalaxy){
-	  cost = cost - aExpense.getCost(this, aGalaxy);
+  private void removeExpense(Expense aExpense){
 	  expenses.remove(aExpense);
   }
   /*
@@ -617,16 +210,7 @@ public class Orders implements Serializable {
 	  expenses.remove(index);
   }*/
   
-  private boolean checkLordVassall(DiplomacyLevel level1, DiplomacyLevel level2){
-	  boolean lordVassall = false;
-	  if ((level1 == DiplomacyLevel.LORD) & (level2 == DiplomacyLevel.VASSAL)){
-		  lordVassall = true;
-	  }else
-	  if ((level2 == DiplomacyLevel.LORD) & (level1 == DiplomacyLevel.VASSAL)){
-		  lordVassall = true;
-	  }
-	  return lordVassall;
-  }
+
   
   public DiplomacyOffer findDiplomacyOffer(Player otherPlayer){
 	  DiplomacyOffer foundOffer = null;
@@ -712,15 +296,6 @@ public class Orders implements Serializable {
 		  }
 	  }
 	  return found;
-  }
-
-  public int getExpensesCost(Galaxy aGalaxy){
-    int totalCost = 0;
-    for (int i = 0; i < expenses.size(); i++){
-      Expense tempExpense = (Expense)expenses.get(i);
-      totalCost = totalCost + tempExpense.getCost(this, aGalaxy);
-    }
-    return totalCost;
   }
 
   public List<Expense> getExpenses(){
@@ -974,7 +549,7 @@ public class Orders implements Serializable {
   }
   
   public void addNewBuilding(Planet aPlanet, String playerName, BuildingType tempbuilding, Galaxy aGalaxy){
-	  addExpenses(new Expense("building", tempbuilding, playerName,aPlanet, null), aGalaxy);
+	  addExpenses(new Expense("building", tempbuilding, playerName,aPlanet, null));
   }
   
   //public void removeNewBuilding(Planet aPlanet, BuildingType tempbuilding){
@@ -988,13 +563,13 @@ public class Orders implements Serializable {
       }
     }
     if (findIndex > -1){
-    	removeExpense(expenses.get(findIndex), aGalaxy);
+    	removeExpense(expenses.get(findIndex));
     }
     
   }
   
   public void addReconstruct(Planet aPlanet, Player aPlayer){
-	  addExpenses(new Expense("reconstruct",aPlanet,aPlayer), aPlayer.getGalaxy());
+	  addExpenses(new Expense("reconstruct",aPlanet,aPlayer));
   }
 
   public void removeReconstruct(Planet aPlanet, Galaxy aGalaxy){
@@ -1006,12 +581,12 @@ public class Orders implements Serializable {
 			}
 	  }
 	  if (findIndex > -1){
-	    	removeExpense(expenses.get(findIndex), aGalaxy);
+	    	removeExpense(expenses.get(findIndex));
 	    }
 }
 
   public void addIncPop(Planet aPlanet,Player aPlayer){
-	  addExpenses(new Expense("pop",aPlanet,aPlayer), aPlayer.getGalaxy());
+	  addExpenses(new Expense("pop",aPlanet,aPlayer));
   }
 	  
   public void removeIncPop(Planet aPlanet, Galaxy aGalaxy){
@@ -1023,12 +598,12 @@ public class Orders implements Serializable {
       }
     }
     if (findIndex > -1){
-    	removeExpense(expenses.get(findIndex), aGalaxy);
+    	removeExpense(expenses.get(findIndex));
     }
   }
 
   public void addIncRes(Planet aPlanet, Player aPlayer){
-	  addExpenses(new Expense("res",aPlanet,aPlayer), aPlayer.getGalaxy());
+	  addExpenses(new Expense("res",aPlanet,aPlayer));
   }
 
   public void removeIncRes(Planet aPlanet, Galaxy aGalaxy){
@@ -1040,7 +615,7 @@ public class Orders implements Serializable {
       }
     }
     if (findIndex > -1){
-    	removeExpense(expenses.get(findIndex), aGalaxy);
+    	removeExpense(expenses.get(findIndex));
     }
    }
 
@@ -1458,11 +1033,11 @@ public class Orders implements Serializable {
       }
     }
     if (findIndex > -1){
-    	removeExpense(expenses.get(findIndex), recipient.getGalaxy());
+    	removeExpense(expenses.get(findIndex));
     }
     
     if (aSum > 0){
-    	addExpenses(new Expense("transaction",recipient,aSum), recipient.getGalaxy());
+    	addExpenses(new Expense("transaction",recipient,aSum));
     }
   }
 
@@ -1618,17 +1193,17 @@ public class Orders implements Serializable {
 
   public void addBuildShip(Building aBuilding, SpaceshipType sst, Player  aPlayer){
     // skapa ny order
-	  addExpenses(new Expense("buildship",aBuilding,sst, aPlayer.getName()), aPlayer.getGalaxy());
+	  addExpenses(new Expense("buildship",aBuilding,sst, aPlayer.getName()));
   }
   
   public void addBuildTroop(Building aBuilding, TroopType tt, Player  aPlayer){
     // skapa ny order
-	  addExpenses(new Expense("buildtroop",aBuilding,tt,aPlayer.getName()), aPlayer.getGalaxy());
+	  addExpenses(new Expense("buildtroop",aBuilding,tt,aPlayer.getName()));
   }
   
   public void addBuildVIP(Building aBuilding, VIPType vt, Player  aPlayer){
     // skapa ny order
-	  addExpenses(new Expense("buildVIP",aBuilding,vt,aPlayer.getName()), aPlayer.getGalaxy());
+	  addExpenses(new Expense("buildVIP",aBuilding,vt,aPlayer.getName()));
   }
 
   public void removeAllBuildShip(Building aBuilding, Galaxy aGalaxy){
@@ -1645,7 +1220,7 @@ public class Orders implements Serializable {
     for (int j = nrFoundIndexes-1; j >= 0; j--){
 	  Logger.finest( "Removing: " + j);
 	  Logger.finest( "Removing: " + expenses.get(j).getSpaceshipTypeName());
-	  removeExpense(expenses.get(removeIndexes[j]), aGalaxy);
+	  removeExpense(expenses.get(removeIndexes[j]));
     }
   }
   
@@ -1662,7 +1237,7 @@ public class Orders implements Serializable {
     }
     for (int j = nrFoundIndexes-1; j >= 0; j--){
 	  Logger.finest("Removing: " + j);
-	  removeExpense(expenses.get(removeIndexes[j]), aGalaxy);
+	  removeExpense(expenses.get(removeIndexes[j]));
 	}
   }
   
@@ -1675,7 +1250,7 @@ public class Orders implements Serializable {
     	}
     }
     if(foundIndexes >= 0){
-    	removeExpense(expenses.get(foundIndexes), aGalaxy);
+    	removeExpense(expenses.get(foundIndexes));
     }
   }
 
@@ -1707,14 +1282,14 @@ public class Orders implements Serializable {
       }
     }
     if (findIndex > -1){
-    	removeExpense(expenses.get(findIndex), aGalaxy);
+    	removeExpense(expenses.get(findIndex));
     }
   }
 
   public void addUppgradeBuilding(Building currentBuilding, BuildingType newBuilding, Player aPlayer){
 	  // skapa ny order om inte varvet redan �r satt att uppgradera
     if (!alreadyUpgrading(currentBuilding)){
-    	addExpenses(new Expense("building", newBuilding, aPlayer.getName(),currentBuilding.getLocation(), currentBuilding), aPlayer.getGalaxy());
+    	addExpenses(new Expense("building", newBuilding, aPlayer.getName(),currentBuilding.getLocation(), currentBuilding));
     }
   }
   
@@ -1781,20 +1356,6 @@ public class Orders implements Serializable {
 	  return found;
   }
   
-  // ska returnera en vektor med alla skeppstyper det finns byggorder på för currentBuilding.
-  // behöver ej testa för upgrading
-  public List<SpaceshipType> getAllShipBuilds(Building currentBuilding){
-    Vector<SpaceshipType> allsst = new Vector<SpaceshipType>();
-    for (int i = 0; i < expenses.size(); i++){
-      Expense tempExpense = (Expense)expenses.get(i);
-      if (tempExpense.isBuildingBuildingShip(currentBuilding)){
-    	  SpaceshipType aSpaceshipType = currentBuilding.getLocation().getPlayerInControl().findSpaceshipType(tempExpense.getSpaceshipTypeName());
-    	  allsst.addElement(aSpaceshipType);
-      }
-    }
-    return allsst;
-  }
-  
   public boolean haveSpaceshipTypeBuildOrder(SpaceshipType aSpaceshipType){
 	  for (int i = 0; i < expenses.size(); i++){
 	      Expense tempExpense = (Expense)expenses.get(i);
@@ -1810,7 +1371,7 @@ public class Orders implements Serializable {
 	  for (int i = 0; i < expenses.size(); i++){
 	      Expense tempExpense = (Expense)expenses.get(i);
 	      if (aBuildingType.getName().equals(tempExpense.getBuildingTypeName())){
-	    	  if(buildingId < 0 || buildingId != tempExpense.currentBuildingId){
+	    	  if(buildingId < 0 || buildingId != tempExpense.getCurrentBuildingId()){
 	    		  return true;
 	    	  }
 	      }
@@ -1927,16 +1488,16 @@ public class Orders implements Serializable {
     // remove old any bid to this offer
     Expense oldExpenseBid = getBidToOffer(aOffer);
     if (oldExpenseBid != null){
-    	removeExpense(oldExpenseBid, aPlayer.getGalaxy());
+    	removeExpense(oldExpenseBid);
     }
     // add new bid if sum > 0
     if (aSum > 0){
     	if( destination == null){
-    		addExpenses(new Expense("blackmarketbid",new BlackMarketBid(aSum,aOffer,null),aPlayer), aPlayer.getGalaxy());
+    		addExpenses(new Expense("blackmarketbid",new BlackMarketBid(aSum,aOffer,null),aPlayer));
     	}
     	else
     	{
-    		addExpenses(new Expense("blackmarketbid",new BlackMarketBid(aSum,aOffer,destination.getName()),aPlayer), aPlayer.getGalaxy());	
+    		addExpenses(new Expense("blackmarketbid",new BlackMarketBid(aSum,aOffer,destination.getName()),aPlayer));
     	}	
     }
   }
@@ -2072,7 +1633,7 @@ public class Orders implements Serializable {
 	public void addResearchOrder(ResearchOrder researchOrder, Player p) {
 		this.researchOrder.add(researchOrder);
 		if(researchOrder.getCost()> 0){
-			addExpenses(new Expense("research", researchOrder, p), p.getGalaxy());
+			addExpenses(new Expense("research", researchOrder, p));
 		}
 		
 		
@@ -2087,7 +1648,7 @@ public class Orders implements Serializable {
 	      }
 	    }
 	    if (findIndex > -1){
-	    	removeExpense(expenses.get(findIndex), aGalaxy);
+	    	removeExpense(expenses.get(findIndex));
 	    }
 		this.researchOrder.remove(researchOrder);
 	}
@@ -2106,7 +1667,7 @@ public class Orders implements Serializable {
 	      }
 	    }
 	    if (findIndex > -1){
-	    	removeExpense(expenses.get(findIndex), aGalaxy);
+	    	removeExpense(expenses.get(findIndex));
 	    }
 	}
 	
@@ -2200,10 +1761,12 @@ public class Orders implements Serializable {
 		}
 		return tempShipList;
 	}
-	
+
+
 	/**
 	 * Return text lines for all orders (used in the app client)
 	 */
+	/*
 	public List<String> dumpOrders(Galaxy g, Player player){
 		List<String> ordersTextList = new ArrayList<String>();
 		// add expenses
@@ -2280,6 +1843,7 @@ public class Orders implements Serializable {
 		
 		return ordersTextList;
 	}
+	*/
 
 	@JsonIgnore
 	public int getOrdersCount(){

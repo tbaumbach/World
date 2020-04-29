@@ -77,10 +77,6 @@ public class Research implements Serializable {
 		return new Research(this);
 	}
 	
-	public void researchAdvantage(String advantageName, TurnInfo ti, Player p){
-		getAdvantage(advantageName).research(ti,p);
-	}
-	
 	public List<ResearchAdvantage> getAdvantages() {
 		return advantages;
 	}

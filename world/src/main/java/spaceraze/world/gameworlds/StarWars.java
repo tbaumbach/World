@@ -9,6 +9,7 @@ import spaceraze.world.SpaceshipType;
 import spaceraze.world.UniqueIdCounter;
 import spaceraze.world.VIPType;
 import spaceraze.world.enums.BlackMarketFrequency;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 
@@ -111,7 +112,7 @@ Sulanko Frigate			Poor Hull Small
  */                                                                                                                                        
 //Large                                                                                                                                               
 //Berserker Cruiser  //                                                                                                                          
-tempsst = new SpaceshipType("Berserker Cruiser","BCR",SpaceshipType.SIZE_LARGE,450,1000,SpaceshipRange.LONG,15,40,uniqueShipIdCounter,40,10);     
+tempsst = new SpaceshipType("Berserker Cruiser","BCR", SpaceShipSize.LARGE,450,1000,SpaceshipRange.LONG,15,40,uniqueShipIdCounter,40,10);
 tempsst.setDescription("Galactic Republic, Multicapable battleship ");                                                                             
 tempsst.setWeaponsStrengthMedium(20);                                                                                                             
 tempsst.setArmorSmall(95);                                                                                                                        
@@ -127,7 +128,7 @@ tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
 gw.addShipType(tempsst);                                                                                                                          
                                                                                                                                          
 //Venator Class V  //                                                                                                                          
-tempsst = new SpaceshipType("Venator Class V","VCV",SpaceshipType.SIZE_LARGE,600,1200,SpaceshipRange.LONG,15,40,uniqueShipIdCounter,40,10);     
+tempsst = new SpaceshipType("Venator Class V","VCV",SpaceShipSize.LARGE,600,1200,SpaceshipRange.LONG,15,40,uniqueShipIdCounter,40,10);
 tempsst.setDescription("Galactic Republic, Multicapable battleship ");                                                                             
 tempsst.setWeaponsStrengthMedium(20);                                                                                                             
 tempsst.setArmorSmall(95);                                                                                                                        
@@ -150,7 +151,7 @@ gw.addShipType(tempsst);
                                                                                                                                          
 //HUGE                                                                                                                                                
 //Guargantuan  //                                                                                                                                  
-tempsst = new SpaceshipType("Guargantuan","Guar",SpaceshipType.SIZE_HUGE,450,2000,SpaceshipRange.SHORT,20,65,uniqueShipIdCounter,40,15);          
+tempsst = new SpaceshipType("Guargantuan","Guar",SpaceShipSize.HUGE,450,2000,SpaceshipRange.SHORT,20,65,uniqueShipIdCounter,40,15);
 tempsst.setDescription("Galactic Republic, Huge Battleship");                                                  
 tempsst.setWeaponsStrengthMedium(60);                                                                                                             
 tempsst.setCanAppearOnBlackMarket(false);                                                                                                         
@@ -173,7 +174,7 @@ gw.addShipType(tempsst);
                                                                                                                                          
 //Medium                                                                                                                                              
 //Reliant Carrier  //                                                                                                                                
-tempsst = new SpaceshipType("Reliant Carrier","ReC",SpaceshipType.SIZE_MEDIUM,10,180,SpaceshipRange.LONG,2,5,uniqueShipIdCounter,5,5);               
+tempsst = new SpaceshipType("Reliant Carrier","ReC",SpaceShipSize.MEDIUM,10,180,SpaceshipRange.LONG,2,5,uniqueShipIdCounter,5,5);
 tempsst.setDescription("Galactic Republic, Merchant ship rebuilt to carrier");                                                                     
 tempsst.setSquadronCapacity(4);                                                                                                                   
 tempsst.setCanAppearOnBlackMarket(true);                                                                                                          
@@ -182,7 +183,7 @@ tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
 gw.addShipType(tempsst);                                                                                                                          
                                                                                                                                          
 //Meteor  //                                                                                                                        
-tempsst = new SpaceshipType("Meteor","Met",SpaceshipType.SIZE_MEDIUM,50,200,SpaceshipRange.LONG,5,10,uniqueShipIdCounter,10,10);   
+tempsst = new SpaceshipType("Meteor","Met",SpaceShipSize.MEDIUM,50,200,SpaceshipRange.LONG,5,10,uniqueShipIdCounter,10,10);
 tempsst.setDescription("Galactic Republic, Bombardment Cruiser. Against medium ships");                                                            
 tempsst.setWeaponsStrengthLarge(120);
 tempsst.setWeaponsMaxSalvoesLarge(3);
@@ -192,14 +193,14 @@ tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
 gw.addShipType(tempsst);                                                                                                                          
 
 //Ion Frigate  //                                                                                                                          
-tempsst = new SpaceshipType("Ion Frigate","Ion",SpaceshipType.SIZE_MEDIUM,50,350,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,40,40);     
+tempsst = new SpaceshipType("Ion Frigate","Ion",SpaceShipSize.MEDIUM,50,350,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,40,40);
 tempsst.setDescription("Galactic Republic, Anti-air Defence cruiser");                                                                             
 tempsst.setArmorSmall(50);                                                                                                                        
 tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);                                                                                                  
 gw.addShipType(tempsst);       
 
 //Reliant Troopship  //                                                                                                                          
-tempsst = new SpaceshipType("Reliant Troopship","Rel",SpaceshipType.SIZE_MEDIUM,100,500,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,15,15);     
+tempsst = new SpaceshipType("Reliant Troopship","Rel",SpaceShipSize.MEDIUM,100,500,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,15,15);
 tempsst.setDescription("Galactic Republic, TroopShip");                                                                             
 tempsst.setArmorSmall(50);
 tempsst.setBombardment(1);
@@ -209,7 +210,7 @@ tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
 gw.addShipType(tempsst);                                                                                                                          
                                                                                                                                          
 //Protector I  //                                                                                                                     
-tempsst = new SpaceshipType("Protector I","PI",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,5,11,uniqueShipIdCounter,10,15);
+tempsst = new SpaceshipType("Protector I","PI",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,5,11,uniqueShipIdCounter,10,15);
 tempsst.setDescription("Galactic Republic, Against medium ships");                                                          
 tempsst.setWeaponsStrengthMedium(50);                                                                                                             
 tempsst.setWeaponsMaxSalvoesMedium(3);
@@ -218,7 +219,7 @@ tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
 gw.addShipType(tempsst);                                                                                                                          
                                                                                                                                          
 //Protector II  //                                                                                                                           
-tempsst = new SpaceshipType("Protector II","PII",SpaceshipType.SIZE_MEDIUM,150,600,SpaceshipRange.LONG,7,13,uniqueShipIdCounter,25,15);      
+tempsst = new SpaceshipType("Protector II","PII",SpaceShipSize.MEDIUM,150,600,SpaceshipRange.LONG,7,13,uniqueShipIdCounter,25,15);
 tempsst.setDescription("Galactic Republic, Second Generation Cruiser");                                                                  
 tempsst.setCanAppearOnBlackMarket(true);                                                                                                          
 tempsst.setWeaponsStrengthMedium(25); 
@@ -233,7 +234,7 @@ gw.addShipType(tempsst);
 //SMALL                                                                                                                                               
 
 //Sulanko Frigate  //                                                                                                                           
-tempsst = new SpaceshipType("Sulanko Frigate","Suk",SpaceshipType.SIZE_SMALL,50,50,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,20,20);         
+tempsst = new SpaceshipType("Sulanko Frigate","Suk",SpaceShipSize.SMALL,50,50,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,20,20);
 tempsst.setDescription("Galactic Republic, Small allround Frigate");                                                                               
 tempsst.setWeaponsStrengthMedium(10);
 tempsst.setWeaponsMaxSalvoesMedium(10);
@@ -247,21 +248,21 @@ gw.addShipType(tempsst);
 //######## ( ) ########
 //Figters
 //VF  //
-tempsst = new SpaceshipType("V-Fighter","VF",SpaceshipType.SIZE_SMALL,15,20,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,12);
+tempsst = new SpaceshipType("V-Fighter","VF",SpaceShipSize.SMALL,15,20,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,12);
 tempsst.setDescription("Galactic Republic, First generation fighter");
 tempsst.setSquadron(true);
 tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
 gw.addShipType(tempsst);
 
 //N1  //
-tempsst = new SpaceshipType("Naboo Starfighter N-1","N1",SpaceshipType.SIZE_SMALL,20,35,SpaceshipRange.LONG,2,2,uniqueShipIdCounter,10,24);
+tempsst = new SpaceshipType("Naboo Starfighter N-1","N1",SpaceShipSize.SMALL,20,35,SpaceshipRange.LONG,2,2,uniqueShipIdCounter,10,24);
 tempsst.setDescription("Galactic Republic, Second genration fighter");
 tempsst.setSquadron(true);
 tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
 gw.addShipType(tempsst);
 
 //B5  //
-tempsst = new SpaceshipType("B5-Bomber","B5",SpaceshipType.SIZE_MEDIUM,10,60,SpaceshipRange.LONG,3,4,uniqueShipIdCounter,25,10);
+tempsst = new SpaceshipType("B5-Bomber","B5",SpaceShipSize.MEDIUM,10,60,SpaceshipRange.LONG,3,4,uniqueShipIdCounter,25,10);
 tempsst.setDescription("Galactic Republic, First Generation bomber");
 tempsst.setWeaponsStrengthMedium(20);
 tempsst.setSquadron(true);
@@ -272,7 +273,7 @@ tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
 gw.addShipType(tempsst);
 
 //B1  //
-tempsst = new SpaceshipType("B1-Bomber","B1",SpaceshipType.SIZE_SMALL,10,40,SpaceshipRange.NONE,2,2,uniqueShipIdCounter,25,15);
+tempsst = new SpaceshipType("B1-Bomber","B1",SpaceShipSize.SMALL,10,40,SpaceshipRange.NONE,2,2,uniqueShipIdCounter,25,15);
 tempsst.setDescription("Trade Federation Second genration bomber");
 tempsst.setWeaponsStrengthMedium(15);
 tempsst.setSquadron(true);
@@ -286,21 +287,21 @@ gw.addShipType(tempsst);
 //######## ( ) ########
 //  Figters
     //DF-x10  //
-    tempsst = new SpaceshipType("DF-x10","F10",SpaceshipType.SIZE_SMALL,15,15,SpaceshipRange.NONE,1,2,uniqueShipIdCounter,10,12);
+    tempsst = new SpaceshipType("DF-x10","F10",SpaceShipSize.SMALL,15,15,SpaceshipRange.NONE,1,2,uniqueShipIdCounter,10,12);
     tempsst.setDescription("Trade Federation First generation fighter");
     tempsst.setSquadron(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
     gw.addShipType(tempsst);
 
     //DF-x14  //
-    tempsst = new SpaceshipType("DF-x14","F14",SpaceshipType.SIZE_MEDIUM,25,20,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,10,25);
+    tempsst = new SpaceshipType("DF-x14","F14",SpaceShipSize.MEDIUM,25,20,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,10,25);
     tempsst.setDescription("Trade Federation Second genration fighter");
     tempsst.setSquadron(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
     gw.addShipType(tempsst);
 
     //DB-y44  //
-    tempsst = new SpaceshipType("DB-y44","B44",SpaceshipType.SIZE_MEDIUM,15,60,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,25,10);
+    tempsst = new SpaceshipType("DB-y44","B44",SpaceShipSize.MEDIUM,15,60,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,25,10);
     tempsst.setDescription("Trade Federation First Generation bomber");
     tempsst.setWeaponsStrengthMedium(25);
     tempsst.setSquadron(true);
@@ -312,7 +313,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //DB-y27  //
-    tempsst = new SpaceshipType("DB-y27","B27",SpaceshipType.SIZE_SMALL,15,20,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,25,10);
+    tempsst = new SpaceshipType("DB-y27","B27",SpaceShipSize.SMALL,15,20,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,25,10);
     tempsst.setDescription("Trade Federation Second genration bomber");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setSquadron(true);
@@ -327,7 +328,7 @@ gw.addShipType(tempsst);
 //  ######## ( ) ########   
 //Large
     //Droid control ship  //
-    tempsst = new SpaceshipType("Droid control ship","DCS",SpaceshipType.SIZE_LARGE,900,800,SpaceshipRange.LONG,15,45,uniqueShipIdCounter,40,10);
+    tempsst = new SpaceshipType("Droid control ship","DCS",SpaceShipSize.LARGE,900,800,SpaceshipRange.LONG,15,45,uniqueShipIdCounter,40,10);
     tempsst.setDescription("Trade Federation, Command ship increases initiative");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(55);
@@ -346,7 +347,7 @@ gw.addShipType(tempsst);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
     gw.addShipType(tempsst);
 
-    tempsst = new SpaceshipType("Droid Battle ship","DBS",SpaceshipType.SIZE_LARGE,900,800,SpaceshipRange.LONG,15,45,uniqueShipIdCounter,40,10);
+    tempsst = new SpaceshipType("Droid Battle ship","DBS",SpaceShipSize.LARGE,900,800,SpaceshipRange.LONG,15,45,uniqueShipIdCounter,40,10);
     tempsst.setDescription("Trade Federation, Multicapable battleship ");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(95);
@@ -366,7 +367,7 @@ gw.addShipType(tempsst);
 //  ######## ( ) ########
 //HUGE
     //Battlestar  //
-    tempsst = new SpaceshipType("Battlestar","BaS",SpaceshipType.SIZE_HUGE,900,3000,SpaceshipRange.SHORT,45,115,uniqueShipIdCounter,40,15);
+    tempsst = new SpaceshipType("Battlestar","BaS",SpaceShipSize.HUGE,900,3000,SpaceshipRange.SHORT,45,115,uniqueShipIdCounter,40,15);
     tempsst.setDescription("Trade Federation, First generation Death star. Superior to most ships");
     tempsst.setWeaponsStrengthMedium(60);
     tempsst.setCanAppearOnBlackMarket(false);
@@ -388,7 +389,7 @@ gw.addShipType(tempsst);
 //  ######## ( ) ########
 //Medium
     //Fast Carrier  //
-    tempsst = new SpaceshipType("Fast Carrier","FCa",SpaceshipType.SIZE_MEDIUM,10,300,SpaceshipRange.LONG,3,7,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Fast Carrier","FCa",SpaceShipSize.MEDIUM,10,300,SpaceshipRange.LONG,3,7,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Trade Federation, Merchant ship rebuilt to carrier");
     tempsst.setSquadronCapacity(6);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -397,7 +398,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Improved Dreadnought  //
-    tempsst = new SpaceshipType("Improved Dreadnought","iDrd",SpaceshipType.SIZE_MEDIUM,50,400,SpaceshipRange.LONG,8,12,uniqueShipIdCounter,20,10);
+    tempsst = new SpaceshipType("Improved Dreadnought","iDrd",SpaceShipSize.MEDIUM,50,400,SpaceshipRange.LONG,8,12,uniqueShipIdCounter,20,10);
     tempsst.setDescription("Trade Federation, Bombardment Cruiser. Against medium ships");
     tempsst.setWeaponsStrengthMedium(30);
     tempsst.setWeaponsStrengthLarge(10);
@@ -411,7 +412,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Acclamator cruiser  //
-    tempsst = new SpaceshipType("Acclamator cruiser","Acc",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,8,15,uniqueShipIdCounter,40,40);
+    tempsst = new SpaceshipType("Acclamator cruiser","Acc",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,8,15,uniqueShipIdCounter,40,40);
     tempsst.setDescription("Trade Federation, Anti-air Defence cruiser");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsMaxSalvoesMedium(20);
@@ -420,7 +421,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Broadside-class cruiser  //
-    tempsst = new SpaceshipType("Broadside Class cruiser","BCC",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,9,17,uniqueShipIdCounter,15,15);
+    tempsst = new SpaceshipType("Broadside Class cruiser","BCC",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,9,17,uniqueShipIdCounter,15,15);
     tempsst.setDescription("Trade Federation, Troopship and Cruiser. Against larger ships");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsStrengthLarge(30);
@@ -432,7 +433,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Sullustan cruiser  //
-    tempsst = new SpaceshipType("Sullustan Cruiser","Sul",SpaceshipType.SIZE_MEDIUM,150,500,SpaceshipRange.LONG,10,19,uniqueShipIdCounter,15,15);
+    tempsst = new SpaceshipType("Sullustan Cruiser","Sul",SpaceShipSize.MEDIUM,150,500,SpaceshipRange.LONG,10,19,uniqueShipIdCounter,15,15);
     tempsst.setDescription("Trade Federation, Allround cruiser with planet survey");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setWeaponsStrengthMedium(15);
@@ -449,7 +450,7 @@ gw.addShipType(tempsst);
 //SMALL
     
     //Free Starrunner  //
-    tempsst = new SpaceshipType("Free Starrunner","FrS",SpaceshipType.SIZE_SMALL,30,30,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,10,10);
+    tempsst = new SpaceshipType("Free Starrunner","FrS",SpaceShipSize.SMALL,30,30,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,10,10);
     tempsst.setDescription("Trade Federation, Smugler, Trader, pirate earns money on enemy planets");
     tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -458,7 +459,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Sullustan Frigate  //
-    tempsst = new SpaceshipType("Sullustan Frigate","Suf",SpaceshipType.SIZE_SMALL,50,100,SpaceshipRange.LONG,3,9,uniqueShipIdCounter,20,15);
+    tempsst = new SpaceshipType("Sullustan Frigate","Suf",SpaceShipSize.SMALL,50,100,SpaceshipRange.LONG,3,9,uniqueShipIdCounter,20,15);
     tempsst.setDescription("Trade Federation, Small allround Frigate");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsMaxSalvoesMedium(20);
@@ -471,7 +472,7 @@ gw.addShipType(tempsst);
 //////////////////////////////////////Rebel Capital ships//////////////////////////////////////////////////////  
     
     //Millenium Falcon  //
-    tempsst = new SpaceshipType("Millenium Falcon","Mil",SpaceshipType.SIZE_SMALL,30,30,SpaceshipRange.LONG,1,1,uniqueShipIdCounter,10,10);
+    tempsst = new SpaceshipType("Millenium Falcon","Mil",SpaceShipSize.SMALL,30,30,SpaceshipRange.LONG,1,1,uniqueShipIdCounter,10,10);
     tempsst.setDescription("Rebel, Planet survey and smuggler ship earns money on enemy planets");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setIncEnemyOpenBonus(1);
@@ -481,7 +482,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Corellian Gunship  //
-    tempsst = new SpaceshipType("Corellian Gunship","CrG",SpaceshipType.SIZE_SMALL,50,120,SpaceshipRange.LONG,2,5,uniqueShipIdCounter,25,20);
+    tempsst = new SpaceshipType("Corellian Gunship","CrG",SpaceShipSize.SMALL,50,120,SpaceshipRange.LONG,2,5,uniqueShipIdCounter,25,20);
     tempsst.setDescription("Rebel, Small Anti-air corvette");
     tempsst.setWeaponsStrengthMedium(5);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -489,7 +490,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Dreadnaught  //
-    tempsst = new SpaceshipType("Dreadnaught","Drd",SpaceshipType.SIZE_MEDIUM,50,300,SpaceshipRange.LONG,5,9,uniqueShipIdCounter,20,10);
+    tempsst = new SpaceshipType("Dreadnaught","Drd",SpaceShipSize.MEDIUM,50,300,SpaceshipRange.LONG,5,9,uniqueShipIdCounter,20,10);
     tempsst.setDescription("Rebel, Cruiser with bombardment capabilities. Medium - Large targets");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setWeaponsStrengthLarge(15);
@@ -500,7 +501,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Nebulon-B Frigate  //
-    tempsst = new SpaceshipType("Nebulon-B Frigate","NebB",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,20,30);
+    tempsst = new SpaceshipType("Nebulon-B Frigate","NebB",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,6,12,uniqueShipIdCounter,20,30);
     tempsst.setDescription("Rebel, Medium Anti-air Cruiser, with carrier capabilities");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsMaxSalvoesMedium(40);
@@ -510,7 +511,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Assault frigate  //
-    tempsst = new SpaceshipType("Assault frigate","AsF",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,7,14,uniqueShipIdCounter,15,15);
+    tempsst = new SpaceshipType("Assault frigate","AsF",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,7,14,uniqueShipIdCounter,15,15);
     tempsst.setDescription("Rebel, Planet Besiege ship. Troops and specialised equipment takes down 2 resistance per turn");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsStrengthLarge(30);
@@ -522,7 +523,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Liberator Cruiser  //
-    tempsst = new SpaceshipType("Liberator Cruiser","Lib",SpaceshipType.SIZE_MEDIUM,150,500,SpaceshipRange.LONG,8,16,uniqueShipIdCounter,15,15);
+    tempsst = new SpaceshipType("Liberator Cruiser","Lib",SpaceShipSize.MEDIUM,150,500,SpaceshipRange.LONG,8,16,uniqueShipIdCounter,15,15);
     tempsst.setDescription("Rebel, Carrier specialised against medium ships an planet survey");
     tempsst.setWeaponsStrengthMedium(30);
     tempsst.setWeaponsMaxSalvoesMedium(20);
@@ -535,7 +536,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Mon Calamari Cruiser  //
-    tempsst = new SpaceshipType("Mon Calamari Cruiser","MCC",SpaceshipType.SIZE_LARGE,300,1100,SpaceshipRange.SHORT,12,30,uniqueShipIdCounter,25,15);
+    tempsst = new SpaceshipType("Mon Calamari Cruiser","MCC",SpaceShipSize.LARGE,300,1100,SpaceshipRange.SHORT,12,30,uniqueShipIdCounter,25,15);
     tempsst.setDescription("Rebel, The cornerstone against Medium - Large ships");
     tempsst.setWeaponsStrengthMedium(30);
     tempsst.setArmorSmall(85);
@@ -554,7 +555,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
     
     //Dauntless Cruiser  //
-    tempsst = new SpaceshipType("Dauntless Cruiser","DaC",SpaceshipType.SIZE_LARGE,600,2200,SpaceshipRange.SHORT,22,50,uniqueShipIdCounter,25,20);
+    tempsst = new SpaceshipType("Dauntless Cruiser","DaC",SpaceShipSize.LARGE,600,2200,SpaceshipRange.SHORT,22,50,uniqueShipIdCounter,25,20);
     tempsst.setDescription("Rebel, Developed to meet the threat from ISD and SSD");
     tempsst.setCanAppearOnBlackMarket(false);
     tempsst.setWeaponsStrengthMedium(20);
@@ -573,7 +574,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Bulwark Battlecruiser  //
-    tempsst = new SpaceshipType("Bulwark Battlecruiser","BBC",SpaceshipType.SIZE_HUGE,900,3300,SpaceshipRange.SHORT,28,75,uniqueShipIdCounter,40,15);
+    tempsst = new SpaceshipType("Bulwark Battlecruiser","BBC",SpaceShipSize.HUGE,900,3300,SpaceshipRange.SHORT,28,75,uniqueShipIdCounter,40,15);
     tempsst.setDescription("Especially Developed to meet SSD and Huge Ships");
     tempsst.setCanAppearOnBlackMarket(false);
     tempsst.setArmorSmall(95);
@@ -594,7 +595,7 @@ gw.addShipType(tempsst);
 //  ######## ( Imperial Capital ships) ########
         
     //Lambda Shuttle  //
-    tempsst = new SpaceshipType("Lambda Shuttle","Shu",SpaceshipType.SIZE_SMALL,30,30,SpaceshipRange.LONG,1,1,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Lambda Shuttle","Shu",SpaceShipSize.SMALL,30,30,SpaceshipRange.LONG,1,1,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Imperial, Small transport ship");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -602,14 +603,14 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Lancer Frigate  //
-    tempsst = new SpaceshipType("Lancer Frigate","Lan",SpaceshipType.SIZE_SMALL,90,150,SpaceshipRange.LONG,3,6,uniqueShipIdCounter,15,40);
+    tempsst = new SpaceshipType("Lancer Frigate","Lan",SpaceShipSize.SMALL,90,150,SpaceshipRange.LONG,3,6,uniqueShipIdCounter,15,40);
     tempsst.setDescription("Imperial, Anti-air Frigate");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
     gw.addShipType(tempsst);
 
     //Carrack Light Cruiser  //
-    tempsst = new SpaceshipType("Carrack Light Cruiser","Car",SpaceshipType.SIZE_SMALL,90,100,SpaceshipRange.LONG,2,6,uniqueShipIdCounter,20,10);
+    tempsst = new SpaceshipType("Carrack Light Cruiser","Car",SpaceShipSize.SMALL,90,100,SpaceshipRange.LONG,2,6,uniqueShipIdCounter,20,10);
     tempsst.setDescription("Imperial, Small allround ship that can bombardment");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsStrengthLarge(10);
@@ -620,7 +621,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Nebulon-A Frigate  //
-    tempsst = new SpaceshipType("Nebulon-A Frigate","NebA",SpaceshipType.SIZE_MEDIUM,100,400,SpaceshipRange.LONG,5,8,uniqueShipIdCounter,15,20);
+    tempsst = new SpaceshipType("Nebulon-A Frigate","NebA",SpaceShipSize.MEDIUM,100,400,SpaceshipRange.LONG,5,8,uniqueShipIdCounter,15,20);
     tempsst.setDescription("Imperial, Deigned to meet medium ship. Small Squadron capacity");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(50);
@@ -635,7 +636,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Interdictor Cruiser  //
-    tempsst = new SpaceshipType("Interdictor Cruiser","Int",SpaceshipType.SIZE_MEDIUM,150,400,SpaceshipRange.LONG,5,12,uniqueShipIdCounter,10,10);
+    tempsst = new SpaceshipType("Interdictor Cruiser","Int",SpaceShipSize.MEDIUM,150,400,SpaceshipRange.LONG,5,12,uniqueShipIdCounter,10,10);
     tempsst.setDescription("Imperial, With giant tractor beams it stops other ships to hyperjump and Improved besiege of planets");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(50);
@@ -649,7 +650,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Victory Destroyer  //
-    tempsst = new SpaceshipType("Victory Destroyer","VSD",SpaceshipType.SIZE_LARGE,200,900,SpaceshipRange.SHORT,9,20,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Victory Destroyer","VSD",SpaceShipSize.LARGE,200,900,SpaceshipRange.SHORT,9,20,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Imperial, Once the largest ship in the universe designed to attack Medium ships");
     tempsst.setWeaponsStrengthMedium(30);
     tempsst.setArmorSmall(85);
@@ -666,7 +667,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
  
     //Victory II Star Destroyer  //
-    tempsst = new SpaceshipType("Victory II Star Destroyer","VSD2",SpaceshipType.SIZE_LARGE,225,950,SpaceshipRange.SHORT,10,25,uniqueShipIdCounter,30,15);
+    tempsst = new SpaceshipType("Victory II Star Destroyer","VSD2",SpaceShipSize.LARGE,225,950,SpaceshipRange.SHORT,10,25,uniqueShipIdCounter,30,15);
     tempsst.setDescription("Imperial, Improved verison with better capabilities agianst large ships");
     tempsst.setWeaponsStrengthMedium(25);
     tempsst.setArmorSmall(85);
@@ -687,7 +688,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Imperial Star Destroyer  //
-    tempsst = new SpaceshipType("Imperial Star Destroyer","ISD",SpaceshipType.SIZE_LARGE,400,1300,SpaceshipRange.SHORT,14,40,uniqueShipIdCounter,40,10);
+    tempsst = new SpaceshipType("Imperial Star Destroyer","ISD",SpaceShipSize.LARGE,400,1300,SpaceshipRange.SHORT,14,40,uniqueShipIdCounter,40,10);
     tempsst.setDescription("Imperial, Excellent Against Large and huge ships");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(85);
@@ -706,7 +707,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Imperial Star Destroyer II  //
-    tempsst = new SpaceshipType("Imperial Star Destroyer II","ISD2",SpaceshipType.SIZE_LARGE,450,1500,SpaceshipRange.SHORT,16,50,uniqueShipIdCounter,25,15);
+    tempsst = new SpaceshipType("Imperial Star Destroyer II","ISD2",SpaceShipSize.LARGE,450,1500,SpaceshipRange.SHORT,16,50,uniqueShipIdCounter,25,15);
     tempsst.setDescription("Imperial, Best against Large and huge ships");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setCanAppearOnBlackMarket(false);
@@ -726,7 +727,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Super Star Destroyer  //
-    tempsst = new SpaceshipType("Super Star Destroyer","SSD",SpaceshipType.SIZE_HUGE,700,4500,SpaceshipRange.SHORT,30,100,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Super Star Destroyer","SSD",SpaceShipSize.HUGE,700,4500,SpaceshipRange.SHORT,30,100,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Imperial, The best ship against Huge ships");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setArmorSmall(95);
@@ -745,7 +746,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Death Star  //
-    tempsst = new SpaceshipType("Death Star","DS",SpaceshipType.SIZE_HUGE,5000,10000,SpaceshipRange.SHORT,80,500,uniqueShipIdCounter,20,10);
+    tempsst = new SpaceshipType("Death Star","DS",SpaceShipSize.HUGE,5000,10000,SpaceshipRange.SHORT,80,500,uniqueShipIdCounter,20,10);
     tempsst.setDescription("Imperial, DEATH STAR the name says it all!");
     tempsst.setWeaponsStrengthMedium(50);
     tempsst.setWeaponsStrengthLarge(5000);
@@ -765,7 +766,7 @@ gw.addShipType(tempsst);
 //  ######## ( Rebel Fighter ) ########
     
     //Z-95  //
-    tempsst = new SpaceshipType("Z-95","Z95",SpaceshipType.SIZE_SMALL,0,40,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,15);
+    tempsst = new SpaceshipType("Z-95","Z95",SpaceShipSize.SMALL,0,40,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,15);
     tempsst.setDescription("Cheap Efficent Fighter");
     tempsst.setWeaponsStrengthMedium(5);
     tempsst.setSquadron(true);
@@ -774,7 +775,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //X-Wing  //
-    tempsst = new SpaceshipType("X-Wing","X-w",SpaceshipType.SIZE_SMALL,20,40,SpaceshipRange.LONG,2,3,uniqueShipIdCounter,15,25);
+    tempsst = new SpaceshipType("X-Wing","X-w",SpaceShipSize.SMALL,20,40,SpaceshipRange.LONG,2,3,uniqueShipIdCounter,15,25);
     tempsst.setDescription("Rebels, Second generation fighter");
     tempsst.setWeaponsStrengthMedium(5);
     tempsst.setSquadron(true);
@@ -783,7 +784,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //E-Wing  //
-    tempsst = new SpaceshipType("E-Wing","E-w",SpaceshipType.SIZE_MEDIUM,20,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,15,30);
+    tempsst = new SpaceshipType("E-Wing","E-w",SpaceShipSize.MEDIUM,20,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,15,30);
     tempsst.setDescription("Rebels, Third generation fighter");
     tempsst.setWeaponsStrengthMedium(5);
     tempsst.setSquadron(true);
@@ -792,14 +793,14 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //A-Wing  //
-    tempsst = new SpaceshipType("A-Wing","A-w",SpaceshipType.SIZE_SMALL,15,25,SpaceshipRange.LONG,1,2,uniqueShipIdCounter,10,20);
+    tempsst = new SpaceshipType("A-Wing","A-w",SpaceShipSize.SMALL,15,25,SpaceshipRange.LONG,1,2,uniqueShipIdCounter,10,20);
     tempsst.setDescription("Rebels, Cheap fighter with an Hyperdrive");
     tempsst.setSquadron(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
     gw.addShipType(tempsst);
 
     //B-Wing  //
-    tempsst = new SpaceshipType("B-Wing","B-w",SpaceshipType.SIZE_MEDIUM,15,50,SpaceshipRange.LONG,3,5,uniqueShipIdCounter,25,15);
+    tempsst = new SpaceshipType("B-Wing","B-w",SpaceShipSize.MEDIUM,15,50,SpaceshipRange.LONG,3,5,uniqueShipIdCounter,25,15);
     tempsst.setDescription("Rebels, Heavy Fighter-Bomber, Best allround Sqaudron");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setSquadron(true);
@@ -811,7 +812,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Y-Wing  //
-    tempsst = new SpaceshipType("Y-Wing","Y-w",SpaceshipType.SIZE_SMALL,15,20,SpaceshipRange.LONG,2,3,uniqueShipIdCounter,20,7);
+    tempsst = new SpaceshipType("Y-Wing","Y-w",SpaceShipSize.SMALL,15,20,SpaceshipRange.LONG,2,3,uniqueShipIdCounter,20,7);
     tempsst.setDescription("Rebels, First Generation Bomber");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setSquadron(true);
@@ -824,7 +825,7 @@ gw.addShipType(tempsst);
 //  ######## ( Imperial Fighter ) ########
     
     //TIE-Fighter  //
-    tempsst = new SpaceshipType("TIE-Fighter","TieF",SpaceshipType.SIZE_SMALL,0,22,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,17);
+    tempsst = new SpaceshipType("TIE-Fighter","TieF",SpaceShipSize.SMALL,0,22,SpaceshipRange.NONE,1,1,uniqueShipIdCounter,10,17);
     tempsst.setDescription("Empire, Cheap Fighter");
     tempsst.setSquadron(true);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -832,14 +833,14 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //TIE-Interceptor  //
-    tempsst = new SpaceshipType("TIE-Interceptor","TieI",SpaceshipType.SIZE_SMALL,0,25,SpaceshipRange.NONE,1,2,uniqueShipIdCounter,15,25);
+    tempsst = new SpaceshipType("TIE-Interceptor","TieI",SpaceShipSize.SMALL,0,25,SpaceshipRange.NONE,1,2,uniqueShipIdCounter,15,25);
     tempsst.setDescription("Empire, Second generation Tie-fighter");
     tempsst.setSquadron(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
     gw.addShipType(tempsst);
 
     //TIE-Bomber  //
-    tempsst = new SpaceshipType("TIE-Bomber","TieB",SpaceshipType.SIZE_SMALL,0,40,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,25,7);
+    tempsst = new SpaceshipType("TIE-Bomber","TieB",SpaceShipSize.SMALL,0,40,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,25,7);
     tempsst.setDescription("Empire, Heavy Bomber");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setSquadron(true);
@@ -850,7 +851,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //TIE-Advanced  //
-    tempsst = new SpaceshipType("TIE-Advanced","TieA",SpaceshipType.SIZE_SMALL,15,30,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,15,30);
+    tempsst = new SpaceshipType("TIE-Advanced","TieA",SpaceShipSize.SMALL,15,30,SpaceshipRange.NONE,2,3,uniqueShipIdCounter,15,30);
     tempsst.setDescription("Empire, Third generation Tie-fighter");
     tempsst.setWeaponsStrengthMedium(5);
     tempsst.setSquadron(true);
@@ -859,7 +860,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //TIE-Defender  //
-    tempsst = new SpaceshipType("TIE-Defender","TieD",SpaceshipType.SIZE_MEDIUM,20,35,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,35);
+    tempsst = new SpaceshipType("TIE-Defender","TieD",SpaceShipSize.MEDIUM,20,35,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,35);
     tempsst.setDescription("Empire, Only Empire Fighter/bomber with an hyperdrive.");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setSquadron(true);
@@ -870,7 +871,7 @@ gw.addShipType(tempsst);
 //  ######## ( Starting ships ) ########
     
     //Old Rebublic Cruiser  //
-    tempsst = new SpaceshipType("Old Rebublic Cruiser","RCr",SpaceshipType.SIZE_MEDIUM,0,300,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,20,5);
+    tempsst = new SpaceshipType("Old Rebublic Cruiser","RCr",SpaceShipSize.MEDIUM,0,300,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,20,5);
     tempsst.setDescription("Starting ship");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setWeaponsMaxSalvoesMedium(10);
@@ -879,7 +880,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Old Republic Carrier //
-    tempsst = new SpaceshipType("Old Republic Carrier","RCa",SpaceshipType.SIZE_SMALL,0,150,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,5,0);
+    tempsst = new SpaceshipType("Old Republic Carrier","RCa",SpaceShipSize.SMALL,0,150,SpaceshipRange.LONG,1,10,uniqueShipIdCounter,5,0);
     tempsst.setDescription("Starting Carrier");
     tempsst.setSquadronCapacity(2);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -888,7 +889,7 @@ gw.addShipType(tempsst);
     
     
      //Old Rebublic Fighter  //
-    tempsst = new SpaceshipType("Old Rebublic Fighter","ORF",SpaceshipType.SIZE_SMALL,0,30,SpaceshipRange.NONE,1,10,uniqueShipIdCounter,10,15);
+    tempsst = new SpaceshipType("Old Rebublic Fighter","ORF",SpaceShipSize.SMALL,0,30,SpaceshipRange.NONE,1,10,uniqueShipIdCounter,10,15);
     tempsst.setDescription("Starting Bomber");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setSquadron(true);
@@ -898,7 +899,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
     
      //Old Rebublic Bomber  //
-    tempsst = new SpaceshipType("Old Rebublic Bomber","ORB",SpaceshipType.SIZE_SMALL,0,40,SpaceshipRange.NONE,1,10,uniqueShipIdCounter,15,5);
+    tempsst = new SpaceshipType("Old Rebublic Bomber","ORB",SpaceShipSize.SMALL,0,40,SpaceshipRange.NONE,1,10,uniqueShipIdCounter,15,5);
     tempsst.setDescription("Starting Fighter");
     tempsst.setWeaponsStrengthMedium(10);
     tempsst.setSquadron(true);
@@ -910,14 +911,14 @@ gw.addShipType(tempsst);
 //  ######## ( Public ships ) ########    
 
     //Corellian Corvettte  //
-    tempsst = new SpaceshipType("Corellian Corvettte","CrV",SpaceshipType.SIZE_SMALL,70,70,SpaceshipRange.LONG,1,2,uniqueShipIdCounter,10,5);
+    tempsst = new SpaceshipType("Corellian Corvettte","CrV",SpaceShipSize.SMALL,70,70,SpaceshipRange.LONG,1,2,uniqueShipIdCounter,10,5);
     tempsst.setDescription("Cheap allround trasnport ship");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
     gw.addShipType(tempsst);
 
     //Galleon  //
-    tempsst = new SpaceshipType("Galleon","Gal",SpaceshipType.SIZE_SMALL,50,150,SpaceshipRange.LONG,2,2,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Galleon","Gal",SpaceShipSize.SMALL,50,150,SpaceshipRange.LONG,2,2,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Small Carrier");
     tempsst.setSquadronCapacity(2);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -925,7 +926,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Escort Carrier  //
-    tempsst = new SpaceshipType("Escort Carrier","Esc",SpaceshipType.SIZE_MEDIUM,100,300,SpaceshipRange.LONG,3,8,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Escort Carrier","Esc",SpaceShipSize.MEDIUM,100,300,SpaceshipRange.LONG,3,8,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Medium Carrier");
     tempsst.setSquadronCapacity(10);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -933,7 +934,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Star Galleon  //
-    tempsst = new SpaceshipType("Star Galleon","SGal",SpaceshipType.SIZE_LARGE,200,600,SpaceshipRange.SHORT,6,15,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Star Galleon","SGal",SpaceShipSize.LARGE,200,600,SpaceshipRange.SHORT,6,15,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Heavy Carrier");
     tempsst.setPsychWarfare(1);    
     tempsst.setSquadronCapacity(16);
@@ -943,21 +944,21 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
     
     // Long range freighter
-    tempsst = new SpaceshipType("Long Range Freighter","Lrf",SpaceshipType.SIZE_MEDIUM,10,20,SpaceshipRange.LONG,3,8,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Long Range Freighter","Lrf",SpaceShipSize.MEDIUM,10,20,SpaceshipRange.LONG,3,8,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Supplies Medium ships with material");
-    tempsst.setSupply(2);
+    tempsst.setSupply(SpaceShipSize.MEDIUM);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
     
     // Supply Freighter
-    tempsst = new SpaceshipType("Supply Freighter","SF",SpaceshipType.SIZE_MEDIUM,10,20,SpaceshipRange.SHORT,5,10,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Supply Freighter","SF",SpaceShipSize.MEDIUM,10,20,SpaceshipRange.SHORT,5,10,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Supplies Huge ships with material");
-	tempsst.setSupply(4);
+	tempsst.setSupply(SpaceShipSize.HUGE);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
 
     //Strike Cruiser  //
-    tempsst = new SpaceshipType("Strike Cruiser","Stc",SpaceshipType.SIZE_SMALL,50,100,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,5);
+    tempsst = new SpaceshipType("Strike Cruiser","Stc",SpaceShipSize.SMALL,50,100,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,5);
     tempsst.setDescription("Allround cruiser with Troops");
     tempsst.setPsychWarfare(1);
     tempsst.setCanAppearOnBlackMarket(true);
@@ -966,7 +967,7 @@ gw.addShipType(tempsst);
 
     
     //Torpedo Ship  //
-    tempsst = new SpaceshipType("Torpedo Ship","Tor",SpaceshipType.SIZE_MEDIUM,10,60,SpaceshipRange.NONE,3,4,uniqueShipIdCounter,5,5);
+    tempsst = new SpaceshipType("Torpedo Ship","Tor",SpaceShipSize.MEDIUM,10,60,SpaceshipRange.NONE,3,4,uniqueShipIdCounter,5,5);
     tempsst.setDescription("Weak against most, but great against Large and Huge");
     tempsst.setWeaponsStrengthMedium(20);
     tempsst.setSquadron(true);
@@ -980,7 +981,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Missile Boat  //
-    tempsst = new SpaceshipType("Missile Boat","Mis",SpaceshipType.SIZE_MEDIUM,10,60,SpaceshipRange.NONE,3,4,uniqueShipIdCounter,20,5);
+    tempsst = new SpaceshipType("Missile Boat","Mis",SpaceShipSize.MEDIUM,10,60,SpaceshipRange.NONE,3,4,uniqueShipIdCounter,20,5);
     tempsst.setDescription("Weak against most, but great against Medium and Small");
     tempsst.setWeaponsStrengthMedium(25);
     tempsst.setSquadron(true);
@@ -992,14 +993,14 @@ gw.addShipType(tempsst);
 //  ######## ( Defence plattforms ) ########    
     
     //Golan I  //
-    tempsst = new SpaceshipType("Golan I","GI",SpaceshipType.SIZE_SMALL,40,80,SpaceshipRange.NONE,1,5,uniqueShipIdCounter,25,10);
+    tempsst = new SpaceshipType("Golan I","GI",SpaceShipSize.SMALL,40,80,SpaceshipRange.NONE,1,5,uniqueShipIdCounter,25,10);
     tempsst.setDescription("Defence plattforms Level 1");
     tempsst.setSquadronCapacity(2);
     tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
     gw.addShipType(tempsst);
 
     //Golan II  //
-    tempsst = new SpaceshipType("Golan II","GII",SpaceshipType.SIZE_MEDIUM,150,300,SpaceshipRange.NONE,3,10,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Golan II","GII",SpaceShipSize.MEDIUM,150,300,SpaceshipRange.NONE,3,10,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Defence plattforms Level 2");
     tempsst.setWeaponsStrengthMedium(25);
     tempsst.setSquadronCapacity(4);
@@ -1007,7 +1008,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Golan III  //
-    tempsst = new SpaceshipType("Golan III","GIII",SpaceshipType.SIZE_LARGE,500,1000,SpaceshipRange.NONE,6,20,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Golan III","GIII",SpaceShipSize.LARGE,500,1000,SpaceshipRange.NONE,6,20,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Defence plattforms Level 3");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setWeaponsStrengthLarge(25);
@@ -1017,7 +1018,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Golan IV  //
-    tempsst = new SpaceshipType("Golan IV","GIV",SpaceshipType.SIZE_HUGE,1500,3000,SpaceshipRange.NONE,15,65,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Golan IV","GIV",SpaceShipSize.HUGE,1500,3000,SpaceshipRange.NONE,15,65,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Defence plattforms Level 4");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setWeaponsStrengthLarge(15);
@@ -1030,7 +1031,7 @@ gw.addShipType(tempsst);
 //  ######## ( Head Quarters ) ########    
     
     //Head Quarter  //
-    tempsst = new SpaceshipType("Rebel Head Quarter","RHQ",SpaceshipType.SIZE_MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Rebel Head Quarter","RHQ",SpaceShipSize.MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Head Quarters, Gives a bonus to closed Home planets");
     
     tempsst.setIncOwnClosedBonus(10);
@@ -1041,7 +1042,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Head Quarter  //
-    tempsst = new SpaceshipType("Trade Federation Head Quarter","THQ",SpaceshipType.SIZE_MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Trade Federation Head Quarter","THQ",SpaceShipSize.MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Head Quarters, If placed on open planets gives a great +7 income boost");
     tempsst.setIncOwnOpenBonus(2);
     tempsst.setIncOwnClosedBonus(2);
@@ -1052,7 +1053,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Head Quarter  //
-    tempsst = new SpaceshipType("Imperial Head Quarter","IHQ",SpaceshipType.SIZE_MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Imperial Head Quarter","IHQ",SpaceShipSize.MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Imperial Head Quarters, Gives greater income boost to open home planet");
     tempsst.setIncOwnOpenBonus(10);
     tempsst.setIncOwnClosedBonus(5);
@@ -1063,7 +1064,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Head Quarter  //
-    tempsst = new SpaceshipType("Galactic Republic HQ","GHQ",SpaceshipType.SIZE_MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Galactic Republic HQ","GHQ",SpaceShipSize.MEDIUM,700,900,SpaceshipRange.NONE,1,1000,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Galactic Republic Head Quarters, Gives greater income boost to open home planet");
     tempsst.setIncOwnOpenBonus(15);
     tempsst.setIncOwnClosedBonus(5);
@@ -1076,14 +1077,14 @@ gw.addShipType(tempsst);
 //  ######## ( NEUTRALA SKEPP ) ########
 
     //Space Fortress I  //
-    tempsst = new SpaceshipType("Space Fortress I","SFI",SpaceshipType.SIZE_SMALL,40,80,SpaceshipRange.NONE,1,50,uniqueShipIdCounter,25,10);
+    tempsst = new SpaceshipType("Space Fortress I","SFI",SpaceShipSize.SMALL,40,80,SpaceshipRange.NONE,1,50,uniqueShipIdCounter,25,10);
     tempsst.setDescription("Neutral planet Defence plattforms Level 1");
     tempsst.setSquadronCapacity(2);
     tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
     gw.addShipType(tempsst);
 
     //Space Fortress II  //
-    tempsst = new SpaceshipType("Space Fortress II","SFII",SpaceshipType.SIZE_MEDIUM,150,300,SpaceshipRange.NONE,1,100,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Space Fortress II","SFII",SpaceShipSize.MEDIUM,150,300,SpaceshipRange.NONE,1,100,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Neutral planet Defence plattforms Level 2");
     tempsst.setWeaponsStrengthMedium(25);
     tempsst.setSquadronCapacity(4);
@@ -1091,7 +1092,7 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     //Space Fortress III  //
-    tempsst = new SpaceshipType("Space Fortress III","SFIII",SpaceshipType.SIZE_LARGE,500,1000,SpaceshipRange.NONE,2,200,uniqueShipIdCounter,15,10);
+    tempsst = new SpaceshipType("Space Fortress III","SFIII",SpaceShipSize.LARGE,500,1000,SpaceshipRange.NONE,2,200,uniqueShipIdCounter,15,10);
     tempsst.setDescription("Neutral planet Defence plattforms Level 3");
     tempsst.setWeaponsStrengthMedium(15);
     tempsst.setWeaponsStrengthLarge(25);
@@ -1108,7 +1109,7 @@ gw.addShipType(tempsst);
     // **************
     
     // Blockade Runner
-    tempsst = new SpaceshipType("Blockade Runner","Run",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
+    tempsst = new SpaceshipType("Blockade Runner","Run",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
     tempsst.setDescription("A small merchant ship specialized in smuggling in closed systems");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setIncOwnClosedBonus(1);
@@ -1120,41 +1121,41 @@ gw.addShipType(tempsst);
     gw.addShipType(tempsst);
 
     // Small Merchant Freighter
-    tempsst = new SpaceshipType("Small Merchant Freighter","SMF",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
+    tempsst = new SpaceshipType("Small Merchant Freighter","SMF",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
     tempsst.setDescription("Small sized merchant ship");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setIncOwnOpenBonus(1);
     tempsst.setIncNeutralOpenBonus(3);
-    tempsst.setIncFrendlyOpenBonus(2);
+    tempsst.setIncFriendlyOpenBonus(2);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
     
     // Medium Merchant Freighter
-    tempsst = new SpaceshipType("Medium Merchant Freighter","MMF",SpaceshipType.SIZE_MEDIUM,SpaceshipRange.LONG,1,12,uniqueShipIdCounter);
+    tempsst = new SpaceshipType("Medium Merchant Freighter","MMF",SpaceShipSize.MEDIUM,SpaceshipRange.LONG,1,12,uniqueShipIdCounter);
     tempsst.setDescription("Medium sized merchant ship");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setIncOwnOpenBonus(2);
     tempsst.setIncNeutralOpenBonus(4);
-    tempsst.setIncFrendlyOpenBonus(3);
+    tempsst.setIncFriendlyOpenBonus(3);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
     
     
     // Supply Freighter
-    tempsst = new SpaceshipType("Repair Ship","RS",SpaceshipType.SIZE_MEDIUM,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
+    tempsst = new SpaceshipType("Repair Ship","RS",SpaceShipSize.MEDIUM,SpaceshipRange.LONG,1,8,uniqueShipIdCounter);
     tempsst.setDescription("Medium sized repair ship");
     tempsst.setCanAppearOnBlackMarket(true);
-    tempsst.setSupply(2);
+    tempsst.setSupply(SpaceShipSize.MEDIUM);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
 
     // Large Merchant Freighter
-    tempsst = new SpaceshipType("Large Merchant Freighter","LMF",SpaceshipType.SIZE_LARGE,SpaceshipRange.SHORT,1,20,uniqueShipIdCounter);
+    tempsst = new SpaceshipType("Large Merchant Freighter","LMF",SpaceShipSize.LARGE,SpaceshipRange.SHORT,1,20,uniqueShipIdCounter);
     tempsst.setDescription("Large sized merchant ship");
     tempsst.setCanAppearOnBlackMarket(true);
     tempsst.setIncOwnOpenBonus(3);
     tempsst.setIncNeutralOpenBonus(8);
-    tempsst.setIncFrendlyOpenBonus(6);
+    tempsst.setIncFriendlyOpenBonus(6);
     tempsst.setScreened(true);
     gw.addShipType(tempsst);
     

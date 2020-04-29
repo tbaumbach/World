@@ -2,18 +2,10 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 import spaceraze.util.general.Logger;
-import spaceraze.world.CanBeLostInSpace;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.ShortNameable;
-import spaceraze.world.Spaceship;
-import spaceraze.world.SpaceshipType;
-import spaceraze.world.Troop;
-import spaceraze.world.TurnInfo;
-import spaceraze.world.VIP;
 
 public class Spaceship implements Serializable, Comparable<Spaceship>, ShortNameable, CanBeLostInSpace, Cloneable {
 	static final long serialVersionUID = 1L;
@@ -40,8 +32,8 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 
 	// construktorn skall ej anropas direkt, utan spaceshiptype.getShip skall
 	// användas istället
-	public Spaceship(SpaceshipType sst, String name, int nrProduced,
-			int uniqueIdCounter, VIP vipWithBonus, int factionTechBonus,
+	public Spaceship(SpaceshipType sst, String name,
+			int nrProduced, int uniqueIdCounter, VIP vipWithBonus, int factionTechBonus,
 			int buildingBonus) {
 		this.sst = sst;
 		uniqueName = sst.getName() + " - " + nrProduced;
@@ -54,10 +46,10 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 			this.name = uniqueName;
 		}
 		this.screened = sst.isScreened();
-		setData(vipWithBonus, factionTechBonus, buildingBonus);
+		setData(sst, vipWithBonus, factionTechBonus, buildingBonus);
 	}
 
-	private void setData(VIP vipWithBonus, int factionTechBonus, int buildingBonus) {
+	private void setData(SpaceshipType sst, VIP vipWithBonus, int factionTechBonus, int buildingBonus) {
 		int tech = 100 + factionTechBonus;
 		tech = tech + buildingBonus;
 		if (vipWithBonus != null) {
@@ -94,18 +86,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		armorMedium = sst.getArmorMedium() / 100.0d;
 		armorLarge = sst.getArmorLarge() / 100.0d;
 		armorHuge = sst.getArmorHuge() / 100.0d;
-	}
-
-	public int getSize() {
-		int sizeValue = 1;
-		if ((sst.getTonnage() > 300) & (sst.getTonnage() <= 600)) {
-			sizeValue = 2;
-		} else if ((sst.getTonnage() > 600) & (sst.getTonnage() <= 900)) {
-			sizeValue = 3;
-		} else if (sst.getTonnage() > 900) {
-			sizeValue = 4;
-		}
-		return sizeValue;
 	}
 
 	public void moveShip(String inPlanet, TurnInfo ti){
@@ -388,10 +368,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		return location;
 	}
 
-	public int getTonnage() {
-		return sst.getTonnage();
-	}
-
 	/*
 	 * public int getWeapons(){ return weapons; }
 	 */
@@ -457,7 +433,7 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	 * @return
 	 */
 	private int killsFactor(int aValue){
-		double temp = aValue * (((kills/sst.getSlots())+10.0) / 10.0);
+		double temp = aValue * (((kills/sst.getSize().getSlots())+10.0) / 10.0);
 		return (int)Math.round(temp);
 	}
 
@@ -488,13 +464,13 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 			tmpDamage = getWeaponsStrengthSquadron();
 		} else {
 			tmpDamage = getWeaponsStrengthSmall();
-			if (ss.getSize() >= 2) {
+			if (ss.getType().getSize() == SpaceShipSize.MEDIUM) {
 				tmpDamage = tmpDamage + getMediumSalvoe(false);
 			}
-			if (ss.getSize() >= 3) {
+			if (ss.getType().getSize() == SpaceShipSize.LARGE) {
 				tmpDamage = tmpDamage + getLargeSalvoe(false);
 			}
-			if (ss.getSize() == 4) {
+			if (ss.getType().getSize() == SpaceShipSize.HUGE) {
 				tmpDamage = tmpDamage + getHugeSalvoe(false);
 			}
 		}
@@ -518,13 +494,13 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 			tmpDamage = getWeaponsStrengthSquadron() * (1.0 - targetShip.getArmorSmall());
 		} else {
 			tmpDamage = getWeaponsStrengthSmall() * (1.0 - targetShip.getArmorSmall());
-			if (targetShip.getSize() >= 2) {
+			if (targetShip.getType().getSize() == SpaceShipSize.MEDIUM) {
 				tmpDamage = tmpDamage + getMediumSalvoe(true) * (1.0 - targetShip.getArmorMedium());
 			}
-			if (targetShip.getSize() >= 3) {
+			if (targetShip.getType().getSize() == SpaceShipSize.LARGE) {
 				tmpDamage = tmpDamage + getLargeSalvoe(true) * (1.0 - targetShip.getArmorLarge());
 			}
-			if (targetShip.getSize() == 4) {
+			if (targetShip.getType().getSize() == SpaceShipSize.HUGE) {
 				tmpDamage = tmpDamage + getHugeSalvoe(true) * (1.0 - targetShip.getArmorHuge());
 			}
 		}
@@ -683,12 +659,8 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		return sst.getNoRetreatString();
 	}
 
-	public String getSizeString() {
-		return sst.getSizeString();
-	}
-
 	public int getSlots() {
-		return sst.getSlots();
+		return sst.getSize().getSlots();
 	}
 
 	public void performRepairs() {
@@ -721,7 +693,7 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	}
 
 	public int compareTo(Spaceship ss) {
-		return getTonnage() - ss.getTonnage();
+		return getType().getSize().getCompareSize() - ss.getType().getSize().getCompareSize();
 	}
 
 	public boolean getInitSupport() {
@@ -760,19 +732,19 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		return sst.getWeaponsMaxSalvoesMedium();
 	}
 
-	public void supplyWeapons(int size) {
+	public void supplyWeapons(SpaceShipSize size) {
 		if (getMaxWeaponsSalvoesMedium() < Integer.MAX_VALUE) {
-			if (size >= 2) {
+			if (size.getCompareSize() >= SpaceShipSize.MEDIUM.getCompareSize()) {
 				weaponsSalvoesMedium = getMaxWeaponsSalvoesMedium();
 			}
 		}
 		if (getMaxWeaponsSalvoesLarge() < Integer.MAX_VALUE) {
-			if (size >= 3) {
+			if (size.getCompareSize() >= SpaceShipSize.LARGE.getCompareSize()) {
 				weaponsSalvoesLarge = getMaxWeaponsSalvoesLarge();
 			}
 		}
 		if (getMaxWeaponsSalvoesHuge() < Integer.MAX_VALUE) {
-			if (size > 3) {
+			if (size.getCompareSize() > SpaceShipSize.HUGE.getCompareSize()) {
 				weaponsSalvoesHuge = getMaxWeaponsSalvoesHuge();
 			}
 		}
@@ -790,14 +762,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 			needSupplies = true;
 		}
 		return needSupplies;
-	}
-
-	public int getMaxResupply() {
-		return sst.getMaxResupply();
-	}
-
-	public String getMaxResupplyString() {
-		return sst.getMaxResupplyString();
 	}
 
 	public double getArmorHuge() {
@@ -880,11 +844,11 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	}
 
 	public int getIncFrendlyClosedBonus() {
-		return sst.getIncFrendlyClosedBonus();
+		return sst.getIncFriendlyClosedBonus();
 	}
 
 	public int getIncFrendlyOpenBonus() {
-		return sst.getIncFrendlyOpenBonus();
+		return sst.getIncFriendlyOpenBonus();
 	}
 
 	public int getIncNeutralClosedBonus() {
@@ -1017,10 +981,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	
 	public int getTroopCapacity(){
 		return sst.getTroopCapacity();
-	}
-	
-	public int getTroopLaunchCapacity(){
-		return sst.getTroopLaunchCapacity();
 	}
 
 	public String getLostInSpaceString() {

@@ -14,6 +14,7 @@ import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyRelation;
 import spaceraze.world.diplomacy.GameWorldDiplomacy;
 import spaceraze.world.enums.BlackMarketFrequency;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 
@@ -397,13 +398,13 @@ public class SpaceOpera{
 		// -----------------------------------------------------------
 
 		// Interplanetary Patrol Boat
-		tempsst = new SpaceshipType("IP Patrol Boat","IPPB",SpaceshipType.SIZE_SMALL,10,30,SpaceshipRange.NONE,1,3,uSIC,15,10);
+		tempsst = new SpaceshipType("IP Patrol Boat","IPPB",SpaceShipSize.SMALL,10,30,SpaceshipRange.NONE,1,3,uSIC,15,10);
         tempsst.setDescription("Interplanetary (i.e. can not move outside the starsystem it is built) version of a Patrol Boat. It is about as powerful as a normal Patrol Boat, but is cheaper.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         gw.addShipType(tempsst);
 
 		// Interplanetary Corvette
-        tempsst = new SpaceshipType("IP Corvette","IPCo",SpaceshipType.SIZE_MEDIUM,30,100,SpaceshipRange.NONE,1,6,uSIC,30,10);
+        tempsst = new SpaceshipType("IP Corvette","IPCo",SpaceShipSize.MEDIUM,30,100,SpaceshipRange.NONE,1,6,uSIC,30,10);
         tempsst.setDescription("Interplanetary (i.e. can not move outside the starsystem it is built) version of a Corvette. It is about as powerful as a normal Corvette, but is much cheaper.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -412,7 +413,7 @@ public class SpaceOpera{
         gw.addShipType(tempsst);
 
 		// Interplanetary Cruiser
-        tempsst = new SpaceshipType("IP Cruiser","IPCr",SpaceshipType.SIZE_LARGE,80,300,SpaceshipRange.NONE,2,9,uSIC,50,10);
+        tempsst = new SpaceshipType("IP Cruiser","IPCr",SpaceShipSize.LARGE,80,300,SpaceshipRange.NONE,2,9,uSIC,50,10);
         tempsst.setDescription("Interplanetary (i.e. can not move outside the starsystem it was built) version of a Cruiser. It is about as powerful as a normal Cruiser, but is much cheaper.");
 		tempsst.setArmor(60,30);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -429,71 +430,71 @@ public class SpaceOpera{
         // **************
         
         // Blockade Runner
-        tempsst = new SpaceshipType("Blockade Runner","Run",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,5,uSIC);
+        tempsst = new SpaceshipType("Blockade Runner","Run", SpaceShipSize.SMALL,SpaceshipRange.LONG,1,5,uSIC);
         tempsst.setDescription("Small-sized long range civilian merchant ship. Specialized in dealing with closed systems, but can also give some income on open planets.");
         tempsst.setIncOwnClosedBonus(2);
-        tempsst.setIncFrendlyClosedBonus(3);
+        tempsst.setIncFriendlyClosedBonus(3);
         tempsst.setIncNeutralClosedBonus(4);
         tempsst.setIncEnemyClosedBonus(5);
         tempsst.setIncOwnOpenBonus(1);
-        tempsst.setIncFrendlyOpenBonus(2);
+        tempsst.setIncFriendlyOpenBonus(2);
         tempsst.setIncNeutralOpenBonus(3);
         tempsst.setIncEnemyOpenBonus(4); 
         tempsst.setVisibleOnMap(false);
         gw.addShipType(tempsst);
 
         // Small Merchant Freighter
-        tempsst = new SpaceshipType("Small Merchant Freighter","SMF",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,4,uSIC);
+        tempsst = new SpaceshipType("Small Merchant Freighter","SMF",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,4,uSIC);
         tempsst.setDescription("Small-sized long range civilian merchant ship. Give income bonuses on frendly and neutral open planets.");
         tempsst.setIncOwnOpenBonus(2);
-        tempsst.setIncFrendlyOpenBonus(3);
+        tempsst.setIncFriendlyOpenBonus(3);
         tempsst.setIncNeutralOpenBonus(4);
         gw.addShipType(tempsst);
         
         // Troop Passenger Liner
         /*
-        tempsst = new SpaceshipType("Troop Passenger Liner","TrPL",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,5,uSIC);
+        tempsst = new SpaceshipType("Troop Passenger Liner","TrPL",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,5,uSIC);
         tempsst.setDescription("Small-sized long range civilian troop ship. Modified version of a civilian passenger liner, adapted to carry troops and landing crafts. Note that this ship cannot besiege planets on it's own, but when in company with at least one military ship which can besiege planets, it can use it's troops against planets.");
         tempsst.setPsychWarfare(1);
         gw.addShipType(tempsst);
         */
 
         // Survey ship
-        tempsst = new SpaceshipType("Outreach Survey Ship","Out",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,8,uSIC);
+        tempsst = new SpaceshipType("Outreach Survey Ship","Out",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,8,uSIC);
         tempsst.setDescription("Small-sized long range civilian survey ship. Outreach is a scientific vessel, primarily used to scout new solar systems to search for planets suitable for colonization, and to effectively analyse any inhabited worlds it encounters.");
         tempsst.setPlanetarySurvey(true);
         gw.addShipType(tempsst);
 
         // Medium Merchant Freighter
-        tempsst = new SpaceshipType("Medium Merchant Freighter","MMF",SpaceshipType.SIZE_MEDIUM,SpaceshipRange.LONG,1,8,uSIC);
+        tempsst = new SpaceshipType("Medium Merchant Freighter","MMF",SpaceShipSize.MEDIUM,SpaceshipRange.LONG,1,8,uSIC);
         tempsst.setDescription("Medium-sized long range civilian merchant ship. Give income bonuses on frendly and neutral open planets.");
         tempsst.setIncOwnOpenBonus(3);
-        tempsst.setIncFrendlyOpenBonus(4);
+        tempsst.setIncFriendlyOpenBonus(4);
         tempsst.setIncNeutralOpenBonus(5);
         gw.addShipType(tempsst);
 
         // Supply Freighter
-        tempsst = new SpaceshipType("Supply Ship","Sup",SpaceshipType.SIZE_MEDIUM,SpaceshipRange.LONG,1,8,uSIC);
+        tempsst = new SpaceshipType("Supply Ship","Sup",SpaceShipSize.MEDIUM,SpaceshipRange.LONG,1,8,uSIC);
         tempsst.setDescription("Medium-sized long range civilian supply ship. Can only resupply small and large ships.");
-        tempsst.setSupply(2);
+        tempsst.setSupply(SpaceShipSize.MEDIUM);
         gw.addShipType(tempsst);
 
         // Large Merchant Freighter
-        tempsst = new SpaceshipType("Large Merchant Freighter","LMF",SpaceshipType.SIZE_LARGE,SpaceshipRange.SHORT,1,12,uSIC);
+        tempsst = new SpaceshipType("Large Merchant Freighter","LMF",SpaceShipSize.LARGE,SpaceshipRange.SHORT,1,12,uSIC);
         tempsst.setDescription("Large-sized short range civilian merchant ship. Give income bonuses on frendly and neutral open planets.");
         tempsst.setIncOwnOpenBonus(4);
-        tempsst.setIncFrendlyOpenBonus(5);
+        tempsst.setIncFriendlyOpenBonus(5);
         tempsst.setIncNeutralOpenBonus(6);
         gw.addShipType(tempsst);
 
         // Huge Supply Freighter
-        tempsst = new SpaceshipType("Mobile Resupply Base","MRB",SpaceshipType.SIZE_HUGE,SpaceshipRange.SHORT,3,15,uSIC);
+        tempsst = new SpaceshipType("Mobile Resupply Base","MRB",SpaceShipSize.HUGE,SpaceshipRange.SHORT,3,15,uSIC);
         tempsst.setDescription("Huge-sized short range civilian resupply ship. Can resupply all types of ships, even battlestars.");
-        tempsst.setSupply(4);
+        tempsst.setSupply(SpaceShipSize.HUGE);
         gw.addShipType(tempsst);
 
         // VIP transport
-        tempsst = new SpaceshipType("VIP Transport","VT",SpaceshipType.SIZE_SMALL,SpaceshipRange.LONG,1,3,uSIC);
+        tempsst = new SpaceshipType("VIP Transport","VT",SpaceShipSize.SMALL,SpaceshipRange.LONG,1,3,uSIC);
         tempsst.setDescription("Small long range civilian VIP transport ship. Always retreat if it encounters enemy military ships without protection, unless enemy ships have stop retreats ability.");
         tempsst.setAlwaysRetreat(true);
 //        tempsst.setPlayerUnique(true); // ev. l�gga tillbaka detta d� buggen i minishipplanet �r fixad
@@ -503,26 +504,26 @@ public class SpaceOpera{
         // **********************
         
         // Scout
-        tempsst = new SpaceshipType("Nike FTL Scout","Sct",SpaceshipType.SIZE_SMALL,5,10,SpaceshipRange.LONG,1,2,uSIC,5,5);
+        tempsst = new SpaceshipType("Nike FTL Scout","Sct",SpaceShipSize.SMALL,5,10,SpaceshipRange.LONG,1,2,uSIC,5,5);
         tempsst.setDescription("Small-sized long range military scout ship. Very small military ship useful for scouting missions and to carry VIPs. Also useful for commerce raiding. It is virtually useless in combat. Cannot besiege/block planets.");
         tempsst.setCanBlockPlanet(false);
         gw.addShipType(tempsst);
         
 		// Patrol Boat
-		tempsst = new SpaceshipType("Patrol Boat","Pat",SpaceshipType.SIZE_SMALL,10,40,SpaceshipRange.LONG,2,5,uSIC,10,10);
+		tempsst = new SpaceshipType("Patrol Boat","Pat",SpaceShipSize.SMALL,10,40,SpaceshipRange.LONG,2,5,uSIC,10,10);
         //tempsst.setDescription("Small-sized long range military ship. Useful for blocking enemny planets, scouting missions, commerce raiding and to carry VIPs. This is the smallest ship that can besiege planets together with a Troop Passenger Liner (TrPL). It can be used in combat against small enemies and maybe support against medium enemy ships, but against larger ships it is virtually useless.");
         tempsst.setDescription("Small-sized long range military ship. Useful for blocking enemny planets, scouting missions, commerce raiding and to carry VIPs. It can be used in combat against small enemies and maybe support against medium enemy ships, but against larger ships it is virtually useless.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         gw.addShipType(tempsst);
 
         // Patrol Corvette
-		tempsst = new SpaceshipType("Patrol Corvette","PCrv",SpaceshipType.SIZE_SMALL,20,60,SpaceshipRange.LONG,3,8,uSIC,25,15);
+		tempsst = new SpaceshipType("Patrol Corvette","PCrv",SpaceShipSize.SMALL,20,60,SpaceshipRange.LONG,3,8,uSIC,25,15);
 		tempsst.setDescription("Small-sized long range military ship. It is most useful when attacking small opponents or as support against medium ships. Against large and huge opponents it is virtually useless.");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         gw.addShipType(tempsst);
 
         // Troop Armed Transport
-		tempsst = new SpaceshipType("Troop Armed Transport","TrAT",SpaceshipType.SIZE_MEDIUM,10,30,SpaceshipRange.LONG,2,10,uSIC,5,5);
+		tempsst = new SpaceshipType("Troop Armed Transport","TrAT",SpaceShipSize.MEDIUM,10,30,SpaceshipRange.LONG,2,10,uSIC,5,5);
         tempsst.setDescription("Medium-sized long range military troop ship. This military troop transport can single-handedly besiege enemy planets.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setPsychWarfare(1);
@@ -530,7 +531,7 @@ public class SpaceOpera{
         gw.addShipType(tempsst);
 
         // Corvette
-		tempsst = new SpaceshipType("Corvette","Crv",SpaceshipType.SIZE_MEDIUM,30,100,SpaceshipRange.LONG,4,10,uSIC,40,15);
+		tempsst = new SpaceshipType("Corvette","Crv",SpaceShipSize.MEDIUM,30,100,SpaceshipRange.LONG,4,10,uSIC,40,15);
 		tempsst.setDescription("Medium-sized long range military ship. It is most useful when attacking small opponents or as support against more powerful medium or less powerful large ships. Against huge opponents it is virtually useless.");
 		tempsst.setArmor(30);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -554,7 +555,7 @@ public class SpaceOpera{
         
         // UTF Fighter
         typeName = "UTF Fighter";
-        tempsst = new SpaceshipType(typeName,"U-F",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,4,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt);
+        tempsst = new SpaceshipType(typeName,"U-F",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,4,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt);
 		tempsst.setDescription("A fighter squadron specialized in attacking enemy squadrons. It can also do some minor damage to enemy capital ships and has one torpedo salvoe against medium or larger opponents. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -566,7 +567,7 @@ public class SpaceOpera{
 
         // UTF Bomber
         typeName = "UTF Bomber";
-        tempsst = new SpaceshipType(typeName,"U-B",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 10,SpaceshipRange.NONE,1,6,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
+        tempsst = new SpaceshipType(typeName,"U-B",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 10,SpaceshipRange.NONE,1,6,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
 		tempsst.setDescription("Squadron specialized in attacking capital ships, especially ships larger than small where its medium and large torpedo salvoes can can do significant damage. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -580,7 +581,7 @@ public class SpaceOpera{
 
         // UTF Destroyer
         typeName = "UTF Destroyer";
-		tempsst = new SpaceshipType(typeName,"UDes",SpaceshipType.SIZE_MEDIUM,50,160,SpaceshipRange.LONG,5,14,uSIC,35,10);
+		tempsst = new SpaceshipType(typeName,"UDes",SpaceShipSize.MEDIUM,50,160,SpaceshipRange.LONG,5,14,uSIC,35,10);
 		tempsst.setDescription("Medium-sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -591,7 +592,7 @@ public class SpaceOpera{
 
         // UTF Light Carrier
         typeName = "UTF Light Carrier";
-		tempsst = new SpaceshipType(typeName,"ULCa",SpaceshipType.SIZE_MEDIUM,60,220,SpaceshipRange.LONG,6,18,uSIC,10,15);
+		tempsst = new SpaceshipType(typeName,"ULCa",SpaceShipSize.MEDIUM,60,220,SpaceshipRange.LONG,6,18,uSIC,10,15);
 		tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 4 squadrons.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -602,7 +603,7 @@ public class SpaceOpera{
 
         // UTF Light Cruiser
         typeName = "UTF Light Cruiser";
-		tempsst = new SpaceshipType(typeName,"ULCr",SpaceshipType.SIZE_LARGE,80,320,SpaceshipRange.SHORT,8,26,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"ULCr",SpaceShipSize.LARGE,80,320,SpaceshipRange.SHORT,8,26,uSIC,50,15);
 		tempsst.setDescription("Light large-sized short-range capital ship. It is very good against small or medium opponents and gives good support against large ones. It is too weak to threaten huge opponents.");
 		tempsst.setArmor(50,35);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -612,7 +613,7 @@ public class SpaceOpera{
 
         // UTF Cruiser
         typeName = "UTF Cruiser";
-		tempsst = new SpaceshipType(typeName,"UCr",SpaceshipType.SIZE_LARGE,140,420,SpaceshipRange.SHORT,10,32,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"UCr",SpaceShipSize.LARGE,140,420,SpaceshipRange.SHORT,10,32,uSIC,40,10);
 		tempsst.setDescription("Large-sized short-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops, bombardment and can carry one squadron.");
 		tempsst.setArmor(60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -625,7 +626,7 @@ public class SpaceOpera{
 
         // UTF Carrier
         typeName = "UTF Carrier";
-		tempsst = new SpaceshipType(typeName,"UCa",SpaceshipType.SIZE_LARGE,160,470,SpaceshipRange.SHORT,8,28,uSIC,20,20);
+		tempsst = new SpaceshipType(typeName,"UCa",SpaceShipSize.LARGE,160,470,SpaceshipRange.SHORT,8,28,uSIC,20,20);
 		tempsst.setDescription("Large-sized short range squadron carrier. Can carry up to 8 squadrons.");
 		tempsst.setArmor(40,20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -636,7 +637,7 @@ public class SpaceOpera{
 
         // UTF Battle Cruiser
         typeName = "UTF Battlecruiser";
-		tempsst = new SpaceshipType(typeName,"UBCr",SpaceshipType.SIZE_LARGE,150,550,SpaceshipRange.SHORT,12,40,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"UBCr",SpaceShipSize.LARGE,150,550,SpaceshipRange.SHORT,12,40,uSIC,40,10);
 		tempsst.setDescription("Heavy large-sized short range capital ship. Has a powerful array of weapons that can even make significant damage to huge ships. It has troops, bombardment and can carry two squadrons.");
 		tempsst.setArmor(70,45);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -651,7 +652,7 @@ public class SpaceOpera{
 
         // UTF Battle Starship
         typeName = "UTF Battle Starship";
-		tempsst = new SpaceshipType(typeName,"UBSs",SpaceshipType.SIZE_HUGE,250,850,SpaceshipRange.SHORT,23,70,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"UBSs",SpaceShipSize.HUGE,250,850,SpaceshipRange.SHORT,23,70,uSIC,50,15);
 		tempsst.setDescription("Huge-sized short range capital ship. Has a powerful array of weapons that make significant damage to ships of all sizes, and have powerful armor. It has troops, bombardment and can carry three squadrons. It also have a tactical center to increase combat effectiveness.");
 		tempsst.setArmor(80,60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -668,7 +669,7 @@ public class SpaceOpera{
 
         // UTF Battle Star
         typeName = "UTF Battle Star";
-		tempsst = new SpaceshipType(typeName,"UBS",SpaceshipType.SIZE_HUGE,400,1300,SpaceshipRange.SHORT,30,100,uSIC,60,20);
+		tempsst = new SpaceshipType(typeName,"UBS",SpaceShipSize.HUGE,400,1300,SpaceshipRange.SHORT,30,100,uSIC,60,20);
 		tempsst.setDescription("Huge-sized short range capital ship. The UTF Concordat class battle star are the most powerful unit in known space. Have a powerful array of weapons that make massive damage to ships of all sizes, and have very powerful armor. It carries elite troops, have powerful bombardment, carry up to four squadrons and have an advanced tactical center to increase combat efficiency.");
 		tempsst.setArmor(90,70,50);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -740,7 +741,7 @@ public class SpaceOpera{
 
         // Azuriach Fighter
         typeName = "Azuriach Fighter";
-        tempsst = new SpaceshipType(typeName,"A-F",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt+5);
+        tempsst = new SpaceshipType(typeName,"A-F",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt+5);
 		tempsst.setDescription("A fighter squadron specialized in attacking enemy squadrons. It can also do some minor damage to enemy capital ships. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -750,7 +751,7 @@ public class SpaceOpera{
 
         // Azuriach Bomber
         typeName = "Azuriach Bomber";
-        tempsst = new SpaceshipType(typeName,"A-B",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
+        tempsst = new SpaceshipType(typeName,"A-B",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
 		tempsst.setDescription("Squadron specialized in attacking capital ships, especially ships larger than small where its medium and large torpedo salvoes can can do significant damage. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -764,7 +765,7 @@ public class SpaceOpera{
 
         // Azuriach Destroyer
         typeName = "Azuriach Destroyer";
-		tempsst = new SpaceshipType(typeName,"ADes",SpaceshipType.SIZE_MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,30,10);
+		tempsst = new SpaceshipType(typeName,"ADes",SpaceShipSize.MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,30,10);
 		tempsst.setDescription("Medium-sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -775,7 +776,7 @@ public class SpaceOpera{
 
         // Azuriach Light Carrier
         typeName = "Azuriach Light Carrier";
-		tempsst = new SpaceshipType(typeName,"ALCa",SpaceshipType.SIZE_MEDIUM,60,200,SpaceshipRange.LONG,6,18,uSIC,10,15);
+		tempsst = new SpaceshipType(typeName,"ALCa",SpaceShipSize.MEDIUM,60,200,SpaceshipRange.LONG,6,18,uSIC,10,15);
 		tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 4 squadrons.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -786,7 +787,7 @@ public class SpaceOpera{
 
         // Azuriach Light Cruiser
         typeName = "Azuriach Light Cruiser";
-		tempsst = new SpaceshipType(typeName,"ALCr",SpaceshipType.SIZE_LARGE,80,300,SpaceshipRange.SHORT,8,28,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"ALCr",SpaceShipSize.LARGE,80,300,SpaceshipRange.SHORT,8,28,uSIC,50,15);
 		tempsst.setDescription("Light large-sized short range capital ship. It is very good against small or medium opponents and gives good support against large ones. It is too weak to threaten huge opponents. Have bombardment capacity.");
 		tempsst.setArmor(50,35);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -797,7 +798,7 @@ public class SpaceOpera{
 
         // Azuriach Cruiser
         typeName = "Azuriach Cruiser";
-		tempsst = new SpaceshipType(typeName,"ACr",SpaceshipType.SIZE_LARGE,130,400,SpaceshipRange.SHORT,10,30,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"ACr",SpaceShipSize.LARGE,130,400,SpaceshipRange.SHORT,10,30,uSIC,40,10);
 		tempsst.setDescription("Large-sized short-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops, bombardment and can carry one squadron.");
 		tempsst.setArmor(60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -810,7 +811,7 @@ public class SpaceOpera{
 
         // Azuriach Carrier
         typeName = "Azuriach Carrier";
-		tempsst = new SpaceshipType(typeName,"ACa",SpaceshipType.SIZE_LARGE,140,450,SpaceshipRange.SHORT,8,26,uSIC,15,20);
+		tempsst = new SpaceshipType(typeName,"ACa",SpaceShipSize.LARGE,140,450,SpaceshipRange.SHORT,8,26,uSIC,15,20);
 		tempsst.setDescription("Large-sized short range squadron carrier. Can carry up to 8 squadrons.");
 		tempsst.setArmor(40,20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -821,7 +822,7 @@ public class SpaceOpera{
 
         // Azuriach Battle Cruiser
         typeName = "Azuriach Battlecruiser";
-		tempsst = new SpaceshipType(typeName,"ABCr",SpaceshipType.SIZE_LARGE,140,500,SpaceshipRange.SHORT,12,36,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"ABCr",SpaceShipSize.LARGE,140,500,SpaceshipRange.SHORT,12,36,uSIC,40,10);
 		tempsst.setDescription("Heavy large-sized short range capital ship. Has a powerful array of weapons that can even make significant damage to huge ships. It has troops, powerful bombardment and can carry one squadrons.");
 		tempsst.setArmor(70,45);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -836,7 +837,7 @@ public class SpaceOpera{
 
         // Azuriach Battle Starship
         typeName = "Azuriach Battle Starship";
-		tempsst = new SpaceshipType(typeName,"ABSs",SpaceshipType.SIZE_HUGE,220,800,SpaceshipRange.SHORT,22,65,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"ABSs",SpaceShipSize.HUGE,220,800,SpaceshipRange.SHORT,22,65,uSIC,50,15);
 		tempsst.setDescription("Huge-sized short range capital ship. Has a powerful array of weapons that make significant damage to ships of all sizes, and have powerful armor. It has troops, powerful bombardment and can carry two squadrons. It also have a tactical center to increase combat effectiveness.");
 		tempsst.setArmor(80,60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -853,7 +854,7 @@ public class SpaceOpera{
 
         // Azuriach Battle Star
         typeName = "Azuriach Battle Star";
-		tempsst = new SpaceshipType(typeName,"ABS",SpaceshipType.SIZE_HUGE,350,1150,SpaceshipRange.SHORT,28,90,uSIC,60,20);
+		tempsst = new SpaceshipType(typeName,"ABS",SpaceShipSize.HUGE,350,1150,SpaceshipRange.SHORT,28,90,uSIC,60,20);
 		tempsst.setDescription("Huge-sized short range capital ship. The Azuriach Warlord class battle star are probably the second most powerful unit in known space, after the Concordat Battle Star of the UTF. Have a powerful array of weapons that make massive damage to ships of all sizes, and have very powerful armor. It has the second most powerful planetary bombardment in existance, elite troops, can carry up to three squadrons and have an tactical center to increase combat efficiency.");
 		tempsst.setArmor(90,70,50);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -920,21 +921,21 @@ public class SpaceOpera{
 
         // Huge Merchant Freighter
         typeName = "Huge Merchant Freighter";
-        tempsst = new SpaceshipType(typeName,"HMF",SpaceshipType.SIZE_HUGE,SpaceshipRange.SHORT,1,16,uSIC);
+        tempsst = new SpaceshipType(typeName,"HMF",SpaceShipSize.HUGE,SpaceshipRange.SHORT,1,16,uSIC);
         tempsst.setDescription("Huge-sized short range civilian merchant ship. Give income bonuses on frendly and neutral open planets.");
         tempsst.setIncOwnOpenBonus(5);
-        tempsst.setIncFrendlyOpenBonus(6);
+        tempsst.setIncFriendlyOpenBonus(6);
         tempsst.setIncNeutralOpenBonus(7);
         gw.addShipType(tempsst);
         tempFaction.addSpaceshipType(gw.getSpaceshipTypeByName(typeName));
 
         // Small Q-ship 
         typeName = "Small Q-ship";
-		tempsst = new SpaceshipType(typeName,"SQS",SpaceshipType.SIZE_SMALL,20,70,SpaceshipRange.LONG,3,10,uSIC,30,5);
+		tempsst = new SpaceshipType(typeName,"SQS",SpaceShipSize.SMALL,20,70,SpaceshipRange.LONG,3,10,uSIC,30,5);
 		tempsst.setDescription("A Q-ship is a military ship built to look like a civilian merchant freighter. It is primarily used to lure and destroy enemy merchant raiders. It actually has a small cargo hold with which it can earn some income to lessen the cost of the ship.");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setIncOwnOpenBonus(1);
-        tempsst.setIncFrendlyOpenBonus(1);
+        tempsst.setIncFriendlyOpenBonus(1);
         tempsst.setIncNeutralOpenBonus(1);
         tempsst.setLookAsCivilian(true);
         gw.addShipType(tempsst);
@@ -942,14 +943,14 @@ public class SpaceOpera{
 
         // Medium Q-ship 
         typeName = "Medium Q-ship";
-		tempsst = new SpaceshipType(typeName,"MQS",SpaceshipType.SIZE_MEDIUM,30,130,SpaceshipRange.LONG,5,15,uSIC,20,5);
+		tempsst = new SpaceshipType(typeName,"MQS",SpaceShipSize.MEDIUM,30,130,SpaceshipRange.LONG,5,15,uSIC,20,5);
 		tempsst.setDescription("A medium Q-ship is a military ship built to look like a civilian merchant freighter. It is primarily used to lure and destroy enemy merchant raiders or to backstab formerly allies. It actually has a cargo hold with which it can earn some income to lessen the cost of the ship.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(20);
         tempsst.setWeaponsMaxSalvoesMedium(2);
         tempsst.setIncOwnOpenBonus(1);
-        tempsst.setIncFrendlyOpenBonus(1);
+        tempsst.setIncFriendlyOpenBonus(1);
         tempsst.setIncNeutralOpenBonus(1);
         tempsst.setPsychWarfare(1);
         tempsst.setLookAsCivilian(true);
@@ -958,7 +959,7 @@ public class SpaceOpera{
 
         // IRSOL Fighter
         typeName = "IRSOL Fighter";
-        tempsst = new SpaceshipType(typeName,"I-F",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,4,uSIC,sqdBaseSmAtt+5,sqdBaseFightSqdAtt);
+        tempsst = new SpaceshipType(typeName,"I-F",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,4,uSIC,sqdBaseSmAtt+5,sqdBaseFightSqdAtt);
 		tempsst.setDescription("A fighter squadron specialized in attacking enemy squadrons. It can also do some damage to enemy capital ships. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -968,7 +969,7 @@ public class SpaceOpera{
 
         // IRSOL Bomber
         typeName = "IRSOL Bomber";
-        tempsst = new SpaceshipType(typeName,"I-B",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
+        tempsst = new SpaceshipType(typeName,"I-B",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
 		tempsst.setDescription("Squadron specialized in attacking capital ships, especially medium and large where its medium torpedo salvoes can can do significant damage. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -980,7 +981,7 @@ public class SpaceOpera{
 
         // IRSOL Destroyer
         typeName = "IRSOL Destroyer";
-		tempsst = new SpaceshipType(typeName,"IDes",SpaceshipType.SIZE_MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,35,10);
+		tempsst = new SpaceshipType(typeName,"IDes",SpaceShipSize.MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,35,10);
 		tempsst.setDescription("Medium-sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -991,7 +992,7 @@ public class SpaceOpera{
 
         // Azuriach Light Carrier
         typeName = "IRSOL Light Carrier";
-		tempsst = new SpaceshipType(typeName,"ILCa",SpaceshipType.SIZE_MEDIUM,50,180,SpaceshipRange.LONG,6,18,uSIC,10,15);
+		tempsst = new SpaceshipType(typeName,"ILCa",SpaceShipSize.MEDIUM,50,180,SpaceshipRange.LONG,6,18,uSIC,10,15);
 		tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 4 squadrons.");
 		tempsst.setArmor(10);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1002,7 +1003,7 @@ public class SpaceOpera{
 
         // IRSOL Cruiser
         typeName = "IRSOL Cruiser";
-		tempsst = new SpaceshipType(typeName,"ICr",SpaceshipType.SIZE_LARGE,120,380,SpaceshipRange.SHORT,9,28,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"ICr",SpaceShipSize.LARGE,120,380,SpaceshipRange.SHORT,9,28,uSIC,40,10);
 		tempsst.setDescription("Large-sized short-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops, bombardment and can carry one squadron.");
 		tempsst.setArmor(60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1015,7 +1016,7 @@ public class SpaceOpera{
 
         // IRSOL Carrier
         typeName = "IRSOL Carrier";
-		tempsst = new SpaceshipType(typeName,"ICa",SpaceshipType.SIZE_LARGE,100,350,SpaceshipRange.SHORT,7,22,uSIC,10,20);
+		tempsst = new SpaceshipType(typeName,"ICa",SpaceShipSize.LARGE,100,350,SpaceshipRange.SHORT,7,22,uSIC,10,20);
 		tempsst.setDescription("Large-sized short range squadron carrier. Can carry up to 6 squadrons.");
 		tempsst.setArmor(40,20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1026,7 +1027,7 @@ public class SpaceOpera{
 
         // IRSOL Battle Starship
         typeName = "IRSOL Battle Starship";
-		tempsst = new SpaceshipType(typeName,"IBSs",SpaceshipType.SIZE_HUGE,200,650,SpaceshipRange.SHORT,18,55,uSIC,40,15);
+		tempsst = new SpaceshipType(typeName,"IBSs",SpaceShipSize.HUGE,200,650,SpaceshipRange.SHORT,18,55,uSIC,40,15);
 		tempsst.setDescription("Huge-sized short range capital ship. Has a powerful array of weapons that make significant damage to ships of all sizes, and have powerful armor. It has troops, bombardment and can carry three squadrons. It also have a tactical center to increase combat effectiveness.");
 		tempsst.setArmor(80,60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1043,7 +1044,7 @@ public class SpaceOpera{
 
         // IRSOL Battle Star
         typeName = "IRSOL Battle Star";
-		tempsst = new SpaceshipType(typeName,"IBS",SpaceshipType.SIZE_HUGE,280,950,SpaceshipRange.SHORT,22,70,uSIC,60,20);
+		tempsst = new SpaceshipType(typeName,"IBS",SpaceShipSize.HUGE,280,950,SpaceshipRange.SHORT,22,70,uSIC,60,20);
 		tempsst.setDescription("Huge-sized short range capital ship. Have a powerful array of weapons that make massive damage to ships of all sizes, and have very powerful armor. It has planetary bombardment, elite troops, can carry up to four squadrons and have an advanced tactical center to increase combat efficiency.");
 		tempsst.setArmor(90,70,50);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1111,7 +1112,7 @@ public class SpaceOpera{
 
         // Transhuman Fighter-Bomber
         typeName = "Transhuman Fighter-Bomber";
-        tempsst = new SpaceshipType(typeName,"T-FB",SpaceshipType.SIZE_SMALL,sqdBaseSh+10,sqdBaseDC,SpaceshipRange.SHORT,2,10,uSIC,sqdBaseSmAtt+10,sqdBaseFightSqdAtt+5);
+        tempsst = new SpaceshipType(typeName,"T-FB",SpaceShipSize.SMALL,sqdBaseSh+10,sqdBaseDC,SpaceshipRange.SHORT,2,10,uSIC,sqdBaseSmAtt+10,sqdBaseFightSqdAtt+5);
 		tempsst.setDescription("An all-round squadron good at attacking squadrons or small and medium capital ships, and can even hurt larger ships. It is equipped with a short-range hyperdrive which allows it to move between starsystems on its own, but can also be carried in a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1122,7 +1123,7 @@ public class SpaceOpera{
 
         // Transhuman Patrol Corvette
         typeName = "Transhuman Patrol Corvette";
-		tempsst = new SpaceshipType(typeName,"TPCo",SpaceshipType.SIZE_SMALL,60,60,SpaceshipRange.LONG,3,10,uSIC,40,15);
+		tempsst = new SpaceshipType(typeName,"TPCo",SpaceShipSize.SMALL,60,60,SpaceshipRange.LONG,3,10,uSIC,40,15);
 		tempsst.setDescription("Powerful small sized long range military ship. It is most useful when attacking small or even medium opponents. It is too weak to do much damage against large opponents, and is virtually useless against huge ships.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         gw.addShipType(tempsst);
@@ -1130,7 +1131,7 @@ public class SpaceOpera{
 
         // Transhuman Destroyer
         typeName = "Transhuman Destroyer";
-		tempsst = new SpaceshipType(typeName,"TDes",SpaceshipType.SIZE_MEDIUM,180,180,SpaceshipRange.LONG,5,20,uSIC,50,20);
+		tempsst = new SpaceshipType(typeName,"TDes",SpaceShipSize.MEDIUM,180,180,SpaceshipRange.LONG,5,20,uSIC,50,20);
 		tempsst.setDescription("Powerful medium sized long range military ship. It is most useful when attacking small or medium opponents or as support against large ships. It is too weak to do much damage against huge opponents.");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(50);        
@@ -1139,7 +1140,7 @@ public class SpaceOpera{
 
         // Transhuman Command ship
         typeName = "Transhuman Command Ship";
-		tempsst = new SpaceshipType(typeName,"TCom",SpaceshipType.SIZE_MEDIUM,10,180,SpaceshipRange.LONG,5,20,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"TCom",SpaceShipSize.MEDIUM,10,180,SpaceshipRange.LONG,5,20,uSIC,5,5);
 		tempsst.setDescription("Medium-sized long range command ship. Weakly armed, but have a very advanced tactical center to increase combat efficiency, have a planetary survey capacity and stops enemies from retreating.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setIncreaseInitiative(10);
@@ -1152,7 +1153,7 @@ public class SpaceOpera{
 
         // Transhuman Siege ship
         typeName = "Transhuman Siege Ship";
-		tempsst = new SpaceshipType(typeName,"TSie",SpaceshipType.SIZE_MEDIUM,10,180,SpaceshipRange.LONG,5,20,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"TSie",SpaceShipSize.MEDIUM,10,180,SpaceshipRange.LONG,5,20,uSIC,5,5);
 		tempsst.setDescription("Medium-sized long range siege ship. Weakly armed, but have elite troops and planetary bombardment capacity.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setPsychWarfare(2);
@@ -1163,7 +1164,7 @@ public class SpaceOpera{
 
         // Transhuman Carrier
         typeName = "Transhuman Carrier";
-		tempsst = new SpaceshipType(typeName,"TCa",SpaceshipType.SIZE_MEDIUM,10,180,SpaceshipRange.LONG,5,16,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"TCa",SpaceShipSize.MEDIUM,10,180,SpaceshipRange.LONG,5,16,uSIC,5,5);
 		tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 6 squadrons.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setSquadronCapacity(6);        
@@ -1173,7 +1174,7 @@ public class SpaceOpera{
 
         // Transhuman Fleet Cruiser
         typeName = "Transhuman Fleet Cruiser";
-		tempsst = new SpaceshipType(typeName,"TFCr",SpaceshipType.SIZE_LARGE,550,550,SpaceshipRange.SHORT,12,50,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"TFCr",SpaceShipSize.LARGE,550,550,SpaceshipRange.SHORT,12,50,uSIC,50,15);
 		tempsst.setDescription("Heavy large-sized short range capital ship. Has a powerful array of weapons that can even make significant damage to huge ships. It has weak armor, but have very strong shields and never need to reload it's main arnament.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1237,7 +1238,7 @@ public class SpaceOpera{
 
         // MekPurr Destroyer
         typeName = "MekPurr Destroyer";
-		tempsst = new SpaceshipType(typeName,"MDes",SpaceshipType.SIZE_MEDIUM,75,150,SpaceshipRange.LONG,5,18,uSIC,40,40);
+		tempsst = new SpaceshipType(typeName,"MDes",SpaceShipSize.MEDIUM,75,150,SpaceshipRange.LONG,5,18,uSIC,40,40);
 		tempsst.setDescription("Medium sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is also very effective against squadrons. It is too weak to do any significant damage against huge opponents.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1247,7 +1248,7 @@ public class SpaceOpera{
 
         // MekPurr Cruiser
         typeName = "MekPurr Cruiser";
-		tempsst = new SpaceshipType(typeName,"MCr",SpaceshipType.SIZE_LARGE,150,300,SpaceshipRange.LONG,9,28,uSIC,40,30);
+		tempsst = new SpaceshipType(typeName,"MCr",SpaceShipSize.LARGE,150,300,SpaceshipRange.LONG,9,28,uSIC,40,30);
 		tempsst.setDescription("Large-sized long-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops and bombardment.");
 		tempsst.setArmor(60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1260,7 +1261,7 @@ public class SpaceOpera{
 
         // MekPurr Battle Starship
         typeName = "MekPurr Battle Starship";
-		tempsst = new SpaceshipType(typeName,"MBSs",SpaceshipType.SIZE_HUGE,300,600,SpaceshipRange.LONG,20,60,uSIC,40,15);
+		tempsst = new SpaceshipType(typeName,"MBSs",SpaceShipSize.HUGE,300,600,SpaceshipRange.LONG,20,60,uSIC,40,15);
 		tempsst.setDescription("Huge-sized long range capital ship. The MekPuss Battle starship is the smallest of its class but is the biggest ship in known space that have long range capacity. Has a powerful array of weapons that make significant damage to ships of all sizes, even if its arnament is the weakest of all battle starships, and have powerful armor. It has troops, bombardment and have an advanced tactical center to increase combat effectiveness.");
 		tempsst.setArmor(80,60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1328,7 +1329,7 @@ public class SpaceOpera{
 
         // Blarad Bomber
         typeName = "Blarad Bomber";
-        tempsst = new SpaceshipType(typeName,"B-B",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 20,SpaceshipRange.NONE,1,8,uSIC,sqdBaseSmAtt+5,sqdBaseBombSqdAtt+5);
+        tempsst = new SpaceshipType(typeName,"B-B",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 20,SpaceshipRange.NONE,1,8,uSIC,sqdBaseSmAtt+5,sqdBaseBombSqdAtt+5);
 		tempsst.setDescription("The Blarad bomber squadron is the most powerful bomber type of all starnations, and its torpedoe attacks are matched by none. It can also take more damage than any other squadron type and can even pack some punch against enemy squadrons. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1342,7 +1343,7 @@ public class SpaceOpera{
 
         // Blarad Troop Transport
         typeName = "Blarad Troop Transport";
-		tempsst = new SpaceshipType(typeName,"BTrT",SpaceshipType.SIZE_MEDIUM,10,40,SpaceshipRange.LONG,3,12,uSIC,10,5);
+		tempsst = new SpaceshipType(typeName,"BTrT",SpaceShipSize.MEDIUM,10,40,SpaceshipRange.LONG,3,12,uSIC,10,5);
 		tempsst.setDescription("Medium long range military troop ship. This military troop transport carry Blarad elite troops and can single-handedly besiege enemy planets, and can run away from enemy ships if ordered.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setPsychWarfare(2);
@@ -1352,7 +1353,7 @@ public class SpaceOpera{
 
         // Blarad Destroyer
         typeName = "Blarad Destroyer";
-		tempsst = new SpaceshipType(typeName,"BDes",SpaceshipType.SIZE_MEDIUM,80,250,SpaceshipRange.LONG,5,20,uSIC,40,15);
+		tempsst = new SpaceshipType(typeName,"BDes",SpaceShipSize.MEDIUM,80,250,SpaceshipRange.LONG,5,20,uSIC,40,15);
 		tempsst.setDescription("Very heavy medium sized long range military ship, and is almost as big as a light cruiser. It is most useful when attacking small opponents and especially effective when attacking medium sized medium opponents with its heavy duty torpedo salvoes. It is also useful as support against large ships. It is too weak to do much damage against huge opponents.");
 		tempsst.setArmor(50);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1363,7 +1364,7 @@ public class SpaceOpera{
 
         // Blarad Light Carrier
         typeName = "Blarad Carrier";
-		tempsst = new SpaceshipType(typeName,"BCa",SpaceshipType.SIZE_MEDIUM,70,280,SpaceshipRange.LONG,6,20,uSIC,10,15);
+		tempsst = new SpaceshipType(typeName,"BCa",SpaceShipSize.MEDIUM,70,280,SpaceshipRange.LONG,6,20,uSIC,10,15);
 		tempsst.setDescription("Medium long range squadron carrier. Can carry up to 4 squadrons.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1374,7 +1375,7 @@ public class SpaceOpera{
 
         // Blarad Battle Cruiser
         typeName = "Blarad Cruiser";
-		tempsst = new SpaceshipType(typeName,"BCr",SpaceshipType.SIZE_LARGE,150,550,SpaceshipRange.SHORT,12,36,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"BCr",SpaceShipSize.LARGE,150,550,SpaceshipRange.SHORT,12,36,uSIC,40,10);
 		tempsst.setDescription("Large-sized short range capital ship. The Blarad Cruiser is the same size as a Battlecruiser in other navies, and at least as powerful. It is a large-sized short-range capital ship and is very good against small, medium or large opponents and can do serious damage to huge opponents. It has troops, bombardment and can carry one squadron. It's only disadvantage is that is have a very limited number of salvoes available and run dry quickle if it meets multiple opponents, and it needs to resupply between combats.");
 		tempsst.setArmor(75,50);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1390,7 +1391,7 @@ public class SpaceOpera{
 
         // Blarad Battle Starship
         typeName = "Blarad Battle Starship";
-		tempsst = new SpaceshipType(typeName,"BBSs",SpaceshipType.SIZE_HUGE,280,900,SpaceshipRange.SHORT,22,70,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"BBSs",SpaceShipSize.HUGE,280,900,SpaceshipRange.SHORT,22,70,uSIC,50,15);
 		tempsst.setDescription("Huge short range capital ship. The Blarad Harulta class battle starships are so big that any other navy would label them a battlestar. Has a powerful array of weapons that make massive damage to ships of all sizes, and have powerful armor. It has troops, bombardment and can carry three squadrons. It also have a tactical center to increase combat effectiveness. It's only disadvantage is that is have a very limited number of salvoes available and run dry quickle if it meets multiple opponents, and it needs to resupply between combats.");
 		tempsst.setArmor(85,65,45);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1461,7 +1462,7 @@ public class SpaceOpera{
 
         // Hiss'ist Fighter
         typeName = "Hiss'ist Fighter";
-        tempsst = new SpaceshipType(typeName,"H-F",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt+5);
+        tempsst = new SpaceshipType(typeName,"H-F",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt+5);
 		tempsst.setDescription("A fighter squadron specialized in attacking enemy squadrons. It can also do some minor damage to enemy capital ships. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -1471,7 +1472,7 @@ public class SpaceOpera{
 
         // Hiss'ist Fighter-Bomber
         typeName = "Hiss'ist Fighter-Bomber";
-        tempsst = new SpaceshipType(typeName,"H-FB",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt-5);
+        tempsst = new SpaceshipType(typeName,"H-FB",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt-5);
 		tempsst.setDescription("An all-round squadron which can both do some damage against squadrons or capital ships, where its medium torpedo salvoes can hurt larger ships, especially medium sized ones. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1483,7 +1484,7 @@ public class SpaceOpera{
 
         // Hiss'ist Bomber
         typeName = "Hiss'ist Bomber";
-        tempsst = new SpaceshipType(typeName,"H-B",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
+        tempsst = new SpaceshipType(typeName,"H-B",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,3,uSIC,sqdBaseSmAtt,sqdBaseBombSqdAtt);
 		tempsst.setDescription("Squadron specialized in attacking capital ships, especially ships larger than small where its medium and large torpedo salvoes can can do significant damage. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1497,7 +1498,7 @@ public class SpaceOpera{
 
         // Hiss'ist Troop Landing Crafts
         typeName = "Hiss'ist Drop Ships";
-        tempsst = new SpaceshipType(typeName,"H-DS",SpaceshipType.SIZE_SMALL,sqdBaseSh-5,sqdBaseDC-5,SpaceshipRange.NONE,1,3,uSIC,1,5);
+        tempsst = new SpaceshipType(typeName,"H-DS",SpaceShipSize.SMALL,sqdBaseSh-5,sqdBaseDC-5,SpaceshipRange.NONE,1,3,uSIC,1,5);
 		tempsst.setDescription("Squadron carrying troops which can attack planets. Virtually useless in combat and should probably be screened. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -1508,7 +1509,7 @@ public class SpaceOpera{
 
         // Hiss'ist Ground attack
         typeName = "Hiss'ist Ground Attack";
-        tempsst = new SpaceshipType(typeName,"H-GA",SpaceshipType.SIZE_SMALL,sqdBaseSh-5,sqdBaseDC-5,SpaceshipRange.NONE,1,3,uSIC,1,5);
+        tempsst = new SpaceshipType(typeName,"H-GA",SpaceShipSize.SMALL,sqdBaseSh-5,sqdBaseDC-5,SpaceshipRange.NONE,1,3,uSIC,1,5);
 		tempsst.setDescription("Air-to-ground attack shuttles squadron which specializes in attacking (bombarding) planets. Virtually useless in combat and should probably be screened. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -1519,7 +1520,7 @@ public class SpaceOpera{
 
         // Hiss'ist Raider
         typeName = "Hiss'ist Raider";
-        tempsst = new SpaceshipType(typeName,"H-FB",SpaceshipType.SIZE_SMALL,sqdBaseSh+5,sqdBaseDC,SpaceshipRange.NONE,1,8,uSIC,sqdBaseSmAtt+10,sqdBaseFightSqdAtt);
+        tempsst = new SpaceshipType(typeName,"H-FB",SpaceShipSize.SMALL,sqdBaseSh+5,sqdBaseDC,SpaceshipRange.NONE,1,8,uSIC,sqdBaseSmAtt+10,sqdBaseFightSqdAtt);
 		tempsst.setDescription("An advanced all-round squadron which can both do some damage against squadrons and capital ships, where its medium torpedo salvoes can hurt larger ships, especially medium sized ones. It's unique design and speed enables it to quickly break through enemy lines and attack screened ships. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1532,7 +1533,7 @@ public class SpaceOpera{
 
         // Hiss'ist Scout
         typeName = "Hiss'ist Squadron Leader";
-        tempsst = new SpaceshipType(typeName,"H-S",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC-10,SpaceshipRange.NONE,1,8,uSIC,5,5);
+        tempsst = new SpaceshipType(typeName,"H-S",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC-10,SpaceshipRange.NONE,1,8,uSIC,5,5);
 		tempsst.setDescription("Commumnication, command and reconnaissance squadron. Give initiative bonus and can survey planets. Virtually useless in combat and should probably be screened. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -1545,7 +1546,7 @@ public class SpaceOpera{
 
         // Hiss'ist Destroyer
         typeName = "Hiss'ist Destroyer";
-		tempsst = new SpaceshipType(typeName,"HDes",SpaceshipType.SIZE_MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,30,10);
+		tempsst = new SpaceshipType(typeName,"HDes",SpaceShipSize.MEDIUM,50,150,SpaceshipRange.LONG,5,15,uSIC,30,10);
 		tempsst.setDescription("Medium sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents.");
 		tempsst.setArmor(40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1556,7 +1557,7 @@ public class SpaceOpera{
 
         // Hiss'ist Light Carrier
         typeName = "Hiss'ist Light Carrier";
-		tempsst = new SpaceshipType(typeName,"HLCa",SpaceshipType.SIZE_MEDIUM,70,250,SpaceshipRange.LONG,5,20,uSIC,10,15);
+		tempsst = new SpaceshipType(typeName,"HLCa",SpaceShipSize.MEDIUM,70,250,SpaceshipRange.LONG,5,20,uSIC,10,15);
 		tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 6 squadrons.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1567,7 +1568,7 @@ public class SpaceOpera{
 
         // Hiss'ist Light Cruiser
         typeName = "Hiss'ist Light Cruiser";
-		tempsst = new SpaceshipType(typeName,"HLCr",SpaceshipType.SIZE_LARGE,80,300,SpaceshipRange.SHORT,8,24,uSIC,40,15);
+		tempsst = new SpaceshipType(typeName,"HLCr",SpaceShipSize.LARGE,80,300,SpaceshipRange.SHORT,8,24,uSIC,40,15);
 		tempsst.setDescription("Large-sized short-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops, bombardment and can carry one squadron.");
 		tempsst.setArmor(45,30);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1580,7 +1581,7 @@ public class SpaceOpera{
 
         // Hiss'ist Carrier
         typeName = "Hiss'ist Carrier";
-		tempsst = new SpaceshipType(typeName,"HCa",SpaceshipType.SIZE_LARGE,150,500,SpaceshipRange.SHORT,7,26,uSIC,10,20);
+		tempsst = new SpaceshipType(typeName,"HCa",SpaceShipSize.LARGE,150,500,SpaceshipRange.SHORT,7,26,uSIC,10,20);
 		tempsst.setDescription("Large-sized short range squadron carrier. Can carry up to 12 squadrons.");
 		tempsst.setArmor(30,10);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1591,7 +1592,7 @@ public class SpaceOpera{
 
         // Hiss'ist Battle Starship
         typeName = "Hiss'ist Battle Starship";
-		tempsst = new SpaceshipType(typeName,"HBSs",SpaceshipType.SIZE_HUGE,200,700,SpaceshipRange.SHORT,20,60,uSIC,50,15);
+		tempsst = new SpaceshipType(typeName,"HBSs",SpaceShipSize.HUGE,200,700,SpaceshipRange.SHORT,20,60,uSIC,50,15);
 		tempsst.setDescription("Huge-sized short range capital ship. Has a powerful array of weapons that make significant damage to ships of all sizes, and have powerful armor. It has troops, bombardment and can carry three squadrons. It also have a tactical center to increase combat effectiveness.");
 		tempsst.setArmor(80,60,40);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1660,7 +1661,7 @@ public class SpaceOpera{
 
         // Ranan Fighter-Bomber
         typeName = "Ranan Fighter-Bomber";
-        tempsst = new SpaceshipType(typeName,"R-FB",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt-5);
+        tempsst = new SpaceshipType(typeName,"R-FB",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC + 5,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt,sqdBaseFightSqdAtt-5);
 		tempsst.setDescription("An all-round squadron which can both do some damage against squadrons or capital ships, where its two-shot medium and large torpedo salvoes can hurt larger ships. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1674,7 +1675,7 @@ public class SpaceOpera{
 
         // Ranan Raider Shuttles
         typeName = "Ranan Raider Shuttles";
-        tempsst = new SpaceshipType(typeName,"R-RS",SpaceshipType.SIZE_SMALL,0,sqdBaseDC - 5,SpaceshipRange.NONE,1,6,uSIC,5,5);
+        tempsst = new SpaceshipType(typeName,"R-RS",SpaceShipSize.SMALL,0,sqdBaseDC - 5,SpaceshipRange.NONE,1,6,uSIC,5,5);
 		tempsst.setDescription("A squadron of troop carrying shuttles which also can raid planets. This can bring a good profit on enemy and neutral planets. It is almost useless in combat. It cannot move on it's own but has to be carried inside a carrier.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -1691,7 +1692,7 @@ public class SpaceOpera{
 
         // Ranan Corvette
         typeName = "Ranan Corvette";
-		tempsst = new SpaceshipType(typeName,"RCrv",SpaceshipType.SIZE_MEDIUM,30,130,SpaceshipRange.LONG,5,10,uSIC,30,15);
+		tempsst = new SpaceshipType(typeName,"RCrv",SpaceShipSize.MEDIUM,30,130,SpaceshipRange.LONG,5,10,uSIC,30,15);
 		tempsst.setDescription("Medium sized long range military ship. It is most useful when attacking small opponents or as support against more powerful medium. Against large and huge opponents it has little to offer. The Ranan Corvette is less powerful than the standard Corvette but can carry one squadron attached on the outside of it's hull.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1701,7 +1702,7 @@ public class SpaceOpera{
 
         // Ranan Destroyer
         typeName = "Ranan Destroyer";
-		tempsst = new SpaceshipType(typeName,"RDes",SpaceshipType.SIZE_MEDIUM,50,200,SpaceshipRange.LONG,6,14,uSIC,30,10);
+		tempsst = new SpaceshipType(typeName,"RDes",SpaceShipSize.MEDIUM,50,200,SpaceshipRange.LONG,6,14,uSIC,30,10);
 		tempsst.setDescription("Heavy medium sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents. The Ranan Destroyer is somewhat weaker than other destroyers, but has bombardment and can carry one squadron attached outside its hull.");
 		tempsst.setArmor(30);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1714,7 +1715,7 @@ public class SpaceOpera{
 
         // Ranan Troop Carrier
         typeName = "Ranan Siege Carrier";
-		tempsst = new SpaceshipType(typeName,"RSC",SpaceshipType.SIZE_MEDIUM,40,200,SpaceshipRange.LONG,6,14,uSIC,10,10);
+		tempsst = new SpaceshipType(typeName,"RSC",SpaceShipSize.MEDIUM,40,200,SpaceshipRange.LONG,6,14,uSIC,10,10);
 		tempsst.setDescription("Medium-sized long range ship. This ship can give siege support to troops and have room for three squadrons. It does not carry troops itself and can not besiege/block planets on its own.");
 		tempsst.setArmor(20);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1726,7 +1727,7 @@ public class SpaceOpera{
 
         // Ranan Light Cruiser
         typeName = "Ranan Light Cruiser";
-		tempsst = new SpaceshipType(typeName,"RLCr",SpaceshipType.SIZE_LARGE,70,280,SpaceshipRange.LONG,9,22,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"RLCr",SpaceShipSize.LARGE,70,280,SpaceshipRange.LONG,9,22,uSIC,40,10);
 		tempsst.setDescription("Light large-sized long-range capital ship. It is very good against small or medium opponents and gives good support against large ones. It is too weak to threaten huge opponents. The Ranan Light Cruiser is somewhat weaker than other light cruisers but is long range, has place for one squadron and also has significant bombardment ability.");
 		tempsst.setArmor(40,25);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1739,7 +1740,7 @@ public class SpaceOpera{
 
         // Ranan Battlecruiser
         typeName = "Ranan Battlecruiser";
-		tempsst = new SpaceshipType(typeName,"RBCr",SpaceshipType.SIZE_LARGE,120,450,SpaceshipRange.SHORT,12,28,uSIC,30,10);
+		tempsst = new SpaceshipType(typeName,"RBCr",SpaceShipSize.LARGE,120,450,SpaceshipRange.SHORT,12,28,uSIC,30,10);
 		tempsst.setDescription("Heavy large-sized short range capital ship. Has a powerful array of weapons that can even make some damage to huge ships. It has bombardment capacity and can carry three squadrons.");
 		tempsst.setArmor(45,30);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -1814,7 +1815,7 @@ public class SpaceOpera{
         
         // Klackon Ground attack ship
         typeName = "Klackon Gound Attack Ship";
-		tempsst = new SpaceshipType(typeName,"KGas",SpaceshipType.SIZE_SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+2,uSIC,2,2);
+		tempsst = new SpaceshipType(typeName,"KGas",SpaceShipSize.SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+2,uSIC,2,2);
 		tempsst.setDescription("Small long range ship. Used to razed planets and ready them for colonization.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setBombardment(2);
@@ -1824,7 +1825,7 @@ public class SpaceOpera{
 
         // Klackon colony ship
         typeName = "Klackon Colony Ship";
-		tempsst = new SpaceshipType(typeName,"KCol",SpaceshipType.SIZE_SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+4,uSIC,2,2);
+		tempsst = new SpaceshipType(typeName,"KCol",SpaceShipSize.SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+4,uSIC,2,2);
 		tempsst.setDescription("Small long range ship. Used to colonize razed planets.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setPsychWarfare(1);
@@ -1834,17 +1835,17 @@ public class SpaceOpera{
 
         // Klackon Supply Ship
         typeName = "Klackon Supply Ship";
-		tempsst = new SpaceshipType(typeName,"KSup",SpaceshipType.SIZE_SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+4,uSIC,2,2);
+		tempsst = new SpaceshipType(typeName,"KSup",SpaceShipSize.SMALL,0,kLDC,SpaceshipRange.LONG,2,kLBuy+4,uSIC,2,2);
 		tempsst.setDescription("Small long range ship. Used to resupply other Klackon ships.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
-        tempsst.setSupply(1);
+        tempsst.setSupply(SpaceShipSize.SMALL);
         tempsst.setScreened(true);
         gw.addShipType(tempsst);
         tempFaction.addSpaceshipType(gw.getSpaceshipTypeByName(typeName));
 
         // Klackon Squadron Hunter
         typeName = "Klackon Squadron Hunter";
-		tempsst = new SpaceshipType(typeName,"KSH",SpaceshipType.SIZE_SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,15,30);
+		tempsst = new SpaceshipType(typeName,"KSH",SpaceShipSize.SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,15,30);
 		tempsst.setDescription("Small long range ship. Anti-squadron ship");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
         gw.addShipType(tempsst);
@@ -1852,7 +1853,7 @@ public class SpaceOpera{
 
         // Klackon laser corvette
         typeName = "Klackon Laser Boat";
-		tempsst = new SpaceshipType(typeName,"KLB",SpaceshipType.SIZE_SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"KLB",SpaceShipSize.SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,40,10);
 		tempsst.setDescription("Small long range ship. Specialized in attacking small capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         gw.addShipType(tempsst);
@@ -1860,7 +1861,7 @@ public class SpaceOpera{
 
         // Klackon Light Missile Boat
         typeName = "Klackon Light Missile Boat";
-		tempsst = new SpaceshipType(typeName,"KLMB",SpaceshipType.SIZE_SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"KLMB",SpaceShipSize.SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
 		tempsst.setDescription("Small long range ship. Specialized in attacking medium capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(100);
@@ -1870,7 +1871,7 @@ public class SpaceOpera{
 
         // Klackon Light Torpedo Boat
         typeName = "Klackon Light Torpedo Boat";
-		tempsst = new SpaceshipType(typeName,"KLTB",SpaceshipType.SIZE_SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"KLTB",SpaceShipSize.SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
 		tempsst.setDescription("Small long range ship. Specialized in attacking large capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthLarge(125);
@@ -1880,7 +1881,7 @@ public class SpaceOpera{
 
         // Klackon Light Starbuster
         typeName = "Klackon Light Starbuster";
-		tempsst = new SpaceshipType(typeName,"KLSB",SpaceshipType.SIZE_SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"KLSB",SpaceShipSize.SMALL,10,kLDC,SpaceshipRange.LONG,2,kLBuy,uSIC,5,5);
 		tempsst.setDescription("Small long range ship. Specialized in attacking huge capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthHuge(150);
@@ -1890,7 +1891,7 @@ public class SpaceOpera{
 
         // Klackon Heavy Missile Boat
         typeName = "Klackon Heavy Missile Boat";
-		tempsst = new SpaceshipType(typeName,"KHMB",SpaceshipType.SIZE_MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"KHMB",SpaceShipSize.MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
 		tempsst.setDescription("Medium-sized short range ship. Specialized in attacking medium capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(200);
@@ -1900,7 +1901,7 @@ public class SpaceOpera{
 
         // Klackon Heavy Torpedo Boat
         typeName = "Klackon Heavy Torpedo Boat";
-		tempsst = new SpaceshipType(typeName,"KHTB",SpaceshipType.SIZE_MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"KHTB",SpaceShipSize.MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
 		tempsst.setDescription("Medium-sized short range ship. Specialized in attacking large capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(50);
@@ -1912,7 +1913,7 @@ public class SpaceOpera{
 
         // Klackon Heavy Starbuster
         typeName = "Klackon Heavy Starbuster";
-		tempsst = new SpaceshipType(typeName,"KHSB",SpaceshipType.SIZE_MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
+		tempsst = new SpaceshipType(typeName,"KHSB",SpaceShipSize.MEDIUM,20,kHDC,SpaceshipRange.SHORT,3,kHBuy,uSIC,40,10);
 		tempsst.setDescription("Medium-sized short range ship. Specialized in attacking huge capital ships");
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
         tempsst.setWeaponsStrengthMedium(50);
@@ -1926,12 +1927,12 @@ public class SpaceOpera{
 
         // Klackon Mothership
         typeName = "Klackon Mothership";
-		tempsst = new SpaceshipType(typeName,"KMS",SpaceshipType.SIZE_MEDIUM,0,kHDC,SpaceshipRange.SHORT,5,20,uSIC,5,5);
+		tempsst = new SpaceshipType(typeName,"KMS",SpaceShipSize.MEDIUM,0,kHDC,SpaceshipRange.SHORT,5,20,uSIC,5,5);
 		tempsst.setDescription("Medium-sized short range ship. Has considerable siege ability and can resupply all other type of Klackon combat ships. Also have a tactical center to increase combat efficiency.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setBombardment(3);
         tempsst.setPsychWarfare(2);
-        tempsst.setSupply(2);
+        tempsst.setSupply(SpaceShipSize.MEDIUM);
         tempsst.setIncreaseInitiative(5);
         tempsst.setScreened(true);
         gw.addShipType(tempsst);
@@ -1992,7 +1993,7 @@ public class SpaceOpera{
 
         // Bug Fighter
         typeName = "Bug Fighter";
-        tempsst = new SpaceshipType(typeName,"B-F",SpaceshipType.SIZE_SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,10,25);
+        tempsst = new SpaceshipType(typeName,"B-F",SpaceShipSize.SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,10,25);
         tempsst.setDescription("Cheap and basic fighter squadron. It cannot move on it's own but has to be carried inside a carrier/bug meteorite.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -2003,7 +2004,7 @@ public class SpaceOpera{
 
         // Bug Small attacker
         typeName = "Bug Attacker";
-        tempsst = new SpaceshipType(typeName,"B-A",SpaceshipType.SIZE_SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,30,10);
+        tempsst = new SpaceshipType(typeName,"B-A",SpaceShipSize.SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,30,10);
         tempsst.setDescription("Squadron specialized at attacking small capital ships. It cannot move on it's own but has to be carried inside a carrier/bug meteorite.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -2014,7 +2015,7 @@ public class SpaceOpera{
 
         // Bug Light Bomber
         typeName = "Bug Light Bomber";
-        tempsst = new SpaceshipType(typeName,"B-LB",SpaceshipType.SIZE_SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,5,5);
+        tempsst = new SpaceshipType(typeName,"B-LB",SpaceShipSize.SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,5,5);
         tempsst.setDescription("Bomber squadron specialized aganist medium targets, and to lesser degree large and huge targets, and pretty useless against squadrons or small targets. It cannot move on it's own but has to be carried inside a carrier/bug meteorite.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -2027,7 +2028,7 @@ public class SpaceOpera{
 
         // Bug Heavy Bomber
         typeName = "Bug Heavy Bomber";
-        tempsst = new SpaceshipType(typeName,"B-HB",SpaceshipType.SIZE_SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,5,5);
+        tempsst = new SpaceshipType(typeName,"B-HB",SpaceShipSize.SMALL,0,sqdBugBaseDC,SpaceshipRange.NONE,1,1,uSIC,5,5);
         tempsst.setDescription("Bomber squadron specialized aganist large and huge targets, and pretty useless against squadrons or small or megium targets. It cannot move on it's own but has to be carried inside a carrier/bug meteorite.");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -2042,7 +2043,7 @@ public class SpaceOpera{
 
         // Bug Defence Meteorite
         typeName = "Bug Defence Meteorite";
-		tempsst = new SpaceshipType(typeName,"BDM",SpaceshipType.SIZE_SMALL,0,200,SpaceshipRange.NONE,1,6,uSIC,10,10);
+		tempsst = new SpaceshipType(typeName,"BDM",SpaceShipSize.SMALL,0,200,SpaceshipRange.NONE,1,6,uSIC,10,10);
         tempsst.setDescription("Defence meteorite which can guard against enemy raiders, and in greater numbers they can even protect against enemy medium-sized task forces. Are invisible for enemies unless in the same system.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setWeaponsStrengthMedium(50);
@@ -2055,7 +2056,7 @@ public class SpaceOpera{
 
         // Small Bug Meteorite
         typeName = "Bug Small Meteorite";
-		tempsst = new SpaceshipType(typeName,"BSM",SpaceshipType.SIZE_SMALL,0,500,SpaceshipRange.LONG,5,10,uSIC,10,10);
+		tempsst = new SpaceshipType(typeName,"BSM",SpaceShipSize.SMALL,0,500,SpaceshipRange.LONG,5,10,uSIC,10,10);
         tempsst.setDescription("A meteorite retrofitted for interstellar movement and excaved to house three squadrons. It has very weak weapons in itself and need squadrons to make any significant damage to enemy ships. It has both planetary bombardment capacity and troops. Are invisible for enemies unless in the same system.");
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setSquadronCapacity(3);
@@ -2067,7 +2068,7 @@ public class SpaceOpera{
         
         // Medium Bug Meteorite
         typeName = "Bug Medium Meteorite";
-		tempsst = new SpaceshipType(typeName,"BMM",SpaceshipType.SIZE_MEDIUM,0,1000,SpaceshipRange.LONG,10,20,uSIC,15,15);
+		tempsst = new SpaceshipType(typeName,"BMM",SpaceShipSize.MEDIUM,0,1000,SpaceshipRange.LONG,10,20,uSIC,15,15);
         tempsst.setDescription("A meteorite retrofitted for interstellar movement and excaved to house ten squadrons. It has very weak weapons in itself and need squadrons to make any significant damage to enemy ships. It has both planetary bombardment capacity and troops. Are invisible for enemies unless in the same system.");
 		tempsst.setArmor(30);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -2080,7 +2081,7 @@ public class SpaceOpera{
         
         // Large Bug Meteorite
         typeName = "Bug Large Meteorite";
-		tempsst = new SpaceshipType(typeName,"BLM",SpaceshipType.SIZE_LARGE,0,2000,SpaceshipRange.SHORT,14,40,uSIC,15,15);
+		tempsst = new SpaceshipType(typeName,"BLM",SpaceShipSize.LARGE,0,2000,SpaceshipRange.SHORT,14,40,uSIC,15,15);
         tempsst.setDescription("A meteorite retrofitted for interstellar movement and excaved to house twenty squadrons. It has very weak weapons in itself and need squadrons to make any significant damage to enemy ships. It has both heavy planetary bombardment capacity and troops. Are invisible for enemies unless in the same system.");
 		tempsst.setArmor(40,20);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -2093,7 +2094,7 @@ public class SpaceOpera{
 
         // Huge Bug Meteorite
         typeName = "Bug Huge Meteorite";
-		tempsst = new SpaceshipType(typeName,"BHM",SpaceshipType.SIZE_HUGE,0,5000,SpaceshipRange.SHORT,20,80,uSIC,15,15);
+		tempsst = new SpaceshipType(typeName,"BHM",SpaceShipSize.HUGE,0,5000,SpaceshipRange.SHORT,20,80,uSIC,15,15);
         tempsst.setDescription("A meteorite retrofitted for interstellar movement and excaved to house fifty squadrons. It has very weak weapons in itself and need squadrons to make any significant damage to enemy ships. It has both extremely heavy planetary bombardment capacity and troops. Are invisible for enemies unless in the same system.");
 		tempsst.setArmor(50,30);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -2510,7 +2511,7 @@ public class SpaceOpera{
 //
 //    // Avatar Fighter
 //    typeName = "Avatar Fighter";
-//    tempsst = new SpaceshipType(typeName,"V-F",SpaceshipType.SIZE_SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt+5,sqdBaseFightSqdAtt+10);
+//    tempsst = new SpaceshipType(typeName,"V-F",SpaceShipSize.SMALL,sqdBaseSh,sqdBaseDC,SpaceshipRange.NONE,1,5,uSIC,sqdBaseSmAtt+5,sqdBaseFightSqdAtt+10);
 //	tempsst.setDescription("A fighter squadron specialized and very good at attacking enemy squadrons. It can also do some minor damage to enemy capital ships. It cannot move on it's own but has to be carried inside a carrier.");
 //    tempsst.setSquadron(true);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ANTIAIR);
@@ -2520,7 +2521,7 @@ public class SpaceOpera{
 //
 //    // Avatar Troop Transport
 //    typeName = "Avatar Troop Transport";
-//	tempsst = new SpaceshipType(typeName,"ATrT",SpaceshipType.SIZE_SMALL,5,20,SpaceshipRange.LONG,2,8,uSIC,5,5);
+//	tempsst = new SpaceshipType(typeName,"ATrT",SpaceShipSize.SMALL,5,20,SpaceshipRange.LONG,2,8,uSIC,5,5);
 //	tempsst.setDescription("Small long range military troop ship. This military troop transport can single-handedly besiege enemy planets, and can run away from enemy ships if ordered.");
 //    tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
 //    tempsst.setPsychWarfare(1);
@@ -2529,7 +2530,7 @@ public class SpaceOpera{
 //
 //    // Avatar Destroyer
 //    typeName = "Avatar Destroyer";
-//	tempsst = new SpaceshipType(typeName,"VDes",SpaceshipType.SIZE_MEDIUM,70,200,SpaceshipRange.LONG,5,18,uSIC,40,15);
+//	tempsst = new SpaceshipType(typeName,"VDes",SpaceShipSize.MEDIUM,70,200,SpaceshipRange.LONG,5,18,uSIC,40,15);
 //	tempsst.setDescription("Heavy medium sized long range military ship. It is most useful when attacking small or medium opponents or as support against less powerful large ships. It is too weak to do any significant damage against huge opponents.");
 //	tempsst.setArmor(40);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -2540,7 +2541,7 @@ public class SpaceOpera{
 //
 //    // Avatar Light Carrier
 //    typeName = "Avatar Light Carrier";
-//	tempsst = new SpaceshipType(typeName,"VLCa",SpaceshipType.SIZE_MEDIUM,50,150,SpaceshipRange.LONG,5,14,uSIC,10,15);
+//	tempsst = new SpaceshipType(typeName,"VLCa",SpaceShipSize.MEDIUM,50,150,SpaceshipRange.LONG,5,14,uSIC,10,15);
 //	tempsst.setDescription("Medium-sized long range squadron carrier. Can carry up to 6 squadrons.");
 //	tempsst.setArmor(20);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
@@ -2550,7 +2551,7 @@ public class SpaceOpera{
 //    
 //    // Avatar Cruiser
 //    typeName = "Avatar Cruiser";
-//	tempsst = new SpaceshipType(typeName,"VCr",SpaceshipType.SIZE_LARGE,130,400,SpaceshipRange.SHORT,10,30,uSIC,40,10);
+//	tempsst = new SpaceshipType(typeName,"VCr",SpaceShipSize.LARGE,130,400,SpaceshipRange.SHORT,10,30,uSIC,40,10);
 //	tempsst.setDescription("Large-sized short-range capital ship. It is very good against small or medium opponents and pretty good against large ones. It is too weak to to do very much damage to huge opponents. It has troops, bombardment and can carry one squadron.");
 //	tempsst.setArmor(60,40);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -2563,7 +2564,7 @@ public class SpaceOpera{
 //
 //    // Avatar Battle Starship
 //    typeName = "Avatar Battle Starship";
-//	tempsst = new SpaceshipType(typeName,"VBSs",SpaceshipType.SIZE_HUGE,200,700,SpaceshipRange.SHORT,20,60,uSIC,50,15);
+//	tempsst = new SpaceshipType(typeName,"VBSs",SpaceShipSize.HUGE,200,700,SpaceshipRange.SHORT,20,60,uSIC,50,15);
 //	tempsst.setDescription("Huge-sized short range capital ship. Has a powerful array of weapons that make significant damage to ships of all sizes, and have powerful armor. It has troops, bombardment and can carry two squadrons. It also have a tactical center to increase combat effectiveness.");
 //	tempsst.setArmor(80,60,40);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -2580,7 +2581,7 @@ public class SpaceOpera{
 //
 //    // Avatar Battle Star
 //    typeName = "Avatar Battle Star";
-//	tempsst = new SpaceshipType(typeName,"VBS",SpaceshipType.SIZE_HUGE,300,1000,SpaceshipRange.SHORT,25,75,uSIC,60,20);
+//	tempsst = new SpaceshipType(typeName,"VBS",SpaceShipSize.HUGE,300,1000,SpaceshipRange.SHORT,25,75,uSIC,60,20);
 //	tempsst.setDescription("Huge short range capital ship. Have a powerful array of weapons that make massive damage to ships of all sizes, and have very powerful armor. It has planetary bombardment, troops (all Avatar troops can be considered elite), can carry up to three squadrons and have an advanced tactical center to increase combat efficiency.");
 //	tempsst.setArmor(90,70,50);
 //    tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);

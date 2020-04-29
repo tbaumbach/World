@@ -22,6 +22,7 @@ import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyState;
 import spaceraze.world.enums.DiplomacyGameType;
 import spaceraze.world.enums.HighlightType;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.incomeExpensesReports.IncomeType;
 import spaceraze.world.mapinfo.MapPlanetInfo;
@@ -29,44 +30,96 @@ import spaceraze.world.orders.Orders;
 import spaceraze.world.spacebattle.TaskForce;
 import spaceraze.world.spacebattle.TaskForceSpaceShip;
 
+import javax.persistence.*;
+
+@Entity(name = "Galaxy")
 public class Galaxy implements Serializable {
 	static final long serialVersionUID = 1L;
-	public int turn, maxNrStartPlanets;
-	private int steps; // used to determine how close homeplanets for new players can be
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
+	private Long id;
+	public int turn;
+
+	@Column(name="game_ended")
 	public boolean gameEnded = false;
-	private String mapFileName, gameName, password, mapFullName;
+	@Column(name="game_name")
+	private String gameName;
+	//TODO why?
+	private String password;
+
+	//TODO should just have a mapId
+	private String mapFileName;
+	private String mapFullName;
+
+	//TODO Is this a part of turnInfo/MapInfo but the part of information shared by all players.
 	public List<PublicInfo> publicInfos;
+
 	public List<PlanetConnection> planetConnections;
 	public List<Faction> factions;
 	public List<VIPType> vipTypes;
 	public List<VIP> allVIPs;
 	public List<Player> players;
 	public List<Planet> planets;
-	//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
-	//private List<SpaceshipType> spaceshipTypes;
 	private List<Spaceship> spaceships;
 	private List<Troop> troops;
-	private List<TroopType> troopTypes;
-	public UniqueIdCounter uniqueShipIdCounter, uniqueVIPIdCounter, uniqueBlackMarketCounter, uniqueBuildingIdCounter;
+
+	//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
+	//private List<SpaceshipType> spaceshipTypes;
+	//TODO get it from the GameWorld
+	//private List<TroopType> troopTypes;
+
+	//TODO move this out to a own table, create a enum for the names. Do we need this if we havde database id?
+	public UniqueIdCounter uniqueShipIdCounter;
+	public UniqueIdCounter uniqueVIPIdCounter;
+	public UniqueIdCounter uniqueBlackMarketCounter;
+	public UniqueIdCounter uniqueBuildingIdCounter;
+
+
 	private BlackMarket blackMarket;
+
+	@Column(name="last_updated")
 	private Date lastUpdated;
-	private boolean autoBalance, hasAutoUpdated;
-	private long time; // used to determine if and how often a game should update itself
+	@Column(name="auto_balance")
+	private boolean autoBalance;
+	@Column(name="has_auto_updated")
+	private boolean hasAutoUpdated;
+	@Column(name="last_update_complete")
 	private boolean lastUpdateComplete = true;
+	private long time; // used to determine if and how often a game should update itself
+
 	private StringBuffer lastLog;
+	@Column(name="started_by_player") //TODO change to id.
 	private String startedByPlayer; // contains the login of the player who started this game
+
 	private GameWorld gw;
-	private boolean groupSameFaction = false;
-	private List<String> selectableFactionNames;
-	private boolean randomFaction = false;
-	private boolean singlePlayer = false;
-	private boolean ranked = false;
-	private int singleVictory = 60, factionVictory = 65;
-	private int endTurn = 0;
+
+	//Start game parameters. Move to own class?
+
+	@Column(name="Number_of_start_planets")
+	public int maxNrStartPlanets;
+	@Column(name="number_of_start_planet")
 	private int numberOfStartPlanet = 1;
+	private int steps; // used to determine how close homeplanets for new players can be
+	@Column(name="group_same_faction")
+	private boolean groupSameFaction = false;
+	@Column(name="selectable_faction_names") //Change to id.
+	private List<String> selectableFactionNames;
+	@Column(name="random_faction")
+	private boolean randomFaction = false;
+	private boolean ranked = false;
+	@Column(name="single_victory")
+	private int singleVictory = 60;
+	@Column(name="faction_victory")
+	private int factionVictory = 65;
+	private int endTurn = 0;
+
 	private StatisticsHandler statisticsHandler;
 	private Diplomacy diplomacy; // handles all in-game diplomacy
 	private List<DiplomacyState> postConfList;
+	private List<UniqueIdCounter> counters;
+
+	public Galaxy(){}
 
 	public Galaxy(Map aMap, String gameName, int steps, GameWorld aGameWorld, StatisticGameType statisticGameType) {
 		this.mapFileName = aMap.getFileName();
@@ -78,7 +131,7 @@ public class Galaxy implements Serializable {
 		players = new LinkedList<Player>();
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		//spaceshipTypes = gw.getShipTypes();
-		troopTypes = gw.getTroopTypes();
+		//troopTypes = gw.getTroopTypes();
 		spaceships = new ArrayList<Spaceship>();
 		publicInfos = new LinkedList<PublicInfo>();
 		publicInfos.add(new PublicInfo());
@@ -108,23 +161,16 @@ public class Galaxy implements Serializable {
 
 		Logger.fine("statisticGameType: " + statisticGameType.toString());
 		statisticsHandler = new StatisticsHandler(this, statisticGameType);
+		counters = new ArrayList<>();
 	}
 
 	public void setranked(boolean branked) {
 		this.ranked = branked;
 	}
 
-	public void setsinglePlayer(boolean bsinglePlayer) {
-		this.singlePlayer = bsinglePlayer;
-	}
-
 	public boolean getranked() {
 		Logger.finer("RANKED GAME: " + ranked);
 		return this.ranked;
-	}
-
-	public boolean getsinglePlayer() {
-		return this.singlePlayer;
 	}
 
 	public String getMapFileName() {
@@ -364,14 +410,6 @@ public class Galaxy implements Serializable {
 		return initBonus;
 	}
 
-	/**
-	 * 
-	 * @param aShip
-	 *            a squadron
-	 * @param aPlayer
-	 * @param firstLineOnly
-	 * @return
-	 */
 	public int findVIPhighestInitBonusSquadron(Spaceship aShip, Player aPlayer) {
 		int initSquadronBonus = 0;
 		for (int i = 0; i < allVIPs.size(); i++) {
@@ -512,7 +550,7 @@ public class Galaxy implements Serializable {
 		int i = 0;
 		while (!found & (i < spaceships.size())) {
 			Spaceship tempShip = spaceships.get(i);
-			if ((tempShip.getTroopLaunchCapacity() > 0) & (tempShip.getOwner() == aPlayer)
+			if ((tempShip.getTroopCapacity() > 0) & (tempShip.getOwner() == aPlayer)
 					& (tempShip.getLocation() == aPlanet)) {
 				found = true;
 			} else {
@@ -706,9 +744,7 @@ public class Galaxy implements Serializable {
 	/**
 	 * Find if there are at least one ship at the planet aPlanet that belongs to
 	 * aPlayer.
-	 * 
-	 * @param aPlanet
-	 * @param aPlayer
+	 *
 	 * @return if there are at least one dropship at aPlanet belonging to aPlayer
 	 */
 	/*
@@ -1111,8 +1147,7 @@ public class Galaxy implements Serializable {
 	 * Check if there are any abandoned troops on aPlanet that should be destroyed.
 	 * A troop is considered abandoned if there are no ships belonging to the same
 	 * player with drop capacity in orbit around aPlanet.
-	 * 
-	 * @param aPlanet
+	 *
 	 */
 	/*
 	 * public void checkAbandonedTroops(Planet aPlanet){ List<Troop> troopsOnPlanet
@@ -1970,8 +2005,8 @@ public class Galaxy implements Serializable {
 	public TroopType findTroopType(String ttname) {
 		TroopType tt = null;
 		int i = 0;
-		while ((tt == null) & (i < troopTypes.size())) {
-			TroopType aTT = troopTypes.get(i);
+		while ((tt == null) & (i < gw.getTroopTypes().size())) {
+			TroopType aTT = gw.getTroopTypes().get(i);
 			if (aTT.getUniqueName().equals(ttname)) {
 				tt = aTT;
 			} else {
@@ -2546,7 +2581,7 @@ public class Galaxy implements Serializable {
 				String shipOwner = aSpaceship.getOwner().getName();
 				// size
 				Integer valueSize = dataSize.get(shipOwner);
-				dataSize.put(shipOwner, valueSize + aSpaceship.getSize());
+				dataSize.put(shipOwner, valueSize + aSpaceship.getType().getSize().getSlots());
 			}
 		}
 		for (Player aPlayer : players) {
@@ -3135,59 +3170,39 @@ public class Galaxy implements Serializable {
 	}
 
 	public String getLargestShipSizeOnPlanet(Planet aPlanet, Player aPlayer, boolean civilian) {
-		String shipSize = "";
-		int maxTonnage = 0;
+		SpaceShipSize maxSize = null;
 		for (Spaceship aShip : spaceships) {
 			if ((aShip.getOwner() == aPlayer) & (aShip.getLocation() == aPlanet)) {
 				if (aShip.isLookAsCivilian() == civilian) {
 					VIP stealthVIP = findStealthVIPonShip(aPlanet, aShip);
 					if (aShip.isVisibleOnMap() & (stealthVIP == null)) {
-						if (aShip.getTonnage() > maxTonnage) {
-							maxTonnage = aShip.getTonnage();
+						if (maxSize == null || aShip.getType().getSize().getCompareSize() > maxSize.getCompareSize()) {
+							maxSize = aShip.getType().getSize();
 						}
 					}
 				}
 			}
 		}
-		if ((maxTonnage > 0) & (maxTonnage <= 300)) {
-			shipSize = "small";
-		} else if ((maxTonnage > 300) & (maxTonnage <= 600)) {
-			shipSize = "medium";
-		} else if ((maxTonnage > 600) & (maxTonnage <= 900)) {
-			shipSize = "large";
-		} else if ((maxTonnage > 900) & (maxTonnage <= 1500)) {
-			shipSize = "huge";
-		}
-		return shipSize;
+		return maxSize != null ? maxSize.getName() : "";
 	}
 
 	public int getLargestLookAsMilitaryShipSizeOnPlanet(Planet aPlanet, Player aPlayer) {
-		int shipSize = -1;
-		int maxTonnage = 0;
+		SpaceShipSize maxSize = null;
 		for (Spaceship aShip : spaceships) {
 			if ((aShip.getOwner() == aPlayer) & (aShip.getLocation() == aPlanet)) {
 				if (!aShip.isLookAsCivilian()) {
 					VIP stealthVIP = findStealthVIPonShip(aPlanet, aShip);
 					if (aShip.isVisibleOnMap() & (stealthVIP == null)) {
-						if (aShip.getTonnage() > maxTonnage) {
+						if (maxSize == null || aShip.getType().getSize().getCompareSize() > maxSize.getCompareSize()) {
 							// Logger.info("aShip name" + aShip.getName());
 							// Logger.info("aShip location" + aShip.getLocation());
-							maxTonnage = aShip.getTonnage();
+							maxSize = aShip.getType().getSize();
 						}
 					}
 				}
 			}
 		}
-		if ((maxTonnage > 0) & (maxTonnage <= 300)) {
-			shipSize = 1;
-		} else if ((maxTonnage > 300) & (maxTonnage <= 600)) {
-			shipSize = 2;
-		} else if ((maxTonnage > 600) & (maxTonnage <= 900)) {
-			shipSize = 3;
-		} else if ((maxTonnage > 900) & (maxTonnage <= 1500)) {
-			shipSize = 5;
-		}
-		return shipSize;
+		return maxSize != null ? maxSize.getSlots() : -1;
 	}
 
 	/**
@@ -3201,42 +3216,34 @@ public class Galaxy implements Serializable {
 	public String getLargestShipSizeOnPlanet(Planet aPlanet, Player aPlayer) {
 		String shipSize = "";
 		int maxTonnage = 0;
+		SpaceShipSize maxSize = null;
 		boolean civ = false;
-		for (int i = 0; i < spaceships.size(); i++) {
-			Spaceship tempss = spaceships.get(i);
-			if ((tempss.getOwner() != aPlayer) & (tempss.getLocation() == aPlanet)) {
-				if (tempss.isLookAsCivilian()) {
+		for (Spaceship aShip : spaceships) {
+			if ((aShip.getOwner() != aPlayer) & (aShip.getLocation() == aPlanet)) {
+				if (aShip.isLookAsCivilian()) {
 					civ = true;
-				} else if (tempss.isVisibleOnMap()) {
-					if (tempss.getTonnage() > maxTonnage) {
-						maxTonnage = tempss.getTonnage();
+				} else if (aShip.isVisibleOnMap()) {
+					if (maxSize == null || aShip.getType().getSize().getCompareSize() > maxSize.getCompareSize()) {
+						maxSize = aShip.getType().getSize();
 					}
 				}
 			}
 		}
-		if ((maxTonnage > 0) & (maxTonnage <= 300)) {
-			shipSize = "small";
-		} else if ((maxTonnage > 300) & (maxTonnage <= 600)) {
-			shipSize = "medium";
-		} else if ((maxTonnage > 600) & (maxTonnage <= 900)) {
-			shipSize = "large";
-		} else if ((maxTonnage > 900) & (maxTonnage <= 1500)) {
-			shipSize = "huge";
-		}
+		shipSize = maxSize != null ? maxSize.getName() : "";
 		if (civ) {
 			shipSize += "+civ";
 		}
 		return shipSize;
 	}
 
-	public int getMaxResupplyFromShip(Planet aPlanet, Player aPlayer) {
-		int maxSize = 0;
+	public SpaceShipSize getMaxResupplyFromShip(Planet aPlanet, Player aPlayer) {
+		SpaceShipSize maxSize = SpaceShipSize.NONE;
 		for (Iterator<Spaceship> ss = spaceships.iterator(); ss.hasNext();) {
 			Spaceship aShip = ss.next();
 			if (aShip.getLocation() == aPlanet) {
 				if (aShip.getOwner() == aPlayer) {
-					if (aShip.getMaxResupply() > maxSize) {
-						maxSize = aShip.getMaxResupply();
+					if (aShip.getType().getSupply().getCompareSize() > maxSize.getCompareSize()) {
+						maxSize = aShip.getType().getSupply();
 					}
 				}
 			}
@@ -3645,7 +3652,7 @@ public class Galaxy implements Serializable {
 	 * 
 	 * @param aPlanet
 	 *            a planet
-	 * @param civilan
+	 * @param civilian
 	 *            if only civilian ships should be returned
 	 * @return a list of civilian or military ships at the aPlanet
 	 */
@@ -4280,10 +4287,6 @@ public class Galaxy implements Serializable {
 
 	public void addBlackMarketBid(BlackMarketBid aBid) {
 		blackMarket.addBlackMarketBid(aBid);
-	}
-
-	public void performBlackMarket() {
-		blackMarket.performBlackMarket(this);
 	}
 
 	// add Black Market message to all except aPlayer
@@ -4959,7 +4962,7 @@ public class Galaxy implements Serializable {
 	}
 
 	public List<TroopType> getTroopTypes() {
-		return troopTypes;
+		return getGameWorld().getTroopTypes();
 	}
 
 	public boolean hasTroops() {
@@ -5321,8 +5324,7 @@ public class Galaxy implements Serializable {
 
 	/**
 	 * find the VIP with the highest bombardmentbonus on any of the sips in the list
-	 * 
-	 * @param allss
+	 *
 	 *            a list of ships
 	 */
 	public VIP findHighestVIPbombardmentBonus(List<Spaceship> ships) {
@@ -5360,13 +5362,13 @@ public class Galaxy implements Serializable {
 	}
 
 	public SpaceshipType getRandomShipBlueprint() {
-		List<SpaceshipType> possibleShiptypes = new LinkedList<SpaceshipType>();
+		List<SpaceshipType> possibleShiptypes = new LinkedList<>();
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		//for (SpaceshipType aSpaceshipType : spaceshipTypes) {
 		for (SpaceshipType aSpaceshipType : gw.getShipTypes()) {
 			boolean allhaveType = true;
 			for (Player aPlayer : getActivePlayers()) {
-				if (aPlayer.findOwnSpaceshipType(aSpaceshipType.getName()) == null) {
+				if (aPlayer.findOwnPlayerSpaceshipType(aSpaceshipType.getName()) == null) {
 					allhaveType = false;
 				}
 			}
@@ -5453,6 +5455,24 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return noPlanet;
+	}
+
+	public List<UniqueIdCounter> getCounters(){
+		return counters;
+	}
+
+	public void setCounter(List<UniqueIdCounter> counters){
+		this.counters = counters;
+	}
+
+	public UniqueIdCounter getUniqueIdCounter(String name){
+		return counters.stream().filter(counter -> counter.getName().equals(name)).findFirst().orElse(createUniqueIdCounter(name));
+	}
+
+	private UniqueIdCounter createUniqueIdCounter(String name){
+		UniqueIdCounter counter = new UniqueIdCounter(name);
+		counters.add(counter);
+		return counter;
 	}
 
 }

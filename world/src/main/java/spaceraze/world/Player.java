@@ -23,7 +23,7 @@ import spaceraze.world.spacebattle.ReportLevel;
 
 public class Player implements Serializable{
     static final long serialVersionUID = 1L;
-    private List<SpaceshipType> spaceshipTypes,otherSpaceshipTypes; // ,recievedMessages
+    private List<PlayerSpaceshipType> playerSpaceshipTypes;
     private List<TroopType> troopTypes,otherTroopTypes;
     private List<VIPType> vipTypes;
     private String name,password,govenorName;
@@ -80,8 +80,7 @@ public class Player implements Serializable{
         this.name = name;
         this.password = password;
         this.govenorName = govenorName.replace('#',' ');
-        spaceshipTypes = new LinkedList<SpaceshipType>();
-        otherSpaceshipTypes = new LinkedList<SpaceshipType>();
+        playerSpaceshipTypes = new ArrayList<>();
         troopTypes = new ArrayList<TroopType>();
         otherTroopTypes = new ArrayList<TroopType>();
         vipTypes = new ArrayList<VIPType>();
@@ -230,8 +229,8 @@ public class Player implements Serializable{
         return password;
     }
 
-    public List<SpaceshipType> getSpaceshipTypes(){
-      return spaceshipTypes;
+    public List<PlayerSpaceshipType> getPlayerSpaceshipTypes(){
+        return playerSpaceshipTypes;
     }
     
     public Vector<VIPType> getAvailableVIPTypes(){
@@ -245,18 +244,6 @@ public class Player implements Serializable{
     		}
     	}
     	return tempVIPTypes;
-    }
-    
-    public Vector<SpaceshipType> getAvailableSpaceshipTypes(){
-    	Vector<SpaceshipType> tempShipTypes = new Vector<SpaceshipType>(); 
-    	
-    	for(int i=0; i < spaceshipTypes.size();i++){
-    		if((spaceshipTypes.get(i)).isConstructible(this)){
-    			tempShipTypes.add((SpaceshipType)spaceshipTypes.get(i));
-    		//	LoggingHandler.fine("tempShipTypes.add()= " + ((SpaceshipType)spaceshipTypes.get(i)).getName());
-    		}
-    	}
-    	return tempShipTypes;
     }
     
     public Vector<TroopType> getAvailableTroopTypes(){
@@ -300,17 +287,8 @@ public class Player implements Serializable{
         return errormessage;
     }
 
-    public void removeSpaceshipType(SpaceshipType sst){
-    	spaceshipTypes.remove(sst);
-    }
-    
-    public void addSpaceshipType(SpaceshipType sst){
-        spaceshipTypes.add(new SpaceshipType(sst));
-    }
-
-    public void removeOtherSpaceshipType(SpaceshipType sst){
-    	SpaceshipType foundSST = findOtherSpaceshipType(sst.getName());
-    	otherSpaceshipTypes.remove(foundSST);
+    public void addPlayerSpaceshipType(PlayerSpaceshipType ship){
+        playerSpaceshipTypes.add(ship);
     }
 
     public void setOrders(Orders newOrders){
@@ -351,14 +329,6 @@ public class Player implements Serializable{
 
     public void addToVIPReport(String str){
       ti.addToLatestVIPReport(str);
-    }
-
-    public void performOrders(){
-      orders.performOrders(ti,this);
-    }
-
-    public void performDiplomacyOrders(){
-    	orders.performDiplomacyOrders(this);
     }
 
     public void updateTurnInfo(){
@@ -419,38 +389,6 @@ public class Player implements Serializable{
     	}
     	return income;
     }
-
-    public int getSum(){
-    	Logger.finer("upkeepShips();" + upkeepShips());
-    	Logger.finer("upkeepTroops();" + upkeepTroops());
-    	Logger.finer("upkeepVIPs();" + upkeepVIPs());
-    	Logger.finer("income();" + income());
-    	Logger.finer("orders.getExpensesCost();" + orders.getExpensesCost(g));
-    	Logger.finer("treasury;" + treasury);
-    	int tmpIncome = treasury - upkeepShips() - upkeepTroops() - upkeepVIPs() + income();
-//    	if (tmpIncome > 0){ // check taxes
-//    		DiplomacyState lordState = g.getDiplomacy().isVassal(this);
-//    		if (lordState != null){
-//    			tmpIncome -= lordState.getTax();
-//    			if (tmpIncome < 0){
-//    				tmpIncome = 0;
-//    			}
-//    		}
-//    	}
-    	tmpIncome -= orders.getExpensesCost(g);
-    	return tmpIncome;
-    }
-
-    public int getLeftToSpend(){
-    	int tmpIncome = treasury - g.getPlayerUpkeepShips(this) - g.getPlayerUpkeepTroops(this) - g.getPlayerUpkeepVIPs(this) + g.getPlayerIncome(this,false);
-    	tmpIncome -= orders.getExpensesCost(g);
-    	return tmpIncome;
-    }
-
-    /*
-    public int getstartSum(){
-    	return treasury - g.getPlayerUpkeepShips(this) - g.getPlayerUpkeepTroops(this) - g.getPlayerUpkeepVIPs(this) + g.getPlayerIncome(this);
-    }*/
 
     public void addOrRemovePlanetVisib(Planet p){
       orders.addOrRemovePlanetVisib(p);
@@ -571,29 +509,9 @@ public class Player implements Serializable{
       return g.getLastPublicInfo();
     }
 
-    public SpaceshipType findOwnSpaceshipType(String findname){
-    	Logger.finer("findname: " + findname);
-    	SpaceshipType sst = null;
-    	int i = 0;
-    	while ((sst == null) & (i<spaceshipTypes.size())){
-    		SpaceshipType temp = spaceshipTypes.get(i);
-    		Logger.finest("in while: " + temp.getName());
-    		if (temp.getName().equalsIgnoreCase(findname)){
-    			sst = temp;
-    		}else{
-    			i++;
-    		}
-    	}
-    	return sst;
-    }
-
-    public SpaceshipType findSpaceshipType(String findname){
-      SpaceshipType sst = null;
-      sst = findOwnSpaceshipType(findname);
-      if (sst == null){
-    	  sst = findOtherSpaceshipType(findname);
-      }
-      return sst;
+    public PlayerSpaceshipType findOwnPlayerSpaceshipType(String name){
+        Logger.finer("findName: " + name);
+        return playerSpaceshipTypes.stream().filter(ship -> ship.getTypeId().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public TroopType findTroopType(String findname){
@@ -630,20 +548,6 @@ public class Player implements Serializable{
     public BuildingType findBuildingType(String findname){   	
     	return buildings.getBuildingType(findname);
     }
-
-    private SpaceshipType findOtherSpaceshipType(String findname){
-        SpaceshipType sst = null;
-        int i = 0;
-        while ((sst == null) & (i<otherSpaceshipTypes.size())){
-          SpaceshipType temp = otherSpaceshipTypes.get(i);
-          if (temp.getName().equalsIgnoreCase(findname)){
-            sst = temp;
-          }else{
-            i++;
-          }
-        }
-        return sst;
-      }
 
     public String getGovenorName(){
       return govenorName;
@@ -928,17 +832,6 @@ public class Player implements Serializable{
 		this.retreatingGovenor = retreatingGovenor;
 	}
 	
-	public void addOtherShipTypes(List<SpaceshipType> allShipTypes){
-		for (SpaceshipType sst : allShipTypes) {
-			SpaceshipType found = findSpaceshipType(sst.getName());
-			if (found == null){
-				// not in players own list
-				// add to other ships instead
-				otherSpaceshipTypes.add(sst.copy());
-			}
-		}
-	}
-	
 	@Override
 	public String toString(){
 		String tmpStr = "";
@@ -1112,15 +1005,6 @@ public class Player implements Serializable{
 	      orders.addBuildVIP(building, vipTypes, this);
 	    }
 	
-	public SpaceshipType getSpaceShipType(String shipName){
-		for(int i=0; i < spaceshipTypes.size();i++){
-			if(((SpaceshipType)spaceshipTypes.get(i)).getName().equalsIgnoreCase(shipName)){
-				return ((SpaceshipType)spaceshipTypes.get(i));
-			}
-		}
-		return null;
-	}
-	
 	public TroopType getTroopType(String troopName){
 		for(int i=0; i < troopTypes.size();i++){
 			if(troopTypes.get(i).getUniqueName().equalsIgnoreCase(troopName)){
@@ -1241,8 +1125,6 @@ public class Player implements Serializable{
     	notes = null;
     	orders = null;
     	password = null;
-    	spaceshipTypes = null;
-    	otherSpaceshipTypes = null; 
         troopTypes = null;
         otherTroopTypes = null;
         vipTypes = null;

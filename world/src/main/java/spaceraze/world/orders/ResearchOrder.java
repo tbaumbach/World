@@ -39,11 +39,6 @@ public class ResearchOrder implements Serializable {
 	    returnString = "Research on " + getAdvantageName();
 	    return returnString;
 	  }
-
-	public void performResearch(TurnInfo ti, Player p){
-		Logger.finest( "performResearch: " + advantageName + " player: " + p.getName());
-	    p.getResearch().researchAdvantage(advantageName,ti,p);
-	}
 	
 	public void addToHighlights(Player p, HighlightType type){
 		p.addToHighlights(getAdvantageName(), type);

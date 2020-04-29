@@ -1,23 +1,32 @@
 package spaceraze.world.enums;
 
 public enum SpaceshipRange {
-	NONE,
-	SHORT,
-	LONG;
-	
-	public String toString(){
-		String retVal = "-";
-		if (this == SHORT){
-			retVal = "Short";
-		}else
-		if (this == LONG){
-			retVal = "Long";
-		}
-		return retVal;
+	NONE("NONE", "-"),
+	SHORT("SHORT", "Short"),
+	LONG("LONG", "Long");
+
+	private String id;
+	private String name;
+
+	SpaceshipRange(String id, String name){
+		this.id = id;
+		this.name = name;
 	}
 	
+	public String toString(){
+		return this.getName();
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	public String toLowercaseString(){
-		return this.toString().toLowerCase();
+		return this.getName().toLowerCase();
 	}
 	
 	public boolean greaterThan(SpaceshipRange otherRange){

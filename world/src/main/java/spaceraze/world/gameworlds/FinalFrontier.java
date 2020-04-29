@@ -12,6 +12,7 @@ import spaceraze.world.SpaceshipType;
 import spaceraze.world.UniqueIdCounter;
 import spaceraze.world.VIPType;
 import spaceraze.world.enums.BlackMarketFrequency;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 
@@ -405,7 +406,7 @@ public class FinalFrontier{
 		
 		
         // Golan I
-        SpaceshipType tempsst = new SpaceshipType("Defence Platform I","DPI",SpaceshipType.SIZE_SMALL,20,100,SpaceshipRange.NONE,1,3,uniqueShipIdCounter,15,25);
+        SpaceshipType tempsst = new SpaceshipType("Defence Platform I","DPI", SpaceShipSize.SMALL,20,100,SpaceshipRange.NONE,1,3,uniqueShipIdCounter,15,25);
         tempsst.setDescription("Small non-mobile defence unit");
         tempsst.setArmorSmall(40);
         tempsst.setWeaponsStrengthMedium(10);  
@@ -416,7 +417,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // Golan II
-        tempsst = new SpaceshipType("Defence Platform II","DPII",SpaceshipType.SIZE_MEDIUM,50,400,SpaceshipRange.NONE,2,8,uniqueShipIdCounter,30,25);
+        tempsst = new SpaceshipType("Defence Platform II","DPII",SpaceShipSize.MEDIUM,50,400,SpaceshipRange.NONE,2,8,uniqueShipIdCounter,30,25);
         tempsst.setDescription("Medium non-mobile defence unit");
         tempsst.setCanAppearOnBlackMarket(false);
         tempsst.setArmorSmall(70);
@@ -429,7 +430,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // Golan III
-        tempsst = new SpaceshipType("Defence Platform III","DPIII",SpaceshipType.SIZE_LARGE,100,800,SpaceshipRange.NONE,3,16,uniqueShipIdCounter,10,25);
+        tempsst = new SpaceshipType("Defence Platform III","DPIII",SpaceShipSize.LARGE,100,800,SpaceshipRange.NONE,3,16,uniqueShipIdCounter,10,25);
         tempsst.setDescription("Large non-mobile defence unit");
         tempsst.setCanAppearOnBlackMarket(false);
         tempsst.setArmorSmall(90);
@@ -444,7 +445,7 @@ public class FinalFrontier{
 	
         gw.addShipType(tempsst);
 	// Home Base
-        tempsst = new SpaceshipType("Head Quarter","HQ",SpaceshipType.SIZE_LARGE,400,1600,SpaceshipRange.NONE,0,160,uniqueShipIdCounter,20,25);
+        tempsst = new SpaceshipType("Head Quarter","HQ",SpaceShipSize.LARGE,400,1600,SpaceshipRange.NONE,0,160,uniqueShipIdCounter,20,25);
         tempsst.setDescription("Defence and trade plattform ");
         tempsst.setCanAppearOnBlackMarket(false);
         tempsst.setArmorSmall(90);
@@ -465,7 +466,7 @@ public class FinalFrontier{
 //###################  SMALL  ##########################################
         
         // Scout
-        tempsst = new SpaceshipType("Scout","Sct",SpaceshipType.SIZE_SMALL,10,50,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,5,5);
+        tempsst = new SpaceshipType("Scout","Sct",SpaceShipSize.SMALL,10,50,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,5,5);
         tempsst.setDescription("Useful as scout ship, and can also be used to boost long range raiding forces and to transport VIPs");
         tempsst.setVisibleOnMap(false);
         tempsst.setPlanetarySurvey(true);
@@ -474,7 +475,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // Corvette
-        tempsst = new SpaceshipType("Corvette","Crv",SpaceshipType.SIZE_SMALL,20,100,SpaceshipRange.LONG,2,6,uniqueShipIdCounter,15,10);
+        tempsst = new SpaceshipType("Corvette","Crv",SpaceShipSize.SMALL,20,100,SpaceshipRange.LONG,2,6,uniqueShipIdCounter,15,10);
         tempsst.setDescription("A raider and small VIP transport");
         tempsst.setWeaponsStrengthMedium(20);
         tempsst.setWeaponsMaxSalvoesMedium(2);
@@ -483,7 +484,7 @@ public class FinalFrontier{
 //###################  MEDIUM  ##########################################
         
         // Troopship
-        tempsst = new SpaceshipType("Troopship","Tpt",SpaceshipType.SIZE_MEDIUM,20,75,SpaceshipRange.LONG,2,12,uniqueShipIdCounter,10,10);
+        tempsst = new SpaceshipType("Troopship","Tpt",SpaceShipSize.MEDIUM,20,75,SpaceshipRange.LONG,2,12,uniqueShipIdCounter,10,10);
         tempsst.setDescription("Troops on troopships can lower a planets resistance by 1");
         tempsst.setArmorSmall(0);
         tempsst.setPsychWarfare(1);
@@ -491,7 +492,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
 
         // Destroyer
-        tempsst = new SpaceshipType("Destroyer","Des",SpaceshipType.SIZE_MEDIUM,50,200,SpaceshipRange.LONG,4,20,uniqueShipIdCounter,25,25);
+        tempsst = new SpaceshipType("Destroyer","Des",SpaceShipSize.MEDIUM,50,200,SpaceshipRange.LONG,4,20,uniqueShipIdCounter,25,25);
         tempsst.setDescription("Useful for long range raiding attacks, and also boost larger task forces with Anti-Squadron coverage");
         tempsst.setArmorSmall(70);
         tempsst.setSquadronCapacity(1);
@@ -505,7 +506,7 @@ public class FinalFrontier{
 //###################  LARGE  ##########################################
 
         // Carrier
-        tempsst = new SpaceshipType("Carrier","Car",SpaceshipType.SIZE_LARGE,40,150,SpaceshipRange.SHORT,4,25,uniqueShipIdCounter,10,10);
+        tempsst = new SpaceshipType("Carrier","Car",SpaceShipSize.LARGE,40,150,SpaceshipRange.SHORT,4,25,uniqueShipIdCounter,10,10);
         tempsst.setDescription("Backbone in every large fleet is the carrier and its large supply of Squadrons. Keep it Screened");
         tempsst.setArmorSmall(50);
         tempsst.setSquadronCapacity(8);
@@ -513,7 +514,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
    
         // Cruiser
-        tempsst = new SpaceshipType("Cruiser","Cru",SpaceshipType.SIZE_LARGE,150,600,SpaceshipRange.SHORT,5,30,uniqueShipIdCounter,20,15);
+        tempsst = new SpaceshipType("Cruiser","Cru",SpaceShipSize.LARGE,150,600,SpaceshipRange.SHORT,5,30,uniqueShipIdCounter,20,15);
         tempsst.setDescription("Main battle unit, Great against most enemies");
         tempsst.setBombardment(1);
         tempsst.setArmorSmall(90);
@@ -533,7 +534,7 @@ public class FinalFrontier{
 //###################  HUGE  ##########################################
         
         // Battleship
-        tempsst = new SpaceshipType("Battleship","Bat",SpaceshipType.SIZE_HUGE,300,2200,SpaceshipRange.SHORT,10,70,uniqueShipIdCounter,15,10);
+        tempsst = new SpaceshipType("Battleship","Bat",SpaceShipSize.HUGE,300,2200,SpaceshipRange.SHORT,10,70,uniqueShipIdCounter,15,10);
         tempsst.setDescription("Useful as flagship in major task forces, Its bombardment is feared amongst its enemies");
         tempsst.setArmorSmall(75);
         tempsst.setArmorMedium(80);
@@ -549,7 +550,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // Commandship
-        tempsst = new SpaceshipType("Commandship","Com",SpaceshipType.SIZE_HUGE,50,400,SpaceshipRange.SHORT,10,50,uniqueShipIdCounter,15,10);
+        tempsst = new SpaceshipType("Commandship","Com",SpaceShipSize.HUGE,50,400,SpaceshipRange.SHORT,10,50,uniqueShipIdCounter,15,10);
         tempsst.setDescription("The Natural Leader in any major task force, with its Iniative bonus it can help a smaller fleet beat an larger one");
         tempsst.setPsychWarfare(2);
         tempsst.setIncreaseInitiative(7);
@@ -572,7 +573,7 @@ public class FinalFrontier{
 //###################  SQUADRONS  ##########################################
              
         // F1 Fighter
-        tempsst = new SpaceshipType("Fighter Sqd","Fgt",SpaceshipType.SIZE_SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,15,40);
+        tempsst = new SpaceshipType("Fighter Sqd","Fgt",SpaceShipSize.SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,15,40);
         tempsst.setDescription("Best way of winning Sqadron Superiority is to have the most Fighter Sqds");
         tempsst.setSquadron(true);
         tempsst.setCanAttackScreenedShips(true);
@@ -580,7 +581,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // B1 Bomber
-        tempsst = new SpaceshipType("Bomber Sqd","Bom",SpaceshipType.SIZE_SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,10);
+        tempsst = new SpaceshipType("Bomber Sqd","Bom",SpaceShipSize.SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,20,10);
         tempsst.setDescription("A Bomber Squadron can make a big difference against an Small & Medium taskforce");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -591,7 +592,7 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
         
         // T1 Torpedo boat
-        tempsst = new SpaceshipType("Torpedo Boat","Tor",SpaceshipType.SIZE_SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,5,5);
+        tempsst = new SpaceshipType("Torpedo Boat","Tor",SpaceShipSize.SMALL,10,50,SpaceshipRange.LONG,2,4,uniqueShipIdCounter,5,5);
         tempsst.setDescription("A Torpedo Boat Squadron can make a big difference against an Large & Huge taskforce");
         tempsst.setSquadron(true);
         tempsst.setTargetingType(SpaceshipTargetingType.ANTIMBU);
@@ -608,14 +609,14 @@ public class FinalFrontier{
 //###################  CIVILIANS  ##########################################
 
         // Merchant
-        tempsst = new SpaceshipType("Merchant Fleet","Mer",SpaceshipType.SIZE_LARGE,40,80,SpaceshipRange.SHORT,1,15,uniqueShipIdCounter,5,5);
+        tempsst = new SpaceshipType("Merchant Fleet","Mer",SpaceShipSize.LARGE,40,80,SpaceshipRange.SHORT,1,15,uniqueShipIdCounter,5,5);
         tempsst.setDescription("Earn Extra credits by having one of these on each planet");
         tempsst.setArmorSmall(50);
         tempsst.setCanBlockPlanet(false);
         
     	tempsst.setIncOwnOpenBonus(3);
     	tempsst.setIncOwnClosedBonus(2);
-    	tempsst.setIncFrendlyOpenBonus(3);
+    	tempsst.setIncFriendlyOpenBonus(3);
     
     	tempsst.setIncNeutralOpenBonus(4);
     	tempsst.setIncNeutralClosedBonus(3);
@@ -626,10 +627,10 @@ public class FinalFrontier{
         gw.addShipType(tempsst);
 
 	// Supply Ship
-        tempsst = new SpaceshipType("Supply Ship","Sup",SpaceshipType.SIZE_MEDIUM,40,80,SpaceshipRange.SHORT,3,8,uniqueShipIdCounter,5,5);
+        tempsst = new SpaceshipType("Supply Ship","Sup",SpaceShipSize.MEDIUM,40,80,SpaceshipRange.SHORT,3,8,uniqueShipIdCounter,5,5);
         tempsst.setTargetingType(SpaceshipTargetingType.ALLROUND);
         tempsst.setArmorSmall(50);
-        tempsst.setSupply(4);
+        tempsst.setSupply(SpaceShipSize.HUGE);
         tempsst.setCanBlockPlanet(false);
         tempsst.setScreened(true);
        
@@ -639,7 +640,7 @@ public class FinalFrontier{
         
         
         // Repairship
-        //tempsst = new SpaceshipType("Repair dock","Rep",SpaceshipType.SIZE_MEDIUM,40,80,SpaceshipRange.SHORT,1,10,uniqueShipIdCounter,30);
+        //tempsst = new SpaceshipType("Repair dock","Rep",SpaceShipSize.MEDIUM,40,80,SpaceshipRange.SHORT,1,10,uniqueShipIdCounter,30);
         //tempsst.setDescription("An moveble repair dock, have one in each Task force to repair damaged ships");
         //tempsst.setArmorSmall(50);
         //tempsst.setTroops(true);

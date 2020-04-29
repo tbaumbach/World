@@ -9,6 +9,7 @@ import spaceraze.world.GameWorld;
 import spaceraze.world.SpaceshipType;
 import spaceraze.world.UniqueIdCounter;
 import spaceraze.world.VIPType;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 
 public class CorporateSpace {
@@ -40,32 +41,32 @@ public class CorporateSpace {
         UniqueIdCounter uniqueShipIdCounter = new UniqueIdCounter();
 
         // Golan I
-        SpaceshipType tempsst = new SpaceshipType("Defence Platform I","DPI",SpaceshipType.SIZE_SMALL,10,30,SpaceshipRange.NONE,1,3,uniqueShipIdCounter,10);
+        SpaceshipType tempsst = new SpaceshipType("Defence Platform I","DPI", SpaceShipSize.SMALL,10,30,SpaceshipRange.NONE,1,3,uniqueShipIdCounter,10);
         tempsst.setDescription("Small non-mobile defence unit");
         gw.addShipType(tempsst);
         // Golan II
-        tempsst = new SpaceshipType("Defence Platform II","DPII",SpaceshipType.SIZE_MEDIUM,30,80,SpaceshipRange.NONE,1,6,uniqueShipIdCounter,30);
+        tempsst = new SpaceshipType("Defence Platform II","DPII",SpaceShipSize.MEDIUM,30,80,SpaceshipRange.NONE,1,6,uniqueShipIdCounter,30);
         tempsst.setDescription("Medium non-mobile defence unit");
         tempsst.setArmorSmall(0);
         gw.addShipType(tempsst);
         // Golan III
-        tempsst = new SpaceshipType("Defence Platform III","DPIII",SpaceshipType.SIZE_LARGE,50,140,SpaceshipRange.NONE,1,9,uniqueShipIdCounter,50);
+        tempsst = new SpaceshipType("Defence Platform III","DPIII",SpaceShipSize.LARGE,50,140,SpaceshipRange.NONE,1,9,uniqueShipIdCounter,50);
         tempsst.setDescription("Large non-mobile defence unit");
         tempsst.setArmorSmall(0);
         tempsst.setArmorMedium(0);
         gw.addShipType(tempsst);
         // Corvette
-        tempsst = new SpaceshipType("Corvette","Crv",SpaceshipType.SIZE_SMALL,10,20,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,10);
+        tempsst = new SpaceshipType("Corvette","Crv",SpaceShipSize.SMALL,10,20,SpaceshipRange.LONG,1,3,uniqueShipIdCounter,10);
         tempsst.setDescription("Useful as scout ship, and can also be used to boost long range raiding forces and to transport VIPs");
         gw.addShipType(tempsst);
         // Destroyer
-        tempsst = new SpaceshipType("Destroyer","Des",SpaceshipType.SIZE_MEDIUM,40,80,SpaceshipRange.LONG,3,10,uniqueShipIdCounter,30);
+        tempsst = new SpaceshipType("Destroyer","Des",SpaceShipSize.MEDIUM,40,80,SpaceshipRange.LONG,3,10,uniqueShipIdCounter,30);
         tempsst.setDescription("Useful for long range raiding attacks, and also boost larger task forces");
         tempsst.setArmorSmall(0);
         tempsst.setPsychWarfare(1);
         gw.addShipType(tempsst);
         // Cruiser
-        tempsst = new SpaceshipType("Cruiser","Cru",SpaceshipType.SIZE_LARGE,80,300,SpaceshipRange.SHORT,5,16,uniqueShipIdCounter,60);
+        tempsst = new SpaceshipType("Cruiser","Cru",SpaceShipSize.LARGE,80,300,SpaceshipRange.SHORT,5,16,uniqueShipIdCounter,60);
         tempsst.setDescription("Main battle unit");
         tempsst.setBombardment(1);
         tempsst.setPsychWarfare(1);
@@ -73,7 +74,7 @@ public class CorporateSpace {
         tempsst.setArmorMedium(0);
         gw.addShipType(tempsst);
         // Battleship
-        tempsst = new SpaceshipType("Battleship","Bat",SpaceshipType.SIZE_HUGE,120,600,SpaceshipRange.SHORT,10,30,uniqueShipIdCounter,120);
+        tempsst = new SpaceshipType("Battleship","Bat",SpaceShipSize.HUGE,120,600,SpaceshipRange.SHORT,10,30,uniqueShipIdCounter,120);
         tempsst.setDescription("Useful as flagship in major task forces");
         tempsst.setBombardment(2);
         tempsst.setPsychWarfare(1);

@@ -80,7 +80,7 @@ public class BuildingType implements Serializable, Cloneable{
 	//private int shipTechBonus = 0; // %  on ships bild on planet
 	
 	/*
-	// (Tobbe) Dessa användes inte. Samma egenskaper som VIPar har och skall kanske användas i framtiden. Skall vara i % form.
+	//TODO (Tobbe) Dessa användes inte. Samma egenskaper som VIPar har och skall kanske användas i framtiden. Skall vara i % form.
 	private int shipBuildBonus; // decreases build cost of ships
 	private int troopBuildBonus; // decreases build cost of troops
 	private int vipBuildBonus; // decreases build cost of VIPs

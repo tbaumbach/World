@@ -10,6 +10,7 @@ import spaceraze.util.general.Logger;
 import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyState;
 import spaceraze.world.enums.HighlightType;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.incomeExpensesReports.IncomeType;
 import spaceraze.world.spacebattle.TaskForce;
 
@@ -1249,28 +1250,13 @@ public class Planet implements Serializable{
 	
 	public int getMaxWharfsSize(){
 		int maxSize = 0;
-		for(int i=0; i< buildings.size();i++){
-			if(buildings.get(i).getBuildingType().getWharfSize() > maxSize){
-				maxSize = buildings.get(i).getBuildingType().getWharfSize();
+		for(Building building : buildings){
+			if(building.getBuildingType().getWharfSize() > maxSize){
+				maxSize = building.getBuildingType().getWharfSize();
 			}
 		}
 		return maxSize;
 		
-	}
-	
-	public int getMaxRepairTonnage(){
-		int maxSize = getMaxWharfsSize();
-		if(maxSize == 1){
-			return 300;
-		}else if(maxSize == 2){
-			return 600;
-		}else if(maxSize == 3){
-			return 900;
-		}else if(maxSize == 5){
-			return 1200;
-		}
-		
-		return 0;
 	}
 	
 	public boolean isPlanetOwner(Player aPlayer){
@@ -1328,13 +1314,13 @@ public class Planet implements Serializable{
 			}
 			
 			if(aType != null){
-				if(aType.getSizeString().equals("small")){
+				if(aType.getSize() == SpaceShipSize.SMALL){
 					if(pop < 3){
 						shipListString ="[2]" + aType.getName();
 					}else{
 						shipListString ="[4]" + aType.getName();
 					}
-				}else if(aType.getSizeString().equals("medium")){
+				}else if(aType.getSize() == SpaceShipSize.MEDIUM){
 					if(pop < 5){
 						shipListString ="[2]" + aType.getName();
 					}else{
@@ -1374,13 +1360,13 @@ public class Planet implements Serializable{
 				Logger.fine("### aType.getName() ### No ships on planet");
 			}
 			if(aType != null){
-				if(aType.getSizeString().equals("small")){
+				if(aType.getSize() == SpaceShipSize.SMALL){
 					if(pop < 3){
 						shipListString ="1 - 2 " + aType.getName() + "s in defence";
 					}else{
 						shipListString ="2 - 4 " + aType.getName()+ "s in defence";
 					}
-				}else if(aType.getSizeString().equals("medium")){
+				}else if(aType.getSize() == SpaceShipSize.MEDIUM){
 					if(pop < 5){
 						shipListString ="1 - 2 " + aType.getName()+ "s in defence";
 					}else{

@@ -7,6 +7,7 @@
 package spaceraze.world;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -19,11 +20,11 @@ import spaceraze.world.UniqueIdCounter;
  
 public class BlackMarket implements Serializable {
   static final long serialVersionUID = 1L;
-  Vector<BlackMarketOffer> currentOffers;
+  List<BlackMarketOffer> currentOffers;
   UniqueIdCounter uic;
 
   public BlackMarket(UniqueIdCounter uic) {
-    currentOffers = new Vector<BlackMarketOffer>();
+    currentOffers = new ArrayList<>();
     this.uic = uic;
   }
 
@@ -45,7 +46,7 @@ public class BlackMarket implements Serializable {
     }
     for (int i = 0; i < nrOffers; i++){
       BlackMarketOffer tempOffer = new BlackMarketOffer(g,uic.getUniqueId());
-      currentOffers.addElement(tempOffer);
+      currentOffers.add(tempOffer);
       g.addBlackMarketMessages(null,"New item for sale: a " + tempOffer.getString() + " is for sale at the Black Market.");
     }
   }
@@ -63,7 +64,7 @@ public class BlackMarket implements Serializable {
     BlackMarketOffer found = null;
     int i = 0;
     while ((i < currentOffers.size()) & (found == null)){
-      BlackMarketOffer tempOffer = (BlackMarketOffer)currentOffers.elementAt(i);
+      BlackMarketOffer tempOffer = (BlackMarketOffer)currentOffers.get(i);
       if (tempOffer.getUniqueId() == aUniqueId){
         found = tempOffer;
       }else{
@@ -71,20 +72,6 @@ public class BlackMarket implements Serializable {
       }
     }
     return found;
-  }
-
-  public void performBlackMarket(Galaxy galaxy){
-    for (int i = currentOffers.size()-1; i >= 0; i--){
-      BlackMarketOffer tempOffer = (BlackMarketOffer)currentOffers.elementAt(i);
-      boolean sold = tempOffer.performSelling(galaxy);
-      if (sold){
-        currentOffers.removeElementAt(i);
-      }else
-      if (tempOffer.tooOld(galaxy)){
-    	  tempOffer.createRemovedOldMessage(galaxy);
-    	  currentOffers.removeElementAt(i);
-      }
-    }
   }
 
   public List<BlackMarketOffer> getCurrentOffers(){

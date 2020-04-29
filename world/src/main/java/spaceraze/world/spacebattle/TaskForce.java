@@ -21,6 +21,7 @@ import spaceraze.world.GameWorld;
 import spaceraze.world.Planet;
 import spaceraze.world.Spaceship;
 import spaceraze.world.VIP;
+import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 import spaceraze.world.report.spacebattle.EnemySpaceshipTarget;
@@ -99,38 +100,10 @@ public class TaskForce implements Serializable, Cloneable { // serialiseras denn
 			Spaceship aShip = iter.next().getSpaceship();
 			if (aShip.isSquadron()) {
 				if (aShip.getCarrierLocation() != null) {
-					aShip.supplyWeapons(4);
+					aShip.supplyWeapons(SpaceShipSize.HUGE);
 				}
 			}
 		}
-	}
-
-	public int getLargestShipSize() {
-		int maxsize = 0;
-		for (int i = 0; i < allShips.size(); i++) {
-			Spaceship tempss = allShips.get(i).getSpaceship();
-			if (tempss.getSize() > maxsize) {
-				maxsize = tempss.getSize();
-			}
-		}
-		return maxsize;
-	}
-
-	public String getLargestShipSizeString() {
-		String maxSizeString = "none";
-		int maxSize = -1;
-		Spaceship maxss = null;
-		for (int i = 0; i < allShips.size(); i++) {
-			Spaceship tempss = allShips.get(i).getSpaceship();
-			if (tempss.getSize() > maxSize) {
-				maxSize = tempss.getSize();
-				maxss = tempss;
-			}
-		}
-		if (maxss != null) {
-			maxSizeString = maxss.getSizeString();
-		}
-		return maxSizeString;
 	}
 
 	public int getTotalNrShips() {
@@ -669,28 +642,14 @@ public class TaskForce implements Serializable, Cloneable { // serialiseras denn
 	}
 
 	/**
-	 * använder getStrength istället då det gäller att avgöra om en tf ska fly eller
-	 * inte
-	 * 
-	 * @return
-	 */
-	public int getTonnage() {
-		int total = 0;
-		for (int i = 0; i < allShips.size(); i++) {
-			total = total + ((allShips.get(i).getSpaceship()).getTonnage());
-		}
-		return total;
-	}
-
-	/**
 	 * används då det gäller att avgöra om en tf ska fly eller inte
 	 * 
 	 * @return
 	 */
 	public int getStrength() {
 		int total = 0;
-		for (int i = 0; i < allShips.size(); i++) {
-			Spaceship tmpss = allShips.get(i).getSpaceship();
+		for (TaskForceSpaceShip taskForceSpaceShip : allShips) {
+			Spaceship tmpss = taskForceSpaceShip.getSpaceship();
 			total = total + (tmpss.getCurrentShields());
 			total = total + (tmpss.getCurrentDc() / 2);
 			total = total + (tmpss.getActualDamage());

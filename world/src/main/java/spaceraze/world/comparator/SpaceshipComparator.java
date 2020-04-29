@@ -16,7 +16,7 @@ public class SpaceshipComparator implements Comparator<Spaceship> {
     static final long serialVersionUID = 1L;
 
 	public int compare(Spaceship ss1, Spaceship ss2) {
-		int diff = ss2.getTonnage() - ss1.getTonnage();
+		int diff = ss2.getType().getSize().getCompareSize() - ss1.getType().getSize().getCompareSize();
 		if (diff == 0){
 			diff = ss2.getSpaceshipType().getBuildCost(null) - ss1.getSpaceshipType().getBuildCost(null);
 		}
