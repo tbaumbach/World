@@ -624,7 +624,7 @@ public class Titanium{
         
         //TODO Paul jag tog bort denna d� vi nu k�r med att alla har 3 turns
         //tt.setNrAttacks(4);
-        tt.setDropPenalty(0);
+        //tt.setDropPenalty(0);
         tt.setCanBuild(false);
         gw.addTroopType(tt);
 
@@ -650,7 +650,7 @@ public class Titanium{
         tt.setShortDescription("Elite infantry");
         tt.setAdvantages("Can flank");
         tt.setDisadvantages("None");
-        tt.setDropPenalty(0);
+        //tt.setDropPenalty(0);
    //     tt.setAttackScreened(true);
         tt.setDefaultPosition(BattleGroupPosition.FLANKER);
         tt.setCanBuild(false);

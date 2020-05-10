@@ -1199,11 +1199,11 @@ public class TaskForce implements Serializable, Cloneable { // serialiseras denn
 	
 	private boolean canAttackScreened(TaskForceSpaceShip taskForceSpaceShip) {
 		return taskForceSpaceShip.getSpaceship().isCanAttackScreenedShips() 
-				|| taskForceSpaceShip.getVipOnShip().stream().anyMatch(vip -> vipAlloweShipToAttackScreend(vip, taskForceSpaceShip.getSpaceship()));
+				|| taskForceSpaceShip.getVipOnShip().stream().anyMatch(vip -> vipAllowShipToAttackScreened(vip, taskForceSpaceShip.getSpaceship()));
 	}
 	
-	private boolean vipAlloweShipToAttackScreend(VIP vip, Spaceship ship) {
-		return (ship.isSquadron() && vip.isAttackScreenedSquadron()) || vip.isAttackScreenedCapital();
+	private boolean vipAllowShipToAttackScreened(VIP vip, Spaceship ship) {
+		return (ship.isSquadron() && vip.isAttackScreenedSquadron()) || (!ship.isSquadron() && vip.isAttackScreenedCapital());
 	}
 	
 	/**

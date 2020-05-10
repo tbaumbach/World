@@ -6,13 +6,6 @@ import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.enums.BlackMarketFrequency;
 import spaceraze.world.enums.TroopTargetingType;
 import spaceraze.world.enums.TypeOfTroop;
-import spaceraze.world.BlackMarketOffer;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Player;
-import spaceraze.world.Troop;
-import spaceraze.world.TroopType;
-import spaceraze.world.UniqueIdCounter;
-import spaceraze.world.VIP;
 
 public class TroopType implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
@@ -20,7 +13,11 @@ public class TroopType implements Serializable, Cloneable{
 	// names, description etc
 	private String uniqueName;
 	private String uniqueShortName;
-	private String description,history,advantages,disadvantages,shortDescription;
+	private String description;
+	private String history;
+	private String advantages;
+	private String disadvantages;
+	private String shortDescription;
 	private int nrProduced; // used to create unique name for a Troop object 
 	// attack values
 	private int attackInfantry;
@@ -47,8 +44,6 @@ public class TroopType implements Serializable, Cloneable{
 	// costs
 	private int costBuild;
 	private int upkeep; // count against each planet's individual upkeep value (=production)
-	// used for research
-	//private boolean availableToBuild = true;
 //	worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player.
 	private boolean worldUnique=  false, factionUnique = false, playerUnique =  false;
 	
@@ -61,6 +56,37 @@ public class TroopType implements Serializable, Cloneable{
     	this.uic = aUic;
     	this.attackInfantry = anAttackInfantry;
     	this.attackArmored = anAttackArmor;
+    }
+
+    public TroopType(TroopType originalType, PlayerTroopImprovement improvement){
+		this.uniqueName = originalType.getUniqueName();
+		this.uniqueShortName = originalType.getUniqueShortName();
+		this.description = originalType.getDescription();
+		this.history = originalType.getHistory();
+		this.advantages = originalType.getAdvantages();
+		this.disadvantages = originalType.getDisadvantages();
+		this.shortDescription = originalType.getShortDescription();
+		this.nrProduced = originalType.getNrProduced();
+		this.typeOfTroop = originalType.getTypeOfTroop();
+		this.damageCapacity = originalType.getDamageCapacity() + improvement.getDamageCapacity();
+		this.upkeep = originalType.getUpkeep() + improvement.getCostSupport();
+		this.costBuild = originalType.getCostBuild(null) + improvement.getCostBuild();
+		this.attackInfantry = originalType.getAttackInfantry() + improvement.getAttackArtillery();
+		this.attackArmored = originalType.getAttackArmored() + improvement.getAttackArmored();
+		this.attackArtillery = originalType.getAttackArtillery() + improvement.getAttackArtillery();
+		this.spaceshipTravel = improvement.isSpaceshipTravel() ? improvement.isSpaceshipTravel() : originalType.isSpaceshipTravel();
+		this.canAppearOnBlackMarket = originalType.isCanAppearOnBlackMarket();
+		this.blackMarketFrequency = originalType.getBlackMarketFrequency();
+		this.blackmarketFirstTurn = originalType.getBlackmarketFirstTurn();
+		this.defaultPosition = originalType.getDefaultPosition();
+		this.targetingType = originalType.getTargetingType();
+		this.canBuild = improvement.isAvailableToBuild();
+		this.visible = improvement.isChangeVisible() ? improvement.isVisible() :originalType.isVisible();
+		this.landBattleGroupAttacksBonus = originalType.getLandBattleGroupAttacksBonus();
+		this.worldUnique = originalType.isWorldUnique();
+		this.factionUnique = originalType.isFactionUnique();
+		this.playerUnique = originalType.isPlayerUnique();
+
     }
     
     @Override
@@ -80,7 +106,7 @@ public class TroopType implements Serializable, Cloneable{
     	return uniqueName + " (" + uniqueShortName + ")";
     }
     
-    public Troop getTroop(VIP vipWithTechBonus, int factionTechBonus, int buildingTechBonus){
+    public Troop getTroop(VIP vipWithTechBonus, int factionTechBonus, int buildingTechBonus, int uniqueId){
     	nrProduced++;
     	int totalTechBonus = 0;
     	if (vipWithTechBonus != null){
@@ -88,7 +114,7 @@ public class TroopType implements Serializable, Cloneable{
     	}
     	totalTechBonus += factionTechBonus; 
     	totalTechBonus += buildingTechBonus;
-    	Troop tmpTroop = new Troop(this,nrProduced,totalTechBonus,uic.getUniqueId()); 
+    	Troop tmpTroop = new Troop(this, nrProduced, totalTechBonus, uniqueId);
     	return tmpTroop;
     }
 

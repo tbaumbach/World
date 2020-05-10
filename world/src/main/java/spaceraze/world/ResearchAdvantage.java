@@ -31,10 +31,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	// TroopTypes
 	private List<TroopType> troops,replaceTroops;
 	private List<ResearchUpgradeTroop> researchUpgradeTroop;
-	
-	private List<VIPType> vips,replaceVIPs;
 	private List<BuildingType> buildings,replaceBuildings;
-	private List<ResearchUpgradeVIP> researchUpgradeVIP;
 	private List<ResearchUpgradeBuilding> researchUpgradeBuilding;
 	
 	Corruption corruption;
@@ -48,14 +45,11 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		replaceShips = new ArrayList<>();
 		troops = new ArrayList<>();
 		replaceTroops = new ArrayList<>();
-		vips = new ArrayList<>();
-		replaceVIPs = new ArrayList<>();
 		buildings = new ArrayList<>();
 		replaceBuildings = new ArrayList<>();
 		//corruption = new Corruption();
 		researchUpgradeShip =  new ArrayList<>();
 		researchUpgradeTroop = new ArrayList<>();
-		researchUpgradeVIP = new ArrayList<>();
 		researchUpgradeBuilding = new ArrayList<>();
 	}
 
@@ -69,15 +63,12 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 			for(int i=0;i<researchUpgradeShip.size();i++){
 				temp.researchUpgradeShip.add(researchUpgradeShip.get(i));
 			}
+
 			temp.researchUpgradeTroop = new ArrayList<>();
 			for(int i=0;i<researchUpgradeTroop.size();i++){
 				temp.researchUpgradeTroop.add(researchUpgradeTroop.get(i));
 			}
-			
-			temp.researchUpgradeVIP = new ArrayList<>();
-			for(int i=0;i<researchUpgradeVIP.size();i++){
-				temp.researchUpgradeVIP.add(researchUpgradeVIP.get(i));
-			}
+
 			temp.researchUpgradeBuilding = new ArrayList<>();
 			for(int i=0;i<researchUpgradeBuilding.size();i++){
 				temp.researchUpgradeBuilding.add(researchUpgradeBuilding.get(i));
@@ -128,10 +119,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		for (ResearchUpgradeTroop aResearchTroopType: researchUpgradeTroop) {
 			text += "\n" + aResearchTroopType.getResearchText();
 		}
-		
-		for (ResearchUpgradeVIP aResearchVIPType: researchUpgradeVIP) {
-			text += "\n" + aResearchVIPType.getResearchText();
-		}
+
 		for (ResearchUpgradeBuilding aResearchBuildingType: researchUpgradeBuilding) {
 			text += "\n" + aResearchBuildingType.getResearchText();
 		}
@@ -305,40 +293,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public void setTroopTypes(List<TroopType> newTroops){
 		troops = newTroops;
 	}
-	
-	public VIPType getVIPType(String name){
-		VIPType found = null;
-		int counter = 0;
-		while((found == null) & (counter < vips.size())){
-			VIPType tempVIPType = vips.get(counter);
-			if(tempVIPType.getName().equals(name)){
-				found = tempVIPType;
-			}
-		}
-		return found;
-	}
 
-	public void addVIPType(VIPType aVIPType){
-		vips.add(aVIPType);
-	}
-	
-	@JsonIgnore
-	public List<VIPType> getVIPTypes(){
-		return vips;
-	}
-	
-	public List<String> getVIPTypesName(){
-		List<String> vipNames = new ArrayList<String>();
-		for (VIPType vip : vips) {
-			vipNames.add(vip.getName());
-		}
-		return vipNames;
-	}
-	
-	public void setVIPTypes(List<VIPType> newVIPs){
-		vips = newVIPs;
-	}
-	
 	public BuildingType getBuildingType(String name){
 		BuildingType found = null;
 		int counter = 0;
@@ -433,46 +388,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		}
 		return troopNames;
 	}
-	
-	public void setReplaceTroopTypes(List<TroopType> replaceTroopTypes) {
-		this.replaceTroops = replaceTroopTypes;
-	}
-	
-	public VIPType getReplaceVIPType(String name){
-		VIPType found = null;
-		int counter = 0;
-		while((found == null) & (counter < replaceVIPs.size())){
-			VIPType tempVIPType = replaceVIPs.get(counter);
-			if(tempVIPType.getName().equals(name)){
-				found = tempVIPType;
-			}
-		}
-		return found;
-	}
 
-	public void addReplaceVIPType(VIPType aVIPType){
-		replaceVIPs.add(aVIPType);
-	}
-	
-	@JsonIgnore
-	public List<VIPType> getReplaceVIPTypes(){
-		return replaceVIPs;
-	}
-	
-	public List<String> getReplaceVIPTypesName(){
-		List<String> vipNames = new ArrayList<String>();
-		for (VIPType vip : replaceVIPs) {
-			vipNames.add(vip.getName());
-		}
-		return vipNames;
-	}
-	
-	
-	
-	public void setReplaceVIPTypes(List<VIPType> replaceVIPTypes){
-		replaceVIPs = replaceVIPTypes;
-	}
-	
 	public BuildingType getReplaceBuildingType(String name){
 		BuildingType found = null;
 		int counter = 0;
@@ -591,9 +507,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	}
 	public List<ResearchUpgradeTroop> getResearchUpgradeTroop() {
 		return researchUpgradeTroop;
-	}
-	public List<ResearchUpgradeVIP> getResearchUpgradeVIP() {
-		return researchUpgradeVIP;
 	}
 	public List<ResearchUpgradeBuilding> getResearchUpgradeBuilding() {
 		return researchUpgradeBuilding;

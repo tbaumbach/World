@@ -3,16 +3,7 @@ package spaceraze.world.orders;
 import java.io.Serializable;
 
 import spaceraze.util.general.Logger;
-import spaceraze.world.BlackMarketBid;
-import spaceraze.world.Building;
-import spaceraze.world.BuildingType;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.SpaceshipType;
-import spaceraze.world.TroopType;
-import spaceraze.world.VIP;
-import spaceraze.world.VIPType;
+import spaceraze.world.*;
 
 // representerar ett utlägg gjort av spelaren under sitt drag
 public class Expense implements Serializable {
@@ -137,14 +128,14 @@ public class Expense implements Serializable {
     	returnString = "Build new " + sst.getName() + " at " + planetName + ".";
     }else
     if (type.equalsIgnoreCase("buildtroop")){
-    	TroopType troopType = aGalaxy.getPlayer(playerName).findTroopType(troopTypeName);
+    	TroopType troopType = aGalaxy.findTroopType(troopTypeName);
         returnString = "Build new " + troopType.getUniqueName() + " at " + planetName + ".";
     }else
     if (type.equalsIgnoreCase("buildVIP")){
         returnString = "Build new " + typeVIPName + " at " + planetName + ".";
     }else
     if (type.equalsIgnoreCase("transaction")){
-      returnString = "Transfer " + sum + " money to Govenor " + aGalaxy.getPlayer(playerName).getGovenorName();
+      returnString = "Transfer " + sum + " money to Govenor " + aGalaxy.getPlayer(playerName).getGovernorName();
     }else
     if(type.equalsIgnoreCase("blackmarketbid")){
       returnString = blackMarketBid.getText();

@@ -1233,9 +1233,9 @@ public class Galaxy implements Serializable {
 				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_FRIENDLY_VIP_KILLED);
 				losingVIP.getBoss().addToVIPReport(
 						"Your " + losingVIP.getName() + " has been killed by a friendly " + winningVIP.getName()
-								+ " belonging to Governor " + winningVIP.getBoss().getGovenorName() + ".");
+								+ " belonging to Governor " + winningVIP.getBoss().getGovernorName() + ".");
 				winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() + " has killed a friendly "
-						+ losingVIP.getName() + " belonging to Governor " + losingVIP.getBoss().getGovenorName() + ".");
+						+ losingVIP.getName() + " belonging to Governor " + losingVIP.getBoss().getGovernorName() + ".");
 			} else { // different factions => enemies
 				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
 				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
@@ -1864,7 +1864,7 @@ public class Galaxy implements Serializable {
 		Player temp = null;
 		while ((i < players.size()) & (found == null)) {
 			temp = players.get(i);
-			if (temp.isPlayerByGovenorName(govenorName)) {
+			if (temp.isPlayerByGovernorName(govenorName)) {
 				found = temp;
 			} else {
 				i++;
@@ -2640,7 +2640,7 @@ public class Galaxy implements Serializable {
 				.forEach(spaceship -> taskForceSpaceShips
 						.add(new TaskForceSpaceShip(spaceship, findAllVIPsOnShip(spaceship))));
 		
-		TaskForce tf = new TaskForce(aPlayer != null ? aPlayer.getGovenorName() : null, aPlayer != null ? aPlayer.getFaction().getName() : null, taskForceSpaceShips);
+		TaskForce tf = new TaskForce(aPlayer != null ? aPlayer.getGovernorName() : null, aPlayer != null ? aPlayer.getFaction().getName() : null, taskForceSpaceShips);
 		
 		if (tf.getTotalNrShips() == 0) { // om inga skepp returnera null = finns ingen taskforce
 			return null;
@@ -3079,8 +3079,8 @@ public class Galaxy implements Serializable {
 		int longest = 0;
 		for (int i = 0; i < players.size(); i++) {
 			Player temp = (Player) players.get(i);
-			if (temp.getGovenorName().length() > longest) {
-				longest = temp.getGovenorName().length();
+			if (temp.getGovernorName().length() > longest) {
+				longest = temp.getGovernorName().length();
 			}
 		}
 		return longest;
@@ -4249,7 +4249,7 @@ public class Galaxy implements Serializable {
 		int total = 0;
 		for (VIPType aVipType : vipTypes) {
 			if (aVipType.isReadyToUseInBlackMarket(this)) {
-				total = total + aVipType.getFrequency();
+				total = total + aVipType.getFrequency().getFrequency();
 			}
 		}
 		return total;
@@ -4264,7 +4264,7 @@ public class Galaxy implements Serializable {
 		while (aVipType == null) {
 			tmpVipType = (VIPType) vipTypes.get(counter);
 			if (tmpVipType.isReadyToUseInBlackMarket(this)) {
-				tmpFreqSum = tmpFreqSum + tmpVipType.getFrequency();
+				tmpFreqSum = tmpFreqSum + tmpVipType.getFrequency().getFrequency();
 				Logger.finest("tmpFreqSum: " + tmpFreqSum);
 				if (tmpFreqSum > freqValue) {
 					aVipType = tmpVipType;
@@ -4273,12 +4273,6 @@ public class Galaxy implements Serializable {
 			counter++;
 		}
 		return aVipType;
-	}
-
-	public void blackMarketNewTurn() {
-		if (turn > 0) {
-			blackMarket.newTurn(this);
-		}
 	}
 
 	public BlackMarketOffer findBlackMarketOffer(int aUniqueId) {
@@ -4368,8 +4362,8 @@ public class Galaxy implements Serializable {
 		for (Player aPlayer : players) {
 			if (!aPlayer.isPlayer(defeatedPlayer)) {
 				Logger.finest("Create messages about defeated player");
-				aPlayer.addToHighlights(defeatedPlayer.getGovenorName(), HighlightType.TYPE_DEFEATED_OTHER_PLAYER);
-				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovenorName() + " has been defeated.");
+				aPlayer.addToHighlights(defeatedPlayer.getGovernorName(), HighlightType.TYPE_DEFEATED_OTHER_PLAYER);
+				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovernorName() + " has been defeated.");
 				aPlayer.addToGeneral("");
 			}
 		}
@@ -4386,7 +4380,7 @@ public class Galaxy implements Serializable {
 			if (!aPlayer.isPlayer(defeatedPlayer)) {
 				Logger.finest("Create messages about killed governor");
 				// aPlayer.addToHighlights(defeatedPlayer.getGovenorName(),Highlight.TYPE_GOVENOR_KILLED_OTHER_PLAYER);
-				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovenorName() + " has been killed.");
+				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovernorName() + " has been killed.");
 				aPlayer.addToGeneral("");
 			}
 		}
@@ -4403,7 +4397,7 @@ public class Galaxy implements Serializable {
 			if (!aPlayer.isPlayer(defeatedPlayer)) {
 				Logger.finest("Create messages about a player who has no planets or ships");
 				// aPlayer.addToHighlights(defeatedPlayer.getGovenorName(),Highlight.TYPE_NO_SHIPS_NO_PLANETS_OTHER_PLAYER);
-				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovenorName() + " has no planets or ships left.");
+				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovernorName() + " has no planets or ships left.");
 				aPlayer.addToGeneral("");
 			}
 		}
@@ -4419,9 +4413,9 @@ public class Galaxy implements Serializable {
 		Logger.finest("Create messages about a player who has abandoned this game");
 		for (Player aPlayer : players) {
 			if (!aPlayer.isPlayer(defeatedPlayer)) {
-				aPlayer.addToHighlights(defeatedPlayer.getGovenorName(),
+				aPlayer.addToHighlights(defeatedPlayer.getGovernorName(),
 						HighlightType.TYPE_GAME_ABANDONED_OTHER_PLAYER);
-				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovenorName() + " has left this quadrant (player "
+				aPlayer.addToGeneral("Governor " + defeatedPlayer.getGovernorName() + " has left this quadrant (player "
 						+ defeatedPlayer.getName() + " has abandoned this game).");
 				aPlayer.addToGeneral("");
 			}
@@ -4439,9 +4433,9 @@ public class Galaxy implements Serializable {
 				"Create messages about a player who has been removed from this game due to being broke for 5 turns");
 		for (Player aPlayer : players) {
 			if (!aPlayer.isPlayer(removedPlayer)) {
-				aPlayer.addToHighlights(removedPlayer.getGovenorName(),
+				aPlayer.addToHighlights(removedPlayer.getGovernorName(),
 						HighlightType.TYPE_GAME_BROKE_REMOVED_OTHER_PLAYER);
-				aPlayer.addToGeneral("Governor " + removedPlayer.getGovenorName() + " (player "
+				aPlayer.addToGeneral("Governor " + removedPlayer.getGovernorName() + " (player "
 						+ removedPlayer.getName() + ") has been broke for 5 turns and have lost the game.");
 				aPlayer.addToGeneral("");
 			}
@@ -5359,91 +5353,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return found;
-	}
-
-	public SpaceshipType getRandomShipBlueprint() {
-		List<SpaceshipType> possibleShiptypes = new LinkedList<>();
-		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
-		//for (SpaceshipType aSpaceshipType : spaceshipTypes) {
-		for (SpaceshipType aSpaceshipType : gw.getShipTypes()) {
-			boolean allhaveType = true;
-			for (Player aPlayer : getActivePlayers()) {
-				if (aPlayer.findOwnPlayerSpaceshipType(aSpaceshipType.getName()) == null) {
-					allhaveType = false;
-				}
-			}
-			if (!allhaveType) {
-				if (aSpaceshipType.isBluePrintReadyToUseInBlackMarket(this)) {
-					possibleShiptypes.add(aSpaceshipType);
-				}
-			}
-		}
-
-		SpaceshipType randomShiptype = null;
-		SpaceshipType tempShipType = null;
-
-		if (possibleShiptypes.size() > 0) {
-			int totalFrequencypoint = 0;
-			for (SpaceshipType spaceshipType : possibleShiptypes) {
-				totalFrequencypoint += spaceshipType.getBluePrintFrequency().getFrequency();
-			}
-
-			int freqValue = Functions.getRandomInt(0, totalFrequencypoint - 1);
-			int counter = 0;
-			int tmpFreqSum = 0;
-			while (randomShiptype == null) {
-				tempShipType = possibleShiptypes.get(counter);
-				tmpFreqSum = tmpFreqSum + tempShipType.getBluePrintFrequency().getFrequency();
-				if (tmpFreqSum > freqValue) {
-					randomShiptype = tempShipType;
-				}
-				counter++;
-			}
-		}
-		return randomShiptype;
-	}
-
-	// Used to remove factions for Droid client
-	public void removeFactions() {
-		factions = null;
-	}
-
-	public void pruneDroid(Player thePlayer) {
-		// clear ships from other players
-		List<Spaceship> playersShips = new ArrayList<Spaceship>();
-		for (Spaceship aSpaceship : spaceships) {
-			if (aSpaceship.getOwner() == thePlayer) {
-				playersShips.add(aSpaceship);
-			}
-		}
-		spaceships = playersShips;
-		// clear buildings from other players
-		for (Planet aPlanet : planets) {
-			if (aPlanet.getPlayerInControl() != thePlayer) {
-				aPlanet.pruneDroid();
-			}
-		}
-		// clear VIPs from other players
-		List<VIP> playersVIPs = new ArrayList<VIP>();
-		for (VIP aVIP : allVIPs) {
-			if (aVIP.getBoss() == thePlayer) {
-				playersVIPs.add(aVIP);
-			}
-		}
-		allVIPs = playersVIPs;
-		// prune all other players
-		Logger.fine("prune all other players, thePlayer: " + thePlayer.getName());
-		for (Player aPlayer : players) {
-			Logger.fine("aPlayer: " + aPlayer.getName());
-			if (aPlayer != thePlayer) {
-				Logger.fine("aPlayer != thePlayer -> PRUNING!");
-				aPlayer.pruneOtherPlayerDroid();
-			}
-		}
-		// clear other stuff
-		lastLog = null;
-		selectableFactionNames = null;
-		// kan connections tas bort?
 	}
 
 	public boolean checkNoPlanet(Player aPlayer) {

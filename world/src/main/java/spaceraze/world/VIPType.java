@@ -7,13 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import spaceraze.world.enums.BlackMarketFrequency;
-import spaceraze.world.Alignment;
-import spaceraze.world.BlackMarketOffer;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.UniqueIdCounter;
-import spaceraze.world.VIP;
 
 /* 
  * Defines a type of VIP
@@ -45,13 +38,11 @@ public class VIPType implements Serializable {
   private int initSupportBonus; // % bonus (not used - yet?), should not be used together with squadrons
   private int initDefence; // % bonus, should not be used together with squadrons
   private int initFighterSquadronBonus; // % bonus
-  private int antiAirBonus; // % bonus to AA damage, not used (yet?)
   private int psychWarfareBonus; // bonus to resistance decrease of besieged planet
 //  private int siegeBonus; // bonus to resistance decrease of besieged planet
   private int resistanceBonus; // bonus to resistance on planet
   private int shipBuildBonus; // decreases build cost of ship
   private int troopBuildBonus; // decreases build cost of troops
-//  private int vipBuildBonus; // decreases build cost of VIPs. (NOT IN USE)
   private int buildingBuildBonus; // decreases build cost of Bulidings
   private int techBonus; // increased shields & weapons for ships and troops built (%)
   private int openIncBonus; // increase income on open planet
@@ -85,15 +76,13 @@ public class VIPType implements Serializable {
   
   private int buildCost = 0; 
   private int upkeep = 0;
-  private boolean availableToBuild = true;
-  // private boolean availableToBuild = false; skall vara false om forskning p� VIPar skall till�tas
+  private boolean availableToBuild = true; //TODO 2020-05-04 Kolla upp det här
+  // private boolean availableToBuild = false; skall vara false om forskning på VIPar skall tillåtas
   
   // worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player.
-  private boolean worldUnique = false, factionUnique = false, playerUnique = false;
-	
-  // Other fields
-  //private boolean unique; // VIPType is unique - can only be found once NOT USED YET
-  //private boolean uniqueHasBeenFound = false; // always start as false. Becomes true when a vip of this type has been found. NOT USED YET
+  private boolean worldUnique = false;
+  private boolean factionUnique = false;
+  private boolean playerUnique = false;
 
   public VIPType(String name,String shortName,Alignment alignment, UniqueIdCounter uic){
     this.name = name;
@@ -489,8 +478,8 @@ public class VIPType implements Serializable {
   	this.showOnOpenPlanet = showOnOpenPlanet;
   }
   
-  public int getFrequency() {
-  	return frequency.getFrequency();
+  public BlackMarketFrequency getFrequency() {
+  	return frequency;
   }
   
   public void setFrequency(BlackMarketFrequency newFrequency) {
@@ -501,12 +490,6 @@ public class VIPType implements Serializable {
   }
   public boolean isCounterSpy(){
     return counterEspionage > 0;
-  }
-  public int getAntiAirBonus() {
-  	return antiAirBonus;
-  }
-  public void setAntiAirBonus(int antiAirBonus) {
-  	this.antiAirBonus = antiAirBonus;
   }
   public int getInitFighterSquadronBonus() {
   	return initFighterSquadronBonus;
@@ -540,9 +523,6 @@ public class VIPType implements Serializable {
 		  battleVIP = true;
 	  }else
 	  if (initFighterSquadronBonus > 0){
-		  battleVIP = true;
-	  }else
-	  if (antiAirBonus > 0){
 		  battleVIP = true;
 	  }else
       if (aimBonus > 0){
@@ -842,269 +822,5 @@ public class VIPType implements Serializable {
 		this.howToPlay = howToPlay;
 	}
 
-	@JsonIgnore
-	public static String getAllAbilitiesDroid(){
-		List<String> allStrings = new LinkedList<String>();
-		allStrings.add("Governor");
-		allStrings.add("Assassination");
-		allStrings.add("Counter-espionage");
-		allStrings.add("Exterminator");
-		allStrings.add("Spying");
-		allStrings.add("Initiative bonus");
-		allStrings.add("Squadron initiative bonus");
-		allStrings.add("Initiative defence bonus");
-		allStrings.add("Siege bonus");
-		allStrings.add("Ships build bonus");
-		allStrings.add("Buildings build bonus");
-		allStrings.add("Tech bonus");
-		allStrings.add("Open planet income bonus");
-		allStrings.add("Closed planet income bonus");
-		allStrings.add("Can visit enemy planets");
-		allStrings.add("Can visit neutral planets");
-		allStrings.add("Hero combat");
-		allStrings.add("Hard to kill");
-		allStrings.add("Well guarded (immune to assassinations)");
-		allStrings.add("Boosts range of ships");
-		allStrings.add("Diplomacy (can persuade neutral planets)");
-		allStrings.add("Infestate (can infest planets)");
-		allStrings.add("Immune to counter-espionage");
-		allStrings.add("Resistance bonus");
-		allStrings.add("Stealth (makes ship invisible)");
-		allStrings.add("Bombardment bonus");
-		allStrings.add("Squadron attack screened");
-		allStrings.add("Planetary survey (view closed planets as open)");
-		allStrings.add("Visible on open planets");
-		allStrings.add("Player unique");
-		StringBuffer sb = new StringBuffer();
-		for (String string : allStrings) {
-			sb.append(string);
-	        sb.append("&nbsp;<br>");
-		}
-	    return sb.toString();
-	}
-
-	@JsonIgnore
-	public List<String> getAbilitiesStringsDroid(){
-		List<String> allStrings = new LinkedList<String>();
-		if (governor){
-			allStrings.add("Governor");
-		}
-		if (assassination > 0){
-			allStrings.add("Assassination: " + assassination + "%");
-		}
-		if (counterEspionage > 0){
-			allStrings.add("Counter-espionage: " + counterEspionage + "%");
-		}
-		if (exterminator > 0){
-			allStrings.add("Exterminator: " + exterminator + "%");
-		}
-		if (spying){
-			allStrings.add("Spying");
-		}
-		if (initBonus > 0){
-			allStrings.add("Initiative bonus: " + initBonus + "%");
-		}
-		if (initFighterSquadronBonus > 0){
-			allStrings.add("Squadron initiative bonus: " + initFighterSquadronBonus + "%");
-		}
-		if (initDefence > 0){
-			allStrings.add("Initiative defence bonus: " + initDefence + "%");
-		}
-		if (psychWarfareBonus > 0){
-			allStrings.add("Siege bonus: " + psychWarfareBonus);
-		}		    
-		if (shipBuildBonus > 0){
-			allStrings.add("Ships build bonus: " + shipBuildBonus + "%");
-		}
-		if (buildingBuildBonus > 0){
-			allStrings.add("Buildings build bonus: " + buildingBuildBonus + "%");
-		}
-		if (techBonus > 0){
-			allStrings.add("Tech bonus: " + techBonus + "%");
-		}
-		if (openIncBonus > 0){
-			allStrings.add("Open planet income bonus: " + openIncBonus);
-		}
-		if (closedIncBonus > 0){
-			allStrings.add("Closed planet income bonus: " + closedIncBonus);
-		}
-		if (canVisitEnemyPlanets){
-			allStrings.add("Can visit enemy planets");
-		}
-		if (canVisitNeutralPlanets){
-			allStrings.add("Can visit neutral planets");
-		}
-		if (duellist > 0){
-			allStrings.add("Hero combat, skill: " + getDuellistSkillString());
-		}
-		if (hardToKill){
-			allStrings.add("Hard to kill");
-		}
-		if (wellGuarded){
-			allStrings.add("Well guarded (immune to assassinations)");
-		}
-		if (FTLbonus){
-			allStrings.add("Boosts range of ships");
-		}
-		if (diplomat){
-			allStrings.add("Diplomacy (can persuade neutral planets)");
-		}
-		if (infestate){
-			allStrings.add("Infestate (can infest planets)");
-		}
-		if (immuneToCounterEspionage){
-			allStrings.add("Immune to counter-espionage");
-		}
-		if (resistanceBonus > 0){
-			allStrings.add("Resistance bonus: " + resistanceBonus);
-		}
-		if (stealth){
-			allStrings.add("Stealth (makes ship invisible)");
-		}
-		if (bombardmentBonus > 0){
-			allStrings.add("Bombardment bonus: " + bombardmentBonus);
-		}
-		if (attackScreenedSquadron){
-			allStrings.add("Squadron attack screened");
-		}
-		if (planetarySurvey){
-			allStrings.add("Planetary survey (view closed planets as open)");
-		}
-		if (showOnOpenPlanet){
-			allStrings.add("Visible on open planets");
-		}
-		if (playerUnique){
-			allStrings.add("Player unique");
-		}
-		return allStrings;
-	}
-
-	@JsonIgnore
-	public boolean getHasAbilityDroid(int abilityNr){
-		boolean hasAbility = false;
-		if ((abilityNr == 1) & governor){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 2) & (assassination > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 3) & (counterEspionage > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 4) & (exterminator > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 5) & spying){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 6) & (initBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 7) & (initFighterSquadronBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 8) & (initDefence > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 9) & (psychWarfareBonus > 0)){
-			hasAbility = true;
-		}else	    
-		if ((abilityNr == 10) & (shipBuildBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 11) & (buildingBuildBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 12) & (techBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 13) & (openIncBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 14) & (closedIncBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 15) & canVisitEnemyPlanets){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 16) & canVisitNeutralPlanets){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 17) & (duellist > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 18) & hardToKill){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 19) & wellGuarded){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 20) & FTLbonus){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 21) & diplomat){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 22) & infestate){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 23) & immuneToCounterEspionage){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 24) & (resistanceBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 25) & stealth){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 26) & (bombardmentBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 27) & attackScreenedSquadron){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 28) & planetarySurvey){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 29) & showOnOpenPlanet){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 30) & playerUnique){
-			hasAbility = true;
-		}
-		return hasAbility;
-	}
-
-	@JsonIgnore
-	public String getVipInfoDroid() {
-		  StringBuffer sb = new StringBuffer();
-		  sb.append("<h4>VIP type: ");
-		  sb.append(name + " (" + shortName + ")");
-		  sb.append("</h4>");
-		  sb.append(description);
-		  sb.append("<p>");
-		  sb.append("<b>Alignment: </b>");
-		  sb.append(alignment.getName() + " alignment");
-		  sb.append("<br>");
-		  sb.append("<b>Frequency: </b>");
-		  sb.append(frequency.toString());
-		  sb.append("<p>");
-		  sb.append("<b>Abilities: </b>");
-		  sb.append("<br>");
-		  List<String> abilitiesList = getAbilitiesStringsDroid();
-		  for (String ability : abilitiesList) {
-			  sb.append(ability);
-			  sb.append("&nbsp;<br>");
-		  }
-		  sb.append("<br>");
-		  if (buildCost > 0){
-			  sb.append("<b>Build Cost: </b>");
-			  sb.append(buildCost);
-			  sb.append("<p>");
-		  }
-		  sb.append("<b>How to play: </b>");
-		  sb.append(howToPlay);
-		  return sb.toString();
-	}
 
 }

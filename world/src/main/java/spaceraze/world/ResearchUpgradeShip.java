@@ -12,10 +12,9 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     	super(typeId);
     }
 
-    //TODO 2020-04-19 Change this to update players PlayerSpaceshipType instead of the SpaceshipType
-    public String doResearch(SpaceshipType ship){
+    public String doResearch(PlayerSpaceshipImprovement ship){
     	String text;
-    	text = "\nThe ship model " + ship.getName() + " have been upgrade";
+    	text = "\nThe ship model " + ship.getTypeId() + " have been upgrade";
     	
     	if(getShields() != 0){
     		ship.setShields(ship.getShields() + getShields());
@@ -24,7 +23,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     		ship.setUpkeep(ship.getUpkeep() + getUpkeep());
     	}
     	if(getBuildCost() != 0){
-    		ship.setBuildCost(ship.getBuildCost(null) + getBuildCost());
+    		ship.setBuildCost(ship.getBuildCost() + getBuildCost());
     	}
     	if(getBombardment() != 0){
     		ship.setBombardment(ship.getBombardment() + getBombardment());
@@ -39,7 +38,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     		ship.setPsychWarfare(ship.getPsychWarfare() + getPsychWarfare());
     	}
     	if(getRange() != null){
-    		ship.setSpaceshipRange(getRange());
+    		ship.setRange(getRange());
     	}
     	if(isChangeNoRetreat()){
     		ship.setNoRetreat(isNoRetreat());
@@ -60,13 +59,13 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     		ship.setWeaponsStrengthHuge(ship.getWeaponsStrengthHuge() + getWeaponsStrengthHuge());
     	}
     	if(getWeaponsMaxSalvosMedium() != 0){
-    		ship.setWeaponsMaxSalvoesMedium(ship.getWeaponsMaxSalvoesMedium() + getWeaponsMaxSalvosMedium());
+    		ship.setWeaponsMaxSalvosMedium(ship.getWeaponsMaxSalvosMedium() + getWeaponsMaxSalvosMedium());
     	}
     	if(getWeaponsMaxSalvosLarge() != 0){
-    		ship.setWeaponsMaxSalvoesLarge(ship.getWeaponsMaxSalvoesLarge() + getWeaponsMaxSalvosLarge());
+    		ship.setWeaponsMaxSalvosLarge(ship.getWeaponsMaxSalvosLarge() + getWeaponsMaxSalvosLarge());
     	}
     	if(getWeaponsMaxSalvosHuge() != 0){
-    		ship.setWeaponsMaxSalvoesHuge(ship.getWeaponsMaxSalvoesHuge() + getWeaponsMaxSalvosHuge());
+    		ship.setWeaponsMaxSalvosHuge(ship.getWeaponsMaxSalvosHuge() + getWeaponsMaxSalvosHuge());
     	}
     	if(getArmorSmall() != 0){
     		ship.setArmorSmall(ship.getArmorSmall() + getArmorSmall());
@@ -144,7 +143,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     		ship.setVisibleOnMap(isVisibleOnMap());
     	}
     	if(getTroopCarrier() != 0){
-    		ship.setTroopCapacity(ship.getTroopCapacity() + getTroopCarrier());
+    		ship.setTroopCarrier(ship.getTroopCarrier() + getTroopCarrier());
     	}
     	
     	return text;
@@ -270,7 +269,9 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     private String addplus(int number){
     	if(number > 0){
     		return "+" +number;
-    	}
+    	} else if (number < 0){
+			return "-" +number;
+		}
     	return Integer.toString(number);
     }
     private String addYesOrNo(boolean test){
@@ -280,36 +281,43 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     	return "No";
     }
 
+    @Override
 	public void setCanAttackScreenedShips(boolean canAttackScreenedShips) {
 		this.setChangeCanAttackScreenedShips(true);
 		super.setCanAttackScreenedShips(canAttackScreenedShips);
 	}
 
+	@Override
 	public void setCanBlockPlanet(boolean canBlockPlanet) {
 		this.setChangeCanBlockPlanet(true);
 		super.setCanBlockPlanet(canBlockPlanet);
 	}
 
+	@Override
 	public void setInitSupport(boolean initSupport) {
 		this.setChangeInitSupport(true);
 		super.setInitSupport(initSupport);
 	}
 
+	@Override
 	public void setLookAsCivilian(boolean lookAsCivilian) {
 		this.setChangelookAsCivilian(true);
 		super.setLookAsCivilian(lookAsCivilian);
 	}
 
+	@Override
 	public void setNoRetreat(boolean noRetreat) {
 		this.setChangeNoRetreat(true);
 		super.setNoRetreat(noRetreat);
 	}
 
+	@Override
 	public void setPlanetarySurvey(boolean planetarySurvey) {
 		this.setChangePlanetarySurvey(true);
 		super.setPlanetarySurvey(planetarySurvey);
 	}
 
+	@Override
 	public void setVisibleOnMap(boolean visibleOnMap) {
 		this.setChangeVisibleOnMap(true);
 		super.setVisibleOnMap(visibleOnMap);

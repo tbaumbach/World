@@ -283,7 +283,6 @@ public class SpaceshipType implements Serializable{
         this.lookAsCivilian = oldsst.lookAsCivilian;
         this.canBlockPlanet = oldsst.canBlockPlanet;
         this.visibleOnMap = oldsst.isVisibleOnMap();
-      //TODO this.screened = oldsst.isScreened();
         this.availableToBuild = oldsst.isAvailableToBuild();
         this.troopCapacity = oldsst.getTroopCapacity();
      //   this.weaponsAirToGround = oldsst.getWeaponsAirToGround();
@@ -306,67 +305,66 @@ public class SpaceshipType implements Serializable{
     /**
      * Used to get players SpaceshipType updated by PlayerSpaceshipType.
      */
-    public SpaceshipType(SpaceshipType originSpaceshipType, PlayerSpaceshipType playerSpaceshipType){
+    public SpaceshipType(SpaceshipType originSpaceshipType, PlayerSpaceshipImprovement playerSpaceshipImprovement){
         this.name = originSpaceshipType.getName();
         this.shortName = originSpaceshipType.getShortName();
         this.size = originSpaceshipType.getSize();
-        this.range = playerSpaceshipType.getRange();
-        this.shields = originSpaceshipType.getShields() + playerSpaceshipType.getShields();
-        this.upkeep = originSpaceshipType.getUpkeep() + playerSpaceshipType.getUpkeep();
-        this.buildCost = originSpaceshipType.getBuildCost(null) + playerSpaceshipType.getBuildCost();
-        this.bombardment = originSpaceshipType.getBombardment() + playerSpaceshipType.getBombardment();
-        this.noRetreat = playerSpaceshipType.isNoRetreat();
+        this.range = playerSpaceshipImprovement.getRange() != null ? playerSpaceshipImprovement.getRange() : originSpaceshipType.getRange();
+        this.shields = originSpaceshipType.getShields() + playerSpaceshipImprovement.getShields();
+        this.upkeep = originSpaceshipType.getUpkeep() + playerSpaceshipImprovement.getUpkeep();
+        this.buildCost = originSpaceshipType.getBuildCost(null) + playerSpaceshipImprovement.getBuildCost();
+        this.bombardment = originSpaceshipType.getBombardment() + playerSpaceshipImprovement.getBombardment();
+        this.noRetreat = playerSpaceshipImprovement.isNoRetreat();
 
         //Why can't we research hitpoints?
         this.hits = originSpaceshipType.getHits();
 
         this.setInitSupport(originSpaceshipType.getInitSupport());
         if (originSpaceshipType.getInitSupport()){
-            this.increaseInitiative = originSpaceshipType.getInitSupportBonus() + playerSpaceshipType.getIncreaseInitiative();
+            this.increaseInitiative = originSpaceshipType.getInitSupportBonus() + playerSpaceshipImprovement.getIncreaseInitiative();
         }else{
-            this.increaseInitiative = originSpaceshipType.getInitiativeBonus() + playerSpaceshipType.getIncreaseInitiative();
+            this.increaseInitiative = originSpaceshipType.getInitiativeBonus() + playerSpaceshipImprovement.getIncreaseInitiative();
         }
-        this.initDefence = originSpaceshipType.getInitDefence() + playerSpaceshipType.getInitDefence();
-        this.weaponsStrengthSquadron = originSpaceshipType.getWeaponsStrengthSquadron() + playerSpaceshipType.getWeaponsStrengthSquadron();
-        this.weaponsStrengthSmall = originSpaceshipType.getWeaponsStrengthSmall() + playerSpaceshipType.getWeaponsStrengthSmall();
-        this.weaponsStrengthMedium = originSpaceshipType.getWeaponsStrengthMedium() + playerSpaceshipType.getWeaponsStrengthMedium();
-        this.weaponsStrengthLarge = originSpaceshipType.getWeaponsStrengthLarge() + playerSpaceshipType.getWeaponsStrengthLarge();
-        this.weaponsStrengthHuge = originSpaceshipType.getWeaponsStrengthHuge() + playerSpaceshipType.getWeaponsStrengthHuge();
-        this.weaponsMaxSalvoesMedium = originSpaceshipType.getWeaponsMaxSalvoesMedium() + playerSpaceshipType.getWeaponsMaxSalvosMedium();
-        this.weaponsMaxSalvoesLarge = originSpaceshipType.getWeaponsMaxSalvoesLarge() + playerSpaceshipType.getWeaponsMaxSalvosLarge();
-        this.weaponsMaxSalvoesHuge = originSpaceshipType.getWeaponsMaxSalvoesHuge() + playerSpaceshipType.getWeaponsMaxSalvosHuge();
-        this.supply = playerSpaceshipType.getSupply();
+        this.initDefence = originSpaceshipType.getInitDefence() + playerSpaceshipImprovement.getInitDefence();
+        this.weaponsStrengthSquadron = originSpaceshipType.getWeaponsStrengthSquadron() + playerSpaceshipImprovement.getWeaponsStrengthSquadron();
+        this.weaponsStrengthSmall = originSpaceshipType.getWeaponsStrengthSmall() + playerSpaceshipImprovement.getWeaponsStrengthSmall();
+        this.weaponsStrengthMedium = originSpaceshipType.getWeaponsStrengthMedium() + playerSpaceshipImprovement.getWeaponsStrengthMedium();
+        this.weaponsStrengthLarge = originSpaceshipType.getWeaponsStrengthLarge() + playerSpaceshipImprovement.getWeaponsStrengthLarge();
+        this.weaponsStrengthHuge = originSpaceshipType.getWeaponsStrengthHuge() + playerSpaceshipImprovement.getWeaponsStrengthHuge();
+        this.weaponsMaxSalvoesMedium = originSpaceshipType.getWeaponsMaxSalvoesMedium() + playerSpaceshipImprovement.getWeaponsMaxSalvosMedium();
+        this.weaponsMaxSalvoesLarge = originSpaceshipType.getWeaponsMaxSalvoesLarge() + playerSpaceshipImprovement.getWeaponsMaxSalvosLarge();
+        this.weaponsMaxSalvoesHuge = originSpaceshipType.getWeaponsMaxSalvoesHuge() + playerSpaceshipImprovement.getWeaponsMaxSalvosHuge();
+        this.supply = playerSpaceshipImprovement.getSupply()  != null ? playerSpaceshipImprovement.getSupply() : originSpaceshipType.getSupply();
         nrProduced = originSpaceshipType.getNrProduced();
         this.uic = originSpaceshipType.getUniqueIdCounter();
-        this.armorSmall = originSpaceshipType.getArmorSmall() + playerSpaceshipType.getArmorSmall();
-        this.armorMedium = originSpaceshipType.getArmorMedium() + playerSpaceshipType.getArmorMedium();
-        this.armorLarge = originSpaceshipType.getArmorLarge() + playerSpaceshipType.getArmorLarge();
-        this.armorHuge = originSpaceshipType.getArmorHuge() + playerSpaceshipType.getArmorHuge();
-        this.planetarySurvey = playerSpaceshipType.isChangePlanetarySurvey() ? playerSpaceshipType.isPlanetarySurvey() : originSpaceshipType.isPlanetarySurvey();
+        this.armorSmall = originSpaceshipType.getArmorSmall() + playerSpaceshipImprovement.getArmorSmall();
+        this.armorMedium = originSpaceshipType.getArmorMedium() + playerSpaceshipImprovement.getArmorMedium();
+        this.armorLarge = originSpaceshipType.getArmorLarge() + playerSpaceshipImprovement.getArmorLarge();
+        this.armorHuge = originSpaceshipType.getArmorHuge() + playerSpaceshipImprovement.getArmorHuge();
+        this.planetarySurvey = playerSpaceshipImprovement.isChangePlanetarySurvey() ? playerSpaceshipImprovement.isPlanetarySurvey() : originSpaceshipType.isPlanetarySurvey();
 //        this.siegeBonus = oldsst.getSiegeBonus();
 //        this.troops = oldsst.getTroops();
-        this.psychWarfare = originSpaceshipType.getPsychWarfare() + playerSpaceshipType.getPsychWarfare();
+        this.psychWarfare = originSpaceshipType.getPsychWarfare() + playerSpaceshipImprovement.getPsychWarfare();
         this.targetingType = originSpaceshipType.getTargetingType();
-        this.squadronCapacity = originSpaceshipType.getSquadronCapacity() + playerSpaceshipType.getSquadronCapacity();
+        this.squadronCapacity = originSpaceshipType.getSquadronCapacity() + playerSpaceshipImprovement.getSquadronCapacity();
         this.squadron = originSpaceshipType.isSquadron();
-        this.description = playerSpaceshipType.getDescription();
-        this.history = playerSpaceshipType.getHistory();
-        this.incEnemyClosedBonus = originSpaceshipType.incEnemyClosedBonus + playerSpaceshipType.getIncEnemyClosedBonus();
-        this.incEnemyOpenBonus = originSpaceshipType.incEnemyOpenBonus + playerSpaceshipType.getIncEnemyOpenBonus();
-        this.incFriendlyClosedBonus = originSpaceshipType.incFriendlyClosedBonus + playerSpaceshipType.getIncFriendlyClosedBonus();
-        this.incFriendlyOpenBonus = originSpaceshipType.incFriendlyOpenBonus + playerSpaceshipType.getIncFriendlyOpenBonus();
-        this.incNeutralClosedBonus = originSpaceshipType.incNeutralClosedBonus + playerSpaceshipType.getIncNeutralClosedBonus();
-        this.incNeutralOpenBonus = originSpaceshipType.incNeutralOpenBonus + playerSpaceshipType.getIncNeutralOpenBonus();
-        this.incOwnClosedBonus = originSpaceshipType.incOwnClosedBonus + playerSpaceshipType.getIncOwnClosedBonus();
-        this.incOwnOpenBonus = originSpaceshipType.incOwnOpenBonus + playerSpaceshipType.getIncOwnOpenBonus();
-        this.canAttackScreenedShips = playerSpaceshipType.isChangeCanAttackScreenedShips() ? playerSpaceshipType.isCanAttackScreenedShips() : originSpaceshipType.canAttackScreenedShips;
+        this.description = playerSpaceshipImprovement.getDescription();
+        this.history = playerSpaceshipImprovement.getHistory();
+        this.incEnemyClosedBonus = originSpaceshipType.incEnemyClosedBonus + playerSpaceshipImprovement.getIncEnemyClosedBonus();
+        this.incEnemyOpenBonus = originSpaceshipType.incEnemyOpenBonus + playerSpaceshipImprovement.getIncEnemyOpenBonus();
+        this.incFriendlyClosedBonus = originSpaceshipType.incFriendlyClosedBonus + playerSpaceshipImprovement.getIncFriendlyClosedBonus();
+        this.incFriendlyOpenBonus = originSpaceshipType.incFriendlyOpenBonus + playerSpaceshipImprovement.getIncFriendlyOpenBonus();
+        this.incNeutralClosedBonus = originSpaceshipType.incNeutralClosedBonus + playerSpaceshipImprovement.getIncNeutralClosedBonus();
+        this.incNeutralOpenBonus = originSpaceshipType.incNeutralOpenBonus + playerSpaceshipImprovement.getIncNeutralOpenBonus();
+        this.incOwnClosedBonus = originSpaceshipType.incOwnClosedBonus + playerSpaceshipImprovement.getIncOwnClosedBonus();
+        this.incOwnOpenBonus = originSpaceshipType.incOwnOpenBonus + playerSpaceshipImprovement.getIncOwnOpenBonus();
+        this.canAttackScreenedShips = playerSpaceshipImprovement.isChangeCanAttackScreenedShips() ? playerSpaceshipImprovement.isCanAttackScreenedShips() : originSpaceshipType.canAttackScreenedShips;
         this.civilian = originSpaceshipType.civilian;
-        this.lookAsCivilian = playerSpaceshipType.isChangelookAsCivilian() ? playerSpaceshipType.isLookAsCivilian() : originSpaceshipType.lookAsCivilian;
-        this.canBlockPlanet = playerSpaceshipType.isChangeCanBlockPlanet() ? playerSpaceshipType.isCanBlockPlanet() : originSpaceshipType.canBlockPlanet;
-        this.visibleOnMap = playerSpaceshipType.isChangeVisibleOnMap() ? playerSpaceshipType.isVisibleOnMap() : originSpaceshipType.isVisibleOnMap();
-        //TODO this.screened = oldsst.isScreened();
-        this.availableToBuild = playerSpaceshipType.isAvailableToBuild();
-        this.troopCapacity = originSpaceshipType.getTroopCapacity() + playerSpaceshipType.getTroopCarrier();
+        this.lookAsCivilian = playerSpaceshipImprovement.isChangelookAsCivilian() ? playerSpaceshipImprovement.isLookAsCivilian() : originSpaceshipType.lookAsCivilian;
+        this.canBlockPlanet = playerSpaceshipImprovement.isChangeCanBlockPlanet() ? playerSpaceshipImprovement.isCanBlockPlanet() : originSpaceshipType.canBlockPlanet;
+        this.visibleOnMap = playerSpaceshipImprovement.isChangeVisibleOnMap() ? playerSpaceshipImprovement.isVisibleOnMap() : originSpaceshipType.isVisibleOnMap();
+        this.availableToBuild = playerSpaceshipImprovement.isAvailableToBuild();
+        this.troopCapacity = originSpaceshipType.getTroopCapacity() + playerSpaceshipImprovement.getTroopCarrier();
         this.worldUnique = originSpaceshipType.isWorldUnique();
         this.factionUnique = originSpaceshipType.isFactionUnique();
         this.playerUnique = originSpaceshipType.isPlayerUnique();
@@ -1072,10 +1070,10 @@ public class SpaceshipType implements Serializable{
 	}
 	
 	@JsonIgnore
-	public boolean isBluePrintReadyToUseInBlackMarket(Galaxy aGalaxy){
+	public boolean isBluePrintReadyToUseInBlackMarket(int turn){
 		boolean constructible =  false;
 		
-		if (aGalaxy.getTurn() >= getBluePrintFirstTurn()){
+		if (turn >= getBluePrintFirstTurn()){
 			if (bluePrintFrequency != BlackMarketFrequency.NEVER){
 				if(!isPlayerUnique() && !isFactionUnique() && !isWorldUnique()){
 					constructible = true;

@@ -10,20 +10,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import spaceraze.world.enums.HighlightType;
-import spaceraze.util.general.Functions;
-import spaceraze.util.general.Logger;
-import spaceraze.world.BlackMarketBid;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.Spaceship;
-import spaceraze.world.SpaceshipType;
-import spaceraze.world.Troop;
-import spaceraze.world.TroopType;
-import spaceraze.world.VIP;
-import spaceraze.world.VIPType;
-
 public class BlackMarketOffer implements Serializable {
   static final long serialVersionUID = 1L;
   VIPType offeredVIPType;
@@ -31,49 +17,16 @@ public class BlackMarketOffer implements Serializable {
   SpaceshipType offeredShiptypeBlueprint;
   TroopType offeredTroopType;
   boolean hotStuff;
-  int uniqueId,hotStuffAmount;
+  final int uniqueId;
+  int hotStuffAmount;
   List<BlackMarketBid> bids;
   //Galaxy g;
   private int lastTurnAction = 0;
 
-  public BlackMarketOffer(Galaxy g, int uniqueId) {
-    this.uniqueId = uniqueId;
-    int r = 0;
-    if (g.hasTroops()){
-    	r = Functions.getRandomInt(1,12);
-    }else{
-    	r = Functions.getRandomInt(1,9);
+    public BlackMarketOffer(int uniqueId) {
+        this.uniqueId = uniqueId;
+        this.bids = new LinkedList<>();
     }
-    lastTurnAction = g.getTurn();
-    if (r <= 3){ // ship
-    	offeredShiptype = g.getRandomCommonShiptype();
-    }else
-    if ((r >= 4) & (r <= 5)){ // hot stuff
-        hotStuff = true;
-        hotStuffAmount = Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6);
-    }else
-    if ((r >= 6) & (r <= 8)){ // VIP
-    	boolean canBeUsed = false;
-    	int tries = 0;
-    	while (!canBeUsed & (tries < 100)){
-    		offeredVIPType = g.getRandomVIPType();
-    		tries++;
-    		canBeUsed = g.vipCanBeUsed(offeredVIPType);
-    	}
-    	if (!canBeUsed){ // if no vip was found use a hot stuff instead
-    		hotStuffAmount = Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6);
-    	}
-    }else
-    if (r == 9){ // shiptype blueprint
-    	offeredShiptypeBlueprint = g.getRandomShipBlueprint();
-    	if (offeredShiptypeBlueprint == null){ // if no shiptype was found use a hot stuff instead
-    		hotStuffAmount = Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6) + Functions.getRandomInt(1,6);
-    	}
-    }else{ // 10-12 troop
-        offeredTroopType = g.getRandomCommonTroopType();
-    }
-    bids = new LinkedList<BlackMarketBid>();
-  }
 
   public String getString(){
     String returnString = "Hot stuff";
@@ -254,5 +207,38 @@ public class BlackMarketOffer implements Serializable {
 
     public int getHotStuffAmount() {
         return hotStuffAmount;
+    }
+
+    public int getLastTurnAction() {
+        return lastTurnAction;
+    }
+
+    public void setLastTurnAction(int lastTurnAction) {
+        this.lastTurnAction = lastTurnAction;
+    }
+
+    public void setOfferedVIPType(VIPType offeredVIPType) {
+        this.offeredVIPType = offeredVIPType;
+    }
+
+    public void setOfferedShiptype(SpaceshipType offeredShiptype) {
+        this.offeredShiptype = offeredShiptype;
+    }
+
+    public void setOfferedShiptypeBlueprint(SpaceshipType offeredShiptypeBlueprint) {
+        this.offeredShiptypeBlueprint = offeredShiptypeBlueprint;
+    }
+
+    public void setOfferedTroopType(TroopType offeredTroopType) {
+        this.offeredTroopType = offeredTroopType;
+    }
+
+    public void setHotStuffAmount(int hotStuffAmount) {
+        this.hotStuff = true;
+        this.hotStuffAmount = hotStuffAmount;
+    }
+
+    public void setBids(List<BlackMarketBid> bids) {
+        this.bids = bids;
     }
 }

@@ -20,7 +20,7 @@ public class Planet implements Serializable{
     private double x,y,z;
     private String name;
     private int pop, res, basePop;
-    private boolean startPlanet,open,besieged = false, posssibleStartplanet = true;
+    private boolean startPlanet,open,besieged = false, possibleStartPlanet = true;
     private Player playerInControl = null, lastKnownPlayerInControl = null;
     private Planet reachFrom;
     private boolean hasNeverSurrendered = true;
@@ -40,7 +40,7 @@ public class Planet implements Serializable{
     	y = Double.parseDouble(st.nextToken());
     	z = Double.parseDouble(st.nextToken());
     	if(st.hasMoreTokens()){
-    		posssibleStartplanet = Boolean.valueOf(st.nextToken());
+    		possibleStartPlanet = Boolean.valueOf(st.nextToken());
     	}
     	
         pop = 0;
@@ -50,7 +50,7 @@ public class Planet implements Serializable{
         open = false;
     }
     
-    public Planet(double x, double y, double z, String name, int pop, int res, boolean startPlanet, boolean posssibleStartplanet){
+    public Planet(double x, double y, double z, String name, int pop, int res, boolean startPlanet, boolean possibleStartPlanet){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -63,11 +63,11 @@ public class Planet implements Serializable{
         if (startPlanet){ // spelares planeter startar closed
           open = false;
         }
-        this.posssibleStartplanet = posssibleStartplanet;
+        this.possibleStartPlanet = possibleStartPlanet;
     }
     
     public Planet clonePlanet(){
-    	return new Planet(x,y,z,name,pop,res,startPlanet, posssibleStartplanet);
+    	return new Planet(x,y,z,name,pop,res,startPlanet, possibleStartPlanet);
     }
     
     /**
@@ -307,11 +307,11 @@ public class Planet implements Serializable{
         if (playerInControl != null){
         	playerInControl.getPlanetInfos().setLastKnownOwner(name,conqueringPlayer.getName(),playerInControl.getGalaxy().turn + 1);
         	playerInControl.getPlanetInfos().setLastKnownProdRes(name,pop,res);
-        	playerInControl.addToGeneral("The planet " + name + " have no troops and can make no resistance to Governor " + conqueringPlayer.getGovenorName() + " troops.");
-        	playerInControl.addToGeneral("The planet " + name + " has surrendered to Governor " + conqueringPlayer.getGovenorName() + ".");
+        	playerInControl.addToGeneral("The planet " + name + " have no troops and can make no resistance to Governor " + conqueringPlayer.getGovernorName() + " troops.");
+        	playerInControl.addToGeneral("The planet " + name + " has surrendered to Governor " + conqueringPlayer.getGovernorName() + ".");
         	playerInControl.addToHighlights(name,HighlightType.TYPE_PLANET_LOST);
         	conqueringPlayer.addToGeneral("The planet " + name + " have no troops and can make no resistance to your troops.");
-        	conqueringPlayer.addToGeneral("The planet " + name + ", formerly belonging to Governor " + playerInControl.getGovenorName() + ", has surrendered to you.");
+        	conqueringPlayer.addToGeneral("The planet " + name + ", formerly belonging to Governor " + playerInControl.getGovernorName() + ", has surrendered to you.");
         	conqueringPlayer.addToHighlights(name,HighlightType.TYPE_PLANET_CONQUERED);
         	
         	hasNeverSurrendered = false; // should not be needed?
@@ -374,15 +374,15 @@ public class Planet implements Serializable{
         		if(shield >= bombardment){
         			bombardment=0;
         			if (playerInControl != null){
-        				playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovenorName() + " attampt to bombardment your planet but your planet shields stopped his attampt.");
+        				playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovernorName() + " attampt to bombardment your planet but your planet shields stopped his attampt.");
         			}
-        			bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment was stopped by planet defence shields.");
+        			bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment was stopped by planet defence shields.");
         		}else{
         			bombardment-= shield;
         			if (playerInControl != null){
-        				playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovenorName() + " bombardment your planet, your planet shields reduced the bombardment with " + shield + ".");
+        				playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovernorName() + " bombardment your planet, your planet shields reduced the bombardment with " + shield + ".");
         			}
-        			bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment was reduced  with " + shield + " by planet defence shields.");
+        			bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment was reduced  with " + shield + " by planet defence shields.");
         		}
         	}
         }
@@ -393,8 +393,8 @@ public class Planet implements Serializable{
         	}
         	res = res - bombardment;
         	if (playerInControl != null){
-        		playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovenorName() + "'s bombardment have lowered " + name + "'s resistance and population by " + bombardment + ".");
-        		bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have lowered its resistance and population by " + bombardment + ".");
+        		playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovernorName() + "'s bombardment have lowered " + name + "'s resistance and population by " + bombardment + ".");
+        		bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have lowered its resistance and population by " + bombardment + ".");
         	
         		// 10% chans att bomba s�nder en byggnad/bombv�rde.
         		for(int bombardmentIndex = 0; bombardmentIndex < bombardment; bombardmentIndex++){
@@ -409,15 +409,15 @@ public class Planet implements Serializable{
 	    				if(groundBuildings.size() > 0){
 	    					int randomIndex = Functions.getRandomInt(0, groundBuildings.size()-1);
 	    					Building destroyedBuilding = groundBuildings.get(randomIndex);
-	    					playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovenorName() + "'s bombardment have destoyed the building " + destroyedBuilding.getBuildingType().getName() + ".");
+	    					playerInControl.addToGeneral("While besieging your planet " + name + " Governor " + bombardmentPlayer.getGovernorName() + "'s bombardment have destoyed the building " + destroyedBuilding.getBuildingType().getName() + ".");
 	    					
 	    					
 	    					if(galaxy.getTroopsOnPlanet(this, bombardmentPlayer).size() > 0){
 	    						// The attacking player have troops on the planet that can report which typ of building that was destroeyd.
-	    						bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have destroyed a " + destroyedBuilding.getBuildingType().getName() + " building.");
+	    						bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have destroyed a " + destroyedBuilding.getBuildingType().getName() + " building.");
 	    					}else{
 	    						// No troops and no report about the destoeyd buiding, just the explosion that tells about a destroyed building.
-	    						bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have destroyed a building.");
+	    						bombardmentPlayer.addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your bombardment have destroyed a building.");
 	    					}
 	    					removeBuilding(destroyedBuilding.getUniqueId());
 	    				}
@@ -451,7 +451,7 @@ public class Planet implements Serializable{
         open = false;
         if (playerInControl != null){
           playerInControl.addToGeneral("The planet " + name + " is under siege by the forces of Governor " + tf.getPlayerName() + ".");
-          galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("You are laying siege to the planet " + name + ", belonging to Governor " + playerInControl.getGovenorName() + ".");
+          galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("You are laying siege to the planet " + name + ", belonging to Governor " + playerInControl.getGovernorName() + ".");
         }else{
         	galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("You are laying siege to the neutral planet " + name + ".");
         }
@@ -466,7 +466,7 @@ public class Planet implements Serializable{
           res -= psychWarfare;
           if (playerInControl != null){
         	  playerInControl.addToGeneral("While besieging your planet " + name + " the psych warfare bonus in Governor " + tf.getPlayerName() + " (" + galaxy.getPlayerByGovenorName(tf.getPlayerName()).getFaction().getName() + ") fleet have lowered " + name + "'s resistance by " + psychWarfare + ".");
-        	  galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") the psych warfare bonus of your fleets ships have lowered its resistance by " + psychWarfare + ".");
+        	  galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") the psych warfare bonus of your fleets ships have lowered its resistance by " + psychWarfare + ".");
           }else{
         	  galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the neutral planet " + name + " the psych warfare bonus of the ships in your fleet have lowered its resistance by " + psychWarfare + ".");
           }
@@ -476,7 +476,7 @@ public class Planet implements Serializable{
             res -= psychWarfareBonusVIP.getPsychWarfareBonus();
             if (playerInControl != null){
               playerInControl.addToGeneral("While besieging your planet " + name + " the precence of a " + psychWarfareBonusVIP.getName() + " in Governor " + tf.getPlayerName() + " (" + galaxy.getPlayerByGovenorName(tf.getPlayerName()).getFaction().getName() + ") fleet have lowered " + name + "'s resistance by " + psychWarfareBonusVIP.getPsychWarfareBonus() + ".");
-              galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovenorName() + " (" + playerInControl.getFaction().getName() + ") your " + psychWarfareBonusVIP.getName() + " have lowered its resistance by " + psychWarfareBonusVIP.getPsychWarfareBonus() + ".");
+              galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the planet " + name + " belonging to Governor " + playerInControl.getGovernorName() + " (" + playerInControl.getFaction().getName() + ") your " + psychWarfareBonusVIP.getName() + " have lowered its resistance by " + psychWarfareBonusVIP.getPsychWarfareBonus() + ".");
             }else{
             	galaxy.getPlayerByGovenorName(tf.getPlayerName()).addToGeneral("While besieging the neutral planet " + name + " your " + psychWarfareBonusVIP.getName() + " have lowered its resistance by " + psychWarfareBonusVIP.getPsychWarfareBonus() + ".");
             }
@@ -666,9 +666,9 @@ public class Planet implements Serializable{
     	if (playerInControl != null){
     		playerInControl.getPlanetInfos().setLastKnownOwner(name,attackingPlayer.getName(),playerInControl.getGalaxy().turn + 1);
     		playerInControl.getPlanetInfos().setLastKnownProdRes(name,pop,res);
-    		playerInControl.addToGeneral("The planet " + name + " has surrendered to Governor " + attackingPlayer.getGovenorName() + ".");
+    		playerInControl.addToGeneral("The planet " + name + " has surrendered to Governor " + attackingPlayer.getGovernorName() + ".");
     		playerInControl.addToHighlights(name,HighlightType.TYPE_PLANET_LOST);
-    		attackingPlayer.addToGeneral("The planet " + name + ", formerly belonging to Governor " + playerInControl.getGovenorName() + ", has surrendered to you.");
+    		attackingPlayer.addToGeneral("The planet " + name + ", formerly belonging to Governor " + playerInControl.getGovernorName() + ", has surrendered to you.");
     		attackingPlayer.addToHighlights(name,HighlightType.TYPE_PLANET_CONQUERED);
 //  		playerInControl.getGalaxy().checkVIPsOnConqueredPlanet(this,playerInControl);
     		playerInControl.getGalaxy().checkVIPsOnConqueredPlanet(this,attackingPlayer);
@@ -892,9 +892,9 @@ public class Planet implements Serializable{
         	playerInControl.getPlanetInfos().setLastKnownProdRes(name,-1,-1); 
         }
         if (playerInControl != null){
-        	playerInControl.addToGeneral("The planet " + name + " has been RAZED by Governor " + aPlayer.getGovenorName() + " forces.");
+        	playerInControl.addToGeneral("The planet " + name + " has been RAZED by Governor " + aPlayer.getGovernorName() + " forces.");
         	playerInControl.addToHighlights(name,HighlightType.TYPE_OWN_PLANET_RAZED);
-        	aPlayer.addToGeneral("The planet " + name + ", formerly belonging to " + playerInControl.getGovenorName() + ", has been RAZED by your forces.");
+        	aPlayer.addToGeneral("The planet " + name + ", formerly belonging to " + playerInControl.getGovernorName() + ", has been RAZED by your forces.");
         	aPlayer.addToHighlights(name,HighlightType.TYPE_ENEMY_PLANET_RAZED);
         }else{
         	aPlayer.addToGeneral("The neutral planet " + name + " has been RAZED by your forces.");
@@ -1034,7 +1034,7 @@ public class Planet implements Serializable{
         	}
         }
         if (playerInControl != null){
-            playerInControl.addToGeneral("The planet " + name + " has been infected by Governor " + tempInf.getBoss().getGovenorName() + " and is lost!");
+            playerInControl.addToGeneral("The planet " + name + " has been infected by Governor " + tempInf.getBoss().getGovernorName() + " and is lost!");
             playerInControl.addToHighlights(name,HighlightType.TYPE_OWN_PLANET_INFESTATED);
         }
         playerInControl = tempInf.getBoss();
@@ -1091,7 +1091,7 @@ public class Planet implements Serializable{
 		retStr = retStr + "\t" + x;
 		retStr = retStr + "\t" + y;
 		retStr = retStr + "\t" + z;
-		retStr = retStr + "\t" + posssibleStartplanet;
+		retStr = retStr + "\t" + possibleStartPlanet;
 		return retStr;
     }
     
@@ -1382,16 +1382,12 @@ public class Planet implements Serializable{
 		return shipListString;
 	}
 
-	public boolean isPosssibleStartplanet() {
-		return posssibleStartplanet;
+	public boolean isPossibleStartPlanet() {
+		return possibleStartPlanet;
 	}
 
-	public void setPosssibleStartplanet(boolean posssibleStartplanet) {
-		this.posssibleStartplanet = posssibleStartplanet;
-	}
-	
-	public void pruneDroid(){
-		buildings.clear();
+	public void setPossibleStartPlanet(boolean possibleStartPlanet) {
+		this.possibleStartPlanet = possibleStartPlanet;
 	}
 	
 	/* TODO Fixa detta. Ska det vara en JSON eller klassen?

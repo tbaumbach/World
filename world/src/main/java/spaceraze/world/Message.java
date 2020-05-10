@@ -58,7 +58,7 @@ public class Message implements Serializable,Comparable<Message> {
       recieverString = "Faction: " + recipientFaction;
     }else
     if (type.equalsIgnoreCase("private")){ // meddelandet ska till en separat spelare
-      recieverString = "Govenor: " + aGalaxy.getPlayer(recipientPlayer).getGovenorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
+      recieverString = "Govenor: " + aGalaxy.getPlayer(recipientPlayer).getGovernorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
     }else
     if (type.equalsIgnoreCase("all")){ // meddelandet ska till en separat spelare
       recieverString = "Public message";
@@ -72,7 +72,7 @@ public class Message implements Serializable,Comparable<Message> {
 		  recieverString = recipientFaction + " faction";
 	  }else
 		  if (type.equalsIgnoreCase("private")){ // meddelandet ska till en separat spelare
-			  recieverString = "Govenor " + aGalaxy.getPlayer(recipientPlayer).getGovenorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
+			  recieverString = "Govenor " + aGalaxy.getPlayer(recipientPlayer).getGovernorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
 		  }else
 			  if (type.equalsIgnoreCase("all")){ // meddelandet ska till en separat spelare
 				  recieverString = "all governors";
@@ -152,7 +152,7 @@ public class Message implements Serializable,Comparable<Message> {
 	  }
 	  strBuff.append("Turn " + turn);
 	  if (aGalaxy.getPlayer(sender) != null){
-		  strBuff.append(" from Governor " + aGalaxy.getPlayer(sender).getGovenorName());
+		  strBuff.append(" from Governor " + aGalaxy.getPlayer(sender).getGovernorName());
 	  }else{
 		  strBuff.append(" from " + sender);
 	  }

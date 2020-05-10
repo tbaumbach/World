@@ -12,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import spaceraze.util.general.Logger;
 import spaceraze.world.BlackMarketBid;
 import spaceraze.world.BlackMarketOffer;
@@ -813,7 +811,7 @@ public class Orders implements Serializable {
    */
   public boolean checkDiplomacy(Player otherPlayer, DiplomacyLevel newLevel){
     boolean found = false;
-	Logger.fine("checkDiplomacy: " + otherPlayer.getGovenorName() + " " + newLevel.name());
+	Logger.fine("checkDiplomacy: " + otherPlayer.getGovernorName() + " " + newLevel.name());
     for (DiplomacyChange aChange : diplomacyChanges) {
 		if (aChange.isPlayerAndLevel(otherPlayer,newLevel)){
 			Logger.fine("aChange found = true: " + aChange);
@@ -1286,7 +1284,7 @@ public class Orders implements Serializable {
     }
   }
 
-  public void addUppgradeBuilding(Building currentBuilding, BuildingType newBuilding, Player aPlayer){
+  public void addUpgradeBuilding(Building currentBuilding, BuildingType newBuilding, Player aPlayer){
 	  // skapa ny order om inte varvet redan �r satt att uppgradera
     if (!alreadyUpgrading(currentBuilding)){
     	addExpenses(new Expense("building", newBuilding, aPlayer.getName(),currentBuilding.getLocation(), currentBuilding));
@@ -1398,19 +1396,7 @@ public class Orders implements Serializable {
 	    }
 	  return false;
   }
- 
-  
-  public List<TroopType> getAllTroopBuilds(Building currentBuilding){
-	    Vector<TroopType> alltp = new Vector<TroopType>();
-	    for (int i = 0; i < expenses.size(); i++){
-	      Expense tempExpense = (Expense)expenses.get(i);
-	      if (tempExpense.isBuildingBuildingTroop(currentBuilding)){
-	    	  TroopType aTroopType = currentBuilding.getLocation().getPlayerInControl().findTroopType(tempExpense.getTroopTypeName());
-	    	  alltp.addElement(aTroopType);
-	      }
-	    }
-	    return alltp;
-	  }
+
   
   public String getVIPBuild(Building currentBuilding){
 	  String tempVIPName = null;
@@ -1844,23 +1830,4 @@ public class Orders implements Serializable {
 		return ordersTextList;
 	}
 	*/
-
-	@JsonIgnore
-	public int getOrdersCount(){
-		int nr = 0;
-		nr += expenses.size();
-		nr += shipMoves.size();
-		nr += shipToCarrierMoves.size();
-		nr += planetVisibilities.size();
-		nr += abandonPlanets.size();
-		nr += shipSelfDestructs.size();
-		nr += VIPSelfDestructs.size();
-		nr += buildingSelfDestructs.size();
-		nr += VIPMoves.size();
-		nr += planetNotesChanges.size();
-		if (abandonGame){
-			nr++;
-		}
-		return nr;
-	}
 }

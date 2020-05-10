@@ -15,7 +15,7 @@ import spaceraze.world.Player;
 public class PlayerNameComparator<T extends Player> implements Comparator<T> {
 
 	public int compare(T p1, T p2) {
-		return p1.getGovenorName().compareTo(p2.getGovenorName());
+		return p1.getGovernorName().compareTo(p2.getGovernorName());
 	}
 
 }

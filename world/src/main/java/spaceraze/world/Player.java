@@ -8,13 +8,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import spaceraze.util.general.Functions;
 import spaceraze.util.general.Logger;
 import spaceraze.world.diplomacy.DiplomacyChange;
 import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyOffer;
 import spaceraze.world.enums.HighlightType;
-import spaceraze.world.landbattle.report.LandBattleReports;
 import spaceraze.world.mapinfo.MapInfos;
 import spaceraze.world.orders.Expense;
 import spaceraze.world.orders.Orders;
@@ -23,10 +21,9 @@ import spaceraze.world.spacebattle.ReportLevel;
 
 public class Player implements Serializable{
     static final long serialVersionUID = 1L;
-    private List<PlayerSpaceshipType> playerSpaceshipTypes;
-    private List<TroopType> troopTypes,otherTroopTypes;
-    private List<VIPType> vipTypes;
-    private String name,password,govenorName;
+    private List<PlayerSpaceshipImprovement> spaceshipImprovements;
+    private List<PlayerTroopImprovement> troopImprovements;
+    private String name,password, governorName;
     private Orders orders;
     private Galaxy g;
     //TODO 2019-12-20 TurnInfo ersätts av PlayerReport
@@ -42,7 +39,7 @@ public class Player implements Serializable{
     private PlanetInfos pi;
     private Planet homeplanet;
 //    public boolean writeUpkeep = false;
-    private boolean retreatingGovenor = false;
+    private boolean retreatingGovernor = false;
     private int turnDefeated;
     private int nrTurnsBroke;
     private Research research; 
@@ -58,7 +55,7 @@ public class Player implements Serializable{
     private int latestMessageIdFromServer = 0;
     private int messageId;
     private ReportLevel reportLevel;
-    private PlanetOrderStatuses planetOrderStatuses,originalPlanetOrderStatuses;
+    private PlanetOrderStatuses planetOrderStatuses;
     private MapInfos mapPlanetInfos;
     
     private int income = -1, upkeepTroops = -1, upkeepVIPs = -1, upkeepShips = -1;
@@ -75,15 +72,13 @@ public class Player implements Serializable{
     	g = ag;
     }
 
-    public Player(String name, String password, Galaxy g, String govenorName, String factionName, Planet homeplanet){
-    	Logger.fine("Name: " + name + " govenorName: " + govenorName +  " factionName: " + factionName);
+    public Player(String name, String password, Galaxy g, String governorName, String factionName, Planet homeplanet){
+    	Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + factionName);
         this.name = name;
         this.password = password;
-        this.govenorName = govenorName.replace('#',' ');
-        playerSpaceshipTypes = new ArrayList<>();
-        troopTypes = new ArrayList<TroopType>();
-        otherTroopTypes = new ArrayList<TroopType>();
-        vipTypes = new ArrayList<VIPType>();
+        this.governorName = governorName.replace('#',' ');
+        spaceshipImprovements = new ArrayList<>();
+        troopImprovements = new ArrayList<>();
         orders = new Orders();
         this.g = g;
         ti = new TurnInfo();
@@ -105,7 +100,6 @@ public class Player implements Serializable{
         if (tmpCorr != null){
         	corruption = tmpCorr.clone();
         }
-        vipTypes = faction.getVIPTypes();
         reportLevel = ReportLevel.LONG;
         planetOrderStatuses = new PlanetOrderStatuses(g.getPlanets());
         mapPlanetInfos = new MapInfos();
@@ -229,34 +223,8 @@ public class Player implements Serializable{
         return password;
     }
 
-    public List<PlayerSpaceshipType> getPlayerSpaceshipTypes(){
-        return playerSpaceshipTypes;
-    }
-    
-    public Vector<VIPType> getAvailableVIPTypes(){
-    	Vector<VIPType> tempVIPTypes = new Vector<VIPType>(); 
-    	
-    	for(int i=0; i < vipTypes.size();i++){
-    		//LoggingHandler.fine("(vipTypes.get(i)).isAvailableToBuild() " + (vipTypes.get(i)).isAvailableToBuild());
-    		if((vipTypes.get(i)).isConstructible(this)){
-    			tempVIPTypes.add(vipTypes.get(i));
-    		//	LoggingHandler.fine("tempVIPTypes.add()= " + (vipTypes.get(i)).getName());
-    		}
-    	}
-    	return tempVIPTypes;
-    }
-    
-    public Vector<TroopType> getAvailableTroopTypes(){
-    	Vector<TroopType> tempTroopTypes = new Vector<TroopType>(); 
-    	
-    	for(int i=0; i < troopTypes.size();i++){
-    	//	LoggingHandler.fine("(troopTypes.get(i)).isAvailableToBuild() " + (troopTypes.get(i)).isCanBuild());
-    		if(((TroopType)troopTypes.get(i)).isConstructible(this)){
-    			tempTroopTypes.add(troopTypes.get(i));
-    	//		LoggingHandler.fine("tempTroopTypes.add()= " + (troopTypes.get(i)).getUniqueName());
-    		}
-    	}
-    	return tempTroopTypes;
+    public List<PlayerSpaceshipImprovement> getSpaceshipImprovements(){
+        return spaceshipImprovements;
     }
     
     public Vector<BuildingType> getAvailableNewBuildings(Planet aPlanet){
@@ -279,16 +247,16 @@ public class Player implements Serializable{
     	return name.equalsIgnoreCase(anotherPlayer.getName());
     }
 
-    public boolean isPlayerByGovenorName(String aGovenorName){
-      return this.govenorName.equalsIgnoreCase(aGovenorName);
+    public boolean isPlayerByGovernorName(String aGovernorName){
+      return this.governorName.equalsIgnoreCase(aGovernorName);
     }
 
     public String getErrorMessage(){
         return errormessage;
     }
 
-    public void addPlayerSpaceshipType(PlayerSpaceshipType ship){
-        playerSpaceshipTypes.add(ship);
+    public void addSpaceshipImprovement(PlayerSpaceshipImprovement ship){
+        spaceshipImprovements.add(ship);
     }
 
     public void setOrders(Orders newOrders){
@@ -493,8 +461,8 @@ public class Player implements Serializable{
       orders.removeUpgradeBuilding(building, this.getGalaxy());
     }
 
-    public void addUppgradeBuilding(Building currentBuilding, BuildingType newBuilding){
-      orders.addUppgradeBuilding(currentBuilding, newBuilding, this);
+    public void addUpgradeBuilding(Building currentBuilding, BuildingType newBuilding){
+      orders.addUpgradeBuilding(currentBuilding, newBuilding, this);
     }
 
     public void setAbandonGame(boolean abandonGame){
@@ -508,49 +476,13 @@ public class Player implements Serializable{
     public PublicInfo getLastPublicInfo(){
       return g.getLastPublicInfo();
     }
-
-    public PlayerSpaceshipType findOwnPlayerSpaceshipType(String name){
-        Logger.finer("findName: " + name);
-        return playerSpaceshipTypes.stream().filter(ship -> ship.getTypeId().equalsIgnoreCase(name)).findFirst().orElse(null);
-    }
-
-    public TroopType findTroopType(String findname){
-        TroopType tt = null;
-        int i = 0;
-        while ((tt == null) & (i < troopTypes.size())){
-          TroopType temp = troopTypes.get(i);
-          if (temp.getUniqueName().equalsIgnoreCase(findname)){
-            tt = temp;
-          }else{
-            i++;
-          }
-        }
-        return tt;
-      }
-    
-    public VIPType findVIPType(String findname){
-        Logger.fine("findname: " + findname + " vipTypes.size(): " + vipTypes.size());
-        VIPType tt = null;
-        int i = 0;
-        while ((tt == null) & (i < vipTypes.size())){
-        	VIPType temp = vipTypes.get(i);
-        	Logger.fine("temp.getName(): " + temp.getName());
-        	if (temp.getName().equalsIgnoreCase(findname)){
-        		Logger.fine("found!");
-        		tt = temp;
-        	}else{
-        		i++;
-        	}
-        }
-        return tt;
-    }
     
     public BuildingType findBuildingType(String findname){   	
     	return buildings.getBuildingType(findname);
     }
 
-    public String getGovenorName(){
-      return govenorName;
+    public String getGovernorName(){
+      return governorName;
     }
 
     public Faction getFaction(){
@@ -824,19 +756,19 @@ public class Player implements Serializable{
       return text.toString();
   }
 
-	public boolean isRetreatingGovenor() {
-		return retreatingGovenor;
+	public boolean isRetreatingGovernor() {
+		return retreatingGovernor;
 	}
 	
-	public void setRetreatingGovenor(boolean retreatingGovenor) {
-		this.retreatingGovenor = retreatingGovenor;
+	public void setRetreatingGovernor(boolean retreatingGovernor) {
+		this.retreatingGovernor = retreatingGovernor;
 	}
 	
 	@Override
 	public String toString(){
 		String tmpStr = "";
 		tmpStr += "Player: " + name + " (";
-		tmpStr += govenorName + ") - ";
+		tmpStr += governorName + ") - ";
 		tmpStr += faction.getName();
 		return tmpStr;
 	}
@@ -976,26 +908,6 @@ public class Player implements Serializable{
 	public void setCorruption(Corruption corruption) {
 		this.corruption = corruption;
 	}
-
-	public void addTroopType(TroopType aTroopType){
-		troopTypes.add(aTroopType);
-	}
-	
-	public void addVIPType(VIPType aVIPType){
-		vipTypes.add(aVIPType);
-	}
-	
-	public void addOtherTroopType(TroopType aTroopType){
-		otherTroopTypes.add(aTroopType);
-	}
-	
-	public List<TroopType> getTroopTypes(){
-		return troopTypes;
-	}
-	
-	public List<VIPType> getVIPTypes(){
-		return vipTypes;
-	}
 	
 	public void addBuildTroop(Building building, TroopType tt){
 	      orders.addBuildTroop(building, tt, this);
@@ -1004,40 +916,11 @@ public class Player implements Serializable{
 	public void addBuildVIP(Building building, VIPType vipTypes){
 	      orders.addBuildVIP(building, vipTypes, this);
 	    }
-	
-	public TroopType getTroopType(String troopName){
-		for(int i=0; i < troopTypes.size();i++){
-			if(troopTypes.get(i).getUniqueName().equalsIgnoreCase(troopName)){
-				return troopTypes.get(i);
-			}
-		}
-		return null;
-	}
-	
-	public VIPType getVIPType(String vipName){
-		for(int i=0; i < vipTypes.size();i++){
-			if(vipTypes.get(i).getName().equalsIgnoreCase(vipName)){
-				return vipTypes.get(i);
-			}
-		}
-		return null;
-	}
 
 	public boolean orderExist(Player otherPlayer, DiplomacyLevel aLevel){
 		return orders.checkDiplomacy(otherPlayer,aLevel);
 	}
-	
-/*
-	public List<TroopType> getTroopTypesCanBuild(){
-		List<TroopType> canBuildTroopTypes = new ArrayList<TroopType>();
-		for (TroopType aTroopType : troopTypes) {
-			if (aTroopType.isCanBuild()){
-				canBuildTroopTypes.add(aTroopType.clone());
-			}
-		}
-		return canBuildTroopTypes;
-	}
-*/
+
 	public DiplomacyOffer getDiplomacyOffer(Player otherPlayer){
 		return orders.findDiplomacyOffer(otherPlayer);
 	}
@@ -1085,18 +968,6 @@ public class Player implements Serializable{
 	public void setPlanetOrderStatuses(PlanetOrderStatuses planetOrderStatuses) {
 		this.planetOrderStatuses = planetOrderStatuses;
 	}
-	
-	public PlanetOrderStatuses getOriginalPlanetOrderStatuses() {
-		return originalPlanetOrderStatuses;
-	}
-
-	/**
-	 * Set originalPlanetOrderStatuses to be a clone of the current planetOrderStatuses;
-	 * Later in the Android app this can be used to print what orders have been given in the current turn.
-	 */
-	public void initOriginalPlanetOrderStatuses() {
-		this.originalPlanetOrderStatuses = Functions.deepClone(planetOrderStatuses);
-	}
 
 	public void updateMapInfo() {
 		mapPlanetInfos.createNextTurnMapInfo(this);		
@@ -1110,56 +981,15 @@ public class Player implements Serializable{
 		this.faction = faction;
 	}
 
-    public void pruneOtherPlayerDroid(){
-    	ti = null;
-    	pi = null;
-    	research = null;
-    	mapPlanetInfos = null;
-    	planetOrderStatuses = null;
-    	reportLevel = null;
-    	corruption = null;
-    	diplomacyOffers = null;
-    	buildings = null;
-    	// XXX can faction reference be removed?
-    	nextupdate = null;
-    	notes = null;
-    	orders = null;
-    	password = null;
-        troopTypes = null;
-        otherTroopTypes = null;
-        vipTypes = null;
-    }
-
-	public int getOrdersCount(){
-		int nr = 0;
-		Orders orders = getOrders();
-		nr += orders.getOrdersCount();
-		// count planet order statuses
-		PlanetOrderStatuses currentPlanetOrderStatuses = getPlanetOrderStatuses();
-		PlanetOrderStatuses originalPlanetOrderStatuses = getOriginalPlanetOrderStatuses();
-		for(Planet aPlanet : g.getPlanets()){
-			String planetName = aPlanet.getName();
-			PlanetOrderStatus currentPlanetOrderStatus = currentPlanetOrderStatuses.getPlanetOrderStatus(planetName);
-			PlanetOrderStatus originalPlanetOrderStatus = originalPlanetOrderStatuses.getPlanetOrderStatus(planetName);
-			if (currentPlanetOrderStatus.isAttackIfNeutral() != originalPlanetOrderStatus.isAttackIfNeutral()){
-				nr++;
-			}
-			if (currentPlanetOrderStatus.isDestroyOrbitalBuildings() != originalPlanetOrderStatus.isDestroyOrbitalBuildings()){
-				nr++;
-			}
-			if (currentPlanetOrderStatus.isDoNotBesiege() != originalPlanetOrderStatus.isDoNotBesiege()){
-				nr++;
-			}
-			if (currentPlanetOrderStatus.getMaxBombardment() != originalPlanetOrderStatus.getMaxBombardment()){
-				nr++;
-			}
-		}	
-		Logger.info("getOrdersCount() returns: " + nr);
-		return nr;
-	}
-
 	public Map<Integer, PlayerReport> getPlayerReports() {
 		return playerReports;
 	}
 
+    public List<PlayerTroopImprovement> getTroopImprovements() {
+        return troopImprovements;
+    }
+
+    public void addTroopImprovement(PlayerTroopImprovement troopImprovement){
+	    troopImprovements.add(troopImprovement);
+    }
 }

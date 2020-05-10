@@ -286,7 +286,7 @@ public class LandBattleReport implements Serializable{
 		}
 		
 		if(aPlyer != null){
-			return aPlyer.getGovenorName() + " (" + aPlyer.getFaction().getName() + ")";
+			return aPlyer.getGovernorName() + " (" + aPlyer.getFaction().getName() + ")";
 		}else{
 			return "neutrals";
 		}

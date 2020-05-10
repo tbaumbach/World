@@ -176,7 +176,7 @@ public class DiplomacyState implements Serializable{
 	}
 	
 	private boolean confNotPossible(Player thePlayer, Player otherPlayer){
-		Logger.finer("thePlayer, otherPlayer: " + thePlayer.getGovenorName() + ", " + otherPlayer.getGovenorName());
+		Logger.finer("thePlayer, otherPlayer: " + thePlayer.getGovernorName() + ", " + otherPlayer.getGovernorName());
 		boolean confImpossible = false;
 		Galaxy g = thePlayer.getGalaxy();
 		Diplomacy d = g.getDiplomacy();

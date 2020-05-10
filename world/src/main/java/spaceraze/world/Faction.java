@@ -19,17 +19,26 @@ public class Faction implements Serializable {
   static final long serialVersionUID = 1L;
 //  private Color planetColor;
   private String colorHexValue; // ex: red = "FF0000"
-  private String name,shortName,description,history,shortDescription,advantages,disadvantages,howToPlay;
+  private String name;
+  private String shortName;
+  private String description;
+  private String history;
+  private String shortDescription;
+  private String advantages;
+  private String disadvantages;
+  private String howToPlay;
   private List<SpaceshipType> spaceshipsTypes;
-  private int openPlanetBonus = 0,closedPlanetBonus = 0,resistanceBonus = 0;
+  private int openPlanetBonus = 0;
+  private int closedPlanetBonus = 0;
+  private int resistanceBonus = 0;
   private int totalPop; // used when counting winning conditions
   private Alignment alignment = null; // must be set
   private VIPType governorVIPType;
-  private List<VIPType> startingVIPTypes = new LinkedList<VIPType>();
+  private List<VIPType> startingVIPTypes = new LinkedList<>();
   private int nrStartingRandomVIPs = 1;
-  private List<SpaceshipType> startingShipTypes = new ArrayList<SpaceshipType>();
-  private List<TroopType> startingTroops = new ArrayList<TroopType>(); // players shall start with troops of the trooptypes in this list
-  private List<TroopType> troopTypes = new ArrayList<TroopType>(); // these trooptypes is available to build by new players
+  private List<SpaceshipType> startingShipTypes = new ArrayList<>();
+  private List<TroopType> startingTroops = new ArrayList<>(); // players shall start with troops of the trooptypes in this list
+  private List<TroopType> troopTypes = new ArrayList<>(); // these trooptypes is available to build by new players
   private int techBonus = 0; // %
   private boolean alien;
   private boolean canReconstruct = false;
@@ -37,9 +46,8 @@ public class Faction implements Serializable {
   private boolean selectable = false; // if players can choose this faction when joining a game
   private Research research; // research
   private Buildings buildings;
-  private List<BuildingType> startingBuildings = new ArrayList<BuildingType>();
+  private List<BuildingType> startingBuildings = new ArrayList<>();
   private Corruption corruption;
-  private List<VIPType> vipTypes;
   
   /**
    * This constructor is used for GW used in Android
@@ -59,7 +67,6 @@ public class Faction implements Serializable {
 	  spaceshipsTypes = new LinkedList<SpaceshipType>();
 	  research = new Research();
 	  buildings = new Buildings();
-	  vipTypes = new ArrayList<VIPType>();
   }
 
   public void setOpenPlanetBonus(int newBonus){
@@ -562,37 +569,6 @@ public class Faction implements Serializable {
 		}
 		return corrDesc;
 	}
-	
-	public VIPType findVIPType(String findname){
-        VIPType vt = null;
-        int i = 0;
-        while ((vt == null) & (i < vipTypes.size())){
-          VIPType temp = vipTypes.get(i);
-          if (temp.getName().equalsIgnoreCase(findname)){
-            vt = temp;
-          }else{
-            i++;
-          }
-        }
-        return vt;
-      }
-	
-	public void addVIPType(VIPType aVIPType){
-		vipTypes.add(aVIPType);
-	}
-	
-	@JsonIgnore
-	public List<VIPType> getVIPTypes(){
-		return vipTypes;
-	}
-	
-	public List<String> getVIPTypesName(){
-		List<String> vips = new ArrayList<String>();
-		  for (VIPType vipType : vipTypes) {
-			  vips.add(vipType.getName());
-		}
-		  return vips;
-	}
 
 	public String getHowToPlay() {
 		return howToPlay;
@@ -608,107 +584,6 @@ public class Faction implements Serializable {
 
 	public String getShortName() {
 		return shortName;
-	}
-
-	@JsonIgnore
-	public List<String> getAbilitiesStringsDroid(){
-		List<String> allStrings = new LinkedList<String>();
-		if (alien){
-			allStrings.add("Alien");
-		}
-		if (resistanceBonus > 0){
-			allStrings.add("Resistance bonus: " + resistanceBonus);
-		}
-		if (openPlanetBonus > 0){
-			allStrings.add("Open planet income bonus: " + openPlanetBonus);
-		}
-		if (closedPlanetBonus > 0){
-			allStrings.add("Closed planet income bonus: " + closedPlanetBonus);
-		}
-		if (techBonus > 0){
-			allStrings.add("Tech bonus: " + techBonus + "%");
-		}
-		return allStrings;
-	}
-
-	@JsonIgnore
-	public boolean getHasAbilityDroid(int abilityNr){
-		boolean hasAbility = false;
-		if ((abilityNr == 1) & alien){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 2) & (resistanceBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 3) & (openPlanetBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 4) & (closedPlanetBonus > 0)){
-			hasAbility = true;
-		}else
-		if ((abilityNr == 5) & (techBonus > 0)){
-			hasAbility = true;
-		}
-		return hasAbility;
-	}
-
-	@JsonIgnore
-	public String getFactionLinkDroid(){
-		StringBuffer sb = new StringBuffer();
-		sb.append("<b>");
-		sb.append(name); 
-		sb.append("</b>");
-		sb.append("<br>");
-		sb.append(shortDescription);
-		sb.append("<br>");
-		return sb.toString();
-	}
-
-	@JsonIgnore
-	public String getFactionInfoDroid(){
-		StringBuffer sb = new StringBuffer();
-		sb.append("<h4>Faction: ");
-		sb.append(name);
-		sb.append("</h4>");
-		sb.append(description);
-		sb.append("<p>");
-		sb.append("<b>Advantages</b><br>");
-		sb.append(advantages);
-		sb.append("<p>");
-		sb.append("<b>Disadvantages</b><br>");
-		sb.append(disadvantages);
-		sb.append("<p>");
-		sb.append("<b>Abilities: </b>");
-		sb.append("<br>");
-		List<String> abilitiesList = getAbilitiesStringsDroid();
-		for (String ability : abilitiesList) {
-			sb.append(ability);
-			sb.append("&nbsp;<br>");
-		}
-		sb.append("<br>");
-		if (alien){
-			sb.append("<b>Reconstruct cost:</b> 0 (aliens infestate planets automatically at no cost)");			
-		}else{
-			sb.append("<b>Reconstruct cost: </b>");
-			sb.append(reconstructCostBase);
-		}
-		sb.append("<p>");
-		sb.append("<b>Alignment: </b>");
-		sb.append(alignment.getName());
-		sb.append(" alignment");
-		sb.append("<p>");
-		sb.append("<b>History</b><br>");
-		sb.append(history);
-		sb.append("<p>");
-		sb.append("<b>How to play</b><br>");
-		sb.append(howToPlay);
-		sb.append("<p>");
-		sb.append("<b>Spaceship types</b><br>");
-		for (SpaceshipType spaceshipType : spaceshipsTypes){
-			sb.append(spaceshipType.getName());
-			sb.append("<br>");
-		}
-		return sb.toString();
 	}
 
 	@JsonIgnore

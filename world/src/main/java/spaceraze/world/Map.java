@@ -350,7 +350,7 @@ public class Map implements Serializable, Comparable<Map>{
 	private List<Planet> getStarPlanets() {
 		List<Planet>  tempList = new ArrayList<Planet>();
 		for (Planet aPlanet : planets) {
-		  if(aPlanet.isPosssibleStartplanet()){
+		  if(aPlanet.isPossibleStartPlanet()){
 			  tempList.add(aPlanet);
 		  }
 		}  

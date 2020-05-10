@@ -53,7 +53,7 @@ public class MapPlanetInfo implements Serializable {
 	 */
 	public MapPlanetInfo(Planet planet, Player player, MapInfos mapPlanetInfos, int turn){
 		Galaxy g = player.getGalaxy();
-		Logger.finer("MapPlanetInfo creator, planet: " + planet.getName() + ", player: " + player.getGovenorName() + ", turn: " + turn);
+		Logger.finer("MapPlanetInfo creator, planet: " + planet.getName() + ", player: " + player.getGovernorName() + ", turn: " + turn);
 		boolean spy = (g.findVIPSpy(planet,player) != null);
 		boolean shipInSystem = (g.playerHasShipsInSystem(player,planet));
 		boolean surveyShip = (g.findSurveyShip(planet,player) != null);
@@ -275,7 +275,7 @@ public class MapPlanetInfo implements Serializable {
         		int shipSize = g.getLargestLookAsMilitaryShipSizeOnPlanet(planet,tempPlayer);
         		boolean civilianExists = !player.getGalaxy().getLargestShipSizeOnPlanet(planet,tempPlayer,true).equals("");
         		if ((shipSize > -1) | civilianExists){
-        			FleetData fleetData = new FleetData(tempPlayer.getGovenorName(),shipSize,civilianExists);
+        			FleetData fleetData = new FleetData(tempPlayer.getGovernorName(),shipSize,civilianExists);
         			fleets.add(fleetData);
         		}
         	}

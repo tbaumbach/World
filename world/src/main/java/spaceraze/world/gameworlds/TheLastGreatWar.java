@@ -202,7 +202,7 @@ public class TheLastGreatWar{
         // ****************** --- VIP som byggs i buildings --- *******************
         // *******************************************************************************
         
-        // XXX VIP:ar att k�pa via buildings.
+        // XXX VIP:ar att köpa via buildings.
         
         // Just for Trade federation
         tmpVipType = new VIPType("Negotiator","Neg",trade,uniqueVIPIdCounter);
@@ -211,7 +211,7 @@ public class TheLastGreatWar{
         tmpVipType.setBuildCost(20);
         tmpVipType.setPlayerUnique(true);
         tmpVipType.setFrequency(BlackMarketFrequency.NEVER);
-        tmpVipType.setDescription("The Negotiator is a hero with skill in diplomatic skill to convince neutral planets to join he�s faction.");
+        tmpVipType.setDescription("The Negotiator is a hero with skill in diplomatic skill to convince neutral planets to join the faction.");
         gw.addVipType(tmpVipType);
         
         tmpVipType = new VIPType("General","Gen",neutral,uniqueVIPIdCounter);
@@ -246,7 +246,7 @@ public class TheLastGreatWar{
         tmpVipType.setBuildCost(15);
         tmpVipType.setPlayerUnique(true);
         tmpVipType.setFrequency(BlackMarketFrequency.NEVER);
-        tmpVipType.setDescription("Thanks to the skill the ace have, the fleet gives more opportunity to fire the weapons. A ace is a squadron�s pilot and must be on a squadron to give bonus.");
+        tmpVipType.setDescription("Thanks to the skill the ace have, the fleet gives more opportunity to fire the weapons. A ace is a squadron pilot and must be on a squadron to give bonus.");
         gw.addVipType(tmpVipType);
         
         tmpVipType = new VIPType("Designer","Des",neutral,uniqueVIPIdCounter);
@@ -271,7 +271,7 @@ public class TheLastGreatWar{
         tmpVipType.setBuildCost(15);
         tmpVipType.setPlayerUnique(true);
         tmpVipType.setFrequency(BlackMarketFrequency.NEVER);
-        tmpVipType.setDescription("The commander gives your fleet an advantage in tactics, that�s gives the fleet more opportunity to give fire.");
+        tmpVipType.setDescription("The commander gives your fleet an advantage in tactics, that´s gives the fleet more opportunity to give fire.");
         gw.addVipType(tmpVipType);
         
         
@@ -2178,16 +2178,16 @@ public class TheLastGreatWar{
         os.setClosedProdBonus(1);
         tempFaction.setOrbitalStructure(os);*/
         
-        VIPType President = new VIPType("President","Pre",neutral,uniqueVIPIdCounter);
-        President.setGovernor(true);
-        President.setWellGuarded(true);
-        President.setOpenIncBonus(1);
-        President.setCanVisitNeutralPlanets(true);
-        President.setDiplomat(true);
-        President.setFrequency(BlackMarketFrequency.NEVER);
-        President.setDescription("The President is the leader of the faction so protect him. He gives one extra income on open planets. He have also diplomatic skill to convince neutral planets to join he�s faction.");
-        gw.addVipType(President);
-        tempFaction.setGovernorVIPType(President);
+        VIPType president = new VIPType("President","Pre",neutral,uniqueVIPIdCounter);
+        president.setGovernor(true);
+        president.setWellGuarded(true);
+        president.setOpenIncBonus(1);
+        president.setCanVisitNeutralPlanets(true);
+        president.setDiplomat(true);
+        president.setFrequency(BlackMarketFrequency.NEVER);
+        president.setDescription("The President is the leader of the faction so protect him. He gives one extra income on open planets. He have also diplomatic skill to convince neutral planets to join he�s faction.");
+        gw.addVipType(president);
+        tempFaction.setGovernorVIPType(president);
         
         tempFaction.addStartingVIPType(gw.getVIPTypeByName("Ace"));
         
@@ -4548,7 +4548,7 @@ public class TheLastGreatWar{
         // ****** fraction unique property ******
         
         
-        tempFaction.setGovernorVIPType(President);
+        tempFaction.setGovernorVIPType(president);
         
         tempFaction.addStartingVIPType(gw.getVIPTypeByName("Assassin"));
         
@@ -5739,7 +5739,7 @@ public class TheLastGreatWar{
         
         // ****** fraction unique property ******
         
-        tempFaction.setGovernorVIPType(President);
+        tempFaction.setGovernorVIPType(president);
         
         tempFaction.addStartingVIPType(gw.getVIPTypeByName("Designer"));
         
@@ -6832,7 +6832,7 @@ public class TheLastGreatWar{
         
         // ****** fraction unique property ******
         
-        tempFaction.setGovernorVIPType(President);
+        tempFaction.setGovernorVIPType(president);
         
         tempFaction.addStartingVIPType(gw.getVIPTypeByName("Commander"));
         
@@ -7858,7 +7858,7 @@ public class TheLastGreatWar{
         
         // ****** fraction unique property ******
         
-        tempFaction.setGovernorVIPType(President);
+        tempFaction.setGovernorVIPType(president);
         
         tempFaction.addStartingVIPType(gw.getVIPTypeByName("Spy"));
         
