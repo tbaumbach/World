@@ -2131,13 +2131,13 @@ public class SpaceOpera{
 //        tmpBuildingType.setAutoDestructWhenConquered(true);
 //        tempBuildings.addBuilding(tmpBuildingType);        
 
-        tmpBuildingType = new BuildingType("Bug Deep Caves", "BDC", 10, uBIC); // cost 10
+        tmpBuildingType = new BuildingType("Bug Deep Caves", "BDC", 10); // cost 10
         tmpBuildingType.setResistanceBonus(2);
         tmpBuildingType.setShieldCapacity(1);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setVisibleOnMap(false);
-        tmpBuildingType.setSelfDestructable(false);
+        tmpBuildingType.setSelfDestructible(false);
         tempBuildings.addBuilding(tmpBuildingType);        
 
         setWharfs(tempBuildings,uBIC,"Bug","B",false,5,10,15,25);
@@ -2365,7 +2365,7 @@ public class SpaceOpera{
 		BuildingType parent = null;
 		
 		if (costs.length > 0){
-			tmpBuildingType = new BuildingType(longPrefix + " Small Orbital Wharf", shortPrefix + "W1", costs[0], uBIC);
+			tmpBuildingType = new BuildingType(longPrefix + " Small Orbital Wharf", shortPrefix + "W1", costs[0]);
 			tmpBuildingType.setWharfSize(1);
 			tmpBuildingType.setInOrbit(true);
 			tmpBuildingType.setVisibleOnMap(visibleOnMap);
@@ -2374,31 +2374,31 @@ public class SpaceOpera{
 		}
 
 		if (costs.length > 1){
-			tmpBuildingType = new BuildingType(longPrefix + " Medium Orbital Wharf", shortPrefix + "W2", costs[1], uBIC);
+			tmpBuildingType = new BuildingType(longPrefix + " Medium Orbital Wharf", shortPrefix + "W2", costs[1]);
 			tmpBuildingType.setWharfSize(2);
 			tmpBuildingType.setInOrbit(true);
 			tmpBuildingType.setVisibleOnMap(visibleOnMap);
-	        tmpBuildingType.setParentBuildingType(parent);
+	        tmpBuildingType.setParentBuildingTypeName(parent.getName());
 			parent = tmpBuildingType;
 			aBuildings.addBuilding(tmpBuildingType);
 		}
 
 		if (costs.length > 2){
-			tmpBuildingType = new BuildingType(longPrefix + " Large Orbital Wharf", shortPrefix + "W3", costs[2], uBIC);
+			tmpBuildingType = new BuildingType(longPrefix + " Large Orbital Wharf", shortPrefix + "W3", costs[2]);
 			tmpBuildingType.setWharfSize(3);
 			tmpBuildingType.setInOrbit(true);
 			tmpBuildingType.setVisibleOnMap(visibleOnMap);
-	        tmpBuildingType.setParentBuildingType(parent);
+	        tmpBuildingType.setParentBuildingTypeName(parent.getName());
 			parent = tmpBuildingType;
 			aBuildings.addBuilding(tmpBuildingType);
 		}
 
 		if (costs.length > 3){
-			tmpBuildingType = new BuildingType(longPrefix + " Huge Orbital Wharf", shortPrefix + "W5", costs[3], uBIC);
+			tmpBuildingType = new BuildingType(longPrefix + " Huge Orbital Wharf", shortPrefix + "W5", costs[3]);
 			tmpBuildingType.setWharfSize(5);
 			tmpBuildingType.setInOrbit(true);
 			tmpBuildingType.setVisibleOnMap(visibleOnMap);
-	        tmpBuildingType.setParentBuildingType(parent);
+	        tmpBuildingType.setParentBuildingTypeName(parent.getName());
 			aBuildings.addBuilding(tmpBuildingType);
 		}
 	}
@@ -2434,7 +2434,7 @@ public class SpaceOpera{
 		BuildingType tmpBuildingType = null;
 		BuildingType parent = null;
 		
-        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class A", shortPrefix + "SP-A", 10, uBIC);
+        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class A", shortPrefix + "SP-A", 10);
         if (2+openMod > 0) tmpBuildingType.setOpenPlanetBonus(2 + openMod);
         if (closedMod > 0) tmpBuildingType.setClosedPlanetBonus(closedMod);
         tmpBuildingType.setSpaceport(true);
@@ -2445,7 +2445,7 @@ public class SpaceOpera{
         aBuildings.addBuilding(tmpBuildingType);        
 
 		if (maxSize > 1){
-	        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class AA", shortPrefix + "SP-AA", 10, uBIC);
+	        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class AA", shortPrefix + "SP-AA", 10);
 	        if (3+openMod > 0) tmpBuildingType.setOpenPlanetBonus(3 + openMod);
 	        if (1+closedMod > 0) tmpBuildingType.setClosedPlanetBonus(1 + closedMod);
 	        tmpBuildingType.setTechBonus(10);
@@ -2453,13 +2453,13 @@ public class SpaceOpera{
 			tmpBuildingType.setInOrbit(true);
 	        tmpBuildingType.setPlanetUnique(true);
 	        tmpBuildingType.setAutoDestructWhenConquered(true);
-	        tmpBuildingType.setParentBuildingType(parent);
+	        tmpBuildingType.setParentBuildingTypeName(parent.getName());
 			parent = tmpBuildingType;
 	        aBuildings.addBuilding(tmpBuildingType);        
 		}
 
 		if (maxSize > 2){
-	        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class AAA", shortPrefix + "SP-AAA", 10, uBIC);
+	        tmpBuildingType = new BuildingType(longPrefix + " Spaceport Class AAA", shortPrefix + "SP-AAA", 10);
 	        if (4+openMod > 0) tmpBuildingType.setOpenPlanetBonus(4 + openMod);
 	        if (2+closedMod > 0) tmpBuildingType.setClosedPlanetBonus(2 + closedMod);
 	        tmpBuildingType.setTechBonus(20);
@@ -2467,7 +2467,7 @@ public class SpaceOpera{
 			tmpBuildingType.setInOrbit(true);
 	        tmpBuildingType.setPlanetUnique(true);
 	        tmpBuildingType.setAutoDestructWhenConquered(true);
-	        tmpBuildingType.setParentBuildingType(parent);
+	        tmpBuildingType.setParentBuildingTypeName(parent.getName());
 //			parent = tmpBuildingType;
 	        aBuildings.addBuilding(tmpBuildingType);        
 		}
@@ -2490,7 +2490,7 @@ public class SpaceOpera{
 		BuildingType tmpBuildingType = null;
 		BuildingType parent = null;		
 		for (int i = 1; i < 6; i++){		
-	        tmpBuildingType = new BuildingType("Klackon Missile Defence Mk " + i, "KMD-" + i, 5, uBIC);
+	        tmpBuildingType = new BuildingType("Klackon Missile Defence Mk " + i, "KMD-" + i, 5);
 	        tmpBuildingType.setCannonRateOfFire(i);
 	        tmpBuildingType.setCannonHitChance(45 + (i*5));
 	        tmpBuildingType.setCannonDamage(45 + (i*5));
@@ -2498,7 +2498,7 @@ public class SpaceOpera{
 	        tmpBuildingType.setPlanetUnique(true);
 	        tmpBuildingType.setAutoDestructWhenConquered(true);
 	        tmpBuildingType.setVisibleOnMap(false);
-	        if (parent != null) tmpBuildingType.setParentBuildingType(parent);
+	        if (parent != null) tmpBuildingType.setParentBuildingTypeName(parent.getName());
 			parent = tmpBuildingType;
 	        aBuildings.addBuilding(tmpBuildingType);        
 		}

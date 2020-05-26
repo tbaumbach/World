@@ -43,7 +43,7 @@ public class VIPType implements Serializable {
   private int resistanceBonus; // bonus to resistance on planet
   private int shipBuildBonus; // decreases build cost of ship
   private int troopBuildBonus; // decreases build cost of troops
-  private int buildingBuildBonus; // decreases build cost of Bulidings
+  private int buildingBuildBonus; // decreases build cost of buildings
   private int techBonus; // increased shields & weapons for ships and troops built (%)
   private int openIncBonus; // increase income on open planet
   private int closedIncBonus; // increase income on closed planet

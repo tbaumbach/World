@@ -2,7 +2,6 @@ package spaceraze.world;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,143 +9,118 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import spaceraze.world.enums.TypeOfTroop;
 import spaceraze.util.general.Functions;
-import spaceraze.util.general.Logger;
-import spaceraze.world.Building;
-import spaceraze.world.BuildingType;
-import spaceraze.world.Buildings;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.UniqueIdCounter;
-import spaceraze.world.VIP;
-import spaceraze.world.VIPType;
 
 public class BuildingType implements Serializable, Cloneable{
 	static final long serialVersionUID = 1L;
 	
-	private String name, description, shortName,advanteges;
+	private String name;
+	private String description;
+	private String shortName;
+	private String advantages;
 	private boolean inOrbit = false;
 	private boolean autoDestructWhenConquered;
-	private boolean selfDestructable = true;
+	private boolean selfDestructible = true;
 	private boolean developed= true;
-	private int openPlanetBonus = 0,closedPlanetBonus = 0;
+	private int openPlanetBonus = 0;
+	private int closedPlanetBonus = 0;
 	private int techBonus = 0;
 	private int wharfSize = 0; // if = 0 cannot build ships
 	private int troopSize = 0; // if = 0 cannot build troops
-	private List<VIPType> buildVIPTypes;
 	// worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player, planetUnigue = one at planet.
-	private boolean worldUnique = false, factionUnique = false, playerUnique = false, planetUnique = false;
+	private boolean worldUnique = false;
+	private boolean factionUnique = false;
+	private boolean playerUnique = false;
+	private boolean planetUnique = false;
 	private int buildCost = 0;
 	private boolean spaceport;
-	UniqueIdCounter uic;
 	int nrProduced;
 	//  kan nog vara en ide...  om byggnaden ligger i orbit så fungerar det som för skepp men om byggnaden är på planeten så syns den inte fören en fi har trupper på planeten.
 	private boolean visibleOnMap = true;
 	
 	// war buildings. shieldCapacity= ???, CannonDamage =  damge against enemy ships(one shot), cononRateOfFire(number of shot/turn) 
-	private int resistanceBonus = 0, shieldCapacity = 0, CannonDamage = 0, CannonRateOfFire = 0, CannonHitChance= 50;
-	
-	private List<TypeOfTroop> typeOfTroop = new ArrayList<TypeOfTroop>(); // infantry, armored or support
-	
-	//private List<BuildingType> nextBuildingSteps;
-	private BuildingType parentBuildingType;
+	private int resistanceBonus = 0;
+	private int shieldCapacity = 0;
+	private int cannonDamage = 0;
+	private int cannonRateOfFire = 0;
+	private int cannonHitChance = 50;
 
-	// Vänta med dessa tills grunden är klar
-	// -------------------------------------
-//	private int shipTechBonus = 0; // %  on ships bild on planet
-	private int siegeBonus = 0;
+	private List<VIPType> buildVIPTypes;
+	private List<TypeOfTroop> typeOfTroop = new ArrayList<>(); // infantry, armored or support
+	private String parentBuildingTypeName;
 	
-	private boolean alienkiller;
+	private boolean alienKiller;
 	private int counterEspionage = 0;
 	private int exterminator = 0;
-	
-	// Paul  Kan du fixa dessa
-	
+
 	// GÖR OM skapa en klass o lägg dessa i den. 
 	// så att troops får en egen klass + så att build troops klassen kan hämta troops bonus från denna klass
 	// adding bonus to troops build on the planet
 	private int troopHitBonus = 0; // % on troops bild on planet
 	private int troopAttackBonus = 0; // % % on troops bild on planet
-	private int troopDefanceBonus = 0; // % % on troops bild on planet
-	private int troopAirBonus = 0; // % % on troops bild on planet
-	private int troopSuportBonus = 0; // % % on troops bild on planet
+	private int troopDefenceBonus = 0; // % % on troops bild on planet
+	private int troopSupportBonus = 0; // % % on troops bild on planet
 
 	// adding bonus to troops in ground combat
 	private int defenceBonus = 0; // %
-	private int airDefanceBonus = 0; // %
-	private int suportDefanceBonus = 0; // %
-	
-	
-	//private int shipTechBonus = 0; // %  on ships bild on planet
-	
+	private int supportDefenceBonus = 0; // %
+
 	/*
 	//TODO (Tobbe) Dessa användes inte. Samma egenskaper som VIPar har och skall kanske användas i framtiden. Skall vara i % form.
+	private int shipTechBonus = 0; // %  on ships bild on planet
 	private int shipBuildBonus; // decreases build cost of ships
 	private int troopBuildBonus; // decreases build cost of troops
-	private int vipBuildBonus; // decreases build cost of VIPs
-	private int buildingBuildBonus; // decreases build cost of buildings
 	*/
+
+	public BuildingType(BuildingType original, PlayerBuildingImprovement improvement){
+		this.setName(original.getName());
+		this.setDescription(original.getDescription());
+		this.setShortName(original.getShortName());
+		this.setAdvantages(original.getAdvantages());
+		this.setInOrbit(original.isInOrbit());
+		this.setAutoDestructWhenConquered(original.isAutoDestructWhenConquered());
+		this.setSelfDestructible(original.isSelfDestructible());
+		this.setDeveloped(improvement.isDeveloped());
+		this.setOpenPlanetBonus(original.getOpenPlanetBonus() + improvement.getOpenPlanetBonus());
+		this.setClosedPlanetBonus(original.getClosedPlanetBonus() + improvement.getClosedPlanetBonus());
+		this.setTechBonus(original.getTechBonus() + improvement.getTechBonus());
+		this.setWharfSize(improvement.getWharfSize() > 0 ? improvement.getWharfSize() : original.getWharfSize());
+		this.setTroopSize(improvement.getTroopSize() > 0 ? improvement.getTroopSize() : original.getTroopSize());
+		this.setBuildCost(improvement.getBuildCost() > 0 ? improvement.getBuildCost() : original.getBuildCost(null));
+		this.setSpaceport(improvement.isChangeSpaceport() ? improvement.isSpaceport() : original.isSpaceport());
+		this.nrProduced = improvement.getNrProduced();
+		this.setVisibleOnMap(improvement.isChangeVisibleOnMap() ? improvement.isVisibleOnMap() : original.isVisibleOnMap());
+
+		this.setResistanceBonus(original.getResistanceBonus() + improvement.getResistanceBonus());
+		this.setShieldCapacity(original.getShieldCapacity() + improvement.getShieldCapacity());
+		this.setCannonDamage(original.getCannonDamage() + improvement.getCannonDamage());
+		this.setCannonRateOfFire(original.getCannonRateOfFire() + improvement.getCannonRateOfFire());
+		this.setCannonHitChance(original.getCannonHitChance());
+
+		this.setBuildVIPTypes(original.getBuildVIPTypes());
+		this.getTypeOfTroop().addAll(original.getTypeOfTroop());
+		this.setParentBuildingTypeName(original.getParentBuildingName());
+
+		this.setAlienKiller(improvement.isChangeAlienKiller() ? improvement.isAlienKiller() : original.isAlienKiller());
+		this.setCounterEspionage(original.getCounterEspionage() + improvement.getCounterEspionage());
+		this.setExterminator(original.getExterminator() + improvement.getExterminator());
+
+		this.setTroopHitBonus(original.getTroopHitBonus() + improvement.getTroopHitBonus());
+		this.setTroopAttackBonus(original.getTroopAttackBonus() + improvement.getTroopAttackBonus());
+		this.setTroopDefenceBonus(original.getTroopDefenceBonus() + improvement.getTroopDefenceBonus());
+		this.setTroopSupportBonus(original.getTroopSupportBonus() + improvement.getTroopSupportBonus());
+
+		this.setDefenceBonus(original.getDefenceBonus() + improvement.getDefenceBonus());
+		this.setSupportDefenceBonus(original.getSupportDefenceBonus() + improvement.getSupportDefenceBonus());
+
+	}
 	
-	@JsonIgnore
-	  public String getHTMLTableContentNO(){
-		  StringBuffer sb = new StringBuffer();
-		  String RowName= shortName;
-		  sb.append("<tr style='display:inline' class='ListTextRow' id='" + RowName + "A' onMouseOver='TranparentRow(\"" + RowName + "\",5,1);' onMouseOut='TranparentRow(\"" + RowName + "\",5,0);' onclick='ShowLayer(\"" + shortName +  "\");ShowLayer(\"" + shortName +  "A\");ShowLayer(\"" + shortName +  "B\");'>");
-		  sb.append("<td class='ListText' id='" + RowName + "1' WIDTH='10'></td>");
-		  sb.append("<td class='ListText' id='" + RowName + "2'><div class='SolidText'>" + name + "</div></td>");
-		  sb.append("<td class='ListText' id='" + RowName + "3'><div class='SolidText'>" + shortName + "</div></td>");
-		  sb.append("<td class='ListText' id='" + RowName + "4'><div class='SolidText'>" + buildCost + "</div></td>");
-////		  if (governor){
-//			  sb.append("<td class='ListText' id='" + RowName + "5'><div class='SolidText'>Governor</div></td>");
-//		  }else{
-//			  sb.append("<td class='ListText' id='" + RowName + "5'><div class='SolidText'>" + getFrequencyString() + "</div></td>");
-//		  }
-		  sb.append("</tr>\n");
-
-		  sb.append("<tr  onclick='ShowLayer(\"" + shortName +  "\");ShowLayer(\"" + shortName +  "A\");ShowLayer(\"" + shortName +  "B\");'  id='" + RowName + "B' class='ListTextRow' style='display:none'>");
-		  	sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' WIDTH='10'></td>");
-		  	sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + name + "</div></td>");
-		  	sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + shortName + "</div></td>");
-		  	sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + buildCost + "</div></td>");
-
-//		  if (governor){
-//			  sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' id='" + RowName + "5'><div class='SolidText'>Governor</div></td>");
-//		  }else{
-//			  sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' id='" + RowName + "5'><div class='SolidText'>" + getFrequencyString() + "</div></td>");
-//		  }
-		  sb.append("</tr>\n");
-
-		  
-		  
-		  
-		  sb.append("<tr onclick='ShowLayer(\"" + shortName +  "\");ShowLayer(\"" + shortName +  "A\");ShowLayer(\"" + shortName +  "B\");' class='ListTextRow' style=' display:none'id=" + RowName + "><td style='border-bottom: #000 1px solid;border-top: #000 1px solid;' class='ListTextLight' WIDTH='10'></td><td style='border-bottom: #000 1px solid;border-top: #000 1px solid;' class='ListTextLight' colspan='4'><div class='SolidText'>");
-		  
-		  if (description != null){
-			  
-			  sb.append("<b>Description:</b><br>");
-			  sb.append(description);
-			  sb.append("<br><br>");
-		  }
-		  List<String> abilities = getAbilitiesStrings();
-		  
-		  sb.append("<b>Bonus:</b><br>");
-		  for (String aStr : abilities) {
-			  sb.append(aStr + "<br>");
-		  }
-		  sb.append("<br>\n");
-		  sb.append("</div></td></tr>");
-		  return sb.toString();
-	  }
-
-	
-	public BuildingType(String name, String shortName, int buildCost, UniqueIdCounter uic){
+	public BuildingType(String name, String shortName, int buildCost){
 		setName(name);
 		setShortName(shortName);
 		setBuildCost(buildCost);
-		this.uic = uic;
 		nrProduced = 0;
 		//nextBuildingSteps = new ArrayList<BuildingType>();	
-		buildVIPTypes = new ArrayList<VIPType>();
+		buildVIPTypes = new ArrayList<>();
 	}
 	
 	 public Building getBuilding(Planet planet, Galaxy g){
@@ -154,27 +128,8 @@ public class BuildingType implements Serializable, Cloneable{
 		 return new Building(this,null,nrProduced,g, planet);
 	 }
 	
-	public BuildingType getNextBuildingType(String key, Player aPlayer){
-		Iterator<BuildingType> it = aPlayer.getBuildings().getNextBuildingSteps(this).iterator();
-		while(it.hasNext()){
-			BuildingType temp = it.next();
-			if(temp.getName().equals(key)){
-				return temp;
-			}
-		}
-		return null;
-	}
-	
-	public void setParentBuildingType(BuildingType parentBuildingType){
-		this.parentBuildingType = parentBuildingType;
-	}
-	
-	public int getAirDefanceBonus() {
-		return airDefanceBonus;
-	}
-
-	public void setAirDefanceBonus(int airDefanceBonus) {
-		this.airDefanceBonus = airDefanceBonus;
+	public void setParentBuildingTypeName(String parentBuildingTypeName){
+		this.parentBuildingTypeName = parentBuildingTypeName;
 	}
 
 	public int getClosedPlanetBonus() {
@@ -201,12 +156,12 @@ public class BuildingType implements Serializable, Cloneable{
 		this.description = description;
 	}
 
-	public String getAdvanteges() {
-		return advanteges;
+	public String getAdvantages() {
+		return advantages;
 	}
 
-	public void setAdvanteges(String advanteges) {
-		this.advanteges = advanteges;
+	public void setAdvantages(String advantages) {
+		this.advantages = advantages;
 	}
 	
 	public boolean isDeveloped() {
@@ -257,8 +212,8 @@ public class BuildingType implements Serializable, Cloneable{
 		this.openPlanetBonus = openPlanetBonus;
 	}
 
-	public BuildingType getParentBuilding() {
-		return parentBuildingType;
+	public String getParentBuildingName() {
+		return parentBuildingTypeName;
 	}
 
 	/*public void setParentBuilding(BuildingType parentBuildingType) {
@@ -282,39 +237,23 @@ public class BuildingType implements Serializable, Cloneable{
 		this.shipTechBonus = shipTechBonus;
 	}
 */
-	public int getSiegeBonus() {
-		return siegeBonus;
+
+	public int getSupportDefenceBonus() {
+		return supportDefenceBonus;
 	}
 
-	public void setSiegeBonus(int siegeBonus) {
-		this.siegeBonus = siegeBonus;
-	}
-
-	public int getSuportDefanceBonus() {
-		return suportDefanceBonus;
-	}
-
-	public void setSuportDefanceBonus(int suportDefanceBonus) {
-		this.suportDefanceBonus = suportDefanceBonus;
+	public void setSupportDefenceBonus(int supportDefenceBonus) {
+		this.supportDefenceBonus = supportDefenceBonus;
 	}
 	
 	
 	// set all troop bonus on same time
 	public void setTroopBonus(int troopBonus){
-		setTroopAirBonus(troopBonus);
 		setTroopAttackBonus(troopBonus);
-		setTroopDefanceBonus(troopBonus);
+		setTroopDefenceBonus(troopBonus);
 		setTroopHitBonus(troopBonus);
-		setTroopSuportBonus(troopBonus);
+		setTroopSupportBonus(troopBonus);
 		
-	}
-
-	public int getTroopAirBonus() {
-		return troopAirBonus;
-	}
-
-	public void setTroopAirBonus(int troopAirBonus) {
-		this.troopAirBonus = troopAirBonus;
 	}
 
 	public int getTroopAttackBonus() {
@@ -325,12 +264,12 @@ public class BuildingType implements Serializable, Cloneable{
 		this.troopAttackBonus = troopAttackBonus;
 	}
 
-	public int getTroopDefanceBonus() {
-		return troopDefanceBonus;
+	public int getTroopDefenceBonus() {
+		return troopDefenceBonus;
 	}
 
-	public void setTroopDefanceBonus(int troopDefanceBonus) {
-		this.troopDefanceBonus = troopDefanceBonus;
+	public void setTroopDefenceBonus(int troopDefenceBonus) {
+		this.troopDefenceBonus = troopDefenceBonus;
 	}
 
 	public int getTroopHitBonus() {
@@ -341,12 +280,12 @@ public class BuildingType implements Serializable, Cloneable{
 		this.troopHitBonus = troopHitBonus;
 	}
 
-	public int getTroopSuportBonus() {
-		return troopSuportBonus;
+	public int getTroopSupportBonus() {
+		return troopSupportBonus;
 	}
 
-	public void setTroopSuportBonus(int troopSuportBonus) {
-		this.troopSuportBonus = troopSuportBonus;
+	public void setTroopSupportBonus(int troopSupportBonus) {
+		this.troopSupportBonus = troopSupportBonus;
 	}
 /*
 	public boolean isReplaceParentBuilding() {
@@ -357,11 +296,7 @@ public class BuildingType implements Serializable, Cloneable{
 		this.replaceParentBuilding = replaceParentBuilding;
 	}
 	*/
-	
-	@JsonIgnore
-	public UniqueIdCounter getUniqueIdCounter(){
-	      return uic;
-	    }
+
 
 	public int getBuildCost(VIP vipWithBonus){
       int tempBuildCost = buildCost;
@@ -566,18 +501,6 @@ public class BuildingType implements Serializable, Cloneable{
 		}
 		return false;
 	}
-	
-	public List<BuildingType> getUpgradebleBuildingTypes(Building aBuilding){
-		List<BuildingType> upgradebleBuildingTypes = aBuilding.getLocation().getPlayerInControl().getBuildings().getNextBuildingSteps(this);
-		List<BuildingType> playerUpgradebleBuildingTypes = new ArrayList<BuildingType>();
-		
-		for(int i=0; i < upgradebleBuildingTypes.size();i++){
-			if(upgradebleBuildingTypes.get(i).isConstructible(aBuilding.getLocation(), aBuilding.getUniqueId())){
-				playerUpgradebleBuildingTypes.add(upgradebleBuildingTypes.get(i));
-			}
-		}
-		return playerUpgradebleBuildingTypes;
-	}
 
 	public List<TypeOfTroop> getTypeOfTroop() {
 		return typeOfTroop;
@@ -597,18 +520,6 @@ public class BuildingType implements Serializable, Cloneable{
 		return false;
 	}
 
-	public boolean isFactionUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().buildingTypeExist(this, aPlayer.getFaction(), null);
-	}
-
-	public boolean isPlayerUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().buildingTypeExist(this, null, aPlayer);
-	}
-
-	public boolean isWorldUniqueBuild(Galaxy aGalaxy) {
-		return aGalaxy.buildingTypeExist(this, null, null);
-	}
-
 	public void setFactionUnique(boolean factionUnique) {
 		this.factionUnique = factionUnique;
 	}
@@ -616,58 +527,7 @@ public class BuildingType implements Serializable, Cloneable{
 	public void setPlayerUnique(boolean playerUnique) {
 		this.playerUnique = playerUnique;
 	}
-	
-	public boolean isConstructible(Planet aPlanet, int buildingId){
-		Logger.finer("isConstructible, aPlanet: " + aPlanet.getName());
-		Logger.finer("isConstructible, BuildingType: " + this.getName());
-		Player aPlayer = aPlanet.getPlayerInControl();
-		boolean constructible =  true;
-		if(!isDeveloped()){
-			constructible = false;
-		}else if((isWorldUnique() && isWorldUniqueBuild(aPlayer.getGalaxy())) || (isFactionUnique() && isFactionUniqueBuild(aPlayer)) || (isPlayerUnique() && isPlayerUniqueBuild(aPlayer))){
-			constructible = false;
-		}else if(isPlanetUnique() && aPlanet.hasBuilding(this.getName())){
-			constructible = false;
-		}else if(isWorldUnique()|| isFactionUnique()|| isPlayerUnique() || isPlanetUnique()){ // kollar om en unik byggnad redan har en child byggnad byggd. Om s� �r fallet s� �r den ocks� unik och d� skall det inte g� att bygga denna byggnad.
-			if(isWorldUnique() || isFactionUnique() || isPlayerUnique()){
-				// check if a build order already exist
-				if(aPlayer.getOrders().haveBuildingTypeBuildOrder(this, buildingId)){
-					constructible = false;
-				}
-			}
-			if(constructible){
-				for(int i=0; i < aPlanet.getBuildings().size();i++){
-					BuildingType aBuildingType = aPlanet.getBuildings().get(i).getBuildingType();
-					Logger.finer("aBuildingType: " + aBuildingType.getName());
-					if(checkIfAUniqueChildBuildingIsAlreadyBuild(aBuildingType, aPlanet.getPlayerInControl(), name)){
-						constructible = false;
-					}
-				}
-			}
-		}
-		
-		return constructible;
-	}
-	
-	private boolean checkIfAUniqueChildBuildingIsAlreadyBuild(BuildingType aBuildingType, Player aPlayer, String buildingName){
-		boolean childAlreadyBuild = false;
-		Logger.finer("aBuildingType.getName(): " + aBuildingType.getName());
-		if (aBuildingType.getParentBuilding() != null){
-			Logger.finer("aBuildingType.getParentBuilding().getName(): " + aBuildingType.getParentBuilding().getName());
-			if(aBuildingType.getParentBuilding().getName().equalsIgnoreCase(buildingName)){
-				childAlreadyBuild = true;// det finns en child byggnad som �r byggd och eftersom denna byggnad �r unik s� m�ste den ocks� vara det och d� stoppa bygge av denna byggnad.
-			}else{
-				BuildingType tempBuildingType = aPlayer.getBuildings().getBuildingType(aBuildingType.getParentBuilding().getName());
-				if(tempBuildingType != null){
-					Logger.finer("tempBuildingType.getName(): " + tempBuildingType.getName());
-					childAlreadyBuild = aBuildingType.checkIfAUniqueChildBuildingIsAlreadyBuild(tempBuildingType, aPlayer, buildingName);
-				}
-			}
-		}
-		
-		return childAlreadyBuild;
-	}
-		
+
 	@JsonIgnore
 	public List<String> getAbilitiesStrings(){
 	    List<String> allStrings = new LinkedList<String>();
@@ -703,7 +563,7 @@ public class BuildingType implements Serializable, Cloneable{
 	    if (troopSize > 0){
 	    	allStrings.add("Build Troop Capacity: " + troopSize);
 	    }
-	    if (alienkiller){
+	    if (alienKiller){
 	        allStrings.add("Alien Killer: prevent infestator to infestate the planet");
 	    }
 	    if (counterEspionage > 0){
@@ -718,10 +578,10 @@ public class BuildingType implements Serializable, Cloneable{
 	    if (shieldCapacity > 0){
 	    	allStrings.add("Shield Capacity : " + shieldCapacity);
 	    }
-	    if (CannonDamage > 0){
-	    	allStrings.add("Cannon Damage: " + CannonDamage);
-	    	allStrings.add("Cannon Rate Of Fire: " + CannonRateOfFire);
-	    	allStrings.add("Cannon hit chance: " + CannonHitChance);
+	    if (cannonDamage > 0){
+	    	allStrings.add("Cannon Damage: " + cannonDamage);
+	    	allStrings.add("Cannon Rate Of Fire: " + cannonRateOfFire);
+	    	allStrings.add("Cannon hit chance: " + cannonHitChance);
 	    }
 	    
 	    if (troopSize > 0){
@@ -783,12 +643,20 @@ public class BuildingType implements Serializable, Cloneable{
 	    return allStrings;
 	}
 
-	public boolean isAlienkiller() {
-		return alienkiller;
+	public boolean isAlienKiller() {
+		return alienKiller;
 	}
 
-	public void setAlienkiller(boolean ailienkiller) {
-		this.alienkiller = ailienkiller;
+	public void setAlienKiller(boolean ailienkiller) {
+		this.alienKiller = ailienkiller;
+	}
+
+	public int getCounterEspionage() {
+		return counterEspionage;
+	}
+
+	public void setCounterEspionage(int counterEspionage) {
+		this.counterEspionage = counterEspionage;
 	}
 
 	public int getExterminator() {
@@ -800,34 +668,34 @@ public class BuildingType implements Serializable, Cloneable{
 	}
 
 	public int getCannonHitChance() {
-		return CannonHitChance;
+		return cannonHitChance;
 	}
 	public void setCannonHitChance(int iCannonHitChance) {
-		this.CannonHitChance = iCannonHitChance;
+		this.cannonHitChance = iCannonHitChance;
 	}
 	
 	public int getCannonDamage() {
-		return CannonDamage;
+		return cannonDamage;
 	}
 
 	public void setCannonDamage(int CannonDamage) {
-		this.CannonDamage = CannonDamage;
+		this.cannonDamage = CannonDamage;
 	}
 
 	public int getCannonRateOfFire() {
-		return CannonRateOfFire;
+		return cannonRateOfFire;
 	}
 
 	public void setCannonRateOfFire(int CannonRateOfFire) {
-		this.CannonRateOfFire = CannonRateOfFire;
+		this.cannonRateOfFire = CannonRateOfFire;
 	}
 
-	public boolean isSelfDestructable() {
-		return selfDestructable;
+	public boolean isSelfDestructible() {
+		return selfDestructible;
 	}
 
-	public void setSelfDestructable(boolean selfDestructable) {
-		this.selfDestructable = selfDestructable;
+	public void setSelfDestructible(boolean selfDestructible) {
+		this.selfDestructible = selfDestructible;
 	}
 
 

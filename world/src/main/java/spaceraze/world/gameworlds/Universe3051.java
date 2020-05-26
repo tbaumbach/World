@@ -188,48 +188,48 @@ public class Universe3051{
         Buildings tempBuildings = new Buildings();
         BuildingType tempBuildingType;
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 5);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 7, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 7);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 15);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 24, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 24);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("Military Spaceport", "MSP", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Military Spaceport", "MSP", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("Commercial Spaceport", "CSP",6, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Commercial Spaceport", "CSP",6);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Military Spaceport"));
+        tempBuildingType.setParentBuildingTypeName("Military Spaceport");
         tempBuildingType.setDescription("Extending the military Spaceport to become a commercial hub");
         tempBuildings.addBuilding(tempBuildingType);
         
@@ -238,23 +238,23 @@ public class Universe3051{
         
 //      ###################  New Building Types  ##########################################
        
-        tempBuildingType= new BuildingType("Improved Infrastructure", "IIS", 7, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Improved Infrastructure", "IIS", 7);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Preparation to build, advanced buildings");
         tempBuildings.addBuilding(tempBuildingType);
      
         
-        tempBuildingType= new BuildingType("Security Center", "SC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Security Center", "SC", 20);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Master Spy"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Commando Unit"));
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Security Center to train undercover VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Improved Infrastructure"));
+        tempBuildingType.setParentBuildingTypeName("Improved Infrastructure");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Military Academy", "MAC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Military Academy", "MAC", 20);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Admiral"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Top Ace"));
@@ -262,10 +262,10 @@ public class Universe3051{
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Astrogator"));
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Academy to train military VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Improved Infrastructure"));
+        tempBuildingType.setParentBuildingTypeName("Improved Infrastructure");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("Advanced University", "AU", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Advanced University", "AU", 20);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Scientist"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Expert Scientist"));
@@ -274,103 +274,103 @@ public class Universe3051{
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Diplomat"));
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Academy to train Civilian VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Improved Infrastructure"));
+        tempBuildingType.setParentBuildingTypeName("Improved Infrastructure");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("City", "City", 4, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "City", 4);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(1);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City, Increase Open Planet Income +1.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Metropolis", "Met", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Metropolis", "Met", 8);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(3);
         tempBuildingType.setResistanceBonus(1);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Megatropolis, Increase Open Planet Income +3.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Cap", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Cap", 16);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Player Capital gives 5 in income if the planet is open. Gives bonus to the defending ground force. Only one Universal Trade Center can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Metropolis"));
+        tempBuildingType.setParentBuildingTypeName("Metropolis");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Faction Capital", "FCap", 32, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Faction Capital", "FCap", 32);
         tempBuildingType.setOpenPlanetBonus(8);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDescription("Capital that gives 8 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build for each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Capital"));
+        tempBuildingType.setParentBuildingTypeName("Capital");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("Quadrant Capital", "QCap", 64, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Quadrant Capital", "QCap", 64);
         tempBuildingType.setOpenPlanetBonus(12);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setWorldUnique(true);
         tempBuildingType.setDescription("Capital that gives 8 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build for each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Faction Capital"));
+        tempBuildingType.setParentBuildingTypeName("Faction Capital");
         tempBuildings.addBuilding(tempBuildingType);
 
         
       
         
-        tempBuildingType= new BuildingType("Tech Center", "TC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Tech Center", "TC", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);        
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Tech center give better technology to units.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Quadrant Tech Center", "ATC", 50, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Quadrant Tech Center", "ATC", 50);
         tempBuildingType.setTechBonus(25);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setWorldUnique(true);
         tempBuildingType.setDescription("Advanced tech center gives even better technology to units than tech center do.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Tech Center"));
+        tempBuildingType.setParentBuildingTypeName("Tech Center");
         tempBuildings.addBuilding(tempBuildingType);
         
         
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A small shield to defend planets from bombardment.");
         tempBuildings.addBuilding(tempBuildingType);
 
-        tempBuildingType= new BuildingType("Advanced Shield", "AS", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Advanced Shield", "AS", 25);
         tempBuildingType.setShieldCapacity(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDescription("Advanced Shield, Defends planets from most bombardments.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Basic Shield"));
+        tempBuildingType.setParentBuildingTypeName("Basic Shield");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Star Shield", "TOS", 70, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Star Shield", "TOS", 70);
         tempBuildingType.setShieldCapacity(5);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setWorldUnique(true);
         tempBuildingType.setDescription("The One Sheild, Defends against all bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Advanced Shield"));
+        tempBuildingType.setParentBuildingTypeName("Advanced Shield");
         tempBuildings.addBuilding(tempBuildingType);
 
         
-        tempBuildingType= new BuildingType("Missile Silo", "MS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Missile Silo", "MS", 15);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonHitChance(90);
         tempBuildingType.setCannonRateOfFire(1);
@@ -379,55 +379,55 @@ public class Universe3051{
         tempBuildingType.setDescription("A planet based missile system to shoot down ships what besiege the planet.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Missile Defence", "MD", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Missile Defence", "MD", 25);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonHitChance(95);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A planet based missile system to shoot down ships in great numbers, that besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Missile Silo"));
+        tempBuildingType.setParentBuildingTypeName("Missile Silo");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Star Missile Defence", "SMD", 70, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Star Missile Defence", "SMD", 70);
         tempBuildingType.setCannonDamage(1000);
         tempBuildingType.setCannonHitChance(95);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setWorldUnique(true);
         tempBuildingType.setDescription("A planet based missile system to shoot down ships in great numbers, that besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Missile Defence"));
+        tempBuildingType.setParentBuildingTypeName("Missile Defence");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 10);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonHitChance(75);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A planet based Cannon to shoot down small ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 20);
         tempBuildingType.setCannonDamage(250);
         tempBuildingType.setCannonHitChance(75);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A planet based heavy Cannon to shoot down ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Star Cannon", "SC", 50, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Star Cannon", "SC", 50);
         tempBuildingType.setCannonDamage(2500);
         tempBuildingType.setCannonHitChance(75);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setWorldUnique(true);
         tempBuildingType.setDescription("A planet based Star Cannon to shoot down most ships that besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Heavy Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Heavy Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
         

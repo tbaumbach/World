@@ -38,7 +38,6 @@ public class GameWorld implements Serializable{
 	private String versionId = "1"; // should be increased every time a new version of a GameWorld is published
 	private GameWorldDiplomacy diplomacy;
 	private int baseBombardmentDamage = 1000; // default value (always kills the troop) 50% hit chance.
-	private Buildings buildings; // used to list all buildings and to store neutral buildings.
 	private boolean adjustScreenedStatus = true;
 	
 	public GameWorld(){
@@ -109,7 +108,8 @@ public class GameWorld implements Serializable{
     }
 
     public BuildingType getBuildingTypeByName(String btname){
-    	BuildingType foundbt = buildings.getBuildingType(btname);
+		Buildings buildings = factions.stream().map(faction -> faction.getBuildings()).filter(buildings1 -> buildings1.getBuildingType(btname) != null).findFirst().orElse(null);
+		BuildingType foundbt = buildings.getBuildingType(btname);
     	if (foundbt != null){
         	Logger.finest("GameWorld.getBuildingTypeByName, btname:" + btname + " -> " + foundbt);
     	}else{ // om detta inträffar så finns det antagligen en felstavning av en buildingType i gameworlden
@@ -416,75 +416,7 @@ public class GameWorld implements Serializable{
 		assert found != null : "Faction with name " + aFactionName + " does not exist";
 		return found;
 	}
-	/*
-	@JsonIgnore
-	public String getSpaceshipTypesTableContentHTML(){
-		StringBuffer retHTML = new StringBuffer();
-		retHTML.append(SpaceshipType.getHTMLHeaderRow());
-		Collections.sort(shipTypes,new SpaceshipTypeComparator());
-		for (SpaceshipType sst : shipTypes) {
-			retHTML.append(sst.getHTMLTableRow());
-		}
-		return retHTML.toString();
-	}
 
-	@JsonIgnore
-	public String getSpaceshipTypesTableContentHTMLNO(){
-		StringBuffer retHTML = new StringBuffer();
-		retHTML.append(SpaceshipType.getHTMLHeaderRowNO());
-		Collections.sort(shipTypes,new SpaceshipTypeComparator());
-		for (SpaceshipType sst : shipTypes) {
-			retHTML.append(sst.getHTMLTableRowNO());
-		}
-		return retHTML.toString();
-	}
-
-	@JsonIgnore
-	public String getVIPTypesTableContentHTML(){
-		StringBuffer retHTML = new StringBuffer();
-		for (VIPType vt : vipTypes) {
-			retHTML.append(vt.getHTMLTableContent());
-			retHTML.append("<p><p>");
-		}
-		return retHTML.toString();
-	}
-
-	@JsonIgnore
-	public String getVIPTypesTableContentHTMLNO(){
-		StringBuffer retHTML = new StringBuffer();
-		for (VIPType vt : vipTypes) {
-			retHTML.append(vt.getHTMLTableContentNO());
-		}
-		return retHTML.toString();
-	}
-	
-	@JsonIgnore
-	public String getBuildingsTypesTableContentHTMLNO(){
-		StringBuffer retHTML = new StringBuffer();
-		retHTML.append("");
-		Logger.finer("buildings.getBuildingsVectorOrderByParent().size()");
-		
-		//for (Iterator iter = buildings.getBuildingsVectorOrderByParent().iterator(); iter.hasNext();) {
-		//	BuildingType bt = (BuildingType) iter.next();
-		//	retHTML.append(bt.getHTMLTableContentNO());
-		//}
-		return retHTML.toString();
-	}
-	
-	
-	@JsonIgnore
-	public String getAlignmentsTableContentHTML(){
-		StringBuffer retHTML = new StringBuffer();
-		List<Alignment> allAlignments = Functions.cloneList(alignments.getAllAlignments());
-		Collections.sort(allAlignments,new AlignmentNameComparator<Alignment>());
-		for (Alignment alignment : allAlignments) {
-			retHTML.append(alignment.getHTMLTableContent());
-			retHTML.append("<p><p>");
-		}
-		return retHTML.toString();
-	}
-
-	*/
 	@JsonIgnore
 	public boolean isSquadronsSurviveOutsideCarriers() {
 		return squadronsSurviveOutsideCarriers;
@@ -555,17 +487,6 @@ public class GameWorld implements Serializable{
 
 	public void setBaseBombardmentDamage(int baseBombardmentDamage) {
 		this.baseBombardmentDamage = baseBombardmentDamage;
-	}
-	
-	//TODO Don't think this i in use. Buildings are in factions
-	@JsonIgnore
-	public Buildings getBuildings() {
-		return buildings;
-	}
-
-	//TODO Don't think this i in use. Buildings are in factions
-	public void setBuildings(Buildings buildings) {
-		this.buildings = buildings;
 	}
 
 	public String getHowToPlay() {

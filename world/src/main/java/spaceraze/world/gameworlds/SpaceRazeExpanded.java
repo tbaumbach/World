@@ -476,7 +476,7 @@ public class SpaceRazeExpanded{
 		BuildingType tmpBuildingType = null;
         
 		// orbital wharfs
-        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5);
         tmpBuildingType.setWharfSize(1);
         tmpBuildingType.setInOrbit(true);
         BuildingType parent = tmpBuildingType;
@@ -485,36 +485,36 @@ public class SpaceRazeExpanded{
         tempBuildingsPirate.addBuilding(tmpBuildingType);
         tempBuildingsRebel.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 10, uBIC);
+        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 10);
         tmpBuildingType.setWharfSize(2);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         parent = tmpBuildingType;
         tempBuildingsLeague.addBuilding(tmpBuildingType);
         tempBuildingsEmpire.addBuilding(tmpBuildingType);
         tempBuildingsPirate.addBuilding(tmpBuildingType);
         tempBuildingsRebel.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 10, uBIC);
+        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 10);
         tmpBuildingType.setWharfSize(3);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         parent = tmpBuildingType;
         tempBuildingsLeague.addBuilding(tmpBuildingType);
         tempBuildingsEmpire.addBuilding(tmpBuildingType);
         tempBuildingsPirate.addBuilding(tmpBuildingType);
         tempBuildingsRebel.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 10, uBIC);
+        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 10);
         tmpBuildingType.setWharfSize(5);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         tempBuildingsLeague.addBuilding(tmpBuildingType);
         tempBuildingsEmpire.addBuilding(tmpBuildingType);
         tempBuildingsPirate.addBuilding(tmpBuildingType);
         tempBuildingsRebel.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("League Space Station", "LSS", 15, uBIC);
+        tmpBuildingType = new BuildingType("League Space Station", "LSS", 15);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setOpenPlanetBonus(2);
         tmpBuildingType.setSpaceport(true);
@@ -522,7 +522,7 @@ public class SpaceRazeExpanded{
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingsLeague.addBuilding(tmpBuildingType);        
 
-        tmpBuildingType = new BuildingType("Empire Space Station", "ESS", 15, uBIC);
+        tmpBuildingType = new BuildingType("Empire Space Station", "ESS", 15);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setOpenPlanetBonus(2);
         tmpBuildingType.setClosedPlanetBonus(1);
@@ -531,7 +531,7 @@ public class SpaceRazeExpanded{
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingsEmpire.addBuilding(tmpBuildingType);        
 
-        tmpBuildingType = new BuildingType("Rebel Space Station", "RSS", 12, uBIC);
+        tmpBuildingType = new BuildingType("Rebel Space Station", "RSS", 12);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setClosedPlanetBonus(1);
         tmpBuildingType.setTechBonus(10);
@@ -540,7 +540,7 @@ public class SpaceRazeExpanded{
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingsRebel.addBuilding(tmpBuildingType);        
 
-        tmpBuildingType = new BuildingType("Pirate Space Station", "PSS", 15, uBIC);
+        tmpBuildingType = new BuildingType("Pirate Space Station", "PSS", 15);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setClosedPlanetBonus(2);
         tmpBuildingType.setSpaceport(true);

@@ -826,7 +826,7 @@ public class Titanium{
 		Buildings bTemplar = new Buildings();
         
 		// build troops - infantry
-        tmpBuildingType = new BuildingType("Infantry Training Base", "Inf", 5, uBIC);
+        tmpBuildingType = new BuildingType("Infantry Training Base", "Inf", 5);
         tmpBuildingType.setDescription("Can build one infantry troop unit every turn.");
         tmpBuildingType.setTroopSize(1);
         tmpBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
@@ -835,7 +835,7 @@ public class Titanium{
 //        addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
 		// build troops - armor, Cyber excluded
-        tmpBuildingType = new BuildingType("Armor Training Base", "Arm", 5, uBIC);
+        tmpBuildingType = new BuildingType("Armor Training Base", "Arm", 5);
         tmpBuildingType.setDescription("Can build one armoured troop unit every turn.");
         tmpBuildingType.setTroopSize(1);
         tmpBuildingType.setDeveloped(false);
@@ -844,7 +844,7 @@ public class Titanium{
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bGhost,bTemplar);
 
 		// build troops - armor, Cyber only
-        tmpBuildingType = new BuildingType("Mech Factory", "Arm", 5, uBIC);
+        tmpBuildingType = new BuildingType("Mech Factory", "Arm", 5);
         tmpBuildingType.setDescription("Can build one mech unit every turn.");
         tmpBuildingType.setTroopSize(1);
         tmpBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
@@ -852,7 +852,7 @@ public class Titanium{
         addBuildingToFactions(tmpBuildingType,bCyber);
 
 		// build troops - support
-        tmpBuildingType = new BuildingType("Artillery Training Base", "Art", 5, uBIC);
+        tmpBuildingType = new BuildingType("Artillery Training Base", "Art", 5);
         tmpBuildingType.setDescription("Can build one artillery or support troop unit every turn.");
         tmpBuildingType.setTroopSize(1);
         tmpBuildingType.setDeveloped(false);
@@ -861,146 +861,137 @@ public class Titanium{
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost);
 
         // orbital wharfs
-        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5);
         tmpBuildingType.setDescription("Can build one small ship every turn. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setWharfSize(1);
         tmpBuildingType.setInOrbit(true);
-        BuildingType parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
-        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 10, uBIC);
+        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 10);
         tmpBuildingType.setDescription("Can build one medium or two small ship every turn. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setWharfSize(2);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Small Orbital Wharf");
         tmpBuildingType.setInOrbit(true);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
-        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 20, uBIC);
+        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 20);
         tmpBuildingType.setDescription("Can build one large ship or some smaller ships every turn. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setWharfSize(3);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Medium Orbital Wharf");
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
-        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 50, uBIC);
+        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 50);
         tmpBuildingType.setDescription("Can build one huge ship or several smaller ships every turn. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setWharfSize(5);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Large Orbital Wharf");
         tmpBuildingType.setDeveloped(false);
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
         // wharf on planet surface - small
-        tmpBuildingType = new BuildingType("Small Planetary Wharf", "P1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Small Planetary Wharf", "P1", 5);
         tmpBuildingType.setDescription("Can build one small ship every turn.");
         tmpBuildingType.setWharfSize(1);
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
         // wharf on planet surface - upgrade to medium
-        tmpBuildingType = new BuildingType("Medium Planetary Wharf", "P2", 10, uBIC);
+        tmpBuildingType = new BuildingType("Medium Planetary Wharf", "P2", 10);
         tmpBuildingType.setDescription("Can build one medium or two small ship every turn.");
         tmpBuildingType.setWharfSize(2);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Small Planetary Wharf");
         tmpBuildingType.setDeveloped(false);
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
         // planet shields
-        tmpBuildingType = new BuildingType("Small Planetary Shield", "PS1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Small Planetary Shield", "PS1", 5);
         tmpBuildingType.setDescription("Give some protection against enemy bombardment.");
         tmpBuildingType.setShieldCapacity(1);
         tmpBuildingType.setPlanetUnique(true);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
         
-        tmpBuildingType = new BuildingType("Medium Planetary Shield", "PS2", 10, uBIC);
+        tmpBuildingType = new BuildingType("Medium Planetary Shield", "PS2", 10);
         tmpBuildingType.setDescription("Give good protection against enemy bombardment.");
         tmpBuildingType.setShieldCapacity(2);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Small Planetary Shield");
 //        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bTemplar);
 
-        tmpBuildingType = new BuildingType("Ghost Medium Planetary Shield", "GPS2", 5, uBIC);
+        tmpBuildingType = new BuildingType("Ghost Medium Planetary Shield", "GPS2", 5);
         tmpBuildingType.setDescription("Give good protection against enemy bombardment, and is cheaper than the ordinary medium planetary shield.");
         tmpBuildingType.setShieldCapacity(2);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(parent); // small planetary shield is parent
-        parent = tmpBuildingType;
+        tmpBuildingType.setParentBuildingTypeName("Small Planetary Shield"); // small planetary shield is parent
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bGhost);
         
-        tmpBuildingType = new BuildingType("Ghost Large Planetary Shield", "GPS3", 5, uBIC);
+        tmpBuildingType = new BuildingType("Ghost Large Planetary Shield", "GPS3", 5);
         tmpBuildingType.setDescription("Give very good protection against enemy bombardment.");
         tmpBuildingType.setShieldCapacity(3);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Ghost Medium Planetary Shield");
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bGhost);
         
         // Defence building
-        tmpBuildingType = new BuildingType("Defensive Bunkers", "DB", 5, uBIC);
+        tmpBuildingType = new BuildingType("Defensive Bunkers", "DB", 5);
         tmpBuildingType.setDescription("A system of defensive bunkers that will raise the planets resistance (+3) and aid defending troops engaged in land battle.");
         tmpBuildingType.setResistanceBonus(3);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
         // Ghost defence building
-        tmpBuildingType = new BuildingType("Ghost Advanced Bunkers", "GAB", 10, uBIC);
+        tmpBuildingType = new BuildingType("Ghost Advanced Bunkers", "GAB", 10);
         tmpBuildingType.setDescription("A system of advanced and hidden defensive bunkers that will raise the planets resistance (+6) and aid defending troops engaged in land battle.");
         tmpBuildingType.setResistanceBonus(6);
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Defensive Bunkers");
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bGhost);
         
         // space stations
-        tmpBuildingType = new BuildingType("Spaceport Class 1", "S1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Spaceport Class 1", "S1", 5);
         tmpBuildingType.setDescription("The smallest type of spaceport. It increases both open and closed incomes. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setOpenPlanetBonus(1);
         tmpBuildingType.setClosedPlanetBonus(1);
         tmpBuildingType.setInOrbit(true);
         tmpBuildingType.setPlanetUnique(true);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
-        tmpBuildingType = new BuildingType("Spaceport Class 2", "S2", 10, uBIC);
+        tmpBuildingType = new BuildingType("Spaceport Class 2", "S2", 10);
         tmpBuildingType.setDescription("The second smallest type of spaceport. It increases open incomes compared to the class 1 spaceport, and also adds defensive weapons that can destroy small hostile ships. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setOpenPlanetBonus(2);
         tmpBuildingType.setClosedPlanetBonus(1);
         tmpBuildingType.setCannonDamage(100);
         tmpBuildingType.setCannonRateOfFire(2);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Spaceport Class 1");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
-        tmpBuildingType = new BuildingType("Spaceport Class 3", "S3", 15, uBIC);
+        tmpBuildingType = new BuildingType("Spaceport Class 3", "S3", 15);
         tmpBuildingType.setDescription("An average size type of spaceport. It increases both open and closed incomes compared to the class 2 spaceport. But most importantly is contains a stargate which enables short range ships to travel long range to other friendly planets that also have a stargate. It is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setOpenPlanetBonus(3);
         tmpBuildingType.setClosedPlanetBonus(2);
@@ -1008,14 +999,13 @@ public class Titanium{
         tmpBuildingType.setCannonRateOfFire(2);
         tmpBuildingType.setSpaceport(true);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Spaceport Class 2");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
-        tmpBuildingType = new BuildingType("Spaceport Class 4", "S4", 20, uBIC);
+        tmpBuildingType = new BuildingType("Spaceport Class 4", "S4", 20);
         tmpBuildingType.setDescription("The second largest type of spaceport. It increases open income and add a +10 tech bonus. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setOpenPlanetBonus(4);
         tmpBuildingType.setClosedPlanetBonus(2);
@@ -1024,14 +1014,13 @@ public class Titanium{
         tmpBuildingType.setSpaceport(true);
         tmpBuildingType.setTechBonus(10);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Spaceport Class 3");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
-        parent = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
-        tmpBuildingType = new BuildingType("Spaceport Class 5", "S5", 25, uBIC);
+        tmpBuildingType = new BuildingType("Spaceport Class 5", "S5", 25);
         tmpBuildingType.setDescription("The largest type of spaceport. It increases both open and closed incomes, adds +10% tech bonus and upgrades the defensive weapons so that it can defend itself against hostile small and medium ships. Is vulnerable to enemy ships since it is in orbit around the planet.");
         tmpBuildingType.setOpenPlanetBonus(5);
         tmpBuildingType.setClosedPlanetBonus(3);
@@ -1040,14 +1029,14 @@ public class Titanium{
         tmpBuildingType.setSpaceport(true);
         tmpBuildingType.setTechBonus(10);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName("Spaceport Class 4");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setDeveloped(false);
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
 
         // Home Planet Industrial base. Ger h�g inkomst och kan aldrig byggas.
-        tmpBuildingType = new BuildingType("Orbital Industries", "OI", 0, uBIC);
+        tmpBuildingType = new BuildingType("Orbital Industries", "OI", 0);
         tmpBuildingType.setDescription("The orbital industrial base of a home planet is constructed over several decades through organic expansion into the orbit of a major planet. Therefore it cannot be rebuilt if it is destroyed.");
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setInOrbit(true);
@@ -1083,7 +1072,7 @@ public class Titanium{
         String[] vipNames5 = {"Templar Assassin","Templar Star Navigator","Templar Counter-Spy","Templar Infestator","Templar Knight"};
         createVIPBuildings(gw,bTemplar,buildingsGW,uBIC,longNames5,shortNames5,vipNames5);
         
-        tmpBuildingType = new BuildingType("Mercenary Liason Office", "MLO", 100, uBIC);
+        tmpBuildingType = new BuildingType("Mercenary Liason Office", "MLO", 100);
         tmpBuildingType.setDescription("This unique building enables the owner to hire all the different types of mercenary VIPs.");
         for (VIPType mercenaryType : mercenaryVIPs) {
         	tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(mercenaryType.getName()));
@@ -1093,8 +1082,6 @@ public class Titanium{
         tmpBuildingType.setDeveloped(false);
         buildingsGW.addBuilding(tmpBuildingType);
         addBuildingToFactions(tmpBuildingType,bOrb,bLancer,bCyber,bGhost,bTemplar);
-        //TODO buildings i GW anv�nds inte. H�r borde buildingsGW tas bort helt.
-        gw.setBuildings(buildingsGW);
   
         Research tempResearch = null;
         
@@ -1106,6 +1093,7 @@ public class Titanium{
         // *******
         // XXX Orb faction
         Faction tempFaction = new Faction("Orb",Faction.getColorHexString(255,255,63),orb);
+        gw.addFaction(tempFaction);
         tempFaction.setDescription("The Orb faction is a human faction. They use flexible design and tactics in both their spaceships and troops.");
 
         // Troop types
@@ -1413,13 +1401,14 @@ public class Titanium{
         tempFaction.addStartingVIPType(orbStart2);
         tempFaction.setCorruption(tmpCorruption);
         Faction orbFaction = tempFaction;
-        gw.addFaction(tempFaction);
+
 
         // **********
         // * Lancer *
         // **********
         // XXX Lancer faction
         tempFaction = new Faction("Lancer",Faction.getColorHexString(140,140,255),lancer);
+        gw.addFaction(tempFaction);
         tempFaction.setDescription("The Lancer faction is a human faction. They believe firmly in making profits from trade and the use of diplomacy is the best way to achieve power. Especially if it is backed by some very large and very armed spaceships.");
 
         // Troop types
@@ -1592,7 +1581,6 @@ public class Titanium{
         tempsst.setIncFriendlyOpenBonus(9);
         tempsst.setIncNeutralOpenBonus(12);
         tempsst.setAvailableToBuild(false);
-        gw.addShipType(tempsst);
         tempFaction.addSpaceshipType(tempsst);
         
         // Research - Lancer
@@ -1701,13 +1689,13 @@ public class Titanium{
         tempFaction.addStartingVIPType(lancerStart2);
         tempFaction.setCorruption(tmpCorruption);
         Faction lancerFaction = tempFaction;
-        gw.addFaction(tempFaction);
 
         // *********
         // * Cyber *
         // *********
         // XXX Cyber faction
         tempFaction = new Faction("Cyber",Faction.getColorHexString(0,255,255),cyber);
+        gw.addFaction(tempFaction);
 
         // Troop types
         // ***********
@@ -2001,13 +1989,13 @@ public class Titanium{
         tempFaction.addStartingVIPType(cyberStart2);
         tempFaction.setCorruption(tmpCorruption);
         Faction cyberFaction = tempFaction;
-        gw.addFaction(tempFaction);
 
         // *********
         // * Ghost *
         // *********
         // XXX Ghost faction
         tempFaction = new Faction("Ghost",Faction.getColorHexString(122,255,122),ghost);
+        gw.addFaction(tempFaction);
 
         // Ghost Troop types
         // *****************
@@ -2271,13 +2259,13 @@ public class Titanium{
         tempFaction.addStartingVIPType(ghostStart2);
         tempFaction.setCorruption(tmpCorruption);
         Faction ghostFaction = tempFaction;
-        gw.addFaction(tempFaction);
 
         // ***********
         // * Templar *
         // ***********
         // XXX Templar faction
         tempFaction = new Faction("Templar",Faction.getColorHexString(255,100,100),templar);
+        gw.addFaction(tempFaction);
         
         // Troop types
         // ***********
@@ -2535,7 +2523,6 @@ public class Titanium{
         tempFaction.setCorruption(tmpCorruption);
         tempFaction.setAlien(true);
         Faction templarFaction = tempFaction;
-        gw.addFaction(tempFaction);
 
         // ********************
         // add custom diplomacy
@@ -2784,47 +2771,45 @@ public class Titanium{
 	}
 
 	private static void createVIPBuildings(GameWorld gw, Buildings factionBuildings, Buildings buildingsGW, UniqueIdCounter uBIC, String[] longNames, String[] shortNames, String[] vipNames){
-        BuildingType tmpBuildingType = new BuildingType(longNames[0], shortNames[0], 20, uBIC);
+        BuildingType tmpBuildingType = new BuildingType(longNames[0], shortNames[0], 20);
         tmpBuildingType.setDescription("Can train " + vipNames[0] + " VIPs.");
         tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[0]));
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
-        BuildingType ob1 = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         factionBuildings.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType(longNames[1], shortNames[1], 50, uBIC);
+        tmpBuildingType = new BuildingType(longNames[1], shortNames[1], 50);
         tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[0]));
         tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[1]));
         tmpBuildingType.setDescription("Can train " + vipNames[0] + " and " + vipNames[1] + " VIPs.");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(ob1);
+        tmpBuildingType.setParentBuildingTypeName(longNames[0]);
         buildingsGW.addBuilding(tmpBuildingType);
         factionBuildings.addBuilding(tmpBuildingType);
 
-        tmpBuildingType = new BuildingType(longNames[2], shortNames[2], 20, uBIC);
+        tmpBuildingType = new BuildingType(longNames[2], shortNames[2], 20);
         tmpBuildingType.setDescription("Can train " + vipNames[2] + " VIPs.");
         tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[2]));
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
-        BuildingType ob3 = tmpBuildingType;
         buildingsGW.addBuilding(tmpBuildingType);
         factionBuildings.addBuilding(tmpBuildingType);
 
-        tmpBuildingType = new BuildingType(longNames[3], shortNames[3], 50, uBIC);
+        tmpBuildingType = new BuildingType(longNames[3], shortNames[3], 50);
     	tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[2]));
     	tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[3]));
         tmpBuildingType.setDescription("Can train " + vipNames[2] + " and " + vipNames[3] + " VIPs.");
         tmpBuildingType.setPlanetUnique(true);
         tmpBuildingType.setAutoDestructWhenConquered(true);
         tmpBuildingType.setDeveloped(false);
-        tmpBuildingType.setParentBuildingType(ob3);
+        tmpBuildingType.setParentBuildingTypeName(longNames[2]);
         buildingsGW.addBuilding(tmpBuildingType);
         factionBuildings.addBuilding(tmpBuildingType);
 
-        tmpBuildingType = new BuildingType(longNames[4], shortNames[4], 100, uBIC);
+        tmpBuildingType = new BuildingType(longNames[4], shortNames[4], 100);
 		tmpBuildingType.addBuildVIPType(gw.getVIPTypeByName(vipNames[4]));
         tmpBuildingType.setDescription("Can train " + vipNames[4] + " VIPs.");
         tmpBuildingType.setPlayerUnique(true);

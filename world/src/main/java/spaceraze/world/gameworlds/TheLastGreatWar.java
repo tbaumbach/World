@@ -446,38 +446,38 @@ public class TheLastGreatWar{
         Buildings tempBuildings = new Buildings();
         BuildingType tempBuildingType;
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 2);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small China Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large China Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large China Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge China Wharf", "W5", 40, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge China Wharf", "W5", 40);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large China Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large China Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Spaceport", "SP", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Spaceport", "SP", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setClosedPlanetBonus(1);
@@ -486,7 +486,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports and give 1 in incom.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("China Home Base", "CHom", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("China Home Base", "CHom", 20);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setClosedPlanetBonus(7);
@@ -494,23 +494,23 @@ public class TheLastGreatWar{
         tempBuildingType.setPlayerUnique(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("China Base", "CB", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("China Base", "CB", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base and a ground for bigger buildings");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Agent Center", "AC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Agent Center", "AC", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Agent Center to train undercover VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("China Base"));
+        tempBuildingType.setParentBuildingTypeName("China Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("China Military Academy", "CMA", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("China Military Academy", "CMA", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Commander"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Ace"));
@@ -518,41 +518,41 @@ public class TheLastGreatWar{
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Academy to train military VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("China Base"));
+        tempBuildingType.setParentBuildingTypeName("China Base");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("China Base"));
+        tempBuildingType.setParentBuildingTypeName("China Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Barracks", "Bar", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Barracks", "Bar", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
@@ -560,43 +560,43 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Barracks to train infantary");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Barracks", "LB", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Barracks", "LB", 10);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Barracks to train up to 3 infantarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Barracks"));
+        tempBuildingType.setParentBuildingTypeName("Barracks");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("China Military Center", "CMC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("China Military Center", "CMC", 10);
         tempBuildingType.setTroopSize(5);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDescription("Military center to train up to 5 infantarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Barracks"));
+        tempBuildingType.setParentBuildingTypeName("Large Barracks");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Tech Center", "TC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Tech Center", "TC", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(6);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Tech center give better technology to units.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Advanced Tech Center", "ATC", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Advanced Tech Center", "ATC", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(12);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Advanced tech center gives even better technology to units than tech center do.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Tech Center"));
+        tempBuildingType.setParentBuildingTypeName("Tech Center");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Cannon Factory", "CF", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon Factory", "CF", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
         tempBuildingType.setInOrbit(false);
@@ -604,7 +604,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("In this buiding support ground units can be build.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Tank Factory", "TF", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Tank Factory", "TF", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.setInOrbit(false);
@@ -614,7 +614,7 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
@@ -623,7 +623,7 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Missile Silo", "MS", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Missile Silo", "MS", 5);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
@@ -632,14 +632,14 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A planet based missile system to shoot down ships what besiege the planet.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Missile Defence", "MD", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Missile Defence", "MD", 15);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based missile system to shoot down ships in great numbers, what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Missile Silo"));
+        tempBuildingType.setParentBuildingTypeName("Missile Silo");
         tempBuildings.addBuilding(tempBuildingType);
         
         
@@ -1211,13 +1211,11 @@ public class TheLastGreatWar{
         // Trading II
         tempResearchAdvantage = new ResearchAdvantage("Trading II","Gives more income to the Province Capital and the Capital");
         
-        ResearchUpgradeBuilding aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        ResearchUpgradeBuilding aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -1229,8 +1227,7 @@ public class TheLastGreatWar{
         // Trading I
         tempResearchAdvantage = new ResearchAdvantage("Trading I","Gives one more income to all new SpacePort");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("SpacePort");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("SpacePort");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -1477,18 +1474,15 @@ public class TheLastGreatWar{
         // Infrastructure
         tempResearchAdvantage = new ResearchAdvantage("Infrastructure","Gives more income to towns");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -1609,37 +1603,37 @@ public class TheLastGreatWar{
 //      Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 4, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 4);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 16);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildingType.setDeveloped(false);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Africa Wharf", "W5", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Africa Wharf", "W5", 30);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Alliance Dock", "AS", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Alliance Dock", "AS", 3);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setClosedPlanetBonus(1);
         tempBuildingType.setInOrbit(true);
@@ -1647,23 +1641,23 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A dock that gives +1 incom on open and closed planets");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Space Harbour", "SH", 6, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space Harbour", "SH", 6);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setClosedPlanetBonus(1);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setPlanetUnique(true);
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Alliance Dock"));
+        tempBuildingType.setParentBuildingTypeName("Alliance Dock");
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports + giving 1 incom on closed planet");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Outpost Of Alliance", "OOA", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Outpost Of Alliance", "OOA", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base that is the first step to colonise the planet.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Alliance Home Base", "AHom", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Alliance Home Base", "AHom", 20);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setOpenPlanetBonus(8);
         tempBuildingType.setClosedPlanetBonus(8);
@@ -1671,86 +1665,86 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("The home base is made as a head office. Gives an income of 8.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Outpost Of Alliance"));
+        tempBuildingType.setParentBuildingTypeName("Outpost Of Alliance");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Barracks", "Bar", 7, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Barracks", "Bar", 7);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Barracks to train infantary");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Outpost Of Alliance"));
+        tempBuildingType.setParentBuildingTypeName("Outpost Of Alliance");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Training Center", "TC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Training Center", "TC", 10);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Military base to train up to 3 infantarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Barracks"));
+        tempBuildingType.setParentBuildingTypeName("Barracks");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 5);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based Cannon to shoot down small ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15);
         tempBuildingType.setCannonDamage(250);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based heavy Cannon to shoot down ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Planet Defender Cannon", "PDC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Defender Cannon", "PDC", 20);
         tempBuildingType.setCannonDamage(500);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based huge sized Cannon to shoot down ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Heavy Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Heavy Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
@@ -1759,24 +1753,24 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         // ers�tter Basic Shield
-        tempBuildingType= new BuildingType("Planet Shield", "PS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Shield", "PS", 15);
         tempBuildingType.setShieldCapacity(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A shield to defende planets from bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Basic Shield"));
+        tempBuildingType.setParentBuildingTypeName("Basic Shield");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A factory give better parts to build units with.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Tank Factory", "TF", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Tank Factory", "TF", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.setInOrbit(false);
@@ -1785,7 +1779,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("In this buiding armored ground units can be build.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("University", "Un", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("University", "Un", 20);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -2283,13 +2277,11 @@ public class TheLastGreatWar{
         // Infrastructure 3
         tempResearchAdvantage = new ResearchAdvantage("Infrastructure III","Shields will give one in incom on open planets.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Basic Shield");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Basic Shield");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Planet Shield");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Planet Shield");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -2300,18 +2292,15 @@ public class TheLastGreatWar{
         // Infrastructure 2
         tempResearchAdvantage = new ResearchAdvantage("Infrastructure II","Cannon will give one in incom on open planets.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Cannon");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Cannon");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Heavy Cannon");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Heavy Cannon");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Planet Defender Cannon");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Planet Defender Cannon");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -2325,18 +2314,15 @@ public class TheLastGreatWar{
         tempResearchAdvantage.setTimeToResearch(3);
         tempResearchAdvantage.setCostToResearchOneTurnInProcent(10);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -2620,111 +2606,111 @@ public class TheLastGreatWar{
         tempBuildings = new Buildings();
         
                 
-        tempBuildingType= new BuildingType("Dock", "TD", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Dock", "TD", 3);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A small ship dock that gives +1 incom on open planets");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Spaceport", "SP", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Spaceport", "SP", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Dock"));
+        tempBuildingType.setParentBuildingTypeName("Dock");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 2);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Trade Wharf", "W5", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Trade Wharf", "W5", 25);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base with civilians.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Mercenary Camp", "MT", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mercenary Camp", "MT", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Base to hire mercenarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mercenary Tavern", "MB", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mercenary Tavern", "MB", 10);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Base to hire mercenarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Mercenary Camp"));
+        tempBuildingType.setParentBuildingTypeName("Mercenary Camp");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("School", "Sc", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("School", "Sc", 15);
         tempBuildingType.setPlanetUnique(true);
         //tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -2737,10 +2723,10 @@ public class TheLastGreatWar{
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A school to train VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Trade Home Base", "FHom", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Trade Home Base", "FHom", 20);
         tempBuildingType.setOpenPlanetBonus(9);
         tempBuildingType.setClosedPlanetBonus(9);
         tempBuildingType.setInOrbit(false);
@@ -2748,93 +2734,93 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("The home base is made as a head office. Gives an income of 9.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Company Base", "CB", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Company Base", "CB", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base used as a ground to build more advanced buildigns.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A factory give better parts to build units with.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mech Construction Yard", "MCY", 4, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mech Construction Yard", "MCY", 4);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("In this buiding armored ground units can be build.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mech Factory", "MF", 4, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mech Factory", "MF", 4);
         tempBuildingType.setTroopSize(2);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Armored and support troops can be build in big number at this building");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Mech Construction Yard"));
+        tempBuildingType.setParentBuildingTypeName("Mech Construction Yard");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Bunker", "Bu", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Bunker", "Bu", 5);
         tempBuildingType.setResistanceBonus(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A Bunker to boost the defending troops defending skill.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A small shield to defende planets from bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
         // ers�tter Basic Shield
-        tempBuildingType= new BuildingType("Planet Shield", "PS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Shield", "PS", 15);
         tempBuildingType.setShieldCapacity(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A shield to defende planets from bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 5);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A planet based Cannon to shoot down small ships.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Puls Cannon", "PC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Puls Cannon", "PC", 15);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based Cannon used to shoot down small ships in great numbers.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15);
         tempBuildingType.setCannonDamage(250);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based heavy Cannon to shoot down ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
         tempFaction.addStartingBuildings(tempBuildings.getBuildingType("Trade Home Base"));
@@ -3527,18 +3513,15 @@ public class TheLastGreatWar{
         tempResearchAdvantage.setTimeToResearch(0);
         tempResearch.addAdvantage(tempResearchAdvantage);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -3577,8 +3560,7 @@ public class TheLastGreatWar{
         // Infrastructure 1
         tempResearchAdvantage = new ResearchAdvantage("Infrastructure 1","Factory will give one in incom.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Factory");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Factory");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -3856,41 +3838,41 @@ public class TheLastGreatWar{
 //      Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small USA Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small USA Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium USA Wharf", "W2", 11, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium USA Wharf", "W2", 11);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small USA Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small USA Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large USA Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large USA Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium USA Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium USA Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge USA Wharf", "W5", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge USA Wharf", "W5", 25);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large USA Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large USA Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 10);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setOpenPlanetBonus(1);
@@ -3898,7 +3880,7 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("USA Home Base", "UHB", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("USA Home Base", "UHB", 20);
         tempBuildingType.setOpenPlanetBonus(6);
         tempBuildingType.setClosedPlanetBonus(6);
         tempBuildingType.setInOrbit(false);
@@ -3906,53 +3888,53 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("This home base gives an income of 6.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base with civilians.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Drone Base", "DB", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Drone Base", "DB", 20);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("This building are taking humens eggs from the civilan in the old city and make drone soldier of them.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Agent Center", "AC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Agent Center", "AC", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -3961,7 +3943,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Agent Center to train undercover VIPs");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Military Academy", "MA", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Military Academy", "MA", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Commander"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Ace"));
@@ -3970,10 +3952,10 @@ public class TheLastGreatWar{
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Academy to train military VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
@@ -3981,7 +3963,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A factory give better parts to build units with.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Tank Factory", "TF", 14, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Tank Factory", "TF", 14);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.setInOrbit(false);
@@ -3989,7 +3971,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("In this buiding armored ground units can be build.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Armor Factory", "AF", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Armor Factory", "AF", 16);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
@@ -3997,10 +3979,10 @@ public class TheLastGreatWar{
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("In this building, armored and support ground units can be build in big number.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Tank Factory"));
+        tempBuildingType.setParentBuildingTypeName("Tank Factory");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
@@ -4009,16 +3991,16 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         // ers�tter Basic Shield
-        tempBuildingType= new BuildingType("Planet Shield", "PS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Shield", "PS", 15);
         tempBuildingType.setShieldCapacity(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A shield to defende planets from bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Basic Shield"));
+        tempBuildingType.setParentBuildingTypeName("Basic Shield");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Missile Silo", "MS", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Missile Silo", "MS", 5);
         tempBuildingType.setCannonDamage(100);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setDeveloped(false);
@@ -4027,17 +4009,17 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A planet based missile system to shoot down ships what besiege the planet.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Atomic Missile", "AD", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Atomic Missile", "AD", 15);
         tempBuildingType.setCannonDamage(2000);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A atomic planet based missile system to shoot down ships in all sized.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Missile Silo"));
+        tempBuildingType.setParentBuildingTypeName("Missile Silo");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 5);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
@@ -4899,13 +4881,11 @@ public class TheLastGreatWar{
         // Trade 2
         tempResearchAdvantage = new ResearchAdvantage("Trade 2","Gives more income to open planets.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Large USA Wharf");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Large USA Wharf");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Huge USA Wharf");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Huge USA Wharf");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -4917,18 +4897,15 @@ public class TheLastGreatWar{
         // Trade
         tempResearchAdvantage = new ResearchAdvantage("Trade","Better tax control.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -5014,36 +4991,36 @@ public class TheLastGreatWar{
 //      Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 16);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 22, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 22);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Spaceport", "SP", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Spaceport", "SP", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
@@ -5051,7 +5028,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Russian Home Base", "RHom", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Russian Home Base", "RHom", 20);
         tempBuildingType.setOpenPlanetBonus(8);
         tempBuildingType.setClosedPlanetBonus(8);
         tempBuildingType.setPlayerUnique(true);
@@ -5059,43 +5036,43 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("The home base is made as a head office. Gives an income of 8.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base with civilians.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("University", "Un", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("University", "Un", 20);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -5107,20 +5084,20 @@ public class TheLastGreatWar{
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A University to train VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mining Base", "MiB", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mining Base", "MiB", 8);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setClosedPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A mining base that gives 2 in incom on both open and closed planets.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
@@ -5128,7 +5105,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A factory give better parts to build units with.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Armor Construction Yard", "Ac", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Armor Construction Yard", "Ac", 8);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
@@ -5137,7 +5114,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("In this buiding armored and support ground units can be build.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Russian Armor Factory", "RAF", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Russian Armor Factory", "RAF", 12);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
@@ -5145,10 +5122,10 @@ public class TheLastGreatWar{
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("In this buiding armored and support ground units can be build in big numbers.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Armor Construction Yard"));
+        tempBuildingType.setParentBuildingTypeName("Armor Construction Yard");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Basic Shield", "BS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Basic Shield", "BS", 10);
         tempBuildingType.setShieldCapacity(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
@@ -5157,16 +5134,16 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         // ers�tter Basic Shield
-        tempBuildingType= new BuildingType("Planet Shield", "PS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Shield", "PS", 15);
         tempBuildingType.setShieldCapacity(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A shield to defende planets from bombardment.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Basic Shield"));
+        tempBuildingType.setParentBuildingTypeName("Basic Shield");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 5);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
@@ -5174,37 +5151,37 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A planet based Cannon to shoot down small ships what besiege the planet.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 15);
         tempBuildingType.setCannonDamage(250);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based heavy Cannon to shoot down ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Puls Cannon", "PC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Puls Cannon", "PC", 15);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A planet based Cannon that shoot down small ships in great numbers, what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Puls Cannon", "HC", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Puls Cannon", "HC", 15);
         tempBuildingType.setCannonDamage(70);
         tempBuildingType.setCannonRateOfFire(5);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDescription("A planet based Cannon that shoot down ships in great numbers, what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Puls Cannon"));
+        tempBuildingType.setParentBuildingTypeName("Puls Cannon");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Barracks", "Bar", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Barracks", "Bar", 5);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
@@ -5212,14 +5189,14 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Barracks to train infantary");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Barracks", "LB", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Barracks", "LB", 12);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Barracks to train up to 3 infantarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Barracks"));
+        tempBuildingType.setParentBuildingTypeName("Barracks");
         tempBuildings.addBuilding(tempBuildingType);
         
         tempFaction.addStartingBuildings(tempBuildings.getBuildingType("Russian Home Base"));
@@ -6126,18 +6103,15 @@ public class TheLastGreatWar{
         // Infrastructure 1
         tempResearchAdvantage = new ResearchAdvantage("Infrastructure 1","Better tax control.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -6225,52 +6199,52 @@ public class TheLastGreatWar{
 //      Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 20);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge EU Wharf", "W5", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge EU Wharf", "W5", 8);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Spaceport", "SP", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Spaceport", "SP", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit spaceports");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Civilian Outpost", "CO", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A small base with civilians.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("EU Home Base", "EHom", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("EU Home Base", "EHom", 20);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setOpenPlanetBonus(8);
         tempBuildingType.setClosedPlanetBonus(8);
@@ -6279,7 +6253,7 @@ public class TheLastGreatWar{
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Mercenary Mech Center", "MMC", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mercenary Mech Center", "MMC", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
@@ -6287,41 +6261,41 @@ public class TheLastGreatWar{
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Base to hire mercenarys mechs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("University", "Un", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("University", "Un", 20);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -6333,55 +6307,55 @@ public class TheLastGreatWar{
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A University to train VIPs");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Civilian Outpost"));
+        tempBuildingType.setParentBuildingTypeName("Civilian Outpost");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Company Base", "CB", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Company Base", "CB", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("Often used as a building ground by companys to build more advanced buildigns.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A factory give better parts to build units with.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Planet Shield", "PS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Shield", "PS", 10);
         tempBuildingType.setShieldCapacity(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setDescription("A shield to defende planets from bombardment. Gives 1 in incom on both open and closed planets. ");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Planet Shield", "LPS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Planet Shield", "LPS", 10);
         tempBuildingType.setShieldCapacity(3);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setDescription("A shield to defende planets from bombardment. Gives 1 in incom on both open and closed planets. ");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Planet Shield"));
+        tempBuildingType.setParentBuildingTypeName("Planet Shield");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Cannon", "Can", 5, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Cannon", "Can", 5);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A planet based Cannon to shoot down small ships what besiege the planet.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Company Base"));
+        tempBuildingType.setParentBuildingTypeName("Company Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Barracks", "Bar", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Barracks", "Bar", 10);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
@@ -6389,14 +6363,14 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Barracks to train infantary");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Barracks", "LB", 14, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Barracks", "LB", 14);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Barracks to train up to 3 infantarys");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Barracks"));
+        tempBuildingType.setParentBuildingTypeName("Barracks");
         tempBuildings.addBuilding(tempBuildingType);
         
         tempFaction.addStartingBuildings(tempBuildings.getBuildingType("EU Home Base"));
@@ -7129,8 +7103,7 @@ public class TheLastGreatWar{
         // Improvments III
         tempResearchAdvantage = new ResearchAdvantage("Improvments III","Cannon will give one in incom on open planets.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Cannon");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Cannon");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         aResearchUpgradeBuilding.setClosedPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
@@ -7142,8 +7115,7 @@ public class TheLastGreatWar{
         // Improvments II
         tempResearchAdvantage = new ResearchAdvantage("Improvments II","University will give one in incom on open planets.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("University");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("University");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -7155,18 +7127,15 @@ public class TheLastGreatWar{
         // Improvments I
         tempResearchAdvantage = new ResearchAdvantage("Improvments I", "Better tax control.");
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -7262,7 +7231,7 @@ public class TheLastGreatWar{
 //      Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Hidden Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Hidden Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setVisibleOnMap(false);
@@ -7270,7 +7239,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Small Wharf what can build small ships. This building is a hidden base under the surface. That makes it to the only building that can build ship then the planet is besieged.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Liberty Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Liberty Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
@@ -7278,26 +7247,26 @@ public class TheLastGreatWar{
         //tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Liberty Wharf", "W3", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Liberty Wharf", "W3", 16);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Liberty Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Liberty Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Liberty Wharf", "W5", 22, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Liberty Wharf", "W5", 22);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Liberty Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Liberty Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 11, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 11);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setOpenPlanetBonus(1);
@@ -7305,7 +7274,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("Build this building on the planets and long range ways will be short range between planetes whit Space station. Give 1 incom on open planets");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Federation Home Base", "FHB", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Federation Home Base", "FHB", 20);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setClosedPlanetBonus(8);
@@ -7313,63 +7282,63 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("The home base is made as raids headquarter. Gives an income of 8.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Planet Base", "PB", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Planet Base", "PB", 2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("A small base.");
         tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("City", "Ci", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("City", "Ci", 10);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setOpenPlanetBonus(2);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("City that gives 2 in trade incom if the planet is open.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Planet Base"));
+        tempBuildingType.setParentBuildingTypeName("Planet Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Province Capital", "PC", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Province Capital", "PC", 20);
         tempBuildingType.setOpenPlanetBonus(5);
         tempBuildingType.setResistanceBonus(2);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Province Capital that gives 5 in incom if the planet is open. Gives bonus to the defending ground force. Only one Province Capital can be build each player.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("City"));
+        tempBuildingType.setParentBuildingTypeName("City");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Capital", "Ca", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Capital", "Ca", 30);
         tempBuildingType.setOpenPlanetBonus(7);
         tempBuildingType.setResistanceBonus(5);
-        tempBuildingType.isAutoDestructWhenConquered();
+        tempBuildingType.setAutoDestructWhenConquered(true);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setFactionUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Capital that gives 7 in incom if the planet is open. Gives a big bonus to the defending ground force. Only one Capital can be build each faction.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Province Capital"));
+        tempBuildingType.setParentBuildingTypeName("Province Capital");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mercenary Base", "MB", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mercenary Base", "MB", 8);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDescription("Base to hire mercenarys.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Planet Base"));
+        tempBuildingType.setParentBuildingTypeName("Planet Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Mercenary Stronghold", "MS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Mercenary Stronghold", "MS", 10);
         tempBuildingType.setTroopSize(3);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.INFANTRY);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("Base to hire mercenarys in great numbers.");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Mercenary Base"));
+        tempBuildingType.setParentBuildingTypeName("Mercenary Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("University", "Un", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("University", "Un", 20);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Assassin"));
         tempBuildingType.addBuildVIPType(gw.getVIPTypeByName("Spy"));
@@ -7383,7 +7352,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A University to train VIPs");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Liberty Mining Base", "LMB", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Liberty Mining Base", "LMB", 8);
         tempBuildingType.setOpenPlanetBonus(1);
         tempBuildingType.setClosedPlanetBonus(1);
         tempBuildingType.setCannonDamage(50);
@@ -7392,10 +7361,10 @@ public class TheLastGreatWar{
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A mining base that gives 1 in incom on both open and closed planet. This building is protected by a cannon");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Planet Base"));
+        tempBuildingType.setParentBuildingTypeName("Planet Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Trading Base", "TrB", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Trading Base", "TrB", 8);
         tempBuildingType.setOpenPlanetBonus(6);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(2);
@@ -7403,17 +7372,17 @@ public class TheLastGreatWar{
         tempBuildingType.setPlayerUnique(true);
         tempBuildingType.setDeveloped(false);
         tempBuildingType.setDescription("A trading base that gives 6 in incom on open planet. This building is protected by 2 cannons");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Liberty Mining Base"));
+        tempBuildingType.setParentBuildingTypeName("Liberty Mining Base");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Factory", "Fa", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Factory", "Fa", 12);
         tempBuildingType.setPlanetUnique(true);
         tempBuildingType.setTechBonus(10);
         tempBuildingType.setInOrbit(false);
         tempBuildingType.setDescription("A factory give better parts to build units with.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Armor Construction Yard", "Ac", 7, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Armor Construction Yard", "Ac", 7);
         tempBuildingType.setTroopSize(1);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.ARMORED);
         tempBuildingType.addTypeOfTroop(TypeOfTroop.SUPPORT);
@@ -7423,7 +7392,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("In this buiding armored and support ground units can be build.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Heavy Cannon", "HC", 12);
         tempBuildingType.setCannonDamage(250);
         tempBuildingType.setCannonRateOfFire(1);
         tempBuildingType.setInOrbit(false);
@@ -7432,7 +7401,7 @@ public class TheLastGreatWar{
         tempBuildingType.setDescription("A planet based heavy Cannon to shoot down ships what besiege the planet.");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Puls Cannon", "PC", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Puls Cannon", "PC", 12);
         tempBuildingType.setCannonDamage(50);
         tempBuildingType.setCannonRateOfFire(3);
         tempBuildingType.setInOrbit(false);
@@ -7896,8 +7865,7 @@ public class TheLastGreatWar{
         tempResearchAdvantage.setTimeToResearch(2);
         tempResearchAdvantage.setCostToResearchOneTurnInProcent(10);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Liberty Mining Base");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Liberty Mining Base");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         aResearchUpgradeBuilding.setClosedPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
@@ -7909,8 +7877,7 @@ public class TheLastGreatWar{
         tempResearchAdvantage.setTimeToResearch(2);
         tempResearchAdvantage.setCostToResearchOneTurnInProcent(10);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
@@ -7922,18 +7889,15 @@ public class TheLastGreatWar{
         tempResearchAdvantage.setTimeToResearch(2);
         tempResearchAdvantage.setCostToResearchOneTurnInProcent(10);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("City");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("City");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Province Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Province Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         
-        aResearchUpgradeBuilding = new ResearchUpgradeBuilding();
-        aResearchUpgradeBuilding.setName("Capital");
+        aResearchUpgradeBuilding = new ResearchUpgradeBuilding("Capital");
         aResearchUpgradeBuilding.setOpenPlanetBonus(1);
         tempResearchAdvantage.addResearchUpgradeBuilding(aResearchUpgradeBuilding);
         

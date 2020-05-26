@@ -116,11 +116,11 @@ public class Expense implements Serializable {
       returnString = "Increase resistance on " + planetName + " with +1.";
     }else
     if (type.equalsIgnoreCase("building")){
-    	BuildingType buildingType = aGalaxy.getPlayer(playerName).findBuildingType(buildingTypeName);
-    	if(buildingType.getParentBuilding() == null){
+    	BuildingType buildingType = aGalaxy.getGameWorld().getBuildingTypeByName(buildingTypeName);
+    	if(buildingType.getParentBuildingName() == null){
     		returnString = "Build new " + buildingType.getName() + " at " + planetName + ".";
     	}else{
-    		returnString = "Upgrade " + buildingType.getParentBuilding().getName() + " to " + buildingType.getName() + " at " + planetName + ".";
+    		returnString = "Upgrade " + buildingType.getParentBuildingName() + " to " + buildingType.getName() + " at " + planetName + ".";
     	}
     }else
     if (type.equalsIgnoreCase("buildship")){

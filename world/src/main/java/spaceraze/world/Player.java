@@ -23,6 +23,7 @@ public class Player implements Serializable{
     static final long serialVersionUID = 1L;
     private List<PlayerSpaceshipImprovement> spaceshipImprovements;
     private List<PlayerTroopImprovement> troopImprovements;
+    private List<PlayerBuildingImprovement> buildingImprovements;
     private String name,password, governorName;
     private Orders orders;
     private Galaxy g;
@@ -87,6 +88,7 @@ public class Player implements Serializable{
         this.homeplanet = homeplanet;
         research = faction.getResearch().clone();
         buildings = faction.getBuildings().clone();
+        buildingImprovements = new ArrayList<>();
         
         //      Copy from Faction
         openPlanetBonus = faction.getOpenPlanetBonus();
@@ -225,13 +227,6 @@ public class Player implements Serializable{
 
     public List<PlayerSpaceshipImprovement> getSpaceshipImprovements(){
         return spaceshipImprovements;
-    }
-    
-    public Vector<BuildingType> getAvailableNewBuildings(Planet aPlanet){
-    	Vector<BuildingType> tempBuildingTypes = buildings.getAvailableNewBuildings(aPlanet); 
-    	
-    	return tempBuildingTypes;
-    	
     }
 
     public boolean isPlayer(String name, String password){
@@ -475,10 +470,6 @@ public class Player implements Serializable{
 
     public PublicInfo getLastPublicInfo(){
       return g.getLastPublicInfo();
-    }
-    
-    public BuildingType findBuildingType(String findname){   	
-    	return buildings.getBuildingType(findname);
     }
 
     public String getGovernorName(){
@@ -991,5 +982,13 @@ public class Player implements Serializable{
 
     public void addTroopImprovement(PlayerTroopImprovement troopImprovement){
 	    troopImprovements.add(troopImprovement);
+    }
+
+    public List<PlayerBuildingImprovement> getBuildingImprovements() {
+        return buildingImprovements;
+    }
+
+    public void addBuildingImprovement(PlayerBuildingImprovement buildingImprovement) {
+        this.buildingImprovements.add(buildingImprovement);
     }
 }

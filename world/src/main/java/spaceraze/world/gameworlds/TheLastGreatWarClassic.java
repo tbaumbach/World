@@ -261,35 +261,35 @@ public class TheLastGreatWarClassic {
         Buildings tempBuildings = new Buildings();
         BuildingType tempBuildingType;
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 2, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 2);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 40, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 40);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 8);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("");
@@ -609,35 +609,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 4, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 4);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 8);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 16);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 30, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 30);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 10);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setOpenPlanetBonus(1);
@@ -885,35 +885,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 12);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setOpenPlanetBonus(2);
@@ -1148,35 +1148,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 13, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 13);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 20);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 10);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setOpenPlanetBonus(1);
@@ -1419,35 +1419,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 16, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 16);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 22, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 22);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 15, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 15);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setTechBonus(10);
@@ -1688,35 +1688,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 20, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 20);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 8, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 8);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 10, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 10);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         //tempBuildingType.setTechBonus(10);
@@ -1952,35 +1952,35 @@ public class TheLastGreatWarClassic {
         // Adding Buildings to the faction
         tempBuildings = new Buildings();
         
-        tempBuildingType= new BuildingType("Small Wharf", "W1", 3, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Small Wharf", "W1", 3);
         tempBuildingType.setWharfSize(1);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Small Wharf what can build small ships");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Medium Wharf", "W2", 12);
         tempBuildingType.setWharfSize(2);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Medium Wharf what can build small and medium ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Small Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Small Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Large Wharf", "W3", 18, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Large Wharf", "W3", 18);
         tempBuildingType.setWharfSize(3);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Large Wharf what can build small, medium and large ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Medium Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Medium Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
-        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Huge Wharf", "W5", 25);
         tempBuildingType.setWharfSize(5);
         tempBuildingType.setInOrbit(true);
         tempBuildingType.setDescription("Huge Wharf what can build small, medium, large and huge ships");
-        tempBuildingType.setParentBuildingType(tempBuildings.getBuildingType("Large Wharf"));
+        tempBuildingType.setParentBuildingTypeName("Large Wharf");
         tempBuildings.addBuilding(tempBuildingType);
         
         
-        tempBuildingType= new BuildingType("Space station", "SS", 11, uniqueBuildingIdCounter);
+        tempBuildingType= new BuildingType("Space station", "SS", 11);
         tempBuildingType.setSpaceport(true);
         tempBuildingType.setInOrbit(true);
         //tempBuildingType.setTechBonus(10);

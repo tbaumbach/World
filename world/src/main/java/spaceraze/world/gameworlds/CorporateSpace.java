@@ -153,30 +153,30 @@ public class CorporateSpace {
 		BuildingType tmpBuildingType = null;
         
 		// orbital wharfs
-        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5, uBIC);
+        tmpBuildingType = new BuildingType("Small Orbital Wharf", "W1", 5);
         tmpBuildingType.setWharfSize(1);
         tmpBuildingType.setInOrbit(true);
         BuildingType parent = tmpBuildingType;
         tempBuildings.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 5, uBIC);
+        tmpBuildingType = new BuildingType("Medium Orbital Wharf", "W2", 5);
         tmpBuildingType.setWharfSize(2);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         parent = tmpBuildingType;
         tempBuildings.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 5, uBIC);
+        tmpBuildingType = new BuildingType("Large Orbital Wharf", "W3", 5);
         tmpBuildingType.setWharfSize(3);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         parent = tmpBuildingType;
         tempBuildings.addBuilding(tmpBuildingType);
         
-        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 5, uBIC);
+        tmpBuildingType = new BuildingType("Huge Orbital Wharf", "W5", 5);
         tmpBuildingType.setWharfSize(5);
         tmpBuildingType.setInOrbit(true);
-        tmpBuildingType.setParentBuildingType(parent);
+        tmpBuildingType.setParentBuildingTypeName(parent.getName());
         tempBuildings.addBuilding(tmpBuildingType);
 
         // Factions

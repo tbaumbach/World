@@ -348,8 +348,8 @@ public class SpaceshipType implements Serializable{
         this.targetingType = originSpaceshipType.getTargetingType();
         this.squadronCapacity = originSpaceshipType.getSquadronCapacity() + playerSpaceshipImprovement.getSquadronCapacity();
         this.squadron = originSpaceshipType.isSquadron();
-        this.description = playerSpaceshipImprovement.getDescription();
-        this.history = playerSpaceshipImprovement.getHistory();
+        this.description = playerSpaceshipImprovement.getDescription() != null ? playerSpaceshipImprovement.getDescription() : originSpaceshipType.getDescription();
+        this.history = playerSpaceshipImprovement.getHistory() != null ? playerSpaceshipImprovement.getHistory() : originSpaceshipType.getHistory();
         this.incEnemyClosedBonus = originSpaceshipType.incEnemyClosedBonus + playerSpaceshipImprovement.getIncEnemyClosedBonus();
         this.incEnemyOpenBonus = originSpaceshipType.incEnemyOpenBonus + playerSpaceshipImprovement.getIncEnemyOpenBonus();
         this.incFriendlyClosedBonus = originSpaceshipType.incFriendlyClosedBonus + playerSpaceshipImprovement.getIncFriendlyClosedBonus();

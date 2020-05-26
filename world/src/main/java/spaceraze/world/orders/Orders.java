@@ -1290,21 +1290,7 @@ public class Orders implements Serializable {
     	addExpenses(new Expense("building", newBuilding, aPlayer.getName(),currentBuilding.getLocation(), currentBuilding));
     }
   }
-  
-  public BuildingType getUppgradeBuilding(Building currentBuilding){
-	  BuildingType tempBuildingType = null;
-	  int i = 0;
-	    while ((i < expenses.size()) && (tempBuildingType == null)){
-	    	Logger.finer("getUppgradeBuilding lop index: " + i);
-	    	Expense tempExpense = (Expense)expenses.get(i);
-	    	if (tempExpense.isBuilding(currentBuilding)){
-	    		tempBuildingType = currentBuilding.getLocation().getPlayerInControl().findBuildingType(tempExpense.getBuildingTypeName());
-	    	}else{
-	    		i++;
-	    	}
-	    }
-	    return tempBuildingType;
-  }
+
   
   public boolean alreadyUpgrading(Building currentBuilding){
     boolean found = false;
@@ -1319,20 +1305,6 @@ public class Orders implements Serializable {
       }
     }
     return found;
-  }
-  
-  public BuildingType getNewBuilding(Planet currentPlanet){
-	  BuildingType tempBuildingType = null;
-	  int i = 0;
-	  while ((i < expenses.size()) & (tempBuildingType == null)){
-		  Expense tempExpense = (Expense)expenses.get(i);
-		  if (tempExpense.isBuilding(currentPlanet)){
-			  tempBuildingType = currentPlanet.getPlayerInControl().findBuildingType(tempExpense.getBuildingTypeName());
-		  }else{
-			  i++;
-		  }
-	  }
-	  return tempBuildingType;
   }
   
   /**
