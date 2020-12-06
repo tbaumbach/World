@@ -2,11 +2,11 @@ package spaceraze.world.mapinfo;
 
 import java.io.Serializable;
 
+import lombok.*;
 import spaceraze.util.general.Logger;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
 import spaceraze.world.PlanetConnection;
-import spaceraze.world.Player;
+
+import javax.persistence.*;
 
 /**
  * Anv�nds f�r att hantera kart-informationen f�r en enskild starport-koppling mellan tv� planeter f�r ett visst drag f�r en viss spelare
@@ -14,10 +14,27 @@ import spaceraze.world.Player;
  * @author Paul Bodin
  *
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "MAP_CONNECTION_INFO")
 public class MapConnectionInfo implements Serializable {
 	static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_MAP_INFO_TURN")
+	private MapInfoTurn mapInfoTurn;
 	
-	private String planet1,planet2;
+	private String planet1;
+	private String planet2;
 
 	@Override
 	public String toString(){
@@ -33,8 +50,8 @@ public class MapConnectionInfo implements Serializable {
 	 * player:s karta kommer att se ut d� player g�r sitt n�sta drag.
 	 */
 	public MapConnectionInfo(PlanetConnection planetConnection){
-		planet1 = planetConnection.getPlanet1().getName();
-		planet2 = planetConnection.getPlanet2().getName();
+		planet1 = planetConnection.getPlanetOne().getName();
+		planet2 = planetConnection.getPlanetTwo().getName();
 		Logger.finer("MapConnectionInfo creator, planet1: " + planet1 + ", planet2: " + planet2);
 	}
 	
@@ -48,25 +65,5 @@ public class MapConnectionInfo implements Serializable {
 		}
 		return isStarPortConnection;
 	}
-
-    public static boolean isStarPortConnections(PlanetConnection planetConnection, Player player){
-    	boolean haveStarPort = false;
-    	Galaxy g = player.getGalaxy();
-        Planet p1 = planetConnection.getPlanet1();
-        Planet p2 = planetConnection.getPlanet2();
-      	// check if starport make this connection short range
-      	if ((p1.getPlayerInControl() != null) & (p2.getPlayerInControl() != null)){ // none of the planets are neutral
-  			if ((p1.hasSpacePort()) & (p2.hasSpacePort())){ // both have a spacestation
-  				if (g.getDiplomacy().friendlySpaceports(p1.getPlayerInControl(),p2.getPlayerInControl())){
-      				if (g.getDiplomacy().friendlySpaceports(player,p1.getPlayerInControl())){
-          				if (g.getDiplomacy().friendlySpaceports(player,p2.getPlayerInControl())){
-          					haveStarPort = true;
-          				}	
-          			}
-          		}
-      		}
-      	}
-      	return haveStarPort;
-    }
 
 }

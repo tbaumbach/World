@@ -2,9 +2,6 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
-import spaceraze.world.Corruption;
-import spaceraze.world.CorruptionPoint;
-
 /**
  * handles corruption levels for a faction
  * @author WMPABOD
@@ -23,7 +20,7 @@ public class Corruption implements Serializable{
 		// clone any breakpoint in this Corruption instance
 		CorruptionPoint tmpCp = firstBreakpoint;
 		while (tmpCp != null){
-			deepClone.addBreakpoint(tmpCp.getIncomeLimit(), tmpCp.getCorrutionPercentage());
+			deepClone.addBreakpoint(tmpCp.getIncomeLimit(), tmpCp.getCorruptionPercentage());
 			tmpCp = tmpCp.getNextBreakpoint();
 		}
 		return deepClone;
@@ -65,14 +62,7 @@ public class Corruption implements Serializable{
 		return desc;
 	}
 
-	/* Used for testing	
-	public static void main(String[] args){
-		Corruption c = new Corruption();
-		c.addBreakpoint(50, 25);
-		c.addBreakpoint(100, 50);
-		c.addBreakpoint(150, 75);
-		int cinc = c.getIncomeAfterCorruption(100);
-		System.out.println(cinc);
+	public CorruptionPoint getCorruptionPoint(){
+		return this.clone().firstBreakpoint;
 	}
-	*/
 }

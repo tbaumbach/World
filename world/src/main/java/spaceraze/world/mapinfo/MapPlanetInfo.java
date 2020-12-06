@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.world.Building;
 import spaceraze.world.Galaxy;
@@ -16,24 +17,68 @@ import spaceraze.world.Spaceship;
 import spaceraze.world.VIP;
 import spaceraze.world.comparator.SpaceshipSizeAndBuildCostComparator;
 
+import javax.persistence.*;
+
 /**
  * Hanterar kart-informationen för en enskild planet för ett visst drag för en viss spelare
  * 
  * @author Paul Bodin
  *
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "MAP_PLANET_INFO")
 public class MapPlanetInfo implements Serializable {
 	static final long serialVersionUID = 1L;
 	public static final String NEUTRAL = "neutral";
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_MAP_INFO_TURN")
+	private MapInfoTurn mapInfoTurn;
+
+	private String planetName;
 	
 	// värden som skall visas på kartan om en spelares nuvarande kunskap om planeten som denna instans gäller
 	private String owner; // namnet på gov som äger planeten, "neutral" om neutral. Kan visas i lagpartier?
-	private List<String> buildingsHidden,buildingsVisible; // alla buildings tillhör ägaren av planeten
-	private VIPData ownVIPs,otherVIPs; // det kan aldrig vara vippar från mer än en annan spelare än sina egna vippar
-	private List<String> shipsOwn; // gäller endast egna skepp, varje skeppssträng kan börja med en siffra för hur många skepp det är av den typen 
-	private List<FleetData> fleetsOther; // max size f�r neutrala och andra flottor, inkl civila skepp
-	private boolean razed,open,besieged;
-	private String prod,res,lastKnownProd,lastKnownRes;
+	@ElementCollection
+	@CollectionTable(name = "BUILDINGS_HIDDEN")
+	@Builder.Default
+	private List<String> buildingsHidden = new ArrayList<>();
+	@ElementCollection
+	@CollectionTable(name = "BUILDINGS_VISIBLE")
+	@Builder.Default
+	private List<String> buildingsVisible = new ArrayList<>(); // alla buildings tillhör ägaren av planeten
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_OWN_VIP_DATA")
+	private VIPData ownVIPs;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_OTHERS_VIP_DATA")
+	private VIPData otherVIPs; // det kan aldrig vara vippar från mer än en annan spelare än sina egna vippar
+	@ElementCollection
+	@CollectionTable(name = "SHIPS_OWN")
+	@Builder.Default
+	private List<String> shipsOwn = new ArrayList<>(); // gäller endast egna skepp, varje skeppssträng kan börja med en siffra för hur många skepp det är av den typen
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mapPlanetInfo")
+	@Builder.Default
+	private List<FleetData> fleetsOther = new ArrayList<>(); // max size f�r neutrala och andra flottor, inkl civila skepp
+	private boolean razed;
+	private boolean open;
+	private boolean besieged;
+	private String prod;
+	private String res;
+	private String lastKnownProd;
+	private String lastKnownRes;
 	
 	// planet notes sätts via order men lagras här
 	private String notes; 
@@ -41,7 +86,14 @@ public class MapPlanetInfo implements Serializable {
 	// info about last known info
 	private String lastKnownOwner; // null = neutral. Påverkar planetens färg.
 	private String lastKnownMaxShipSize; // visa bara en grå storlek även om det fanns flera flottor vid planeten. Inkluderar info om civila skepp, t.ex. "small+civ"
-	private List<String> lastKnownBuildingsInOrbit,lastKnownBuildingsOnSurface;
+	@ElementCollection
+	@CollectionTable(name = "LAST_KNOWN_BUILDINGS_IN_ORBITE")
+	@Builder.Default
+	private List<String> lastKnownBuildingsInOrbit = new ArrayList<>();
+	@ElementCollection
+	@CollectionTable(name = "LAST_KNOWN_BUILDINGS_ON_SURFACE")
+	@Builder.Default
+	private List<String> lastKnownBuildingsOnSurface = new ArrayList<>();
 	private boolean lastKnownRazed;
 	private int lastInfoTurn = 0; // används även för att lagra nuvarande turn om det finns data om en planet
 
@@ -51,9 +103,10 @@ public class MapPlanetInfo implements Serializable {
 	 * 
 	 * MapPlanetInfos behövs för att kunna hitta lastKnownInfo-information
 	 */
-	public MapPlanetInfo(Planet planet, Player player, MapInfos mapPlanetInfos, int turn){
+	public MapPlanetInfo(Planet planet, Player player, MapInfos mapPlanetInfos, int turn, List<String> spaceships){
 		Galaxy g = player.getGalaxy();
 		Logger.finer("MapPlanetInfo creator, planet: " + planet.getName() + ", player: " + player.getGovernorName() + ", turn: " + turn);
+		this.planetName = planet.getName();
 		boolean spy = (g.findVIPSpy(planet,player) != null);
 		boolean shipInSystem = (g.playerHasShipsInSystem(player,planet));
 		boolean surveyShip = (g.findSurveyShip(planet,player) != null);
@@ -143,9 +196,7 @@ public class MapPlanetInfo implements Serializable {
 		// open
 		open = openPlanet;
 		// shipsOwn
-		if (shipInSystem){
-			shipsOwn = getShipsList(planet, player, g);
-		}
+		shipsOwn = spaceships;
 		// fleetsOther
 		if (spy | shipInSystem | openPlanet | ownsPlanet){
 			fleetsOther = getOtherFleets(planet, player, g);
@@ -223,7 +274,9 @@ public class MapPlanetInfo implements Serializable {
 			}
 		}
 		// notes
-		notes = player.getPlanetInfos().getNotes(planet.getName());
+		//TODO 2020-1-14 removed notes logik, none acces to PlanetPureFunctions. Think this hole class will be removed.
+		//notes = player.getPlanetInformations().getNotes(planet.getName());
+
 //		Logger.info("razed: " + razed);
 //		Logger.info("lastKnownRazed: " + lastKnownRazed);
 	}

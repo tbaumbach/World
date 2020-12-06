@@ -9,6 +9,7 @@ public enum DiplomacyLevel {
 	PEACE("Peace","Unstable","In peace you and the other players units will not attack each other. But if any of your ships travel to one of the other players planets (and vice versa) diplomacy between you and that player will be changed to cease fire the next turn."),
 	ALLIANCE("Alliance","Stable","In an alliance you and the other players units will never attack each other."),
 	CONFEDERACY("Confederacy","Permanent","In a confederacy you and the other players units will never attack each other, and neither of you can ever change diplomacy toward each other again."),
+	//TODO 2020-11-12 Remove VASSAL and LORD state, easy way to cheat. Ho will play vassal and get tax to max.
 	VASSAL("Vassal","Permanent","As a vassal you and the lord's units will never attack each other, and neither of you can ever change diplomacy toward each other again. The Lord player can set a tax that will be deducted from your income each turn and given to the lord player."),
 	LORD("Lord","Permanent","As a Lord you and the vassal's units will never attack each other, and neither of you can ever change diplomacy toward each other again. You can set a tax that will be deducted from the vassal's income each turn and given to you.");
 	

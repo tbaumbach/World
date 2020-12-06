@@ -1,19 +1,46 @@
 package spaceraze.world.report.landbattle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.report.EventReport;
+import spaceraze.world.report.PlanetReport;
 
+import javax.persistence.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "LAND_BATTLE_REPORT")
 public class LandBattleReport extends EventReport {
-	private static final long serialVersionUID = 1L;
-	
-	private final List<OwnTroop> ownTroops;
-	private final List<EnemyTroop> enemyTroops;
-	private final String enemyName;
-	private final String enemyFaction;
-	private final boolean defending;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_PLANET_REPORT")
+	private PlanetReport planetReport;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "landBattleReport")
+	@Builder.Default
+	private List<OwnTroop> ownTroops = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "landBattleReport")
+	@Builder.Default
+	private List<EnemyTroop> enemyTroops = new ArrayList<>();
+	private String enemyName;
+	private String enemyFaction;
+	private boolean defending;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "landBattleReport")
+	@Builder.Default
+	private List<LandBattleAttack> landBattleAttacks = new ArrayList<>();
 	
 	//public final static String START = "Land battle report for the planet %s";
 	public final static String DEFENDING = "Your forces are defending";
@@ -46,6 +73,14 @@ public class LandBattleReport extends EventReport {
 		this.enemyName = enemyName;
 		this.enemyFaction = enemyFaction;
 		this.defending = defending;
+		this.landBattleAttacks = new ArrayList<>();
+	}
+
+	@Override
+	public List<EventReport> getChildReports() {
+		List<EventReport> eventReports = new ArrayList<>(landBattleAttacks);
+
+		return eventReports;
 	}
 
 	@Override
@@ -54,7 +89,12 @@ public class LandBattleReport extends EventReport {
 	}
 
 	@Override
-	public String getReports() {
+	public EventReport getParent() {
+		return planetReport;
+	}
+
+	@Override
+	public String getFullReport() {
 		return createReport(true);
 	}
 
@@ -66,7 +106,7 @@ public class LandBattleReport extends EventReport {
 		getOwnArmy(stringBuilderReport);
 		getEnemyArmy(stringBuilderReport);
 		if(includeChildes) {
-			stringBuilderReport.append(getChildereports());
+			getChildReports().forEach(eventReport -> stringBuilderReport.append(eventReport.getFullReport()));
 		}
 		getNumberOfRounds(stringBuilderReport);
 		getOwnPostBattleTroops(stringBuilderReport, OWN_SURVIVING_FORCE, false);
@@ -87,6 +127,7 @@ public class LandBattleReport extends EventReport {
 	
 	private void getOwnArmy(StringBuilder report) {
 		report.append(OWN_FORCES);
+		report.append("\n");
 		getOwnArmy(report, BattleGroupPosition.FIRST_LINE, FIRST_LINE);
 		getOwnArmy(report, BattleGroupPosition.RESERVE, RESERVE);
 		getOwnArmy(report, BattleGroupPosition.FLANKER, FLANKERS);
@@ -121,12 +162,12 @@ public class LandBattleReport extends EventReport {
 		troopList.forEach(troop -> {
 			if (troops.length() == 0) {
 				troops.append(troop.getType());
-				troops.append(postBattle ? troop.getPostBattleHitpoints() != 0 ? "(" + troop.getPostBattleHitpoints() + ")": "" 
-					: troop.getStartHitpoints() != 100 ? "(" + troop.getStartHitpoints() + ")" : "");
+				troops.append(postBattle ? troop.getPostBattleHitPoints() != 0 ? "(" + troop.getPostBattleHitPoints() + ")": "" 
+					: troop.getStartHitPoints() != 100 ? "(" + troop.getStartHitPoints() + ")" : "");
 			} else {
 				troops.append(", ").append(troop.getType());
-				troops.append(postBattle ? troop.getPostBattleHitpoints() != 0 ? "(" + troop.getPostBattleHitpoints() + ")": "" 
-					: troop.getStartHitpoints() != 100 ? "(" + troop.getStartHitpoints() + ")" : "");
+				troops.append(postBattle ? troop.getPostBattleHitPoints() != 0 ? "(" + troop.getPostBattleHitPoints() + ")": "" 
+					: troop.getStartHitPoints() != 100 ? "(" + troop.getStartHitPoints() + ")" : "");
 			}
 		});
 		return troops.toString();
@@ -137,19 +178,19 @@ public class LandBattleReport extends EventReport {
 		troopList.forEach(troop -> {
 			if (troops.length() == 0) {
 				troops.append(troop.getName());
-				troops.append(postBattle ? troop.getPostBattleHitpoints() != 0 ? "(" + troop.getPostBattleHitpoints() + ")": "" 
-					: troop.getStartHitpoints() != 100 ? "(" + troop.getStartHitpoints() + ")" : "");
+				troops.append(postBattle ? troop.getPostBattleHitPoints() != 0 ? "(" + troop.getPostBattleHitPoints() + ")": "" 
+					: troop.getStartHitPoints() != 100 ? "(" + troop.getStartHitPoints() + ")" : "");
 			} else {
 				troops.append(", ").append(troop.getName());
-				troops.append(postBattle ? troop.getPostBattleHitpoints() != 0 ? "(" + troop.getPostBattleHitpoints() + ")": "" 
-					: troop.getStartHitpoints() != 100 ? "(" + troop.getStartHitpoints() + ")" : "");
+				troops.append(postBattle ? troop.getPostBattleHitPoints() != 0 ? "(" + troop.getPostBattleHitPoints() + ")": "" 
+					: troop.getStartHitPoints() != 100 ? "(" + troop.getStartHitPoints() + ")" : "");
 			}
 		});
 		return troops.toString();
 	}
 	
 	private void getNumberOfRounds(StringBuilder report) {
-		report.append(String.format(BATTLE_LENGTH, getChildeReports().size()));
+		report.append(String.format(BATTLE_LENGTH, getChildReports().size()));
 	}
 	
 	private void getOwnPostBattleTroops(StringBuilder report, String troopStatus, boolean isDestroyed) {

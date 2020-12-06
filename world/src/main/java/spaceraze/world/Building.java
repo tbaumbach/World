@@ -2,17 +2,33 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
-import spaceraze.world.Building;
-import spaceraze.world.BuildingType;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Planet;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "BUILDNING")
 public class Building implements Serializable, Cloneable{
 	static final long serialVersionUID = 1L;
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_BUILDNING_TYPE")
+	@Column(insertable = false, updatable = false)
 	private BuildingType buildingType;
-	private String uniqueName;
-	// vet ej om dessa behövs
+
+	@ManyToOne
+	@JoinColumn(name = "FK_GALAXY")
 	private Planet location;
 	private int uniqueId; 
 	@SuppressWarnings("unused")
@@ -20,11 +36,9 @@ public class Building implements Serializable, Cloneable{
     
     //  construktorn skall ej anropas direkt, utan BuildingType.getBuilding skall
 	// användas istället    
-    public Building(BuildingType buildingType,String name,int nrProduced,Galaxy g, Planet location){
+    public Building(BuildingType buildingType, int nrProduced, Galaxy galaxy, Planet location){
     	this.buildingType = buildingType;
-    	uniqueName = buildingType.getName() + " - " + nrProduced;
-//    	uniqueShortName = buildingType.getShortName() + " - " + nrProduced;
-    	this.uniqueId = g.uniqueBuildingIdCounter.getUniqueId();
+    	this.uniqueId = galaxy.getUniqueIdCounter(CounterType.BUILDING).getUniqueId();
 		this.setLocation(location);
 //		if (name != null) {
 //			this.name = name;
@@ -44,39 +58,13 @@ public class Building implements Serializable, Cloneable{
 		}
 		return clonedBuilding;
 	}
-    
-    /*
-	public Building (BuildingType buildingType){
-		
-	}
-	*/
-    
-    public BuildingType getBuildingType(){
-    	return buildingType;
-    }
 
-	public Planet getLocation() {
-		return location;
-	}
-
-	public void setLocation(Planet location) {
-		this.location = location;
-	}
-/*
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-*/
 	public int getUniqueId() {
 		return uniqueId;
 	}
 
-	public String getUniqueName() {
-		return uniqueName;
+	public String getName() {
+		return buildingType.getName();
 	}
 
 /*	public void setUniqueId(int uniqueId) {

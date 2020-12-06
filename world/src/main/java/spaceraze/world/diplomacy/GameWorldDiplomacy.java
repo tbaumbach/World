@@ -24,11 +24,6 @@ public class GameWorldDiplomacy implements Serializable {
 		return allRelations;
 	}
 	
-	public void addDefaultRelation(Faction aFaction1, Faction aFaction2){
-		DiplomacyRelation tmpDR = new DiplomacyRelation(aFaction1,aFaction2);
-		allRelations.add(tmpDR);
-	}
-	
 	public DiplomacyRelation getRelation(Faction aFaction1, Faction aFaction2){
 		DiplomacyRelation foundDR = null;
 		int counter = 0;

@@ -2,18 +2,41 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import spaceraze.world.Faction;
 
+import javax.persistence.*;
+
 /**
- * Handles diplomacy in gameworld and games
- * 
- * @author WMPABOD
- *
+ * Handles diplomacy in gameWorld and games
  */
-public class DiplomacyRelation implements Serializable, Cloneable {
+
+@SuperBuilder
+@Setter
+@Getter
+@NoArgsConstructor
+@MappedSuperclass
+public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
-	private Faction faction1,faction2;
-	private DiplomacyLevel highestRelation,startRelation,lowestRelation;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_FACTION_ONE")
+	private Faction faction1;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_FACTION_TWO")
+	private Faction faction2;
+
+	private DiplomacyLevel highestRelation;
+	private DiplomacyLevel startRelation;
+	private DiplomacyLevel lowestRelation;
 	
 	/**
 	 * Create a default relation between two factions

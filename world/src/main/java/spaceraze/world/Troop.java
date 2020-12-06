@@ -2,27 +2,51 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.enums.TroopTargetingType;
 import spaceraze.util.general.Logger;
-import spaceraze.world.CanBeLostInSpace;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.Spaceship;
-import spaceraze.world.Troop;
-import spaceraze.world.TroopType;
-import spaceraze.world.TurnInfo;
 
-public class Troop implements Serializable, CanBeLostInSpace, Cloneable{
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "TROOP")
+public class Troop implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_GALAXY")
+	private Galaxy galaxy;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_TROOP_TYPE")
+	@Column(insertable = false, updatable = false)
 	private TroopType troopType;
 	private String uniqueName;
 	private String uniqueShortName;
 	private int currentDC,maxDC;
 	private BattleGroupPosition position;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLAYER")
+	@Column(insertable = false, updatable = false)
 	private Player owner = null;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_LOCATION")
+	@Column(insertable = false, updatable = false)
 	private Planet planetLocation;
 	private int lastPlanetMoveTurn;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_SPACESHIP_LOCATION")
+	@Column(insertable = false, updatable = false)
 	private Spaceship shipLocation;
 	private int kills;
 	private int uniqueId;
@@ -32,8 +56,14 @@ public class Troop implements Serializable, CanBeLostInSpace, Cloneable{
 	private int attackArmored;
 	private int attackArtillery;
 	// used when moving
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_OLD_LOCATION")
+	@Column(insertable = false, updatable = false)
 	private Planet oldPlanetLocation;
-	private Spaceship oldCarrierLocation;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_SPACESHIP_OLD_LOCATION")
+	@Column(insertable = false, updatable = false)
+	private Spaceship oldShipLocation;
 
 	public Troop(TroopType aTroopType, int aNrProduced, int aTotalTechBonus, int anUniqueId ){
 		this.troopType = aTroopType;
@@ -279,16 +309,12 @@ public class Troop implements Serializable, CanBeLostInSpace, Cloneable{
 	public boolean isSpaceshipTravel(){
 		return troopType.isSpaceshipTravel();
 	}
-	
-	public int getId() {
-		return uniqueId;
-	}
 
 	public void move(Spaceship destinationCarrier, TurnInfo ti) {
 		String oldLocString = null;
-		if (planetLocation == null) { // old location is a carrier
-			oldCarrierLocation = shipLocation;
-			oldLocString = oldCarrierLocation.getName();
+		if (planetLocation == null) { // old location is a ship
+			oldShipLocation = shipLocation;
+			oldLocString = oldShipLocation.getName();
 		} else { // old location is a planet
 			oldPlanetLocation = planetLocation;
 			oldLocString = oldPlanetLocation.getName();
@@ -301,14 +327,14 @@ public class Troop implements Serializable, CanBeLostInSpace, Cloneable{
 	}
 
 	public void move(Planet destination, TurnInfo ti){
-    	// move ship from carrier
+    	// move troop from ship
 		if(shipLocation == null || destination == null){
 			Logger.severe("Error: shipLocation= " + shipLocation + " destination= " + destination);
 		}else{
-			oldCarrierLocation = shipLocation;
+			oldShipLocation = shipLocation;
 			shipLocation = null;
 			planetLocation = destination;
-			ti.addToLatestGeneralReport(uniqueName + " has moved from " + oldCarrierLocation.getName() + " to " + planetLocation.getName() + ".");
+			ti.addToLatestGeneralReport(uniqueName + " has moved from " + oldShipLocation.getName() + " to " + planetLocation.getName() + ".");
 		}
 	}	
 
@@ -318,10 +344,6 @@ public class Troop implements Serializable, CanBeLostInSpace, Cloneable{
 	
 	public int getUpkeep(){
 		return troopType.getUpkeep();
-	}
-
-	public String getLostInSpaceString() {
-		return troopType.getUniqueName();
 	}
 	
 	public String hit(int damage, boolean artillery, boolean defending, int resistance){

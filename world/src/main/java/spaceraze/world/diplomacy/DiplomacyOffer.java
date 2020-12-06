@@ -2,9 +2,15 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Player;
+import spaceraze.world.orders.Orders;
+
+import javax.persistence.*;
 
 /**
  * This class is used when a player wish to send an offer to another player
@@ -16,18 +22,36 @@ import spaceraze.world.Player;
  * 
  * @author WMPABOD
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "DIPLOMACY_OFFER")
 public class DiplomacyOffer implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String thePlayerName,otherPlayerName;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_PLAYER")
+	private Player player;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_ORDERS")
+	private Orders orders;
+
+	private String thePlayerName;
+	private String otherPlayerName;
 	private DiplomacyLevel suggestedLevel;
-//	private boolean responseToPreviousOffer; // används denna? Tror att changes används istället (se text ovan...)
 	private boolean offerPerformed;
 	
 	public DiplomacyOffer(Player thePlayer, Player otherPlayer, DiplomacyLevel suggestedLevel){
 		this.thePlayerName = thePlayer.getName();
 		this.otherPlayerName = otherPlayer.getName();
 		this.suggestedLevel = suggestedLevel;
-//		this.responseToPreviousOffer = responseToPreviousOffer;
 	}
 
 	public boolean isPlayerAndLevel(Player anOtherPlayer, DiplomacyLevel aNewLevel){
@@ -71,10 +95,6 @@ public class DiplomacyOffer implements Serializable {
 	public DiplomacyLevel getSuggestedLevel(){
 		return suggestedLevel;
 	}
-
-//	public boolean isResponseToPreviousOffer() {
-//		return responseToPreviousOffer;
-//	}
 
 	public boolean isOfferPerformed() {
 		return offerPerformed;

@@ -1,44 +1,105 @@
 package spaceraze.world;
 
 import java.io.Serializable;
+import java.util.UUID;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 import spaceraze.util.general.Logger;
 
-public class Spaceship implements Serializable, Comparable<Spaceship>, ShortNameable, CanBeLostInSpace, Cloneable {
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "SPACESHIP")
+public class Spaceship implements Serializable, Comparable<Spaceship>, ShortNameable, Cloneable {
 	static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_GALAXY")
+	private Galaxy galaxy;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_SPACESHIP_TYPE")
+	@Column(insertable = false, updatable = false)
 	private SpaceshipType sst;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLAYER")
+	@Column(insertable = false, updatable = false)
 	private Player owner;
-	private Planet location, oldLocation, runningTo;
-	private Spaceship carrierLocation, oldCarrierLocation;
-	private Planet runningFrom; // original planet where the ship was forced to
-								// start running
-	// private String statusx = "ok"; // används endast av runAway()
-	private String name, uniqueName, uniqueShortName;
-	private int shields, damagecapacity, currentdc, currentshields, uniqueId, kills;
-//	private boolean movedThisTurnx = false; // används för att kolla om ett
-											// retirerande skepp skall återvända
-											// till sin oldLocation eller hitta
-											// en ny planet att fly till
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_LOCATION")
+	@Column(insertable = false, updatable = false)
+	private Planet location;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_OLD_LOCATION")
+	@Column(insertable = false, updatable = false)
+	private Planet oldLocation;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_RUNNING_FROM")
+	@Column(insertable = false, updatable = false)
+	private Planet runningFrom; // original planet where the ship was forced to start running from
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_PLANET_RUNNING_TO")
+	@Column(insertable = false, updatable = false)
+	private Planet runningTo;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_SPACESHIP_CARRIER")
+	@Column(insertable = false, updatable = false)
+	private Spaceship carrierLocation;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_SPACESHIP_OLD_CARRIER")
+	@Column(insertable = false, updatable = false)
+	private Spaceship oldCarrierLocation;
+
+	private String name;
+	private String uniqueName;
+	private String uniqueShortName;
+	private int shields;
+	private int damagecapacity;
+	private int currentdc;
+	private int currentShields;
+	private String uniqueId;
+	private int kills;
 	private boolean screened = false;
 	private boolean retreating = false;
-	private int weaponsStrengthSmall, weaponsStrengthMedium, weaponsStrengthLarge, weaponsStrengthHuge, weaponsStrengthSquadron;
+	private int weaponsStrengthSmall;
+	private int weaponsStrengthMedium;
+	private int weaponsStrengthLarge;
+	private int weaponsStrengthHuge;
+	private int weaponsStrengthSquadron;
     private int weaponsAirToGround;
-	private int weaponsSalvoesMedium, weaponsSalvoesLarge, weaponsSalvoesHuge; // if Integer.MAX then treat as infinite
-	private double armorSmall, armorMedium, armorLarge, armorHuge;
+	private int weaponsSalvoesMedium;
+	private int weaponsSalvoesLarge;
+	private int weaponsSalvoesHuge; // if Integer.MAX then treat as infinite
+	private double armorSmall;
+	private double armorMedium;
+	private double armorLarge;
+	private double armorHuge;
 	private int techWhenBuilt;
 
 	// construktorn skall ej anropas direkt, utan spaceshiptype.getShip skall
 	// användas istället
 	public Spaceship(SpaceshipType sst, String name,
-			int nrProduced, int uniqueIdCounter, VIP vipWithBonus, int factionTechBonus,
+			int nrProduced, VIP vipWithBonus, int factionTechBonus,
 			int buildingBonus) {
 		this.sst = sst;
 		uniqueName = sst.getName() + " - " + nrProduced;
 		uniqueShortName = sst.getShortName() + " - " + nrProduced;
-		this.uniqueId = uniqueIdCounter;
+		this.uniqueId = UUID.randomUUID().toString();
 		kills = 0;
 		if (name != null) {
 			this.name = name;
@@ -76,8 +137,8 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 
 		shields = (int) Math.round(sst.getShields() * techBonus);
 
-		currentshields = shields;
-		Logger.finest( "currentshields & shields: " + currentshields + " " + shields);
+		currentShields = shields;
+		Logger.finest( "currentShields & shields: " + currentShields + " " + shields);
 		damagecapacity = sst.getHits();
 
 		currentdc = damagecapacity;
@@ -86,77 +147,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		armorMedium = sst.getArmorMedium() / 100.0d;
 		armorLarge = sst.getArmorLarge() / 100.0d;
 		armorHuge = sst.getArmorHuge() / 100.0d;
-	}
-
-	public void moveShip(String inPlanet, TurnInfo ti){
-		Planet destination = owner.getGalaxy().getPlanet(inPlanet);
-    	if (owner != null){
-    		Logger.finer("Called, spaceship: " + toString() + " destination: " + destination + " retreating: " + retreating);
-    	}else{
-    		Logger.finer("moveShip called, spaceship: " + toString() + " destination: " + destination + " retreating: " + retreating);
-    	}
-        if (retreating){ // retreating ship given new move order
-          if (owner != null){
-        	  Logger.finer("retreating == true");
-          }else{
-        	  Logger.finer("owner == null, retreating == true");
-          }
-          // if destination is a planet belonging to the player and not under
-		  // siege
-          if ((destination.getPlayerInControl() != null) && (destination.getPlayerInControl() == owner) && !destination.isBesieged()){
-            location = destination;
-            ti.addToLatestGeneralReport("Your ship " + name + " has arrived to " + runningTo.getName() + " after retreating from " + runningFrom.getName() + ".");
-            runningTo = null;
-            runningFrom = null;
-            oldLocation = runningFrom; // is this one needed?
-            retreating = false;
-          }else{ // ship continues to retreat
-          	// find a planet to run to
-            location = destination;
-          	runningTo = getRunToPlanet();
-          	if (runningTo == null){ // there is no planet to retreat to
-                ti.addToLatestGeneralReport("Your ship " + name + " has been scuttled by it's crew because they had nowhere to retreat to.");
-      			if (owner != null) {
-      				owner.getGalaxy().checkVIPsInDestroyedShips(this, owner);
-      				owner.getGalaxy().checkTroopsInDestroyedShips(this, owner);
-					owner.getTurnInfo().addToLatestShipsLostInSpace(this);
-      			}
-                owner.getGalaxy().removeShip(this);
-          	}else{ // there is a planet to retreat to
-          		// running from is unchanged
-          		// retreating is still true
-                oldLocation = location;
-          		location = null; // a retreating ship has no location
-                ti.addToLatestGeneralReport("Your ship " + name + " is retreating and just left " + oldLocation.getName() + ".");
-          	}
-          }
-        }else{
-        	if (carrierLocation != null){ // move ship from carrier
-        		oldCarrierLocation = carrierLocation;
-        		carrierLocation = null;
-        		location = destination;
-        		ti.addToLatestGeneralReport(name + " has moved from " + oldCarrierLocation.getName() + " to " + location.getName() + ".");
-        	}else{ // move ship from another planet
-        		oldLocation = location;
-        		location = destination;
-        		ti.addToLatestGeneralReport(name + " has moved from " + oldLocation.getName() + " to " + location.getName() + ".");
-        	}
-        }
-	}	
-	
-	public void moveShip(Spaceship destinationCarrier, TurnInfo ti) {
-		String oldLocString = null;
-		if (location == null) { // old location is a carrier
-			oldCarrierLocation = carrierLocation;
-			oldLocString = oldCarrierLocation.getName();
-		} else { // old location is a planet
-			oldLocation = location;
-			oldLocString = oldLocation.getName();
-		}
-		// behövs denna, eller en motsvarighet till det?
-		carrierLocation = destinationCarrier;
-		ti.addToLatestGeneralReport(name + " has moved from " + oldLocString
-				+ " to " + carrierLocation.getName() + ".");
 	}
 
 	public void moveRetreatingSquadron(TurnInfo ti) {
@@ -210,8 +200,8 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	// return part of shot that will penetrate the shields
 	public int shipShieldsHit(int rawDamage) {
 		int penetrating = 0;
-		if (currentshields < rawDamage) {
-			penetrating = rawDamage - currentshields;
+		if (currentShields < rawDamage) {
+			penetrating = rawDamage - currentShields;
 		}
 		Logger.finer( "rawDamage: " + rawDamage + " penetrating: " + penetrating);
 		return penetrating;
@@ -221,18 +211,18 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	// sköldarna
 	public String shipHit(int damage, int damageAfterShields, int damageNoArmor) {
 		String returnString = "";
-		Logger.finer( "shipHit currentshields "
-				+ currentshields + " damage " + damage + " currentdc "
+		Logger.finer( "shipHit currentShields "
+				+ currentShields + " damage " + damage + " currentdc "
 				+ currentdc + " damageAfterShields: " + damageAfterShields
 				+ " damageNoArmor: " + damageNoArmor);
 		// if (currentshields > damage){
 		if (damageAfterShields == 0) { // all damage was absorbed by the shields
-			currentshields = currentshields - damageNoArmor;
-			int shieldStrength = (int) Math.round((100.0 * currentshields) / getShields());
+			currentShields = currentShields - damageNoArmor;
+			int shieldStrength = (int) Math.round((100.0 * currentShields) / getShields());
 			returnString = "was absorbed by the shields (shield strength: " + String.valueOf(shieldStrength) + "%).";
 		} else {
 			// damage = damage - currentshields;
-			currentshields = 0;
+			currentShields = 0;
 			if (currentdc > damage) {
 				currentdc = currentdc - damage;
 				int hullStrength = (int) Math.round((100.0 * currentdc)	/ damagecapacity);
@@ -250,10 +240,10 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 
 	public String hitByAntiAir(int damage){
 		String returnString = "";
-		if (damage >= currentshields){
+		if (damage >= currentShields){
 			// shields depleted
-			int tmpDamage = damage - currentshields;
-			currentshields = 0;
+			int tmpDamage = damage - currentShields;
+			currentShields = 0;
 			if (tmpDamage > 0){
 				currentdc -= tmpDamage;
 				if (currentdc <= 0){
@@ -267,8 +257,8 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 				returnString = "Anti-Air was absorbed by the shields (shield strength: 0%).";
 			}
 		}else{
-			currentshields = currentshields - damage;
-			int shieldStrength = (int) Math.round((100.0 * currentshields) / getShields());
+			currentShields = currentShields - damage;
+			int shieldStrength = (int) Math.round((100.0 * currentShields) / getShields());
 			returnString = "Anti-Air was absorbed by the shields (shield strength: " + String.valueOf(shieldStrength) + "%).";
 		}
 		return returnString;
@@ -286,7 +276,7 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	 * @return a percentage of remaning shields
 	 */
 	public int getShieldStrength(){
-		int shieldStrength = (int) Math.round((100.0 * currentshields) / getShields());
+		int shieldStrength = (int) Math.round((100.0 * currentShields) / getShields());
 		return shieldStrength;
 	}
 
@@ -321,11 +311,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		location = null;
 		retreating = true;
 		restoreShields();
-	}
-
-	// leta reda på planet att fly till
-	private Planet getRunToPlanet() {
-		return owner.getGalaxy().getRunToPlanet(this);
 	}
 
 	public boolean isDestroyed() {
@@ -572,11 +557,11 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	}
 
 	public int getCurrentShields() {
-		return currentshields;
+		return currentShields;
 	}
 
 	public void restoreShields() {
-		currentshields = getShields();
+		currentShields = getShields();
 	}
 
 	public void setOwner(Player newOwner) {
@@ -598,9 +583,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	 * 
 	 * public void setMovedThisTurn(boolean newValue){ movedThisTurn = newValue; }
 	 */
-	public int getId() {
-		return uniqueId;
-	}
 
 	public SpaceshipType getSpaceshipType() {
 		return sst;
@@ -704,6 +686,10 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 		return retreating;
 	}
 
+	public void setRetreating(boolean isRetreating){
+		this.retreating = isRetreating;
+	}
+
 	public int getWeaponsSalvoesHuge() {
 		return weaponsSalvoesHuge;
 	}
@@ -803,6 +789,14 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 
 	public void setCarrierLocation(Spaceship carrier) {
 		this.carrierLocation = carrier;
+	}
+
+	public Spaceship getOldCarrierLocation() {
+		return oldCarrierLocation;
+	}
+
+	public void setOldCarrierLocation(Spaceship carrier){
+		this.oldCarrierLocation = carrier;
 	}
 
 	public int getSquadronCapacity() {
@@ -961,7 +955,7 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	public int getDamageLevel(){
 		double curDcLevel = currentdc*1.0/damagecapacity;
 		//TODO 2019-12-08 ändrar från shields till att använda getShields() för att få med sköld + killsfactor.
-		double curShieldsLevel = currentshields*1.0/getShields();
+		double curShieldsLevel = currentShields *1.0/getShields();
 		int curDcPercentage = (int)Math.round(curDcLevel*100);
 		int curShieldsPercentage = (int)Math.round(curShieldsLevel*100);
 		int damageLevel = curDcPercentage + curShieldsPercentage; 
@@ -981,10 +975,6 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	
 	public int getTroopCapacity(){
 		return sst.getTroopCapacity();
-	}
-
-	public String getLostInSpaceString() {
-		return sst.getName();
 	}
 
 	public int getWeaponsAirToGround() {
@@ -1032,5 +1022,13 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
     public boolean isSmallPsychWarfareShip(){
     	return sst.isSmallPsychWarfareShiptype();
     }
+
+	public void setRunningTo(Planet runningTo) {
+		this.runningTo = runningTo;
+	}
+
+	public void setRunningFrom(Planet runningFrom) {
+		this.runningFrom = runningFrom;
+	}
 
 }

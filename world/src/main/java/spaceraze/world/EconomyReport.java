@@ -3,15 +3,32 @@
  */
 package spaceraze.world;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author WMPABOD
- *
  * This class encapsulates information about economy key numbers for one turn
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "ECONOMY_REPORT")
 public class EconomyReport implements Serializable{
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_TURN_INFO")
+	TurnInfo turnInfo;
+
 	private int savedLastTurn,incomeLastTurn,expensesLastTurn,supportLastTurn,savedNextTurn,incomeNextTurn,supportNextTurn;
 	private int corruptionUpkeepLastTurn,corruptionIncomeLastTurn,corruptionUpkeepNextTurn,corruptionIncomeNextTurn; // lost to corruption
 	private int supportTroopsLastTurn,supportTroopsNextTurn;

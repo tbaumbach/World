@@ -1,31 +1,38 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world.orders;
 
 import java.io.Serializable;
 
-import spaceraze.util.general.Logger;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Planet;
 import spaceraze.world.Spaceship;
-import spaceraze.world.TurnInfo;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "ORDERS")
 public class ShipMovement implements Serializable {
 	static final long serialVersionUID = 1L;
-	private String planetName, owner;
-	private int spaceShipID;
-	// Planet destination;
-	// Spaceship ss;
 
-	
-	public ShipMovement(){}              
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_ORDERS")
+	private Orders orders;
+
+	private String planetName;
+	private String owner;
+	private String spaceShipID;
 	
 	public ShipMovement(Spaceship ss, Planet destination) {
-		this.spaceShipID = ss.getId();
+		this.spaceShipID = ss.getUniqueId();
 		this.planetName = destination.getName();
 		this.owner = ss.getOwner().getName();
 	}
@@ -37,15 +44,6 @@ public class ShipMovement implements Serializable {
 	 * newGalaxy.findSpaceship(oldShipMove.getSpaceshipId()); }
 	 */
 
-	public void performMove(TurnInfo ti, Galaxy aGalaxy) {
-		Spaceship spaceship = aGalaxy.findSpaceship(spaceShipID);
-		if (spaceship != null) {
-			String spaceShipname = spaceship.getName();
-			Logger.finest("performMove: " + spaceShipname + " destination: " + planetName);
-			aGalaxy.findSpaceship(spaceShipname, aGalaxy.getPlayer(owner)).moveShip(planetName, ti);
-		}
-
-	}
 
 	/*
 	 * public int getSpaceshipId(){ return ss.getId(); }
@@ -57,38 +55,26 @@ public class ShipMovement implements Serializable {
 	 */
 
 	public String getText(Galaxy aGalaxy) {
-		String spaceShipname = aGalaxy.findSpaceship(spaceShipID).getName();
+		String spaceShipname = aGalaxy.findSpaceshipByUniqueId(spaceShipID).getName();
 		return "Move " + spaceShipname + " from "
 				+ aGalaxy.findSpaceship(spaceShipname, aGalaxy.getPlayer(owner)).getLocation().getName() + " to "
 				+ planetName + ".";
 	}
 
 	public boolean isThisShip(Spaceship sSpaceship) {
-		return sSpaceship.getId() == spaceShipID;
+		return sSpaceship.getUniqueId() == spaceShipID;
 	}
 
 	public String getDestinationName() {
 		return planetName;
 	}
 
-	public String setDestinationName(String planetName) {
-		return this.planetName = planetName;
-	}
-
-	public int getSpaceShipID() {
+	public String getSpaceShipID() {
 		return spaceShipID;
-	}
-
-	public int setSpaceShipID(int spaceShipID) {
-		return this.spaceShipID = spaceShipID;
 	}
 
 	public String getOwner() {
 		return owner;
-	}
-
-	public String setOwner(String owner) {
-		return this.owner = owner;
 	}
 
 }

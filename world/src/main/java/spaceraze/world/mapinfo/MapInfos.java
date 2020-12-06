@@ -26,17 +26,7 @@ public class MapInfos implements Serializable{
 	private List<MapInfoTurn> allTurns;
 	
 	public MapInfos() {
-		allTurns = new ArrayList<MapInfoTurn>();
-	}
-
-	public void createNextTurnMapInfo(Player player) {
-		MapInfoTurn mapPlanetInfoTurn = new MapInfoTurn(player,this,allTurns.size()+1); 
-		allTurns.add(mapPlanetInfoTurn);
-	}
-	
-	public MapInfoTurn getMapInfoTurn(int turn){
-		MapInfoTurn mapInfoTurn = allTurns.get(turn-1);
-		return mapInfoTurn;
+		allTurns = new ArrayList<>();
 	}
 
 	public MapInfoTurn getLastMapInfoTurn(){
@@ -101,10 +91,8 @@ public class MapInfos implements Serializable{
 		return lastKnownMapPlanetInfo;
 	}
 
-	public void pruneDroid(){
-		MapInfoTurn lastMapInfoTurn = getLastMapInfoTurn();
-		allTurns.clear();
-		allTurns.add(lastMapInfoTurn);
+	public List<MapInfoTurn> getAllTurns(){
+		return allTurns;
 	}
 
 }

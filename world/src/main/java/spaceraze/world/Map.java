@@ -14,18 +14,37 @@ import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.util.properties.PropertiesHandler;
+
+import javax.persistence.*;
 
 /**
  * @author WMPABOD
  *
  * Encapsulates all data for a map instance
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "MAP")
 public class Map implements Serializable, Comparable<Map>{
 	private static final long serialVersionUID = 1L;
-	private List<PlanetConnection> connections;
-	private List<Planet> planets;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
+	private Long id;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
+	@Builder.Default
+	private List<PlanetConnection> connections = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
+	@Builder.Default
+	private List<BasePlanet> planets = new ArrayList<>();
 	private int maxNrStartPlanets;
 	private String createdDate,changedDate,description;
 	private String authorName; // real name of author
@@ -82,25 +101,18 @@ public class Map implements Serializable, Comparable<Map>{
 	/**
 	 * This constructor is only used during testing
 	 * @param planets
-	 * @param conns
+	 * @param connections
 	 * @param name
 	 * @param maxNrPlayers
 	 */
-	public Map(List<Planet> planets, List<PlanetConnection> conns, String name, String desc, int maxNrPlayers){
+	public Map(List<BasePlanet> planets, List<PlanetConnection> connections, String name, String desc, int maxNrPlayers){
 		this.planets = planets;
-		this.connections = conns;
+		this.connections = connections;
 		this.name = name;
 		this.description = desc;
 //		createdDate = props.getProperty("createddate");		
 //		changedDate = props.getProperty("changeddate");
 		this.maxNrStartPlanets = maxNrPlayers;
-	}
-	
-	public Map(){
-		planets = new LinkedList<Planet>(); // beh�vs denna?
-		connections = new LinkedList<PlanetConnection>(); // beh�vs denna?
-		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-		createdDate = sdf.format(new Date());
 	}
 	
 	/**
@@ -112,8 +124,8 @@ public class Map implements Serializable, Comparable<Map>{
 		return new Map(fileName);
 	}
 
-	private List<Planet> getPlanets(Properties props){
-		List<Planet> tmpPlanets = new LinkedList<Planet>();
+	private List<BasePlanet> getPlanets(Properties props){
+		List<BasePlanet> tmpPlanets = new LinkedList<>();
 		int index = 0;
 		String tmpValue = props.getProperty("planet" + index);
 		while (tmpValue != null){
@@ -125,8 +137,8 @@ public class Map implements Serializable, Comparable<Map>{
 		return tmpPlanets;
 	}
 	
-	private List<PlanetConnection> getConnections(Properties props, List<Planet> allPlanets){
-		List<PlanetConnection> tmpConnections = new LinkedList<PlanetConnection>();
+	private List<PlanetConnection> getConnections(Properties props, List<BasePlanet> allPlanets){
+		List<PlanetConnection> tmpConnections = new LinkedList<>();
 		int index = 0;
 		String tmpValue = props.getProperty("connection" + index);
 		while (tmpValue != null){
@@ -225,13 +237,13 @@ public class Map implements Serializable, Comparable<Map>{
 	}
 
 	@JsonIgnore
-	public List<Planet> getPlanets() {
+	public List<BasePlanet> getPlanets() {
 		return planets;
 	}
 	
 	public List<String> getPlanetNames() {
 		List<String> planetsName = new ArrayList<String>();
-		for (Planet planet : planets) {
+		for (BasePlanet planet : planets) {
 			planetsName.add(planet.getName());
 		}
 		return planetsName;
@@ -243,7 +255,7 @@ public class Map implements Serializable, Comparable<Map>{
 
 	/**
 	 * used to create propertiesfiles from the old GalaxyCreator class
-	 * @param args not used
+
 	 
 	public static void main(String[] args){
 		String mapNameArr[] = {"test","wigge3","wigge6","wigge9","wigge12","solen15"};
@@ -322,7 +334,7 @@ public class Map implements Serializable, Comparable<Map>{
 	@JsonIgnore
 	public String getNrPlayersHTML(){
 		String retStr = "";
-		List<Planet> starPlanets = getStarPlanets();
+		List<BasePlanet> starPlanets = getStarPlanets();
 		for (int i = 2; i <= starPlanets.size(); i++){
 			String selected = "";
 			String recText = "";
@@ -347,14 +359,13 @@ public class Map implements Serializable, Comparable<Map>{
 	}
 	
 	@JsonIgnore
-	private List<Planet> getStarPlanets() {
-		List<Planet>  tempList = new ArrayList<Planet>();
-		for (Planet aPlanet : planets) {
+	private List<BasePlanet> getStarPlanets() {
+		List<BasePlanet>  tempList = new ArrayList<>();
+		for (BasePlanet aPlanet : planets) {
 		  if(aPlanet.isPossibleStartPlanet()){
 			  tempList.add(aPlanet);
 		  }
-		}  
-		// TODO Auto-generated method stub
+		}
 		return tempList;
 	}
 	
@@ -389,9 +400,9 @@ public class Map implements Serializable, Comparable<Map>{
 	
 	
 	
-	public Planet createNewPlanet(int x, int y){
+	public BasePlanet createNewPlanet(int x, int y){
 		String newName = getFreeName("Unnamed - ");
-		Planet newPlanet = new Planet(x,y,0,newName,-1,-1,false, true);
+		BasePlanet newPlanet = new BasePlanet(x, y, 0, newName, true);
 		planets.add(newPlanet);
 		return newPlanet;
 	}
@@ -422,12 +433,12 @@ public class Map implements Serializable, Comparable<Map>{
 		return curName;
 	}
 	
-	public Planet findClosestPlanet(int xLY,int yLY){
-		Planet closestPlanet = null;
+	public BasePlanet findClosestPlanet(int xLY,int yLY){
+		BasePlanet closestPlanet = null;
 		double closest = Double.MAX_VALUE;
-		for (Planet aPlanet : planets) {
-			double xDiff = aPlanet.getXcoor() - xLY;
-			double yDiff = aPlanet.getYcoor() - yLY;
+		for (BasePlanet aPlanet : planets) {
+			double xDiff = aPlanet.getX() - xLY;
+			double yDiff = aPlanet.getY() - yLY;
 			double distance = Math.sqrt(Math.pow(xDiff,2) + Math.pow(yDiff,2));
 			if (distance < closest){
 				closest = distance;
@@ -437,11 +448,11 @@ public class Map implements Serializable, Comparable<Map>{
 		return closestPlanet;
 	}
 	
-	public void removePlanet(Planet aPlanet){
+	public void removePlanet(BasePlanet aPlanet){
 		// remove all connections
 		List<PlanetConnection> removeConns = new LinkedList<PlanetConnection>();
 		for (PlanetConnection aConn : connections) {
-			if ((aConn.getPlanet1() == aPlanet) | (aConn.getPlanet2() == aPlanet)){
+			if ((aConn.getPlanetOne() == aPlanet) | (aConn.getPlanetTwo() == aPlanet)){
 				removeConns.add(aConn);
 			}
 		}
@@ -453,7 +464,7 @@ public class Map implements Serializable, Comparable<Map>{
 		planets.remove(aPlanet);
 	}
 
-	public void addNewConnection(Planet newP1, Planet newP2, boolean longRange){
+	public void addNewConnection(BasePlanet newP1, BasePlanet newP2, boolean longRange){
 		PlanetConnection newConn = new PlanetConnection(newP1,newP2,longRange);
 		connections.add(newConn);
 	}
@@ -464,15 +475,15 @@ public class Map implements Serializable, Comparable<Map>{
 
 	/**
 	 * copy of method i Galaxy
-	 * @param findname
+	 * @param findName
 	 * @return
 	 */
-    public Planet findPlanet(String findname){
-        Planet p = null;
+    public BasePlanet findPlanet(String findName){
+        BasePlanet p = null;
         int i = 0;
         while ((p == null) & (i<planets.size())){
-          Planet temp = (Planet)planets.get(i);
-          if (temp.getName().equalsIgnoreCase(findname)){
+          BasePlanet temp = planets.get(i);
+          if (temp.getName().equalsIgnoreCase(findName)){
             p = temp;
           }else{
             i++;
@@ -481,12 +492,12 @@ public class Map implements Serializable, Comparable<Map>{
         return p;
     }
     
-    public void deleteConnection(Planet aPlanet1, Planet aPlanet2){
+    public void deleteConnection(BasePlanet aPlanet1, BasePlanet aPlanet2){
     	PlanetConnection found = findConnection(aPlanet1,aPlanet2);
     	connections.remove(found);
     }
     
-    public PlanetConnection findConnection(Planet aPlanet1, Planet aPlanet2){
+    public PlanetConnection findConnection(BasePlanet aPlanet1, BasePlanet aPlanet2){
     	int i = 0;
     	PlanetConnection found = null;
     	while ((found == null) & (i < connections.size())){
@@ -504,7 +515,7 @@ public class Map implements Serializable, Comparable<Map>{
     @JsonIgnore
 	public String getMapData(){
 		String s = "";
-		List<Planet> allPlanets = getPlanets();
+		List<BasePlanet> allPlanets = getPlanets();
 		List<PlanetConnection> allConnections = getConnections();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -535,7 +546,7 @@ public class Map implements Serializable, Comparable<Map>{
 		s = s + "\n";
 		// write planets
 		int counter = 0;
-		for (Planet aPlanet : allPlanets) {
+		for (BasePlanet aPlanet : allPlanets) {
 			s = s + aPlanet.getSaveString(counter) + "\n";
 			counter++;
 		}
@@ -583,10 +594,10 @@ public class Map implements Serializable, Comparable<Map>{
 
 	public boolean checkPlanetNamesUnique(){
 		boolean allNamesUnique = true;
-		for (Planet aPlanet1 : planets) {
+		for (BasePlanet aPlanet1 : planets) {
 			if (allNamesUnique){
 				int counter = 0;
-				for (Planet aPlanet2 : planets) {
+				for (BasePlanet aPlanet2 : planets) {
 					if (aPlanet1.getName().equalsIgnoreCase(aPlanet2.getName())){
 						counter++;
 					}
@@ -604,17 +615,17 @@ public class Map implements Serializable, Comparable<Map>{
 	 * Returns the first planet without any connections. If all have 
 	 * connections, null is returned.
 	 */
-	public Planet checkConnectionToPlanets(){
-		Planet foundPlanet = null;
+	public BasePlanet checkConnectionToPlanets(){
+		BasePlanet foundPlanet = null;
 		int i = 0;
 		while ((foundPlanet == null) && (i < planets.size())){
-			Planet tmpPlanet = (Planet)planets.get(i);
+			BasePlanet tmpPlanet = planets.get(i);
 			int j = 0;
 			boolean foundConn = false;
 			while ((!foundConn) && (j < connections.size())){
 				PlanetConnection tmpConn = (PlanetConnection)connections.get(j);
-				Logger.finest( tmpPlanet.getName() + " " + tmpConn.getPlanet1().getName() + " " + tmpConn.getPlanet2().getName());
-				if (tmpConn.getPlanet1().equals(tmpPlanet) | tmpConn.getPlanet2().equals(tmpPlanet)){
+				Logger.finest( tmpPlanet.getName() + " " + tmpConn.getPlanetOne().getName() + " " + tmpConn.getPlanetTwo().getName());
+				if (tmpConn.getPlanetOne().equals(tmpPlanet) | tmpConn.getPlanetTwo().equals(tmpPlanet)){
 					foundConn = true;
 				}else{
 					j++;
@@ -631,17 +642,17 @@ public class Map implements Serializable, Comparable<Map>{
 
 	public boolean checkPlanetsAllConnected(){
 		boolean allComnected = true;
-		List<Planet> searchedPlanets = new LinkedList<Planet>(); // add all serched planets + startplanet
+		List<BasePlanet> searchedPlanets = new LinkedList<>(); // add all serched planets + startplanet
 		if (planets.size() > 1){ // 0 or 1 planets are by definition connected
-			List<Planet> edgePlanets = new LinkedList<Planet>();
-			List<Planet> newEdgePlanets = new LinkedList<Planet>();
+			List<BasePlanet> edgePlanets = new LinkedList<>();
+			List<BasePlanet> newEdgePlanets = new LinkedList<>();
 			searchedPlanets.add(planets.get(0));
 			edgePlanets.add(planets.get(0));
-			List<Planet> allNeighbours = new LinkedList<Planet>();
+			List<BasePlanet> allNeighbours = new LinkedList<>();
 			
 	      	// Gå igenom alla edgePlanets (dvs bara startplaneten initialt)
 	        for (int i = 0; i < edgePlanets.size(); i++){
-	          Planet tempPlanet = (Planet)edgePlanets.get(i);
+	          BasePlanet tempPlanet = (Planet)edgePlanets.get(i);
 	          // Hämta alla grannar till tempPlanet
 	          allNeighbours = getAllDestinations(tempPlanet,true);
 	          // Gå igenom alla allNeighbours  (lägg i newEdgePlanets)
@@ -671,7 +682,7 @@ public class Map implements Serializable, Comparable<Map>{
 
 		      	// Gå igenom alla edgePlanets (dvs bara startplaneten initialt)
 		        for (int i = 0; i < edgePlanets.size(); i++){
-		          Planet tempPlanet = (Planet)edgePlanets.get(i);
+		          BasePlanet tempPlanet = (Planet)edgePlanets.get(i);
 		          // Hämta alla grannar till tempPlanet
 		          allNeighbours = getAllDestinations(tempPlanet,true);
 		          // Gå igenom alla allNeighbours  (lägg i newEdgePlanets)
@@ -691,9 +702,9 @@ public class Map implements Serializable, Comparable<Map>{
 	}
 	
 	@JsonIgnore
-    public List<Planet> getAllDestinations(Planet location, boolean longRange){
-        List<Planet> alldest = new LinkedList<Planet>();
-        Planet tempPlanet = null;
+    public List<BasePlanet> getAllDestinations(BasePlanet location, boolean longRange){
+        List<BasePlanet> alldest = new LinkedList<>();
+        BasePlanet tempPlanet = null;
         for (PlanetConnection temppc : connections){
           tempPlanet = temppc.getOtherEnd(location,longRange);
           if (tempPlanet != null){  // there is a connection within range
@@ -714,35 +725,5 @@ public class Map implements Serializable, Comparable<Map>{
 	public void incVersionId() {
 		versionId++;
 	}
-
-	@JsonIgnore
-	public String getMapInfoDroid() {
-		  StringBuffer sb = new StringBuffer();
-		  sb.append("<h4>Map: ");
-		  sb.append(name);
-		  sb.append("</h4>");
-		  sb.append("<p>");
-		  sb.append(description);
-		  sb.append("</p>");
-		  
-		  sb.append("<b>Number of players: </b>");
-		  sb.append(maxNrStartPlanets);
-		  sb.append("<br>");
-
-		  sb.append("<b>Number of planets: </b>");
-		  sb.append(planets.size());
-		  sb.append("<br>");
-
-		  sb.append("<b>Average nr connections: </b>");
-		  sb.append(getAverageNrConnectionsString());
-		  sb.append("<br>");
-		  sb.append("<br>");
-		  
-		  // visa bild p� kartan
-		  sb.append("<img src=\"map_" + fileName + "\" alt=\"map_" + fileName + "\" />");
-		  
-		  return sb.toString();
-	}
-
 
 }

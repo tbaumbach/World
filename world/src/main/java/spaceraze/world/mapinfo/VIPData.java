@@ -1,7 +1,10 @@
 package spaceraze.world.mapinfo;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,31 +12,33 @@ import java.util.List;
  * 
  * @author developer
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "VIP_DATA")
 public class VIPData implements Serializable{
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	private String playerName;
-	private List<String> vipShortNames;	
-	
-	public VIPData(){
-		vipShortNames = new LinkedList<String>();
-	}
 
-	public String getPlayerName() {
-		return playerName;
-	}
+	@ElementCollection
+	@CollectionTable(name = "VIP_SHORT_NAME")
+	@Builder.Default
+	private List<String> vipShortNames = new ArrayList<>();
 
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-	}
-
-	public List<String> getVipShortNames() {
-		return vipShortNames;
-	}
-
+	@Transient
 	public void addVipShortName(String vipShortName) {
 		vipShortNames.add(vipShortName);
 	}
 
+	@Transient
 	@Override
 	public String toString(){
 		StringBuffer sb = new StringBuffer();

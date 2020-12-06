@@ -5,43 +5,55 @@
 //Detta Javaprojekt omfattar serversidan av spelet.
 
 package spaceraze.world.orders;
+
 import java.io.Serializable;
 
-import spaceraze.util.general.Logger;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Spaceship;
-import spaceraze.world.TurnInfo;
 
-public class ShipToCarrierMovement implements Serializable{
-  private static final long serialVersionUID = 1L;
-  private int ss, destinationCarrier;
-  //Spaceship ss;
-  //Spaceship destinationCarrier;
+import javax.persistence.*;
 
-  public ShipToCarrierMovement(Spaceship ss, Spaceship destinationCarrier){
-    this.ss = ss.getId();
-    this.destinationCarrier = destinationCarrier.getId();
-  }
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "SHIP_CARRIER_MOVE")
+public class ShipToCarrierMovement implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-  public void performMove(TurnInfo ti, Galaxy aGalaxy){
-	  Spaceship aSpaceship = aGalaxy.findSpaceship(ss);
-	  Spaceship aSpaceshipCarrier = aGalaxy.findSpaceship(destinationCarrier);
-	  Logger.finest( "performMove: " + aSpaceship.getName() + " destination: " + aSpaceshipCarrier.getName());
-	  aSpaceship.moveShip(aSpaceshipCarrier,ti);
-  }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  public int getDestinationCarrierId(){
-    return destinationCarrier;
-  }
+    @ManyToOne
+    @JoinColumn(name = "FK_ORDERS")
+    private Orders orders;
 
-  public Spaceship getDestinationCarrier(Galaxy aGalaxy){
-	  Spaceship aSpaceshipCarrier = aGalaxy.findSpaceship(destinationCarrier);
-	  return aSpaceshipCarrier;
-  }
+    private String spaceShipUniqueId;
+    private String destinationCarrier;
+    //Spaceship ss;
+    //Spaceship destinationCarrier;
 
-  public int getSpaceshipId(){
-    return ss;
-  }
+    public ShipToCarrierMovement(Spaceship ss, Spaceship destinationCarrier) {
+        this.spaceShipUniqueId = ss.getUniqueId();
+        this.destinationCarrier = destinationCarrier.getUniqueId();
+    }
+
+    public String getDestinationCarrierId() {
+        return destinationCarrier;
+    }
+
+    public Spaceship getDestinationCarrier(Galaxy aGalaxy) {
+        Spaceship aSpaceshipCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrier);
+        return aSpaceshipCarrier;
+    }
+
+    public String getSpaceshipId() {
+        return spaceShipUniqueId;
+    }
 
   /* beh�vs ej???
   public String getSpaceshipUniqueName(){
@@ -49,24 +61,24 @@ public class ShipToCarrierMovement implements Serializable{
   }
   */
 
-  public String getText(Galaxy aGalaxy){
-	  Spaceship aSpaceship = aGalaxy.findSpaceship(ss);
-	  Spaceship aSpaceshipCarrier = aGalaxy.findSpaceship(destinationCarrier);
-	  
-	  String retStr = null;
-	  if (aSpaceship.getLocation() != null){
-		  retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
-	  }else{
-		  retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getCarrierLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
-	  }
-    return retStr;
-  }
+    public String getText(Galaxy aGalaxy) {
+        Spaceship aSpaceship = aGalaxy.findSpaceshipByUniqueId(spaceShipUniqueId);
+        Spaceship aSpaceshipCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrier);
 
-  public boolean isThisShip(Spaceship sSpaceship){
-    return sSpaceship.getId() == ss;
-  }
+        String retStr = null;
+        if (aSpaceship.getLocation() != null) {
+            retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
+        } else {
+            retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getCarrierLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
+        }
+        return retStr;
+    }
 
-  public boolean isThisDestination(Spaceship aCarrier){
-	  return aCarrier.getId() == destinationCarrier;
-  }
+    public boolean isThisShip(Spaceship sSpaceship) {
+        return sSpaceship.getUniqueId() == spaceShipUniqueId;
+    }
+
+    public boolean isThisDestination(Spaceship aCarrier) {
+        return aCarrier.getUniqueId() == destinationCarrier;
+    }
 }

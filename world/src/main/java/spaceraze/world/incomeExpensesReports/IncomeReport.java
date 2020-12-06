@@ -1,21 +1,45 @@
 package spaceraze.world.incomeExpensesReports;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import spaceraze.world.TurnInfo;
+
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Contains all information about a players incomes for a specific turn
- * @author bodinp
  *
  */
+@Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@Entity()
+@Table(name = "INCOME_REPORT")
 public class IncomeReport implements Serializable {
     static final long serialVersionUID = 1L;
-	private List<IncomeReportRow> incomeRows;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_TURN_INFO")
+	TurnInfo turnInfo;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "incomeReport")
+	@Builder.Default
+	private List<IncomeReportRow> incomeRows = new ArrayList<>();
+
 	private int counter; 
 	
 	public IncomeReport (){
-		incomeRows = new LinkedList<IncomeReportRow>();
+		this.incomeRows = new ArrayList<>();
 		counter = 1;
 	}
 	

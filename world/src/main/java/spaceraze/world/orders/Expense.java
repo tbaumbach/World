@@ -2,33 +2,48 @@ package spaceraze.world.orders;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
 import spaceraze.world.*;
 
+import javax.persistence.*;
+
 // representerar ett utlägg gjort av spelaren under sitt drag
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "EXPENCE")
 public class Expense implements Serializable {
 	static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_ORDERS")
+    private Orders orders;
+
   	private String type;
-  	//Planet planet;
   	private String planetName;
- 	// OrbitalWharf ow;
-  	//SpaceshipType sst;
  	private String spaceshipTypeName;
-  	//BuildingType buildingType;
   	private String buildingTypeName;
 	private int currentBuildingId = 0;//byggnaden som bygger enheten.
-  	//TroopType troopType;
   	private String troopTypeName;
-  	//VIPType vipType;
   	private String typeVIPName;
-  	//Galaxy g;
-  	//Player player;
   	private String playerName=""; // Du eller player som mot tar en gåva.
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_BLACK_MARKET_BID")
 	private BlackMarketBid blackMarketBid;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_RESEARCH_ORDERS")
 	private ResearchOrder researchOrder;
 	private int sum;
-  
-  	public Expense(){}
 
   // Research
   public Expense(String temptype, ResearchOrder ro, Player aPlayer){
@@ -105,49 +120,6 @@ public class Expense implements Serializable {
 
   public String getType(){
 	  return type;
-  }
-
-  public String getText(Galaxy aGalaxy, int cost){
-    String returnString = "";
-    if (type.equalsIgnoreCase("pop")){
-      returnString = "Increase production on " + planetName + " with +1.";
-    }else
-    if (type.equalsIgnoreCase("res")){
-      returnString = "Increase resistance on " + planetName + " with +1.";
-    }else
-    if (type.equalsIgnoreCase("building")){
-    	BuildingType buildingType = aGalaxy.getGameWorld().getBuildingTypeByName(buildingTypeName);
-    	if(buildingType.getParentBuildingName() == null){
-    		returnString = "Build new " + buildingType.getName() + " at " + planetName + ".";
-    	}else{
-    		returnString = "Upgrade " + buildingType.getParentBuildingName() + " to " + buildingType.getName() + " at " + planetName + ".";
-    	}
-    }else
-    if (type.equalsIgnoreCase("buildship")){
-    	SpaceshipType sst = aGalaxy.findSpaceshipType(spaceshipTypeName);
-    	returnString = "Build new " + sst.getName() + " at " + planetName + ".";
-    }else
-    if (type.equalsIgnoreCase("buildtroop")){
-    	TroopType troopType = aGalaxy.findTroopType(troopTypeName);
-        returnString = "Build new " + troopType.getUniqueName() + " at " + planetName + ".";
-    }else
-    if (type.equalsIgnoreCase("buildVIP")){
-        returnString = "Build new " + typeVIPName + " at " + planetName + ".";
-    }else
-    if (type.equalsIgnoreCase("transaction")){
-      returnString = "Transfer " + sum + " money to Govenor " + aGalaxy.getPlayer(playerName).getGovernorName();
-    }else
-    if(type.equalsIgnoreCase("blackmarketbid")){
-      returnString = blackMarketBid.getText();
-    }else
-    if(type.equalsIgnoreCase("reconstruct")){
-      returnString = "Reconstruct the planet " + planetName;
-    }else
-    if(type.equalsIgnoreCase("research")){
-    	returnString = "Research on " + researchOrder.getAdvantageName();
-    }
-    returnString += " (cost: " + cost + ")";
-    return returnString;
   }
 
   public String getPlanetName(){
@@ -228,7 +200,7 @@ public class Expense implements Serializable {
   }
 
   public boolean isBuildingBuildingShip(Building aBuilding){
-	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getUniqueName());
+	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getName());
 	  Logger.finer("type currentBuildingId aBuilding.getUniqueId()" + type + " " + currentBuildingId + " " + aBuilding.getUniqueId());
 	    boolean isBilding = false;
 	    if (type.equalsIgnoreCase("buildship")){
@@ -287,7 +259,7 @@ public class Expense implements Serializable {
 
   public boolean isBuilding(Building aBuilding){
 	  Logger.finer("############");
-	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getUniqueName());
+	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getName());
 	  Logger.finer("type.equalsIgnoreCase(building): " + type.equalsIgnoreCase("building"));
 	  Logger.finer("currentBuildingId > 0: " + (currentBuildingId > 0));
 	  Logger.finer("aBuilding.getUniqueId() == currentBuildingId: " + (aBuilding.getUniqueId() == currentBuildingId));

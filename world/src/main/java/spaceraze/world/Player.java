@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Vector;
 
+import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.world.diplomacy.DiplomacyChange;
 import spaceraze.world.diplomacy.DiplomacyLevel;
@@ -19,77 +17,142 @@ import spaceraze.world.orders.Orders;
 import spaceraze.world.report.PlayerReport;
 import spaceraze.world.spacebattle.ReportLevel;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "PLAYER")
 public class Player implements Serializable{
     static final long serialVersionUID = 1L;
-    private List<PlayerSpaceshipImprovement> spaceshipImprovements;
-    private List<PlayerTroopImprovement> troopImprovements;
-    private List<PlayerBuildingImprovement> buildingImprovements;
-    private String name,password, governorName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_GALAXY")
+    private Galaxy galaxy;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlayerSpaceshipImprovement> spaceshipImprovements = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlayerTroopImprovement> troopImprovements = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlayerBuildingImprovement> buildingImprovements = new ArrayList<>();
+    private String name;
+    private String password;
+    private String governorName;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_ORDERS")
     private Orders orders;
-    private Galaxy g;
     //TODO 2019-12-20 TurnInfo ersätts av PlayerReport
-    private TurnInfo ti;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_TURN_INFO")
+    private TurnInfo turnInfo;
     private String errormessage = null, notes = "";
     private boolean defeated = false;
     private boolean win = false;
 	private boolean updatedThisTurn = false; // saved this turn
     private boolean finishedThisTurn = false; // ok for server to update
-    private String nextupdate;  // flytta till PublicInfo?
-    private int treasury,totalPop;
+    private int treasury;
+    private int totalPop;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_FACTION")
+    @Column(insertable = false, updatable = false)
     private Faction faction;
-    private PlanetInfos pi;
-    private Planet homeplanet;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlanetInformation> planetInformations = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_PLANET")
+    @Column(insertable = false, updatable = false)
+    private Planet homePlanet;
 //    public boolean writeUpkeep = false;
     private boolean retreatingGovernor = false;
     private int turnDefeated;
     private int nrTurnsBroke;
-    private Research research; 
-    private Buildings buildings;
-    private List<DiplomacyOffer> diplomacyOffers; // current offers for the current turn 
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<ResearchProgress> researchProgresses = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<DiplomacyOffer> diplomacyOffers = new ArrayList<>(); // current offers (from others players) for the current turn
     
     // Copy from Faction
-    private int openPlanetBonus = 0,closedPlanetBonus = 0,resistanceBonus = 0;
+    private int openPlanetBonus = 0;
+    private int closedPlanetBonus = 0;
+    private int resistanceBonus = 0;
     private int techBonus = 0; // %
     private boolean canReconstruct = false;
     private int reconstructCostBase = 8;
-    private Corruption corruption;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_CORRUPTION_POINT")
+    CorruptionPoint corruptionPoint;
+
     private int latestMessageIdFromServer = 0;
     private int messageId;
     private ReportLevel reportLevel;
-    private PlanetOrderStatuses planetOrderStatuses;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlanetOrderStatus> planetOrderStatuses = new ArrayList<>();
     private MapInfos mapPlanetInfos;
+
+    //TODO 2020-11-19 Can we romve this? we can use the methodes instead.
+    private int income = -1;
+    private int upkeepTroops = -1;
+    private int upkeepVIPs = -1;
+    private int upkeepShips = -1;
     
-    private int income = -1, upkeepTroops = -1, upkeepVIPs = -1, upkeepShips = -1;
-    
-    //TODO 2019-12-20 lade till nya sättet att rapportera ett drag, med utbruten kopplingar till spel objekten som Spaceship, troop, VIP mm. Möjligt att listan borde ligga i ett eget objekt om den blir logik runt listan.
-    private Map<Integer, PlayerReport>  playerReports = new TreeMap<>();
+    //TODO 2019-12-20 lade till nya sättet att rapportera ett drag, med utbruten kopplingar till spel objekten som Spaceship, troop, VIP mm.
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
+    @Builder.Default
+    private List<PlayerReport>  playerReports = new ArrayList<>();
     
     public Player(String errormessage){
         this.errormessage = errormessage;
+        spaceshipImprovements = new ArrayList<>();
+        troopImprovements = new ArrayList<>();
+        buildingImprovements = new ArrayList<>();
+        planetInformations = new ArrayList<>();
+        researchProgresses = new ArrayList<>();
+        diplomacyOffers = new ArrayList<>();
+        planetOrderStatuses = new ArrayList<>();
+        playerReports = new ArrayList<>();
     }
 
     public Player(String errormessage, Galaxy ag){
     	this(errormessage);
-    	g = ag;
+    	galaxy = ag;
     }
 
-    public Player(String name, String password, Galaxy g, String governorName, String factionName, Planet homeplanet){
-    	Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + factionName);
-        this.name = name;
+    public Player(String name, String password, Galaxy g, String governorName, String factionName, Planet homePlanet, List<PlanetOrderStatus> planetOrderStatuses){
+        this(null);
+        Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + factionName);
+    	this.name = name;
         this.password = password;
         this.governorName = governorName.replace('#',' ');
-        spaceshipImprovements = new ArrayList<>();
-        troopImprovements = new ArrayList<>();
         orders = new Orders();
-        this.g = g;
-        ti = new TurnInfo();
+        this.galaxy = g;
+        turnInfo = new TurnInfo();
+        turnInfo.newTurn();
         treasury = 0;
         faction = g.findFaction(factionName);
-        this.homeplanet = homeplanet;
-        research = faction.getResearch().clone();
-        buildings = faction.getBuildings().clone();
-        buildingImprovements = new ArrayList<>();
-        
+        this.homePlanet = homePlanet;
+
         //      Copy from Faction
         openPlanetBonus = faction.getOpenPlanetBonus();
         closedPlanetBonus = faction.getClosedPlanetBonus();
@@ -98,13 +161,10 @@ public class Player implements Serializable{
         canReconstruct = faction.isCanReconstruct();
         reconstructCostBase = faction.getReconstructCostBase();
         // set values from faction
-        Corruption tmpCorr = faction.getCorruption();
-        if (tmpCorr != null){
-        	corruption = tmpCorr.clone();
-        }
+        corruptionPoint = faction.getCorruptionPoint();
         reportLevel = ReportLevel.LONG;
-        planetOrderStatuses = new PlanetOrderStatuses(g.getPlanets());
-        mapPlanetInfos = new MapInfos();
+        this.planetOrderStatuses = planetOrderStatuses;
+        this.mapPlanetInfos = new MapInfos();
     }
     
     public ReportLevel getReportLevel(){
@@ -116,7 +176,7 @@ public class Player implements Serializable{
     }
 
     public void resetDiplomacyOffers(){
-    	diplomacyOffers = new LinkedList<DiplomacyOffer>();
+    	diplomacyOffers = new LinkedList<>();
     }
     
     public void addDiplomacyOffer(DiplomacyOffer anOffer){
@@ -137,20 +197,8 @@ public class Player implements Serializable{
     	return foundOffer;
     }
 
-    public PlanetInfos getPlanetInfos(){
-      return pi;
-    }
-
-    public void setPlanetInfos(PlanetInfos newpi){
-      this.pi = newpi;
-    }
-
-    public void createPlanetInfos(){
-      pi = new PlanetInfos(g.getPlanets(),this);
-    }
-
     public TurnInfo getTurnInfo(){
-      return ti;
+      return turnInfo;
     }
 
     public void setTotalPop(int newPop){
@@ -169,52 +217,44 @@ public class Player implements Serializable{
       defeated = true;
       this.turnDefeated = turnDefeated;
       if (govenorDead){
-        ti.addToLatestGeneralReport("Your Govenor has been killed.\n");
+        turnInfo.addToLatestGeneralReport("Your Govenor has been killed.\n");
 //        addToHighlights("",Highlight.TYPE_GOVENOR_KILLED); // Not needed, highlight already created in other places (vip killed in ship or planet)
-        g.govenorKilled(this);
+        galaxy.govenorKilled(this);
       }else{
-        ti.addToLatestGeneralReport("You have no planets or spaceships left.\n");
+        turnInfo.addToLatestGeneralReport("You have no planets or spaceships left.\n");
         addToHighlights("",HighlightType.TYPE_NO_SHIPS_NO_PLANETS);
-        g.noPlanetsOrShips(this);
+        galaxy.noPlanetsOrShips(this);
       }
-      ti.addToLatestGeneralReport("You have been defeated.\n");
+      turnInfo.addToLatestGeneralReport("You have been defeated.\n");
       addToHighlights("",HighlightType.TYPE_DEFEATED);
-      g.playerDefeated(this);
+      galaxy.playerDefeated(this);
     }
 
     public void abandonGame(int turnDefeated){
         defeated = true;
         this.turnDefeated = turnDefeated;
-        ti.addToLatestGeneralReport("You have abandoned this game and your Govenor have left this quadrant.\n");
-        ti.addToLatestGeneralReport("Game is over.\n");
+        turnInfo.addToLatestGeneralReport("You have abandoned this game and your Govenor have left this quadrant.\n");
+        turnInfo.addToLatestGeneralReport("Game is over.\n");
         addToHighlights("",HighlightType.TYPE_GAME_ABANDONED);
-        g.playerAbandonsGame(this);
+        galaxy.playerAbandonsGame(this);
     }
 
     public void brokeRemovedFromGame(int turnRemoved){
         defeated = true;
         this.turnDefeated = turnRemoved;
-        ti.addToLatestGeneralReport("You have been broke for 5 turns in a row and government have broken down.\n");
-        ti.addToLatestGeneralReport("Game is over.\n");
+        turnInfo.addToLatestGeneralReport("You have been broke for 5 turns in a row and government have broken down.\n");
+        turnInfo.addToLatestGeneralReport("Game is over.\n");
         addToHighlights("",HighlightType.TYPE_GAME_BROKE_REMOVED);
-        g.playerRemovedBrokeGame(this);
+        galaxy.playerRemovedBrokeGame(this);
     }
 
     public void brokeRemovedWarning(){
-        ti.addToLatestGeneralReport("Warning: you have been broke for 4 turns in a row and will lose the game if you are broke one more turn.\n");
+        turnInfo.addToLatestGeneralReport("Warning: you have been broke for 4 turns in a row and will lose the game if you are broke one more turn.\n");
         addToHighlights("",HighlightType.TYPE_GAME_BROKE_WARNING);
     }
 
     public boolean isDefeated(){
       return defeated;
-    }
-
-    public void setNextUpdate(String newtime){
-        nextupdate = newtime;
-    }
-
-    public String getNextUpdate(){
-        return nextupdate;
     }
 
     public String getName(){
@@ -263,39 +303,39 @@ public class Player implements Serializable{
     }
 
     public Galaxy getGalaxy(){
-      return g;
+      return galaxy;
     }
 
     public void addToGeneral(String str){
-      ti.addToLatestGeneralReport(str);
+      turnInfo.addToLatestGeneralReport(str);
     }
 
     public void addToGeneralAt(String str, int index){
-    	ti.addToLatestGeneralReportAt(str,index);
+    	turnInfo.addToLatestGeneralReportAt(str,index);
     }
 
     public void addToHighlights(String str, HighlightType type){
-        ti.addToLatestHighlights(str,type);
+        turnInfo.addToLatestHighlights(str,type);
       }
 
     public void addToShipsLostInSpace(Spaceship ss){
-        ti.addToLatestShipsLostInSpace(ss);
+        turnInfo.addToLatestShipsLostInSpace(ss);
     }
 
     public void addToTroopsLostInSpace(Troop aTroop){
-        ti.addToLatestTroopsLostInSpace(aTroop);
+        turnInfo.addToLatestTroopsLostInSpace(aTroop);
     }
 
     public void addToLatestBlackMarketMessages(String aMessage){
-      ti.addToLatestBlackMarketReport(aMessage);
+      turnInfo.addToLatestBlackMarketReport(aMessage);
     }
 
     public void addToVIPReport(String str){
-      ti.addToLatestVIPReport(str);
+      turnInfo.addToLatestVIPReport(str);
     }
 
     public void updateTurnInfo(){
-      ti.newTurn();
+      turnInfo.newTurn();
     }
 
     public void addToTreasury(int money){
@@ -317,42 +357,6 @@ public class Player implements Serializable{
       return treasury;
     }
 
-    public boolean isBroke(){
-    	return (g.getPlayerUpkeepShips(this) + g.getPlayerUpkeepTroops(this)) + g.getPlayerUpkeepVIPs(this)> (treasury + g.getPlayerIncome(this,false));
-    }
-    // used in client to just count first time
-    public boolean isBrokeClient(){
-    	return (upkeepShips() + upkeepTroops() + upkeepVIPs())> (treasury + income());
-    }
-    // used in client to just count first time
-    public int upkeepShips(){
-    	if(upkeepShips == -1){
-    		upkeepShips = g.getPlayerUpkeepShips(this);
-    	}
-    	return upkeepShips;
-    }
-    // used in client to just count first time
-    public int upkeepTroops(){
-    	if(upkeepTroops < 0){
-    		upkeepTroops = g.getPlayerUpkeepTroops(this);
-    	}
-    	return upkeepTroops;
-    }
-    // used in client to just count first time
-    public int upkeepVIPs(){
-    	if(upkeepVIPs < 0){
-    		upkeepVIPs = g.getPlayerUpkeepVIPs(this);
-    	}
-    	return upkeepVIPs;
-    }
-    // used in client to just count first time
-    public int income(){
-    	if(income < 0){
-    		income = g.getPlayerIncome(this,false);
-    	}
-    	return income;
-    }
-
     public void addOrRemovePlanetVisib(Planet p){
       orders.addOrRemovePlanetVisib(p);
     }
@@ -362,7 +366,7 @@ public class Player implements Serializable{
     }
 
     public void addNewBuilding(Planet aPlanet, BuildingType bt){
-      orders.addNewBuilding(aPlanet, getName(), bt, g);
+      orders.addNewBuilding(aPlanet, getName(), bt, galaxy);
     }
     public void removeNewBuilding(Planet aPlanet){
         orders.removeNewBuilding(aPlanet, this.getGalaxy());
@@ -397,7 +401,7 @@ public class Player implements Serializable{
     }
 
     public void addTroopToPlanetMove(Troop aTroop, Planet destination){
-    	orders.addNewTroopToPlanetMove(aTroop,destination,g.getTurn());
+    	orders.addNewTroopToPlanetMove(aTroop,destination, galaxy.getTurn());
     }
 
     public void addTroopToCarrierMove(Troop aTroop, Spaceship destinationCarrier){
@@ -413,40 +417,32 @@ public class Player implements Serializable{
     }
 
     public String getShipDestinationName(Spaceship ss){
-      return orders.getDestinationName(ss, g);
+      return orders.getDestinationName(ss, galaxy);
     }
 
     public String getTroopDestinationPlanetName(Troop aTroop){
-    	return orders.getDestinationPlanetName(aTroop, g);
+    	return orders.getDestinationPlanetName(aTroop, galaxy);
     }
 
     public String getShipDestinationCarrierName(Spaceship ss){
-        return orders.getDestinationCarrierName(ss, g);
+        return orders.getDestinationCarrierName(ss, galaxy);
     }
 
     public String getShipDestinationCarrierShortName(Spaceship ss){
-        return orders.getDestinationCarrierShortName(ss, g);
+        return orders.getDestinationCarrierShortName(ss, galaxy);
     }
 
     public String getTroopDestinationCarrierName(Troop aTroop){
-        return orders.getTroopDestinationCarrierName(aTroop, g);
+        return orders.getTroopDestinationCarrierName(aTroop, galaxy);
     }
 
     public String getTroopDestinationCarrierShortName(Troop aTroop){
-        return orders.getTroopDestinationCarrierShortName(aTroop, g);
+        return orders.getTroopDestinationCarrierShortName(aTroop, galaxy);
     }
 
     public String getVIPDestinationName(VIP aVIP,boolean longName){
-      return orders.getDestinationName(aVIP, g, longName);
+      return orders.getDestinationName(aVIP, galaxy, longName);
     }
-
-    public List<String> getAllDestinations(Planet location, boolean longRange){
-    	return getAllDestinations(location,longRange,false);
-    }
-
-    public List<String> getAllDestinations(Planet location, boolean longRange, boolean ownPlanetsOnly){
-        return g.getAllDestinationsStrings(location,longRange,this,ownPlanetsOnly);
-      }
 
     public void addBuildShip(Building building, SpaceshipType sst){
       orders.addBuildShip(building, sst, this);
@@ -466,10 +462,6 @@ public class Player implements Serializable{
     
     public boolean isAbandonGame(){
     	return orders.isAbandonGame();
-    }
-
-    public PublicInfo getLastPublicInfo(){
-      return g.getLastPublicInfo();
     }
 
     public String getGovernorName(){
@@ -516,8 +508,8 @@ public class Player implements Serializable{
       return orders.getBuildingSelfDestruct(building);
     }
 
-    public Planet getHomeplanet(){
-      return homeplanet;
+    public Planet getHomePlanet(){
+      return homePlanet;
     }
 
   public boolean checkMove(Spaceship ss){
@@ -732,7 +724,7 @@ public class Player implements Serializable{
         text.append("\n");
 
         //TODO 2019-12-31 This is the new report logic, should replace all logic from TurnInfo (the old report logic).
-        text.append(getPlayerReports().get(turn -1).getReports());
+        text.append(getPlayerReports().get(turn -2 < 0 ? 0 : turn -2).getFullReport());
 
         // Land battle reports
 	    /*
@@ -792,24 +784,6 @@ public class Player implements Serializable{
 		nrTurnsBroke++;
 	}
 	
-	public Buildings getBuildings() {
-		return buildings;
-	}
-
-	public void setBuildings(Buildings buildings) {
-		this.buildings = buildings;
-	}
-	
-	
-
-	public Research getResearch() {
-		return research;
-	}
-
-	public void setResearch(Research research) {
-		this.research = research;
-	}
-	
 	public boolean isCanReconstruct() {
 		return canReconstruct;
 	}
@@ -859,47 +833,9 @@ public class Player implements Serializable{
 	}
 
 	public int getReconstructCost(Planet aPlanet){
-		return reconstructCostBase + aPlanet.getBasePop();
+		return reconstructCostBase + aPlanet.getBasePopulation();
 	}
 
-	public int getIncomeAfterCorruption(int anIncome){
-		int tmpIncome = anIncome;
-		if (corruption != null){
-			tmpIncome = corruption.getIncomeAfterCorruption(anIncome);
-		}
-		return tmpIncome;
-	}
-
-	public int getLostToCorruption(int anIncome){
-		return anIncome - getIncomeAfterCorruption(anIncome);
-	}
-
-	/**
-	 * This method calls the getIncomeAfterCorruption method.
-	 * Income and upkeep are affected the same way by corruption.
-	 * @param anIncome
-	 * @return
-	 */
-	public int getUpkeepAfterCorruption(int anIncome){
-		return getIncomeAfterCorruption(anIncome);
-	}
-
-	/**
-	 * Duplicate of method in faction
-	 * @return
-	 */
-	public String getCorruptionDescription(){
-		String corrDesc = "None";
-		if (corruption != null){
-			corrDesc = corruption.getCorruptionDescription();
-		}
-		return corrDesc;
-	}
-	
-	public void setCorruption(Corruption corruption) {
-		this.corruption = corruption;
-	}
-	
 	public void addBuildTroop(Building building, TroopType tt){
 	      orders.addBuildTroop(building, tt, this);
 	    }
@@ -952,16 +888,8 @@ public class Player implements Serializable{
 		this.win = win;
 	}
 
-	public PlanetOrderStatuses getPlanetOrderStatuses() {
+	public List<PlanetOrderStatus> getPlanetOrderStatuses() {
 		return planetOrderStatuses;
-	}
-
-	public void setPlanetOrderStatuses(PlanetOrderStatuses planetOrderStatuses) {
-		this.planetOrderStatuses = planetOrderStatuses;
-	}
-
-	public void updateMapInfo() {
-		mapPlanetInfos.createNextTurnMapInfo(this);		
 	}
 
 	public MapInfos getMapInfos() {
@@ -972,7 +900,7 @@ public class Player implements Serializable{
 		this.faction = faction;
 	}
 
-	public Map<Integer, PlayerReport> getPlayerReports() {
+	public List<PlayerReport> getPlayerReports() {
 		return playerReports;
 	}
 
@@ -990,5 +918,16 @@ public class Player implements Serializable{
 
     public void addBuildingImprovement(PlayerBuildingImprovement buildingImprovement) {
         this.buildingImprovements.add(buildingImprovement);
+    }
+
+    public ResearchProgress getResearchProgress(String name){
+	    return getResearchProgresses().stream().filter(researchProgress -> researchProgress.getResearchAdvantageName().equals(name)).findFirst().orElse(creatAndAddResearchProgress(name));
+    }
+
+    private ResearchProgress creatAndAddResearchProgress(String name) {
+        ResearchProgress researchProgress = new ResearchProgress();
+        researchProgress.setResearchAdvantageName(name);
+        getResearchProgresses().add(researchProgress);
+        return researchProgress;
     }
 }

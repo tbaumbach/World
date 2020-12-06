@@ -2,11 +2,27 @@ package spaceraze.world;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Functions;
 
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "RESEARCH_UPGRADE_TROOP")
 public class ResearchUpgradeTroop extends TroopImprovements{
 	static final long serialVersionUID = 1L;
 
+	@ManyToOne
+	@JoinColumn(name = "FK_RESEARCH_ADVANTAGE")
+	private ResearchAdvantage researchAdvantage;
 
     public ResearchUpgradeTroop(String typeId){
     	super(typeId);

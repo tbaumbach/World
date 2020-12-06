@@ -9,7 +9,7 @@ public class TroopBattlePositionChange {
 	private BattleGroupPosition newPosition;
 	
 	public TroopBattlePositionChange(Troop aTroop, BattleGroupPosition aNewPosition){
-		this.troop = aTroop.getId();
+		this.troop = aTroop.getUniqueId();
 		this.newPosition = aNewPosition;
 	}
 	
@@ -22,7 +22,7 @@ public class TroopBattlePositionChange {
 	}
 	
 	public boolean isTroop(Troop aTroop){
-		return aTroop.getId() == troop;
+		return aTroop.getUniqueId() == troop;
 	}
 	
 	public BattleGroupPosition getNewPosition(){

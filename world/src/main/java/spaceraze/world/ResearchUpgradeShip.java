@@ -2,10 +2,26 @@ package spaceraze.world;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "RESEARCH_UPGRADE_SHIP")
 public class ResearchUpgradeShip extends SpaceshipImprovements {
 	static final long serialVersionUID = 1L;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_RESEARCH_ADVANTAGE")
+	private ResearchAdvantage researchAdvantage;
 
     
     public ResearchUpgradeShip(String typeId){
@@ -249,7 +265,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     	if(isChangeCanAttackScreenedShips()){
     		text+="\n-Can attack screened ships: " + addYesOrNo(isCanAttackScreenedShips());
     	}
-    	if(isChangelookAsCivilian()){
+    	if(isChangeLookAsCivilian()){
     		text+="\n-Look as civilian: " + addYesOrNo(isLookAsCivilian());
     	}
     	if(isChangeCanBlockPlanet()){
@@ -301,7 +317,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
 
 	@Override
 	public void setLookAsCivilian(boolean lookAsCivilian) {
-		this.setChangelookAsCivilian(true);
+		this.setChangeLookAsCivilian(true);
 		super.setLookAsCivilian(lookAsCivilian);
 	}
 

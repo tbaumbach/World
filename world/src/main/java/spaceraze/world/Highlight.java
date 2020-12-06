@@ -5,17 +5,38 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import spaceraze.world.enums.HighlightType;
 import spaceraze.util.general.Functions;
 import spaceraze.world.Highlight;
+
+import javax.persistence.*;
 
 /**
  * @author WMPABOD
  *
  * Represents one extra important news item that can be shown at startup in a client
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "HIGHLIGHT")
 public class Highlight implements Comparable<Highlight>, Serializable{
 	static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_REPORT")
+	private Report report;
+
 	private String text,text2;
 	private HighlightType type;
 	

@@ -5,11 +5,15 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.enums.BlackMarketFrequency;
 import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
-import spaceraze.util.general.Functions;
+
+import javax.persistence.*;
 
 /**
  * Instances of this class represent one spaceship type, from which 
@@ -18,15 +22,25 @@ import spaceraze.util.general.Functions;
  * @author wmpabod
  *
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "SPACESHIP_TYPE")
 public class SpaceshipType implements Serializable{
     static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_GAME_WORLD")
+    private GameWorld gameWorld;
+
     private String name;
     private String shortName;
-    private String advanteges;
-    private String disadvanteges;
     private SpaceShipSize size;
-    int nrProduced;
     int shields;
     int upkeep;
     int buildCost;
@@ -67,7 +81,6 @@ public class SpaceshipType implements Serializable{
     private String shortDescription;
     private String advantages;
     private String disadvantages;
-    UniqueIdCounter uic;
     private boolean civilian = false;
     private boolean lookAsCivilian = false;
     private boolean canBlockPlanet = true;
@@ -108,8 +121,8 @@ public class SpaceshipType implements Serializable{
 		this.weaponsAirToGround = weaponsAirToGround;
 	}*/
 
-	public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, UniqueIdCounter uic, int weaponsStrengthSmall){
-    	this(name,shortName, size,shields,hits,range,upkeep,buildCost,uic,weaponsStrengthSmall,0);
+	public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall){
+    	this(name,shortName, size,shields,hits,range,upkeep,buildCost, weaponsStrengthSmall,0);
     }
 	
 	@JsonIgnore
@@ -178,17 +191,16 @@ public class SpaceshipType implements Serializable{
      * @param range
      * @param upkeep
      * @param buildCost
-     * @param uic
      */
-    public SpaceshipType(String name, String shortName, SpaceShipSize size, SpaceshipRange range, int upkeep, int buildCost, UniqueIdCounter uic){
-    	this(name,shortName, size,0,1,range,upkeep,buildCost,uic,0,0);
+    public SpaceshipType(String name, String shortName, SpaceShipSize size, SpaceshipRange range, int upkeep, int buildCost){
+    	this(name,shortName, size,0,1,range,upkeep,buildCost, 0,0);
     	setCivilian(true);
     	setLookAsCivilian(true);
     	setCanBlockPlanet(false);
         setArmor(0,0,0,0);
     }
 	
-    public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, UniqueIdCounter uic, int weaponsStrengthSmall, int weaponsStrengthSquadron){
+    public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall, int weaponsStrengthSquadron){
         this.name = name;
         this.shortName = shortName;
         this.size = size;
@@ -199,9 +211,6 @@ public class SpaceshipType implements Serializable{
         this.hits = hits;
         this.weaponsStrengthSmall = weaponsStrengthSmall;
         this.weaponsStrengthSquadron = weaponsStrengthSquadron;
-        // init
-        nrProduced = 0;
-        this.uic = uic;
         // default armor
         setStandardArmorLevels();
         // Default (almost) infinite number of salvoes
@@ -254,8 +263,6 @@ public class SpaceshipType implements Serializable{
         this.weaponsMaxSalvoesLarge = oldsst.getWeaponsMaxSalvoesLarge();
         this.weaponsMaxSalvoesHuge = oldsst.getWeaponsMaxSalvoesHuge();
         this.supply = oldsst.getSupply();
-        nrProduced = 0;
-        this.uic = oldsst.getUniqueIdCounter();
         this.armorSmall = oldsst.getArmorSmall();
         this.armorMedium = oldsst.getArmorMedium();
         this.armorLarge = oldsst.getArmorLarge();
@@ -293,8 +300,8 @@ public class SpaceshipType implements Serializable{
         this.alwaysRetreat = oldsst.isAlwaysRetreat();
         this.screened = oldsst.isScreened();
         
-        this.advanteges = oldsst.getAdvanteges();
-        this.disadvanteges = oldsst.getDisAdvanteges();
+        this.advantages = oldsst.getAdvantages();
+        this.disadvantages = oldsst.getDisadvantages();
         this.canAppearOnBlackMarket = oldsst.isCanAppearOnBlackMarket();
         this.blackMarketFrequency = oldsst.getBlackMarketFrequency();
         this.blackmarketFirstTurn = oldsst.getBlackmarketFirstTurn();
@@ -335,8 +342,6 @@ public class SpaceshipType implements Serializable{
         this.weaponsMaxSalvoesLarge = originSpaceshipType.getWeaponsMaxSalvoesLarge() + playerSpaceshipImprovement.getWeaponsMaxSalvosLarge();
         this.weaponsMaxSalvoesHuge = originSpaceshipType.getWeaponsMaxSalvoesHuge() + playerSpaceshipImprovement.getWeaponsMaxSalvosHuge();
         this.supply = playerSpaceshipImprovement.getSupply()  != null ? playerSpaceshipImprovement.getSupply() : originSpaceshipType.getSupply();
-        nrProduced = originSpaceshipType.getNrProduced();
-        this.uic = originSpaceshipType.getUniqueIdCounter();
         this.armorSmall = originSpaceshipType.getArmorSmall() + playerSpaceshipImprovement.getArmorSmall();
         this.armorMedium = originSpaceshipType.getArmorMedium() + playerSpaceshipImprovement.getArmorMedium();
         this.armorLarge = originSpaceshipType.getArmorLarge() + playerSpaceshipImprovement.getArmorLarge();
@@ -360,7 +365,7 @@ public class SpaceshipType implements Serializable{
         this.incOwnOpenBonus = originSpaceshipType.incOwnOpenBonus + playerSpaceshipImprovement.getIncOwnOpenBonus();
         this.canAttackScreenedShips = playerSpaceshipImprovement.isChangeCanAttackScreenedShips() ? playerSpaceshipImprovement.isCanAttackScreenedShips() : originSpaceshipType.canAttackScreenedShips;
         this.civilian = originSpaceshipType.civilian;
-        this.lookAsCivilian = playerSpaceshipImprovement.isChangelookAsCivilian() ? playerSpaceshipImprovement.isLookAsCivilian() : originSpaceshipType.lookAsCivilian;
+        this.lookAsCivilian = playerSpaceshipImprovement.isChangeLookAsCivilian() ? playerSpaceshipImprovement.isLookAsCivilian() : originSpaceshipType.lookAsCivilian;
         this.canBlockPlanet = playerSpaceshipImprovement.isChangeCanBlockPlanet() ? playerSpaceshipImprovement.isCanBlockPlanet() : originSpaceshipType.canBlockPlanet;
         this.visibleOnMap = playerSpaceshipImprovement.isChangeVisibleOnMap() ? playerSpaceshipImprovement.isVisibleOnMap() : originSpaceshipType.isVisibleOnMap();
         this.availableToBuild = playerSpaceshipImprovement.isAvailableToBuild();
@@ -371,8 +376,8 @@ public class SpaceshipType implements Serializable{
         this.alwaysRetreat = originSpaceshipType.isAlwaysRetreat();
         this.screened = originSpaceshipType.isScreened();
 
-        this.advanteges = originSpaceshipType.getAdvanteges();
-        this.disadvanteges = originSpaceshipType.getDisAdvanteges();
+        this.advantages = originSpaceshipType.getAdvantages();
+        this.disadvantages = originSpaceshipType.getDisadvantages();
         this.canAppearOnBlackMarket = originSpaceshipType.isCanAppearOnBlackMarket();
         this.blackMarketFrequency = originSpaceshipType.getBlackMarketFrequency();
         this.blackmarketFirstTurn = originSpaceshipType.getBlackmarketFirstTurn();
@@ -413,21 +418,12 @@ public class SpaceshipType implements Serializable{
       }
       return tempBuildCost;
     }
-    
-    @JsonIgnore
-    public UniqueIdCounter getUniqueIdCounter(){
-      return uic;
-    }
 
     @JsonIgnore
-    public Spaceship getShip(VIP vipWithBonus, int factionTechBonus, int buildingBonus){
-      nrProduced++;
-      return new Spaceship(Functions.deepClone(this),null,nrProduced,uic.getUniqueId(),vipWithBonus,factionTechBonus,buildingBonus);
+    public Spaceship getShip(VIP vipWithBonus, int factionTechBonus, int buildingBonus, int uniqueId){
+      return new Spaceship(this, null, 0, vipWithBonus, factionTechBonus,buildingBonus);
     }
-/*
- * public Spaceship getVirtualShip(){ return new
- * Spaceship(this,null,nrProduced,0,false); }
- */
+
     public SpaceShipSize getSize(){
       return size;
     }
@@ -457,10 +453,6 @@ public class SpaceshipType implements Serializable{
 
     public String getShortName(){
       return shortName;
-    }
-
-    public int getNrProduced(){
-      return nrProduced;
     }
 /*
  * public int getDamageCapacity(){ return damagecapacity; }
@@ -1024,8 +1016,8 @@ public class SpaceshipType implements Serializable{
 			if(aPlayer.getOrders().haveSpaceshipTypeBuildOrder(this)){
 				constructible = false;
 			}
-			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getBlackMarket().getCurrentOffers()) {
-				if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getOfferedShiptype().getName().equals(name)){
+			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getCurrentOffers()) {
+				if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getSpaceshipType().getName().equals(name)){
 					constructible = false;
 				}
 			}
@@ -1043,8 +1035,8 @@ public class SpaceshipType implements Serializable{
 					if(!isPlayerUnique() && !isFactionUnique()){
 						if(isWorldUnique() && !isWorldUniqueBuild(aGalaxy)){
 							boolean isAlreadyAoffer = false;
-							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getBlackMarket().getCurrentOffers()) {
-								if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getOfferedShiptype().getName().equals(name)){
+							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getCurrentOffers()) {
+								if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getSpaceshipType().getName().equals(name)){
 									isAlreadyAoffer = true;
 								}
 							}
@@ -1112,19 +1104,12 @@ public class SpaceshipType implements Serializable{
 		this.bluePrintFrequency = bluePrintFrequency;
 	}
 
-	public String getAdvanteges() {
-		return advanteges;
+	public String getAdvantages() {
+		return advantages;
 	}
 
-	public void setAdvanteges(String advanteges) {
-		this.advanteges = advanteges;
-	}
-	public String getDisAdvanteges() {
-		return disadvanteges;
-	}
-
-	public void setDisAdvanteges(String disadvanteges) {
-		this.disadvanteges = disadvanteges;
+	public void setAdvantages(String advantages) {
+		this.advantages = advantages;
 	}
 	
 	public BlackMarketFrequency getBlackMarketFrequency() {

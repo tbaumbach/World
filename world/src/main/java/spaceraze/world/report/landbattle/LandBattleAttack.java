@@ -1,15 +1,39 @@
 package spaceraze.world.report.landbattle;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import spaceraze.util.general.Functions;
 import spaceraze.world.report.EventReport;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "LAND_BATTLE_ATTACK")
 public class LandBattleAttack extends EventReport implements Serializable {
 	static final long serialVersionUID = 1L;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "FK_LAND_BATTLE_REPORT")
+	private LandBattleReport landBattleReport;
+
+	@OneToOne
+	@JoinColumn(name = "FK_TROOP_ATTACK")
 	private TroopAttack troopAttack;
+
+	@OneToOne
+	@JoinColumn(name = "FK_TROOP_TARGET")
 	private TroopTarget troopTarget;
+
 	private int damage;
 	private int counterDamage;
 	private int attMultiplier;
@@ -33,11 +57,7 @@ public class LandBattleAttack extends EventReport implements Serializable {
 	public static String OWN_COUNTERFIRE = "   You perform %s counterfire (%d damage) against the enemy troop (%s)"; // include " (destroyed).\n" or " (" + attackingTroop.getTroopStrength() + "%).\n"
 	//public static String OWN_NO_COUNTERFIRE = "   You does not procuce any significant counterfire.";
 	public static String TARGET_DESTROYED = "destroyed";
-	
-	public LandBattleAttack() {
-		
-	}
-	
+
 	public LandBattleAttack(TroopAttack troopAttack, TroopTarget troopTarget, int damage, int counterDamage, int attMultiplier, int counterMultiplier) {
 		this.troopAttack = troopAttack;
 		this.troopTarget = troopTarget;
@@ -46,7 +66,7 @@ public class LandBattleAttack extends EventReport implements Serializable {
 		this.attMultiplier = attMultiplier;
 		this.counterMultiplier = counterMultiplier;
 	}
-	
+
 	/*
 	public String getAsString(){
 		StringBuffer sb = new StringBuffer();
@@ -110,7 +130,12 @@ public class LandBattleAttack extends EventReport implements Serializable {
 		}
 		return sb.toString();
 	}*/
-	
+
+	@Override
+	public List<EventReport> getChildReports() {
+		return Collections.emptyList();
+	}
+
 	@Override
 	public String getReport() {
 		StringBuilder builder = new StringBuilder();
@@ -126,7 +151,12 @@ public class LandBattleAttack extends EventReport implements Serializable {
 		}*/
 		return builder.toString();
 	}
-	
+
+	@Override
+	public EventReport getParent() {
+		return landBattleReport;
+	}
+
 	private void attack(StringBuilder builder) {
 		String attDesc = getAttackLevelDescription(attMultiplier);
 		if(troopAttack instanceof OwnTroopAttack) {

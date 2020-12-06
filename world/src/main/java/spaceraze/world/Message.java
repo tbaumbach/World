@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 import spaceraze.util.general.Logger;
 
+//TODO 2020-11-25 Change this to an entity and save in the database, guess messages should be a stand alone application.
 public class Message implements Serializable,Comparable<Message> {
   static final long serialVersionUID = 1L;
   private String content,type;

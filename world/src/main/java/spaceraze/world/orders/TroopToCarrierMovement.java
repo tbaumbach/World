@@ -7,30 +7,48 @@
 package spaceraze.world.orders;
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Spaceship;
 import spaceraze.world.Troop;
 import spaceraze.world.TurnInfo;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "TROOP_CARRIER_MOVMENT")
 public class TroopToCarrierMovement implements Serializable{
   private static final long serialVersionUID = 1L;
-  
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_ORDERS")
+    private Orders orders;
+
   int troopId;
-  int destinationCarrierId;
+  String destinationCarrierId;
   
   //Troop troop;
   //Spaceship destinationCarrier;
 
   public TroopToCarrierMovement(Troop theTroop, Spaceship destinationCarrier){
-    this.troopId = theTroop.getId();
-    this.destinationCarrierId = destinationCarrier.getId();
+    this.troopId = theTroop.getUniqueId();
+    this.destinationCarrierId = destinationCarrier.getUniqueId();
   }
 
  
   public void performMove(TurnInfo ti, Galaxy aGalaxy){
 	  Troop aTroop = aGalaxy.findTroop(troopId);
-	  Spaceship destinationCarrier = aGalaxy.findSpaceship(destinationCarrierId);
+	  Spaceship destinationCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrierId);
 	  if(aTroop == null || destinationCarrier == null){
 		  Logger.severe( "performMove Error: troopId= " + troopId + " destinationCarrierId= " + destinationCarrierId);
 	  }else{
@@ -40,12 +58,12 @@ public class TroopToCarrierMovement implements Serializable{
 	  
   }
 
-  public int getDestinationCarrierId(){
+  public String getDestinationCarrierId(){
     return destinationCarrierId;
   }
 
   public Spaceship getDestinationCarrier(Galaxy aGalaxy){
-	  return aGalaxy.findSpaceship(destinationCarrierId);
+	  return aGalaxy.findSpaceshipByUniqueId(destinationCarrierId);
   }
 
   public int getTroopId(){
@@ -54,7 +72,7 @@ public class TroopToCarrierMovement implements Serializable{
 
   public String getText(Galaxy aGalaxy){
 	  Troop aTroop = aGalaxy.findTroop(troopId);
-	  Spaceship destinationCarrier = aGalaxy.findSpaceship(destinationCarrierId);
+	  Spaceship destinationCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrierId);
 	  String retStr = null;
 	  if (aTroop.getPlanetLocation() != null){
 		  retStr = "Move " + aTroop.getUniqueName() + " from " + aTroop.getPlanetLocation().getName() + " to " + destinationCarrier.getName() + ".";
@@ -65,10 +83,10 @@ public class TroopToCarrierMovement implements Serializable{
   }
 
   public boolean isThisTroop(Troop aTroop){
-    return aTroop.getId() == troopId;
+    return aTroop.getUniqueId() == troopId;
   }
 
   public boolean isThisDestination(Spaceship aCarrier){
-	  return aCarrier.getId() == destinationCarrierId;
+	  return aCarrier.getUniqueId() == destinationCarrierId;
   }
 }

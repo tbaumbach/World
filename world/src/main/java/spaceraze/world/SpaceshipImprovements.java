@@ -1,14 +1,26 @@
 package spaceraze.world;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@MappedSuperclass
 public abstract class SpaceshipImprovements implements Serializable {
     static final long serialVersionUID = 1L;
 
-    final private String typeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String typeId;
     private int shields;
     private int upkeep;
     private int buildCost;
@@ -56,7 +68,7 @@ public abstract class SpaceshipImprovements implements Serializable {
     private boolean changeInitSupport = false;
     private boolean changePlanetarySurvey = false;
     private boolean changeCanAttackScreenedShips = false;
-    private boolean changelookAsCivilian = false;
+    private boolean changeLookAsCivilian = false;
     private boolean changeCanBlockPlanet = false;
     private boolean changeVisibleOnMap = false;
 
@@ -444,12 +456,12 @@ public abstract class SpaceshipImprovements implements Serializable {
         this.changeCanAttackScreenedShips = changeCanAttackScreenedShips;
     }
 
-    public boolean isChangelookAsCivilian() {
-        return changelookAsCivilian;
+    public boolean isChangeLookAsCivilian() {
+        return changeLookAsCivilian;
     }
 
-    public void setChangelookAsCivilian(boolean changelookAsCivilian) {
-        this.changelookAsCivilian = changelookAsCivilian;
+    public void setChangeLookAsCivilian(boolean changelookAsCivilian) {
+        this.changeLookAsCivilian = changelookAsCivilian;
     }
 
     public boolean isChangeCanBlockPlanet() {

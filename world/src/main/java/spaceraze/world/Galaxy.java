@@ -3,66 +3,74 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
-import java.util.stream.Collectors;
 
+import lombok.*;
 import spaceraze.util.general.Functions;
 import spaceraze.util.general.Logger;
-import spaceraze.util.move.FindPlanetCriterion;
-import spaceraze.world.diplomacy.Diplomacy;
-import spaceraze.world.diplomacy.DiplomacyLevel;
 import spaceraze.world.diplomacy.DiplomacyState;
 import spaceraze.world.enums.DiplomacyGameType;
 import spaceraze.world.enums.HighlightType;
 import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
-import spaceraze.world.incomeExpensesReports.IncomeType;
-import spaceraze.world.mapinfo.MapPlanetInfo;
 import spaceraze.world.orders.Orders;
-import spaceraze.world.spacebattle.TaskForce;
-import spaceraze.world.spacebattle.TaskForceSpaceShip;
 
 import javax.persistence.*;
 
-@Entity(name = "Galaxy")
+/**
+The container for a game, the galaxy the game is played in.
+ */
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity()
+@Table(name = "GALAXY")
 public class Galaxy implements Serializable {
 	static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
 	private Long id;
+
 	public int turn;
 
-	@Column(name="game_ended")
+	@Column(name="GAME_ENDED")
 	public boolean gameEnded = false;
-	@Column(name="game_name")
+	@Column(name="GAME_NAME")
 	private String gameName;
-	//TODO why?
+	@Column(name="PASSWORD")
 	private String password;
 
-	//TODO should just have a mapId
+	//TODO should just have a mapId, is this just for info or do we use the map?
 	private String mapFileName;
 	private String mapFullName;
 
-	//TODO Is this a part of turnInfo/MapInfo but the part of information shared by all players.
-	public List<PublicInfo> publicInfos;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<PlanetConnection> planetConnections = new ArrayList<>();
 
-	public List<PlanetConnection> planetConnections;
-	public List<Faction> factions;
-	public List<VIPType> vipTypes;
-	public List<VIP> allVIPs;
-	public List<Player> players;
-	public List<Planet> planets;
-	private List<Spaceship> spaceships;
-	private List<Troop> troops;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	public List<VIP> allVIPs = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	public List<Player> players = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	public List<Planet> planets = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<Spaceship> spaceships = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<Troop> troops = new ArrayList<>();
 
 	//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 	//private List<SpaceshipType> spaceshipTypes;
@@ -70,13 +78,14 @@ public class Galaxy implements Serializable {
 	//private List<TroopType> troopTypes;
 
 	//TODO move this out to a own table, create a enum for the names. Do we need this if we havde database id?
-	public UniqueIdCounter uniqueShipIdCounter;
-	public UniqueIdCounter uniqueVIPIdCounter;
-	public UniqueIdCounter uniqueBlackMarketCounter;
-	public UniqueIdCounter uniqueBuildingIdCounter;
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<UniqueIdCounter> uniqueIdCounters = new ArrayList<>();
 
-	private BlackMarket blackMarket;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<BlackMarketOffer> currentOffers = new ArrayList<>();
 
 	@Column(name="last_updated")
 	private Date lastUpdated;
@@ -92,7 +101,9 @@ public class Galaxy implements Serializable {
 	@Column(name="started_by_player") //TODO change to id.
 	private String startedByPlayer; // contains the login of the player who started this game
 
-	private GameWorld gw;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_GAME_WORLD")
+	private GameWorld gameWorld;
 
 	//Start game parameters. Move to own class?
 
@@ -103,8 +114,12 @@ public class Galaxy implements Serializable {
 	private int steps; // used to determine how close homeplanets for new players can be
 	@Column(name="group_same_faction")
 	private boolean groupSameFaction = false;
-	@Column(name="selectable_faction_names") //Change to id.
+
+	@ElementCollection
+	@CollectionTable(name="selectable_faction_names") //Change to id.
 	private List<String> selectableFactionNames;
+
+
 	@Column(name="random_faction")
 	private boolean randomFaction = false;
 	private boolean ranked = false;
@@ -114,54 +129,59 @@ public class Galaxy implements Serializable {
 	private int factionVictory = 65;
 	private int endTurn = 0;
 
-	private StatisticsHandler statisticsHandler;
-	private Diplomacy diplomacy; // handles all in-game diplomacy
-	private List<DiplomacyState> postConfList;
-	private List<UniqueIdCounter> counters;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
+	@Builder.Default
+	private List<Statistics> allStatistics = new ArrayList<>();
 
-	public Galaxy(){}
+	private StatisticGameType statisticGameType;
 
-	public Galaxy(Map aMap, String gameName, int steps, GameWorld aGameWorld, StatisticGameType statisticGameType) {
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy_states")
+	@Builder.Default
+	private List<DiplomacyState> diplomacyStates = new ArrayList<>(); // current states between all players
+
+	private DiplomacyGameType diplomacyGameType;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy_post_conflicts")
+	@Builder.Default
+	private List<DiplomacyState> postConflicts = new ArrayList<>();
+
+	public Galaxy(Map aMap, String gameName, int steps, GameWorld aGameWorld) {
 		this.mapFileName = aMap.getFileName();
 		this.mapFullName = aMap.getNameFull();
 		this.gameName = gameName;
 		this.steps = steps;
-		this.gw = aGameWorld;
-		planets = new LinkedList<Planet>();
-		players = new LinkedList<Player>();
+		this.gameWorld = aGameWorld;
+		planets = new ArrayList<>();
+		players = new ArrayList<>();
+		spaceships = new ArrayList<>();
+		planetConnections = new ArrayList<>();
+		allVIPs = new ArrayList<>();
+		troops = new ArrayList<>();
+		uniqueIdCounters = new ArrayList<>();
+		postConflicts = new ArrayList<>();
+		diplomacyStates = new ArrayList<>();
+		allStatistics = new ArrayList<>();
+		currentOffers = new ArrayList<>();
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		//spaceshipTypes = gw.getShipTypes();
 		//troopTypes = gw.getTroopTypes();
-		spaceships = new ArrayList<Spaceship>();
-		publicInfos = new LinkedList<PublicInfo>();
-		publicInfos.add(new PublicInfo());
-		planetConnections = new LinkedList<PlanetConnection>();
-		vipTypes = gw.getVipTypes();
-		allVIPs = new LinkedList<VIP>();
-		troops = new ArrayList<Troop>();
+		//vipTypes = gw.getVipTypes();
 		turn = 0;
-		uniqueShipIdCounter = new UniqueIdCounter();
-		uniqueVIPIdCounter = new UniqueIdCounter();
-		uniqueBlackMarketCounter = new UniqueIdCounter();
-		uniqueBuildingIdCounter = new UniqueIdCounter();
-		diplomacy = new Diplomacy(this);
-		factions = gw.getFactions();
-		blackMarket = new BlackMarket(uniqueBlackMarketCounter);
+		uniqueIdCounters.add(new UniqueIdCounter(CounterType.SHIP));
+		uniqueIdCounters.add(new UniqueIdCounter(CounterType.VIP));
+		uniqueIdCounters.add(new UniqueIdCounter(CounterType.BLACK_MARKET));
+		uniqueIdCounters.add(new UniqueIdCounter(CounterType.BUILDING));
 
 		// create map data
-		for (Planet aPlanet : aMap.getPlanets()) {
-			planets.add(aPlanet.clonePlanet());
+		for (BasePlanet aPlanet : aMap.getPlanets()) {
+			planets.add(new Planet(aPlanet));
 		}
 		for (PlanetConnection aConnection : aMap.getConnections()) {
-			Planet p1 = findPlanet(aConnection.getPlanet1().getName());
-			Planet p2 = findPlanet(aConnection.getPlanet2().getName());
+			Planet p1 = findPlanet(aConnection.getPlanetOne().getName());
+			Planet p2 = findPlanet(aConnection.getPlanetTwo().getName());
 			planetConnections.add(new PlanetConnection(p1, p2, aConnection.isLongRange()));
 		}
 		maxNrStartPlanets = aMap.getMaxNrStartPlanets();
-
-		Logger.fine("statisticGameType: " + statisticGameType.toString());
-		statisticsHandler = new StatisticsHandler(this, statisticGameType);
-		counters = new ArrayList<>();
 	}
 
 	public void setranked(boolean branked) {
@@ -279,28 +299,6 @@ public class Galaxy implements Serializable {
 				if (tempVIP.getAimBonus() > highestAimBonus) {
 					highestAimBonus = tempVIP.getAimBonus();
 					foundVIP = tempVIP;
-				}
-			}
-		}
-		return foundVIP;
-	}
-
-	public VIP findVIPEconomicBonus(Planet aPlanet, Player aPlayer) {
-		VIP foundVIP = null;
-		int bonus = 0;
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			if ((tempVIP.getBoss() == aPlayer) & (tempVIP.getPlanetLocation() == aPlanet)) {
-				if (aPlanet.isOpen()) {
-					if (tempVIP.getOpenIncBonus() > bonus) {
-						foundVIP = tempVIP;
-						bonus = tempVIP.getOpenIncBonus();
-					}
-				} else {
-					if (tempVIP.getClosedIncBonus() > bonus) {
-						foundVIP = tempVIP;
-						bonus = tempVIP.getClosedIncBonus();
-					}
 				}
 			}
 		}
@@ -461,19 +459,6 @@ public class Galaxy implements Serializable {
 		return initDefence;
 	}
 
-	public boolean isItAlliesSurveyShipsOnPlanet(Player player, Planet planet) {
-		List<Player> allies = getAllies(player, players);
-		boolean foundShip = false;
-		int i = 0;
-		while (!foundShip && allies.size() < i) {
-			if (findSurveyShip(planet, allies.get(i)) != null) {
-				foundShip = true;
-			}
-			i++;
-		}
-		return foundShip;
-	}
-
 	public Spaceship findSurveyShip(Planet aPlanet, Player aPlayer) {
 		Spaceship foundShip = null;
 		int i = 0;
@@ -487,19 +472,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return foundShip;
-	}
-
-	public boolean isItAlliesSurveyVipOnPlanet(Player player, Planet planet) {
-		List<Player> allies = getAllies(player, players);
-		boolean foundSpy = false;
-		int i = 0;
-		while (!foundSpy && allies.size() < i) {
-			if (findSurveyVIPonShip(planet, allies.get(i)) != null) {
-				foundSpy = true;
-			}
-			i++;
-		}
-		return foundSpy;
 	}
 
 	public VIP findSurveyVIPonShip(Planet aPlanet, Player aPlayer) {
@@ -560,19 +532,6 @@ public class Galaxy implements Serializable {
 		return found;
 	}
 
-	public boolean isItAlliedSpyOnPlanet(Player player, Planet planet) {
-		List<Player> allies = getAllies(player, players);
-		boolean foundSpy = false;
-		int i = 0;
-		while (!foundSpy && allies.size() < i) {
-			if (findVIPSpy(planet, allies.get(i)) != null) {
-				foundSpy = true;
-			}
-			i++;
-		}
-		return foundSpy;
-	}
-
 	public VIP findVIPSpy(Planet aPlanet, Player aPlayer) {
 		VIP foundVIP = null;
 		int i = 0;
@@ -599,93 +558,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return foundVIP;
-	}
-
-	public List<VIP> findAllVIPsOnPlanetOrShipsOrTroops(Planet aPlanet) {
-		List<VIP> tempAllVIPs = new LinkedList<VIP>();
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			boolean atPlanet = tempVIP.getPlanetLocation() == aPlanet; // finns vipen vid planeten?
-			boolean inShipAtPlanet = false;
-			boolean inTroopAtPlanet = false;
-			if (!atPlanet & (tempVIP.getPlanetLocation() == null)) { // om inte på planeten...
-				Spaceship tempss = tempVIP.getShipLocation();
-				if (tempss != null) {
-					if (tempss.getLocation() == aPlanet) { // finns vipen i ett skepp vid planeten?
-						inShipAtPlanet = true;
-					}
-				} else { // vip is on troop
-					if (tempVIP.getTroopLocation().isAtPlanet(aPlanet)) {
-						inTroopAtPlanet = true;
-					}
-				}
-			}
-			if (atPlanet | inShipAtPlanet | inTroopAtPlanet) {
-				tempAllVIPs.add(tempVIP);
-			}
-		}
-		return tempAllVIPs;
-	}
-
-	public List<VIP> findPlayersVIPsOnPlanetOrShipsOrTroops(Planet aPlanet, Player aPlayer) {
-		Logger.info("aPlanet: " + aPlanet);
-		Logger.info("aPlayer: " + aPlayer);
-		Logger.info("aPlayer: " + aPlayer.getName());
-		Logger.finer("findPlayersVIPsOnPlanetOrShipsOrTroops called: " + aPlanet.getName() + " " + aPlayer.getName());
-		List<VIP> tempAllVIPs = findAllVIPsOnPlanetOrShipsOrTroops(aPlanet);
-		List<VIP> vipsAtPlanet = new LinkedList<VIP>();
-		Logger.finer("tempAllVIPs: " + tempAllVIPs);
-		for (VIP vip : tempAllVIPs) {
-			if (vip.getBoss() == aPlayer) {
-				vipsAtPlanet.add(vip);
-			}
-		}
-		return vipsAtPlanet;
-	}
-
-	public List<VIP> findPlayersVIPsOnPlanet(Planet aPlanet, Player aPlayer) {
-		Logger.finer("findPlayersVIPsOnPlanet called: " + aPlanet.getName() + " " + aPlayer.getName());
-		List<VIP> tempAllVIPs = findAllVIPsOnPlanetOrShipsOrTroops(aPlanet);
-		List<VIP> vipsAtPlanet = new LinkedList<VIP>();
-		Logger.finer("tempAllVIPs: " + tempAllVIPs);
-		for (VIP vip : tempAllVIPs) {
-			if ((vip.getBoss() == aPlayer) & (vip.getPlanetLocation() == aPlanet)) {
-				vipsAtPlanet.add(vip);
-			}
-		}
-		return vipsAtPlanet;
-	}
-
-	public List<VIP> findAllVIPsOnPlanet(Planet aPlanet) {
-		Vector<VIP> tempAllVIPs = new Vector<VIP>();
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			boolean atPlanet = tempVIP.getPlanetLocation() == aPlanet; // finns vipen vid planeten?
-			if (atPlanet) {
-				tempAllVIPs.addElement(tempVIP);
-			}
-		}
-		return tempAllVIPs;
-	}
-
-	public List<VIP> getAllGovsFromFactionOnPlanet(Planet aPlanet, Faction aFaction) {
-		Logger.finer("called for planet: " + aPlanet.getName() + " and faction: " + aFaction.getName());
-		List<VIP> allGovs = new LinkedList<VIP>();
-		List<VIP> allVIPsonPlanet = findAllVIPsOnPlanet(aPlanet);
-		Logger.finest("VIPs found on planet: " + allVIPsonPlanet.size());
-		for (int i = 0; i < allVIPsonPlanet.size(); i++) {
-			VIP tempVIP = (VIP) allVIPsonPlanet.get(i);
-			Logger.finest("VIP found: " + tempVIP.getName());
-			if (tempVIP.isGovernor()) {
-				Logger.finest("VIP is governor!");
-				Logger.finest(tempVIP.getBoss().getFaction().getName() + " equals " + aFaction.getName() + " ?");
-				if (tempVIP.getBoss().getFaction().equals(aFaction)) {
-					Logger.finest("Remove VIP!");
-					allGovs.add(tempVIP);
-				}
-			}
-		}
-		return allGovs;
 	}
 
 	public int getNrTroops(Planet aPlanet) {
@@ -1064,67 +936,6 @@ public class Galaxy implements Serializable {
 		}
 	}
 
-	public void checkVIPsOnAbandonedPlanet(Planet aPlanet, Player aPlayer) {
-		List<VIP> allVIPsOnPlanet = findAllVIPsOnPlanet(aPlanet);
-		for (int i = 0; i < allVIPsOnPlanet.size(); i++) {
-			VIP tempVIP = allVIPsOnPlanet.get(i);
-			if (tempVIP.getBoss() == aPlayer) {
-				if (!tempVIP.canVisitNeutralPlanets()) {
-					allVIPs.remove(tempVIP);
-					aPlayer.addToVIPReport("Your " + tempVIP.getName() + " has abandoned your cause when your planet "
-							+ aPlanet.getName() + " was abandoned.");
-					aPlayer.addToHighlights(tempVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				}
-			}
-		}
-	}
-
-	public void checkVIPsOnRazedPlanet(Planet aPlanet, Player aPlayer) {
-		List<VIP> allVIPsOnPlanet = findAllVIPsOnPlanet(aPlanet);
-		for (int i = 0; i < allVIPsOnPlanet.size(); i++) {
-			VIP tempVIP = allVIPsOnPlanet.get(i);
-			if (tempVIP.getBoss() == aPlayer) {
-				if (!tempVIP.canVisitEnemyPlanets()) {
-					allVIPs.remove(tempVIP);
-					aPlayer.addToVIPReport("Your " + tempVIP.getName() + " has been killed when the planet "
-							+ aPlanet.getName() + " was RAZED.");
-					aPlayer.addToHighlights(tempVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				}
-			}
-		}
-	}
-
-	public void checkGovenorsOnRazedPlanet(Planet aPlanet) {
-		List<VIP> allVIPsOnPlanet = findAllVIPsOnPlanet(aPlanet);
-		for (int i = 0; i < allVIPsOnPlanet.size(); i++) {
-			VIP tempVIP = allVIPsOnPlanet.get(i);
-			if (tempVIP.isGovernor()) {
-				allVIPs.remove(tempVIP);
-				tempVIP.getBoss().addToVIPReport("Your " + tempVIP.getName() + " has been killed when the planet "
-						+ aPlanet.getName() + " was RAZED.");
-				// aPlayer.addToHighlights(tempVIP.getName(),Highlight.TYPE_OWN_VIP_KILLED);
-			}
-		}
-	}
-
-	public void checkVIPsOnConqueredPlanet(Planet aPlanet, Player aPlayer) {
-		List<VIP> allVIPsOnPlanet = findAllVIPsOnPlanet(aPlanet);
-		for (int i = 0; i < allVIPsOnPlanet.size(); i++) {
-			VIP tempVIP = allVIPsOnPlanet.get(i);
-			if (tempVIP.getBoss() != aPlayer) {
-				if (!tempVIP.canVisitEnemyPlanets()) {
-					allVIPs.remove(tempVIP);
-					tempVIP.getBoss().addToVIPReport("Your " + tempVIP.getName() + " have been killed when the planet "
-							+ aPlanet.getName() + " was conquered.");
-					tempVIP.getBoss().addToHighlights(tempVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-					aPlayer.addToVIPReport("An enemy " + tempVIP.getTypeName()
-							+ " have been killed when you conquered the planet " + aPlanet.getName() + ".");
-					aPlayer.addToHighlights(tempVIP.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
-				}
-			}
-		}
-	}
-
 	public void checkTroopsOnInfestedPlanet(Planet aPlanet, Player aPlayer) {
 		List<Troop> allTroopsOnPlanet = findAllTroopsOnPlanet(aPlanet);
 		for (Troop aTroop : allTroopsOnPlanet) {
@@ -1141,535 +952,6 @@ public class Galaxy implements Serializable {
 				// aPlayer.addToHighlights(tempVIP.getName(),Highlight.TYPE_ENEMY_VIP_KILLED);
 			}
 		}
-	}
-
-	/**
-	 * Check if there are any abandoned troops on aPlanet that should be destroyed.
-	 * A troop is considered abandoned if there are no ships belonging to the same
-	 * player with drop capacity in orbit around aPlanet.
-	 *
-	 */
-	/*
-	 * public void checkAbandonedTroops(Planet aPlanet){ List<Troop> troopsOnPlanet
-	 * = findAllTroopsOnPlanet(aPlanet); for (Troop aTroop : troopsOnPlanet) {
-	 * Logger.finer( "aTroop.getOwner() - aPlanet.getPlayerInControl(): " +
-	 * aTroop.getOwner() + " - " + aPlanet.getPlayerInControl()); if
-	 * (aTroop.getOwner() != aPlanet.getPlayerInControl()){ Logger.finer(
-	 * "aTroop.getOwner() != aPlanet.getPlayerInControl() is true" +
-	 * aTroop.getUniqueName()); boolean dropShipExist = findDropShip(aPlanet,
-	 * aTroop.getOwner()); if (!dropShipExist){ removeTroop(aTroop); if
-	 * (aTroop.getOwner() != null){ // not neutral owner of troop
-	 * aTroop.getOwner().addToGeneral("Your troop at the planet " +
-	 * aTroop.getPlanetLocation().getName() +
-	 * " have been destroyed since it had no support from ships with launch capacity."
-	 * ); aTroop.getOwner().addToHighlights(aTroop.getUniqueName(),
-	 * HighlightType.TYPE_OWN_TROOP_DESTROYED); } // messsage to planet owner Player
-	 * planetOwner = aPlanet.getPlayerInControl(); if (planetOwner != null){
-	 * planetOwner.addToGeneral("An enemy troop at the planet " +
-	 * aTroop.getPlanetLocation().getName() +
-	 * " have been destroyed since it had no support from ships with launch capacity."
-	 * ); planetOwner.addToHighlights(aTroop.getUniqueName(),
-	 * HighlightType.TYPE_ENEMY_TROOP_DESTROYED); } // find if there are any troops
-	 * from other players on planet Set<Player> otherPlayersOnPlanet =
-	 * findOtherTroopsPlayersOnRazedPlanet(aTroop.getOwner(),aPlanet); for (Player
-	 * aPlayer : otherPlayersOnPlanet) { if (aPlayer != planetOwner){
-	 * aPlayer.addToGeneral("An enemy troop at the planet " +
-	 * aTroop.getPlanetLocation().getName() +
-	 * " have been destroyed since it had no support from ships with launch capacity."
-	 * ); aPlayer.addToHighlights(aTroop.getUniqueName(),
-	 * HighlightType.TYPE_ENEMY_TROOP_DESTROYED); } } } } } }
-	 */
-
-	// check conflicts between good and evil duellists on the same faction or player
-	public void checkDuels() {
-		for (int i = 0; i < planets.size(); i++) {
-			Planet aPlanet = (Planet) planets.get(i);
-			List<VIP> vipsAtPlanet = findAllVIPsOnPlanet(aPlanet);
-			if (vipsAtPlanet.size() > 1) {
-				Logger.finest("Check vips at planet " + aPlanet.getName());
-				checkDuelAtPlanet(aPlanet, vipsAtPlanet, 0, vipsAtPlanet.size() - 1);
-			}
-		}
-	}
-
-	// check conflicts between good and evil duellists on the same faction or
-	// player, at a specific planet
-	private void checkDuelAtPlanet(Planet aPlanet, List<VIP> vipsAtPlanet, int lowVIPindex, int highVIPindex) {
-		Logger.finer("checkDuelAtPlanet: (l/h) " + lowVIPindex + " " + highVIPindex);
-		VIP lowVIP = vipsAtPlanet.get(lowVIPindex);
-		VIP highVIP = vipsAtPlanet.get(highVIPindex);
-		// check if the current VIP will fight
-		if (isDuellistConflict(aPlanet, lowVIP, highVIP)) { // Fight!
-			// compute who wins
-			int lowChanceToWin = 50;
-			lowChanceToWin = lowChanceToWin + lowVIP.getDuellistSkill();
-			lowChanceToWin = lowChanceToWin - highVIP.getDuellistSkill();
-			if (lowChanceToWin > 95) {
-				lowChanceToWin = 95;
-			} else if (lowChanceToWin < 5) {
-				lowChanceToWin = 5;
-			}
-			boolean lowWon = Functions.getD100(lowChanceToWin);
-			int loserIndex = -1, winnerIndex = -1;
-			if (lowWon) { // low wins
-				loserIndex = highVIPindex;
-				winnerIndex = lowVIPindex;
-			} else { // high wins
-				loserIndex = lowVIPindex;
-				winnerIndex = highVIPindex;
-			}
-			VIP losingVIP = vipsAtPlanet.get(loserIndex);
-			VIP winningVIP = vipsAtPlanet.get(winnerIndex);
-			winningVIP.incKills();
-			allVIPs.remove(losingVIP);
-			if (losingVIP.getBoss() == winningVIP.getBoss()) {
-				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_ACCIDENTAL_DUEL);
-				losingVIP.getBoss().addToVIPReport(
-						"Your " + losingVIP.getName() + " has been killed by your own " + winningVIP.getName() + ".");
-				winningVIP.getBoss().addToVIPReport(
-						"Your " + winningVIP.getName() + " has killed your own " + losingVIP.getName() + ".");
-			} else if (losingVIP.getBoss().getFaction() == winningVIP.getBoss().getFaction()) {
-				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_FRIENDLY_VIP_KILLED);
-				losingVIP.getBoss().addToVIPReport(
-						"Your " + losingVIP.getName() + " has been killed by a friendly " + winningVIP.getName()
-								+ " belonging to Governor " + winningVIP.getBoss().getGovernorName() + ".");
-				winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() + " has killed a friendly "
-						+ losingVIP.getName() + " belonging to Governor " + losingVIP.getBoss().getGovernorName() + ".");
-			} else { // different factions => enemies
-				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
-				losingVIP.getBoss().addToVIPReport(
-						"Your " + losingVIP.getName() + " has been killed by an enemy " + winningVIP.getName() + ".");
-				winningVIP.getBoss().addToVIPReport(
-						"Your " + winningVIP.getName() + " has killed an enemy " + losingVIP.getName() + ".");
-			}
-			if (loserIndex == highVIPindex) {
-				lowVIPindex = 0;
-			}
-			highVIPindex = highVIPindex - 1;
-			if (lowVIPindex < highVIPindex) {
-				checkDuelAtPlanet(aPlanet, vipsAtPlanet, lowVIPindex, highVIPindex);
-			}
-		} else { // no fight...
-			lowVIPindex = lowVIPindex + 1;
-			if (lowVIPindex == highVIPindex) {
-				lowVIPindex = 0;
-				highVIPindex = highVIPindex - 1;
-			}
-			Logger.finest(lowVIPindex + " " + highVIPindex);
-			if (highVIPindex > 0) {
-				checkDuelAtPlanet(aPlanet, vipsAtPlanet, lowVIPindex, highVIPindex);
-			}
-		}
-	}
-
-	private boolean isDuellistConflict(Planet aPlanet, VIP VIP1, VIP VIP2) {
-		boolean fight = false;
-		if ((VIP1.getLocation() == aPlanet) & (VIP2.getLocation() == aPlanet)) {
-			if (VIP1.isDuellist() & VIP2.isDuellist()) {
-				if (VIP1.hatesDuellist(VIP2)) {
-					fight = true;
-				} else {
-					// only fight if on opposing sides
-					// if (VIP1.getBoss().getFaction() != VIP2.getBoss().getFaction()){
-					if (diplomacy.hostileDuelists(VIP1.getBoss(), VIP2.getBoss(), aPlanet)) { // use diplomacy to
-																								// determine if they
-																								// fight
-						if (VIP1.getAlignment().equals(VIP2.getAlignment())) {
-							if (VIP1.getAlignment().isDuelOwnAlignment()) {
-								fight = true;
-							}
-						} else {
-							fight = true;
-						}
-					}
-				}
-			}
-		}
-		return fight;
-	}
-
-	/*
-	 * // check conflicts between Dark Jedis from different Factions public void
-	 * checkDarkDarkJediFights(){ for (int i = 0; i < planets.size(); i++){ Planet
-	 * aPlanet = (Planet)planets.elementAt(i);
-	 * checkDarkDarkJediFight(aPlanet,0,allVIPs.size() - 1); } }
-	 * 
-	 * // check conflicts between Dark Jedis from different Factions private void
-	 * checkDarkDarkJediFight(Planet aPlanet,int lowVIP, int highVIP){ // check if
-	 * the current VIP will fight if
-	 * (isDarkDarkJediConflict(aPlanet,(VIP)allVIPs.elementAt(lowVIP),(VIP)allVIPs.
-	 * elementAt(highVIP))){ // Fight! int whoWins = Functions.getRandomInt(1,2);
-	 * int loserIndex = -1, winnerIndex = -1; if (whoWins == 1){ // low wins
-	 * loserIndex = highVIP; winnerIndex = lowVIP; }else{ // high wins loserIndex =
-	 * lowVIP; winnerIndex = highVIP; } VIP losingVIP =
-	 * (VIP)allVIPs.elementAt(loserIndex); VIP winningVIP =
-	 * (VIP)allVIPs.elementAt(winnerIndex); winningVIP.incKills();
-	 * allVIPs.removeElementAt(loserIndex);
-	 * losingVIP.getBoss().addToVIPReport("Your " + losingVIP.getName() +
-	 * " has been killed by an enemy Dark Jedi.");
-	 * winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() +
-	 * " has killed an enemy Dark Jedi.");
-	 * losingVIP.getBoss().addToHighlights(losingVIP.getName(),HighlightType.
-	 * TYPE_OWN_VIP_KILLED);
-	 * winningVIP.getBoss().addToHighlights(losingVIP.getName(),Highlight.
-	 * TYPE_ENEMY_VIP_KILLED); if (loserIndex == highVIP){ lowVIP = 0; } highVIP =
-	 * highVIP - 1; if (lowVIP < highVIP){
-	 * checkDarkDarkJediFight(aPlanet,lowVIP,highVIP); } }else{ // no fight...
-	 * lowVIP = lowVIP + 1; if (lowVIP == highVIP){ lowVIP = 0; highVIP = highVIP -
-	 * 1; } if (highVIP > 0){ checkDarkDarkJediFight(aPlanet,lowVIP,highVIP); } } }
-	 * 
-	 * private boolean isDarkDarkJediConflict(Planet aPlanet, VIP VIP1, VIP VIP2){
-	 * boolean fight = false; if ((VIP1.isDarkJedi()) & (VIP2.isDarkJedi()) &
-	 * (VIP1.getLocation() == aPlanet) & (VIP2.getLocation() == aPlanet)){ if
-	 * (VIP1.getBoss().getFaction() != VIP2.getBoss().getFaction()){ fight = true; }
-	 * } return fight; }
-	 * 
-	 * // check if any Light Jedis can be detected by enemy protecting Light Jedis
-	 * public void checkLightJediLightJediSpies(){ for (int i = 0; i <
-	 * planets.size(); i++){ Planet aPlanet = (Planet)planets.elementAt(i);
-	 * checkLightJediLightJediSpies(aPlanet,0,allVIPs.size() - 1); } }
-	 * 
-	 * // check conflicts between Light and Dark Jedis private void
-	 * checkLightJediLightJediSpies(Planet aPlanet,int lowVIP, int highVIP){ //
-	 * check if the current VIP will fight if
-	 * (isLightJediSpiesConflict(aPlanet,(VIP)allVIPs.elementAt(lowVIP),(VIP)allVIPs
-	 * .elementAt(highVIP))){ // Conflict! // kolla vilken av Jedina som �r p� en
-	 * egen planet boolean highIsHome = false; VIP aHighVIP =
-	 * (VIP)allVIPs.elementAt(highVIP); Planet highPlanetLocation =
-	 * aHighVIP.getPlanetLocation(); if (highPlanetLocation != null){ if
-	 * (highPlanetLocation.getPlayerInControl() == aHighVIP.getBoss()){ highIsHome =
-	 * true; } } // slumpa om den andra blir uppt�ckt int discovered =
-	 * Functions.getRandomInt(1,2); int loserIndex = -1, winnerIndex = -1; if
-	 * (discovered == 1){ // the other Light Jedi spy is discovered if (highIsHome){
-	 * winnerIndex = highVIP; loserIndex = lowVIP; }else{ loserIndex = highVIP;
-	 * winnerIndex = lowVIP; } VIP losingVIP = (VIP)allVIPs.elementAt(loserIndex);
-	 * VIP winningVIP = (VIP)allVIPs.elementAt(winnerIndex);
-	 * allVIPs.removeElementAt(loserIndex);
-	 * losingVIP.getBoss().addToVIPReport("Your " + losingVIP.getName() +
-	 * " has been discovered by an enemy Light Jedi at " + aPlanet.getName() +
-	 * " and forced him to abandon his cause and leave this quadrant.");
-	 * winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() +
-	 * " has discovered an enemy Light Jedi at " + aPlanet.getName() +
-	 * " and forced him to abandon his cause and leave this quadrant.");
-	 * losingVIP.getBoss().addToHighlights(winningVIP.getBoss().getGovenorName(),
-	 * Highlight.TYPE_OWN_JEDI_LEAVES);
-	 * winningVIP.getBoss().addToHighlights(losingVIP.getBoss().getGovenorName(),
-	 * Highlight.TYPE_ENEMY_JEDI_LEAVES); if (loserIndex == highVIP){ lowVIP = 0; }
-	 * highVIP = highVIP - 1; if (lowVIP < highVIP){
-	 * checkLightJediLightJediSpies(aPlanet,lowVIP,highVIP); } }else{ // update
-	 * counters as in no fight lowVIP = lowVIP + 1; if (lowVIP == highVIP){ lowVIP =
-	 * 0; highVIP = highVIP - 1; } if (highVIP > 0){
-	 * checkLightJediLightJediSpies(aPlanet,lowVIP,highVIP); } } }else{ // no
-	 * fight... lowVIP = lowVIP + 1; if (lowVIP == highVIP){ lowVIP = 0; highVIP =
-	 * highVIP - 1; } if (highVIP > 0){
-	 * checkLightJediLightJediSpies(aPlanet,lowVIP,highVIP); } } }
-	 * 
-	 * private boolean isLightJediSpiesConflict(Planet aPlanet, VIP VIP1, VIP VIP2){
-	 * boolean fight = false; if ((VIP1.isLightJedi()) & (VIP2.isLightJedi()) &
-	 * (VIP1.getPlanetLocation() == aPlanet) & (VIP2.getPlanetLocation() == aPlanet)
-	 * & (VIP1.getBoss().getFaction() != VIP2.getBoss().getFaction())){ Planet
-	 * planetLocation1 = VIP1.getPlanetLocation(); Planet planetLocation2 =
-	 * VIP2.getPlanetLocation(); if (planetLocation1 != null){ if
-	 * (planetLocation1.getPlayerInControl() == VIP1.getBoss()){ fight = true; } }
-	 * if (planetLocation2 != null){ if (planetLocation2.getPlayerInControl() ==
-	 * VIP2.getBoss()){ fight = true; } } } return fight; }
-	 */
-	
-	// check if spies catch any (normal) spies or assassins
-	public void checkCounterEspionage() {
-		for (int i = 0; i < planets.size(); i++) {
-			Planet aPlanet = (Planet) planets.get(i);
-			List<VIP> vipsAtPlanet = findAllVIPsOnPlanetOrShipsOrTroops(aPlanet);
-			if (vipsAtPlanet.size() > 1) {
-				checkCounterEspionageAtPlanet(aPlanet, vipsAtPlanet, 0, vipsAtPlanet.size() - 1);
-			}
-		}
-	}
-
-	// check if exterminatorsdestroy any alien infestators
-	public void checkExtermination() {
-		List<VIP> exterminators = null;
-		List<VIP> infestators = null;
-		for (int i = 0; i < planets.size(); i++) {
-			Planet aPlanet = (Planet) planets.get(i);
-			exterminators = getExterminators(aPlanet);
-			infestators = getInfestators(aPlanet);
-			if ((exterminators.size() > 0) & (infestators.size() > 0)) {
-				checkExterminationAtPlanet(aPlanet, infestators, exterminators);
-			}
-		}
-	}
-
-	private List<VIP> getExterminators(Planet aPlanet) {
-		List<VIP> exterminators = new LinkedList<VIP>();
-		for (VIP aVIP : allVIPs) {
-			if (aVIP.isExterminator() & (aVIP.getLocation() == aPlanet)) {
-				if (aPlanet.getPlayerInControl() == aVIP.getBoss()) { // exterminators can only work on own planets
-					exterminators.add(aVIP);
-				}
-			}
-		}
-		return exterminators;
-	}
-
-	private List<VIP> getInfestators(Planet aPlanet) {
-		List<VIP> infestators = new LinkedList<VIP>();
-		for (VIP aVIP : allVIPs) {
-			if (aVIP.isInfestator() & (aVIP.getLocation() == aPlanet)) {
-				infestators.add(aVIP);
-			}
-		}
-		return infestators;
-	}
-
-	private void checkExterminationAtPlanet(Planet aPlanet, List<VIP> infestators, List<VIP> exterminators) {
-		List<VIP> enemyInfestators;
-		Collections.shuffle(infestators);
-		for (VIP anExt : exterminators) {
-			enemyInfestators = new LinkedList<VIP>();
-			// copy all enemy infestators to enemy list
-			for (VIP anInf : infestators) {
-				// if (anInf.getBoss().getFaction() != anExt.getBoss().getFaction()){
-				if (diplomacy.hostileExterminator(anInf.getBoss(), anExt.getBoss())) {
-					enemyInfestators.add(anInf);
-				}
-			}
-			if (enemyInfestators.size() > 0) { // all infs may already be killed or are friendly
-				int randomNr = Functions.getRandomInt(1, 100);
-				if (randomNr <= anExt.getExterminatorSkill()) { // the inf is killed
-					int randomIndex = Functions.getRandomInt(0, enemyInfestators.size() - 1);
-					VIP anInf = enemyInfestators.get(randomIndex);
-					anInf.getBoss().addToVIPReport(
-							"Your " + anInf.getName() + " has been discovered by an enemy exterminator at "
-									+ aPlanet.getName() + " and has been killed.");
-					anExt.getBoss().addToVIPReport("Your " + anExt.getName() + " has discovered an enemy "
-							+ anInf.getName() + " at " + aPlanet.getName() + " and has killed him.");
-					anInf.getBoss().addToHighlights(anInf.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-					anExt.getBoss().addToHighlights(anInf.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
-					allVIPs.remove(anInf);
-					infestators.remove(randomIndex);
-				}
-			}
-		}
-	}
-
-	// check if spies catch enemy VIPs on their planets
-	private void checkCounterEspionageAtPlanet(Planet aPlanet, List<VIP> vipsAtPlanet, int lowVIP, int highVIP) {
-		// check if the current VIP will fight
-		if (isSpiesConflict(aPlanet, vipsAtPlanet.get(lowVIP), vipsAtPlanet.get(highVIP))) { // Conflict!
-			// kolla vilken av Spionerna som är på en egen planet
-			VIP aHighVIP = vipsAtPlanet.get(highVIP);
-			VIP aLowVIP = vipsAtPlanet.get(lowVIP);
-			boolean highIsHome = false;
-			if (aHighVIP.isCounterSpy()) {
-				Planet planetLocation = aHighVIP.getPlanetLocation();
-				if (planetLocation != null) {
-					if (planetLocation.getPlayerInControl() == aHighVIP.getBoss()) {
-						if (!aLowVIP.isImmuneToCounterEspionage()) {
-							highIsHome = true;
-						}
-					}
-				}
-			}
-			// slumpa om den andra blir upptäckt
-			int counterEspionageSkill = 0;
-			if (highIsHome) {
-				counterEspionageSkill = aHighVIP.getCounterEspionage();
-			} else {
-				counterEspionageSkill = aLowVIP.getCounterEspionage();
-			}
-			boolean discovered = Functions.getD100(counterEspionageSkill);
-			int loserIndex = -1, winnerIndex = -1;
-			if (discovered) { // the other VIP is discovered
-				if (highIsHome) {
-					winnerIndex = highVIP;
-					loserIndex = lowVIP;
-				} else {
-					loserIndex = highVIP;
-					winnerIndex = lowVIP;
-				}
-				VIP losingVIP = vipsAtPlanet.get(loserIndex);
-				VIP winningVIP = vipsAtPlanet.get(winnerIndex);
-				allVIPs.remove(losingVIP);
-				losingVIP.getBoss().addToVIPReport(
-						"Your " + losingVIP.getName() + " has been discovered by an enemy counter-spy at "
-								+ aPlanet.getName() + " and has been killed.");
-				winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() + " has discovered an enemy "
-						+ losingVIP.getName() + " at " + aPlanet.getName() + " and has captured and killed him.");
-				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
-				// update counters etc
-				if (loserIndex == highVIP) {
-					lowVIP = 0;
-				}
-				highVIP = highVIP - 1;
-				if (lowVIP < highVIP) {
-					checkCounterEspionageAtPlanet(aPlanet, vipsAtPlanet, lowVIP, highVIP);
-				}
-			} else { // update counters as in no fight
-				lowVIP = lowVIP + 1;
-				if (lowVIP == highVIP) {
-					lowVIP = 0;
-					highVIP = highVIP - 1;
-				}
-				if (highVIP > 0) {
-					checkCounterEspionageAtPlanet(aPlanet, vipsAtPlanet, lowVIP, highVIP);
-				}
-			}
-		} else { // no fight...
-			lowVIP = lowVIP + 1;
-			if (lowVIP == highVIP) {
-				lowVIP = 0;
-				highVIP = highVIP - 1;
-			}
-			if (highVIP > 0) {
-				checkCounterEspionageAtPlanet(aPlanet, vipsAtPlanet, lowVIP, highVIP);
-			}
-		}
-	}
-
-	private boolean isSpiesConflict(Planet aPlanet, VIP VIP1, VIP VIP2) {
-		boolean isOnOwnPlanet = false;
-		if ((VIP1.getPlanetLocation() == aPlanet) & (VIP2.getPlanetLocation() == aPlanet)
-				& diplomacy.hostileCounterSpies(VIP1.getBoss(), VIP2.getBoss())) {
-			if (VIP1.isCounterSpy()) {
-				Planet planetLocation = VIP1.getPlanetLocation();
-				if (planetLocation != null) {
-					if (planetLocation.getPlayerInControl() == VIP1.getBoss()) {
-						if (!VIP2.isImmuneToCounterEspionage()) {
-							isOnOwnPlanet = true;
-						}
-					}
-				}
-			}
-			if (VIP2.isCounterSpy()) {
-				Planet planetLocation = VIP2.getPlanetLocation();
-				if (planetLocation != null) {
-					if (planetLocation.getPlayerInControl() == VIP2.getBoss()) {
-						if (!VIP1.isImmuneToCounterEspionage()) {
-							isOnOwnPlanet = true;
-						}
-					}
-				}
-			}
-		}
-		return isOnOwnPlanet;
-	}
-
-	// check if any Assassins kill other VIPs that isn't well guarded
-	public void checkAssassins() {
-		for (int i = 0; i < planets.size(); i++) {
-			Planet aPlanet = (Planet) planets.get(i);
-			List<VIP> vipsAtPlanet = findAllVIPsOnPlanetOrShipsOrTroops(aPlanet);
-			List<VIP> v = vipsAtPlanet.stream().collect(Collectors.toList());
-			Collections.shuffle(v);
-			if (v.size() > 1) {
-				checkAssassins(aPlanet, 0, v.size() - 1, v);
-			}
-		}
-		// remove hasKilled from all assassins
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP aVIP = (VIP) allVIPs.get(i);
-			if (aVIP.isAssassin()) {
-				aVIP.clearHasKilled();
-			}
-		}
-	}
-
-	// check if assassins kill any enemy VIPs
-	private void checkAssassins(Planet aPlanet, int lowVIP, int highVIP, List<VIP> allVIPsOnPlanetRandomized) {
-		// check if the current VIP will fight
-		if (isPossibleAssassinationConflict(aPlanet, (VIP) allVIPsOnPlanetRandomized.get(lowVIP),
-				(VIP) allVIPsOnPlanetRandomized.get(highVIP))) { // Conflict!
-			VIP aHighVIP = allVIPsOnPlanetRandomized.get(highVIP);
-			VIP aLowVIP = allVIPsOnPlanetRandomized.get(lowVIP);
-			boolean highIsAssassin = false;
-			if ((aHighVIP.isAssassin()) & (aHighVIP.getLocation() == aPlanet) & (aLowVIP.getLocation() == aPlanet)
-					& (!aLowVIP.isWellGuarded())) {
-				highIsAssassin = true;
-			}
-			// slumpa om den andra blir m�rdad
-			int assassinationSkill = 0;
-			if (highIsAssassin) {
-				assassinationSkill = aHighVIP.getAssassinationSkill();
-			} else {
-				assassinationSkill = aLowVIP.getAssassinationSkill();
-			}
-			if (assassinationSkill > 95) {
-				assassinationSkill = 95;
-			}
-			boolean discovered = Functions.getD100(assassinationSkill);
-			int loserIndex = -1, winnerIndex = -1;
-			if (discovered) { // the other is murdered
-				if (highIsAssassin) {
-					winnerIndex = highVIP;
-					loserIndex = lowVIP;
-				} else {
-					loserIndex = highVIP;
-					winnerIndex = lowVIP;
-				}
-				VIP losingVIP = (VIP) allVIPsOnPlanetRandomized.get(loserIndex);
-				VIP winningVIP = (VIP) allVIPsOnPlanetRandomized.get(winnerIndex);
-				winningVIP.incKills();
-				allVIPs.remove(losingVIP);
-				allVIPsOnPlanetRandomized.remove(loserIndex);
-				winningVIP.setHasKilled();
-				losingVIP.getBoss().addToVIPReport("Your " + losingVIP.getName()
-						+ " has been assassinated by an enemy assassin at " + aPlanet.getName() + ".");
-				winningVIP.getBoss().addToVIPReport("Your " + winningVIP.getName() + " has assassinated an enemy "
-						+ losingVIP.getName() + " at " + aPlanet.getName() + ".");
-				losingVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_OWN_VIP_KILLED);
-				winningVIP.getBoss().addToHighlights(losingVIP.getName(), HighlightType.TYPE_ENEMY_VIP_KILLED);
-				// update counters etc
-				if (loserIndex == highVIP) {
-					lowVIP = 0;
-				}
-				highVIP = highVIP - 1;
-				if (lowVIP < highVIP) {
-					checkAssassins(aPlanet, lowVIP, highVIP, allVIPsOnPlanetRandomized);
-				}
-			} else { // update counters as in no fight
-				lowVIP = lowVIP + 1;
-				if (lowVIP == highVIP) {
-					lowVIP = 0;
-					highVIP = highVIP - 1;
-				}
-				if (highVIP > 0) {
-					checkAssassins(aPlanet, lowVIP, highVIP, allVIPsOnPlanetRandomized);
-				}
-			}
-		} else { // no fight...
-			lowVIP = lowVIP + 1;
-			if (lowVIP == highVIP) {
-				lowVIP = 0;
-				highVIP = highVIP - 1;
-			}
-			if (highVIP > 0) {
-				checkAssassins(aPlanet, lowVIP, highVIP, allVIPsOnPlanetRandomized);
-			}
-		}
-	}
-
-	private boolean isPossibleAssassinationConflict(Planet aPlanet, VIP VIP1, VIP VIP2) {
-		boolean possibleAssassination = false;
-
-		if (diplomacy.hostileAssassin(VIP1.getBoss(), VIP2.getBoss())) {
-			if ((VIP1.isAssassin()) & (!VIP1.getHasKilled()) & (VIP1.getLocation() == aPlanet)
-					& (VIP2.getLocation() == aPlanet) & (!VIP2.isWellGuarded())) {
-				if (diplomacy.hostileAssassin(VIP1.getBoss(), VIP2.getBoss())) {
-					possibleAssassination = true;
-				}
-			}
-			if ((VIP2.isAssassin()) & (!VIP2.getHasKilled()) & (VIP2.getLocation() == aPlanet)
-					& (VIP1.getLocation() == aPlanet) & (!VIP1.isWellGuarded())) {
-				if (diplomacy.hostileAssassin(VIP1.getBoss(), VIP2.getBoss())) {
-					possibleAssassination = true;
-				}
-			}
-		}
-		return possibleAssassination;
 	}
 
 	public VIP createRandomVIP() {
@@ -1715,7 +997,7 @@ public class Galaxy implements Serializable {
 
 	@SuppressWarnings("unused")
 	private SpaceshipType getSpaceshipTypeByName(String sstname) {
-		return gw.getSpaceshipTypeByName(sstname);
+		return gameWorld.getSpaceshipTypeByName(sstname);
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		/*
 		SpaceshipType foundsst = null;
@@ -1732,7 +1014,7 @@ public class Galaxy implements Serializable {
 	}
 	
 	public SpaceshipType getShipType(String typename) {
-		return gw.getSpaceshipTypeByName(typename);
+		return gameWorld.getSpaceshipTypeByName(typename);
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		/*
 		SpaceshipType st = null;
@@ -1750,7 +1032,7 @@ public class Galaxy implements Serializable {
 	}
 	
 	public SpaceshipType findSpaceshipType(String findname) {
-		return gw.getSpaceshipTypeByName(findname);
+		return gameWorld.getSpaceshipTypeByName(findname);
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
 		/*
 		SpaceshipType sst = null;
@@ -1770,8 +1052,8 @@ public class Galaxy implements Serializable {
 		SpaceshipType sst = null;
 		int i = 0;
 		//TODO 2020-01-01 removed from Galaxy, should be the same list as in GameWorld.
-		while ((sst == null) & (i < gw.getShipTypes().size())) {
-			SpaceshipType temp = (SpaceshipType) gw.getShipTypes().get(i);
+		while ((sst == null) & (i < gameWorld.getShipTypes().size())) {
+			SpaceshipType temp = (SpaceshipType) gameWorld.getShipTypes().get(i);
 			if (temp.getShortName().equalsIgnoreCase(shortfindname)) {
 				sst = temp;
 			}
@@ -1809,8 +1091,8 @@ public class Galaxy implements Serializable {
 		int i = 0;
 		Faction found = null;
 		Faction temp = null;
-		while ((i < factions.size()) & (found == null)) {
-			temp = (Faction) factions.get(i);
+		while ((i < gameWorld.getFactions().size()) & (found == null)) {
+			temp = gameWorld.getFactions().get(i);
 			if (temp.isFaction(name)) {
 				found = temp;
 			} else {
@@ -1898,23 +1180,6 @@ public class Galaxy implements Serializable {
 		return maxNrStartPlanets;
 	}
 
-	/*
-	 * // anv�nds under testning private void createAllVIPs(Player p, Planet
-	 * homeplanet){ for (int i = 1; i < vipTypes.size(); i++){ VIP tempVip =
-	 * ((VIPType)vipTypes.get(i)).createNewVIP(p,homeplanet); allVIPs.add(tempVip);
-	 * } }
-	 */
-
-	/*
-	 * private Planet getStartPlanet(){ Planet p = null; Random r = new Random();
-	 * int dividenr = Math.abs(r.nextInt()%planets.size()); int i = dividenr; while
-	 * ((i<planets.size()) & (p == null)){ Planet temp =
-	 * (Planet)planets.elementAt(i); if (temp.isStartPlanet() &
-	 * (temp.getPlayerInControl() == null)){ p = temp; }else{ i++; } } if (p ==
-	 * null){ i = 0; while ((i<dividenr) & (p == null)){ Planet temp =
-	 * (Planet)planets.elementAt(i); if (temp.isStartPlanet() &
-	 * (temp.getPlayerInControl() == null)){ p = temp; }else{ i++; } } } return p; }
-	 */
 	public void addPlayer(Player p) {
 		players.add(p);
 	}
@@ -1932,7 +1197,7 @@ public class Galaxy implements Serializable {
 		} else {
 			Player temp = getPlayer(p.getName(), p.getPassword());
 			temp.setOrders(p.getOrders());
-			temp.setPlanetInfos(p.getPlanetInfos());
+			temp.setPlanetInformations(p.getPlanetInformations());
 			temp.setNotes(p.getNotes());
 			if (turn > 0) {
 				temp.setUpdatedThisTurn(true);
@@ -1974,12 +1239,12 @@ public class Galaxy implements Serializable {
 		return ss;
 	}
 
-	public Spaceship findSpaceship(int findid) {
+	public Spaceship findSpaceshipByUniqueId(String uniqueId) {
 		Spaceship ss = null;
 		int i = 0;
 		while ((ss == null) & (i < spaceships.size())) {
 			Spaceship temp = spaceships.get(i);
-			if (temp.getId() == findid) {
+			if (temp.getUniqueId().equals(uniqueId)) {
 				ss = temp;
 			} else {
 				i++;
@@ -1993,7 +1258,7 @@ public class Galaxy implements Serializable {
 		int i = 0;
 		while ((foundTroop == null) & (i < troops.size())) {
 			Troop temp = troops.get(i);
-			if (temp.getId() == findid) {
+			if (temp.getUniqueId() == findid) {
 				foundTroop = temp;
 			} else {
 				i++;
@@ -2005,8 +1270,8 @@ public class Galaxy implements Serializable {
 	public TroopType findTroopType(String ttname) {
 		TroopType tt = null;
 		int i = 0;
-		while ((tt == null) & (i < gw.getTroopTypes().size())) {
-			TroopType aTT = gw.getTroopTypes().get(i);
+		while ((tt == null) & (i < gameWorld.getTroopTypes().size())) {
+			TroopType aTT = gameWorld.getTroopTypes().get(i);
 			if (aTT.getUniqueName().equals(ttname)) {
 				tt = aTT;
 			} else {
@@ -2024,24 +1289,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return confPlayers;
-	}
-
-	public boolean checkSoloConfederacyWinner() {
-		boolean singleConfederacyFound = true;
-		for (Player aPlayer1 : players) {
-			if (!aPlayer1.isDefeated()) {
-				for (Player aPlayer2 : players) {
-					if (!aPlayer2.isDefeated()) {
-						if (aPlayer1 != aPlayer2) {
-							if (getDiplomacyState(aPlayer1, aPlayer2).getCurrentLevel() != DiplomacyLevel.CONFEDERACY) {
-								singleConfederacyFound = false;
-							}
-						}
-					}
-				}
-			}
-		}
-		return singleConfederacyFound;
 	}
 
 	public boolean playersLeft() {
@@ -2085,61 +1332,7 @@ public class Galaxy implements Serializable {
 		return winner;
 	}
 
-	private List<List<Player>> getAllConfederacies() {
-		List<List<Player>> confList = new LinkedList<List<Player>>();
-		List<Player> allFoundConfPlayers = new LinkedList<Player>(); // all players in conf
-		for (Player aPlayer1 : players) {
-			if (!aPlayer1.isDefeated() & !allFoundConfPlayers.contains(aPlayer1)) {
-				// find all other players with whom this player is in a confederacy
-				List<Player> tempConfPlayers = new LinkedList<Player>(); // all players in conf with player1
-				for (Player aPlayer2 : players) {
-					if (aPlayer1 != aPlayer2) {
-						if (getDiplomacyState(aPlayer1, aPlayer2).getCurrentLevel() == DiplomacyLevel.CONFEDERACY) {
-							if (!aPlayer2.isDefeated()) {
-								tempConfPlayers.add(aPlayer2);
-							}
-						}
-					}
-				}
-				if (tempConfPlayers.size() > 0) {
-					tempConfPlayers.add(aPlayer1);
-					allFoundConfPlayers.addAll(tempConfPlayers);
-					confList.add(tempConfPlayers);
-				}
-			}
-		}
-		return confList;
-	}
-
-	private List<List<Player>> getAllLordships() {
-		List<List<Player>> lordList = new LinkedList<List<Player>>();
-		List<Player> allFoundLordPlayers = new LinkedList<Player>(); // all players in lord/vassal relations
-		for (Player aPlayer1 : players) {
-			if (!allFoundLordPlayers.contains(aPlayer1)) {
-				// find all other vassal players with whom this player is in a Lord
-				List<Player> tempLordPlayers = diplomacy.getVassalPlayers(aPlayer1);
-				// List<Player> tempLordPlayers = new LinkedList<Player>(); // all players in
-				// conf with player1
-				// for (Player aPlayer2 : players) {
-				// if (aPlayer1 != aPlayer2){
-				// DiplomacyState aState = getDiplomacyState(aPlayer1,aPlayer2);
-				// if ((aState.getCurrentLevel() == DiplomacyLevel.LORD) && (aState.getLord() ==
-				// aPlayer1)){
-				// tempLordPlayers.add(aPlayer2);
-				// }
-				// }
-				// }
-				if (tempLordPlayers.size() > 0) {
-					tempLordPlayers.add(0, aPlayer1);
-					allFoundLordPlayers.addAll(tempLordPlayers);
-					lordList.add(tempLordPlayers);
-				}
-			}
-		}
-		return lordList;
-	}
-
-	private int findPlayerConfederacy(Player aPlayer, List<List<Player>> allConfederacies) {
+	public int findPlayerConfederacy(Player aPlayer, List<List<Player>> allConfederacies) {
 		int foundIndex = -1;
 		int tempIndex = 0;
 		while ((foundIndex == -1) & (tempIndex < allConfederacies.size())) {
@@ -2153,108 +1346,6 @@ public class Galaxy implements Serializable {
 		return foundIndex;
 	}
 
-	private int findPlayerLordship(Player aPlayer, List<List<Player>> allLordships) {
-		int foundIndex = -1;
-		int tempIndex = 0;
-		while ((foundIndex == -1) & (tempIndex < allLordships.size())) {
-			List<Player> aLord = allLordships.get(tempIndex);
-			if (aLord.contains(aPlayer)) {
-				foundIndex = tempIndex;
-			} else {
-				tempIndex++;
-			}
-		}
-		return foundIndex;
-	}
-
-	// check if one confederacy has at least factionVictory XX% of the total pop of
-	// all planets in the game
-	public List<Player> checkWinningConfederacy() {
-		List<Player> winner = null;
-		List<List<Player>> allConfederacies = getAllConfederacies();
-		if (allConfederacies.size() > 0) {
-			// array for total prod for all conf
-			int[] confProdTotal = new int[allConfederacies.size()];
-			int otherProd = 0; // r�kna popen p� alla neutrala planeter
-			// räkna popen på alla factioner
-			for (Planet aPlanet : planets) {
-				if (aPlanet.getPlayerInControl() != null) {
-					int confIndex = findPlayerConfederacy(aPlanet.getPlayerInControl(), allConfederacies);
-					if (confIndex > -1) {
-						if (aPlanet.getPlayerInControl().isAlien()) {
-							confProdTotal[confIndex] += aPlanet.getResistance();
-						} else {
-							confProdTotal[confIndex] += aPlanet.getPopulation();
-						}
-					} else {
-						otherProd += aPlanet.getPopulation();
-					}
-				} else {
-					otherProd += aPlanet.getPopulation();
-				}
-			}
-			// summera all pop i sectorn
-			int totalProd = otherProd;
-			for (int aConfProd : confProdTotal) {
-				totalProd += aConfProd;
-			}
-			// check for a winner
-			int index = 0;
-			while ((winner == null) & (index < confProdTotal.length)) {
-				if (((confProdTotal[index] * 1.0) / totalProd * 1.0) > (factionVictory / 100.0)) {
-					winner = allConfederacies.get(index);
-				} else {
-					index++;
-				}
-			}
-		}
-		return winner;
-	}
-
-	// check if one confederacy has at least factionVictory XX% of the total pop of
-	// all planets in the game
-	public List<Player> checkWinningLord() {
-		List<Player> winner = null;
-		List<List<Player>> allLordships = getAllLordships();
-		if (allLordships.size() > 0) {
-			// array for total prod for all conf
-			int[] lordProdTotal = new int[allLordships.size()];
-			int otherProd = 0; // räkna popen på alla neutrala planeter
-			// r�kna popen p� alla factioner
-			for (Planet aPlanet : planets) {
-				if (aPlanet.getPlayerInControl() != null) {
-					int lordIndex = findPlayerLordship(aPlanet.getPlayerInControl(), allLordships);
-					if (lordIndex > -1) {
-						if (aPlanet.getPlayerInControl().isAlien()) {
-							lordProdTotal[lordIndex] += aPlanet.getResistance();
-						} else {
-							lordProdTotal[lordIndex] += aPlanet.getPopulation();
-						}
-					} else {
-						otherProd += aPlanet.getPopulation();
-					}
-				} else {
-					otherProd += aPlanet.getPopulation();
-				}
-			}
-			// summera all pop i sectorn
-			int totalProd = otherProd;
-			for (int aConfProd : lordProdTotal) {
-				totalProd += aConfProd;
-			}
-			// check for a winner
-			int index = 0;
-			while ((winner == null) & (index < lordProdTotal.length)) {
-				if (((lordProdTotal[index] * 1.0) / totalProd * 1.0) > (factionVictory / 100.0)) {
-					winner = allLordships.get(index);
-				} else {
-					index++;
-				}
-			}
-		}
-		return winner;
-	}
-
 	public Faction checkWinningFaction() {
 		return checkWinningFaction(factionVictory);
 	}
@@ -2264,13 +1355,13 @@ public class Galaxy implements Serializable {
 	public Faction checkWinningFaction(int factionVictoryLimit) {
 		Faction winner = null;
 		// nolls�tt totalpop f�r alla factioner
-		for (int i = 0; i < factions.size(); i++) {
-			((Faction) factions.get(i)).setTotalPop(0);
+		for (int i = 0; i < gameWorld.getFactions().size(); i++) {
+			((Faction) gameWorld.getFactions().get(i)).setTotalPop(0);
 		}
 		int neutralPop = 0; // räkna popen på alla neutrala planeter
 		// räkna popen på alla factioner
 		for (int j = 0; j < planets.size(); j++) {
-			Planet tempPlanet = (Planet) planets.get(j);
+			Planet tempPlanet = planets.get(j);
 			if (tempPlanet.getPlayerInControl() != null) {
 				if (tempPlanet.getPlayerInControl().isAlien()) {
 					tempPlanet.getPlayerInControl().getFaction().setTotalPop(
@@ -2285,12 +1376,12 @@ public class Galaxy implements Serializable {
 		}
 		// summera all pop i sectorn
 		int totalPop = neutralPop;
-		for (int k = 0; k < factions.size(); k++) {
-			totalPop = totalPop + ((Faction) factions.get(k)).getTotalPop();
+		for (int k = 0; k < gameWorld.getFactions().size(); k++) {
+			totalPop = totalPop + gameWorld.getFactions().get(k).getTotalPop();
 		}
-		for (int l = 0; l < factions.size(); l++) {
+		for (int l = 0; l < gameWorld.getFactions().size(); l++) {
 			if (winner == null) {
-				Faction tempFaction = (Faction) factions.get(l);
+				Faction tempFaction = gameWorld.getFactions().get(l);
 				if ((((tempFaction).getTotalPop() * 1.0) / totalPop * 1.0) > (factionVictoryLimit / 100.0)) {
 					winner = tempFaction;
 				}
@@ -2303,7 +1394,7 @@ public class Galaxy implements Serializable {
 	public Faction checkWinningFactionLimit(int factionVictoryLimit) {
 		Faction winner = null;
 		// nollsätt totalpop för alla factioner
-		for (Faction aFaction : factions) {
+		for (Faction aFaction : gameWorld.getFactions()) {
 			aFaction.setTotalPop(0);
 		}
 		int neutralPop = 0; // räkna popen på alla neutrala planeter
@@ -2323,11 +1414,11 @@ public class Galaxy implements Serializable {
 		}
 		// summera all pop i sectorn
 		int totalPop = neutralPop;
-		for (Faction aFaction : factions) {
+		for (Faction aFaction : gameWorld.getFactions()) {
 			totalPop = totalPop + aFaction.getTotalPop();
 		}
 		// kolla om det finns en vinnare
-		for (Faction aFaction : factions) {
+		for (Faction aFaction : gameWorld.getFactions()) {
 			if (winner == null) {
 				if (aFaction.getTotalPop() > factionVictoryLimit) {
 					winner = aFaction;
@@ -2378,654 +1469,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return winner;
-	}
-
-	public void performStatistics() {
-		setStaticsicsIncome();
-		setStaticsicsProduction();
-		setStatisticsVIPs();
-		setStatisticsShipSize();
-		setStatisticsShipNumber();
-		setStatisticsTroopUnits();
-		setStatisticsPlanetsCount();
-		setStatisticsShipsKilled();
-		setStatisticsShipKills();
-	}
-
-	/**
-	 * aFactionName
-	 * 
-	 * @param allLostInSpace
-	 * @param aFactionName
-	 * @param lostShips
-	 *            if false, return ships destroyed
-	 * @return
-	 */
-	private List<CanBeLostInSpace> getShipsLostInSpace(List<CanBeLostInSpace> allLostInSpace, String aFactionName,
-			boolean lostShips) {
-		List<CanBeLostInSpace> lisList = new LinkedList<CanBeLostInSpace>();
-		for (Iterator<CanBeLostInSpace> iter = allLostInSpace.iterator(); iter.hasNext();) {
-			CanBeLostInSpace aLis = iter.next();
-			if (aLis instanceof Spaceship) {
-				if (!lostShips) { // ta alla skepp som ej är från aFaction
-					if (aLis.getOwner() != null) {
-						if (!aLis.getOwner().getFaction().getName().equalsIgnoreCase(aFactionName)) {
-							lisList.add(aLis);
-						}
-					} else { // neutralt = lägg till
-						lisList.add(aLis);
-					}
-				} else { // ta endast skepp från aFaction
-					if (aLis.getOwner() != null) {
-						if (aLis.getOwner().getFaction().getName().equalsIgnoreCase(aFactionName)) {
-							lisList.add(aLis);
-						}
-					}
-				}
-			}
-		}
-		return lisList;
-	}
-
-	private void setStatisticsShipsKilled() {
-		for (Player aPlayer : players) {
-			Report lastReport = aPlayer.getTurnInfo().getLatestGeneralReport();
-			String factionName = aPlayer.getFaction().getName();
-			List<CanBeLostInSpace> allLostInSpace = lastReport.getLostInSpace();
-			List<CanBeLostInSpace> lisOwn = getShipsLostInSpace(allLostInSpace, factionName, true); // egna förlorade
-																									// skepp
-			addStatistics(StatisticType.SHIPS_LOST, aPlayer, lisOwn.size(), true);
-			List<CanBeLostInSpace> lisOther = getShipsLostInSpace(allLostInSpace, factionName, false);
-			addStatistics(StatisticType.SHIPS_KILLED, aPlayer, lisOther.size(), true);
-		}
-	}
-
-	private void setStatisticsTroopUnits() {
-		java.util.Map<String, Integer> dataNumber = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			dataNumber.put(aPlayer.getName(), 0);
-		}
-		for (Troop aTroop : troops) {
-			if (aTroop.getOwner() != null) {
-				String troopOwner = aTroop.getOwner().getName();
-				// number
-				Integer valueNumber = dataNumber.get(troopOwner);
-				dataNumber.put(troopOwner, valueNumber + 1);
-			}
-		}
-		for (Player aPlayer : players) {
-			Integer valueNumber = dataNumber.get(aPlayer.getName());
-			addStatistics(StatisticType.TROOPS_NUMBER, aPlayer, valueNumber);
-		}
-	}
-
-	private void setStatisticsPlanetsCount() {
-		java.util.Map<String, Integer> dataNumber = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			dataNumber.put(aPlayer.getName(), 0);
-		}
-		for (Planet aPlanet : planets) {
-			if (aPlanet.getPlayerInControl() != null) {
-				String planetOwner = aPlanet.getPlayerInControl().getName();
-				// number
-				Integer valueNumber = dataNumber.get(planetOwner);
-				dataNumber.put(planetOwner, valueNumber + 1);
-			}
-		}
-		for (Player aPlayer : players) {
-			Integer valueNumber = dataNumber.get(aPlayer.getName());
-			addStatistics(StatisticType.PLANETS, aPlayer, valueNumber);
-		}
-	}
-
-	private void setStaticsicsIncome() {
-		int tempIncome;
-		for (Player aPlayer : players) {
-			if (!aPlayer.isDefeated()) {
-				tempIncome = getPlayerIncome(aPlayer, false);
-				tempIncome -= getPlayerUpkeepShips(aPlayer);
-				tempIncome -= getPlayerUpkeepTroops(aPlayer);
-				tempIncome -= getPlayerUpkeepVIPs(aPlayer);
-				if (tempIncome < 0) { // if broke set net income to 0
-					tempIncome = 0;
-				}
-				addStatistics(StatisticType.NET_INCOME, aPlayer, tempIncome);
-			} else {
-				addStatistics(StatisticType.NET_INCOME, aPlayer, 0);
-			}
-		}
-	}
-
-	private void setStaticsicsProduction() {
-		// skapa en map för factionernas totala pop
-		java.util.Map<String, Integer> factionProductions = new HashMap<String, Integer>(); // String = faction name
-		// nollsätt totalpop för alla factioner
-		for (Player aPlayer : players) {
-			aPlayer.setTotalPop(0);
-			if (factionProductions.get(aPlayer.getFaction().getName()) == null) {
-				factionProductions.put(aPlayer.getFaction().getName(), 0);
-			}
-		}
-		int neutralPop = 0; // räkna popen på alla neutrala planeter
-		// lägg till factionerna
-		// for (Faction aFaction : gw.getFactions()) {
-		// Logger.fine(aFaction.getName());
-		// factionProductions.put(aFaction.getName(), 0);
-		// }
-		// räkna popen för alla spelare
-		for (int j = 0; j < planets.size(); j++) {
-			Planet tempPlanet = (Planet) planets.get(j);
-			if (tempPlanet.getPlayerInControl() != null) {
-				Faction planetFaction = tempPlanet.getPlayerInControl().getFaction();
-				if (tempPlanet.getPlayerInControl().isAlien()) {
-					tempPlanet.getPlayerInControl()
-							.setTotalPop(tempPlanet.getPlayerInControl().getTotalPop() + tempPlanet.getResistance());
-					factionProductions.put(planetFaction.getName(),
-							factionProductions.get(planetFaction.getName()) + tempPlanet.getResistance());
-				} else {
-					tempPlanet.getPlayerInControl()
-							.setTotalPop(tempPlanet.getPlayerInControl().getTotalPop() + tempPlanet.getPopulation());
-					factionProductions.put(planetFaction.getName(),
-							factionProductions.get(planetFaction.getName()) + tempPlanet.getPopulation());
-					Logger.fine(planetFaction.getName() + " " + factionProductions.get(planetFaction.getName())
-							+ tempPlanet.getPopulation());
-				}
-			} else {
-				neutralPop = neutralPop + tempPlanet.getPopulation();
-			}
-		}
-		// summera all pop i sectorn
-		int totalPop = neutralPop;
-		for (int k = 0; k < players.size(); k++) {
-			totalPop = totalPop + ((Player) players.get(k)).getTotalPop();
-		}
-		// uppdatera player statistiken
-		addStatistics(StatisticType.PRODUCTION_PLAYER, "Neutral", neutralPop);
-		addStatistics(StatisticType.PRODUCTION_FACTION, "Neutral", neutralPop);
-		for (int l = 0; l < players.size(); l++) {
-			Player tempPlayer = (Player) players.get(l);
-			addStatistics(StatisticType.PRODUCTION_PLAYER, tempPlayer, tempPlayer.getTotalPop());
-		}
-		// uppdatera faction statistiken
-		Set<String> keys = factionProductions.keySet();
-		for (Object aFactionName : keys.toArray()) {
-			Faction aFaction = gw.findFaction((String) aFactionName);
-			Logger.fine(aFaction.getName());
-			addStatistics(StatisticType.PRODUCTION_FACTION, aFaction, factionProductions.get(aFactionName));
-		}
-	}
-
-	private void setStatisticsVIPs() {
-		java.util.Map<String, Integer> data = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			data.put(aPlayer.getName(), 0);
-		}
-		for (VIP aVIP : allVIPs) {
-			String vipOwner = aVIP.getBoss().getName();
-			Integer value = data.get(vipOwner);
-			data.put(vipOwner, value + 1);
-		}
-		for (Player aPlayer : players) {
-			Integer value = data.get(aPlayer.getName());
-			addStatistics(StatisticType.VIPS, aPlayer, value);
-		}
-	}
-
-	private void setStatisticsShipSize() {
-		java.util.Map<String, Integer> dataSize = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			dataSize.put(aPlayer.getName(), 0);
-		}
-		for (Spaceship aSpaceship : spaceships) {
-			if (aSpaceship.getOwner() != null) {
-				String shipOwner = aSpaceship.getOwner().getName();
-				// size
-				Integer valueSize = dataSize.get(shipOwner);
-				dataSize.put(shipOwner, valueSize + aSpaceship.getType().getSize().getSlots());
-			}
-		}
-		for (Player aPlayer : players) {
-			Integer valueSize = dataSize.get(aPlayer.getName());
-			addStatistics(StatisticType.SHIP_SIZE, aPlayer, valueSize);
-		}
-	}
-
-	private void setStatisticsShipNumber() {
-		java.util.Map<String, Integer> dataNumber = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			dataNumber.put(aPlayer.getName(), 0);
-		}
-		for (Spaceship aSpaceship : spaceships) {
-			if (aSpaceship.getOwner() != null) {
-				String shipOwner = aSpaceship.getOwner().getName();
-				// number
-				Integer valueNumber = dataNumber.get(shipOwner);
-				dataNumber.put(shipOwner, valueNumber + 1);
-			}
-		}
-		for (Player aPlayer : players) {
-			Integer valueNumber = dataNumber.get(aPlayer.getName());
-			addStatistics(StatisticType.SHIP_NUMBER, aPlayer, valueNumber);
-		}
-	}
-
-	private void setStatisticsShipKills() {
-		java.util.Map<String, Integer> dataNumber = new HashMap<String, Integer>();
-		for (Player aPlayer : players) {
-			dataNumber.put(aPlayer.getName(), 0);
-		}
-		for (Spaceship aSpaceship : spaceships) {
-			if (aSpaceship.getOwner() != null) {
-				String shipOwner = aSpaceship.getOwner().getName();
-				// number
-				Integer valueNumber = dataNumber.get(shipOwner);
-				if (aSpaceship.getKills() > valueNumber) {
-					dataNumber.put(shipOwner, aSpaceship.getKills());
-				}
-			}
-		}
-		for (Player aPlayer : players) {
-			Integer valueNumber = dataNumber.get(aPlayer.getName());
-			addStatistics(StatisticType.SHIPS_MOST_KILLS, aPlayer, valueNumber);
-		}
-	}
-
-	public TaskForce getTaskForce(Player aPlayer, Planet aPlanet, boolean includeCivilians) {
-		// TODO 2019-12-07 Säkra att VIPar på troops eller planet inte kan påverka
-				// striden. VIPar som inte har egeneskaper som påverkar troops borde inte kunna
-				// vara på en troop.
-		List<TaskForceSpaceShip> taskForceSpaceShips = new ArrayList<>();
-		getPlayersSpaceshipsOnPlanet(aPlayer, aPlanet).stream()
-				.filter(spaceship -> (!spaceship.isCivilian() || includeCivilians))
-				.forEach(spaceship -> taskForceSpaceShips
-						.add(new TaskForceSpaceShip(spaceship, findAllVIPsOnShip(spaceship))));
-		
-		TaskForce tf = new TaskForce(aPlayer != null ? aPlayer.getGovernorName() : null, aPlayer != null ? aPlayer.getFaction().getName() : null, taskForceSpaceShips);
-		
-		if (tf.getTotalNrShips() == 0) { // om inga skepp returnera null = finns ingen taskforce
-			return null;
-		}
-		
-		// 2019-12-25 add possible planets to retreat to. Changed is made to remove the Galaxy object from battleHandler.
-		if(aPlayer != null) { //Only players ship can retreat
-			tf.addClosestFriendlyPlanets(SpaceshipRange.LONG, findClosestPlanets(aPlanet, aPlayer, SpaceshipRange.LONG,
-					FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED, null));
-			
-			tf.addClosestFriendlyPlanets(SpaceshipRange.SHORT, findClosestPlanets(aPlanet, aPlayer, SpaceshipRange.SHORT,
-					FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED, null));
-		}
-		
-		return tf;
-	}
-
-	public List<TaskForce> getTaskForces(Planet aPlanet, boolean includeCivilians) {
-		List<TaskForce> taskforces = new LinkedList<TaskForce>();
-		// get all neutral ships at aPlanet
-		TaskForce neutraltf = getTaskForce(null, aPlanet, includeCivilians);
-		if (neutraltf != null) {
-			taskforces.add(neutraltf);
-		}
-		// get all player taskforces at this planet
-		for (int j = 0; j < players.size(); j++) {
-			Player tempplayer = (Player) players.get(j);
-			// LoggingHandler.fine(this,this,"getTaskforces","Player loop: " +
-			// tempplayer.getName());
-			TaskForce temptf = getTaskForce(tempplayer, aPlanet, includeCivilians);
-			if (temptf != null) {
-				// LoggingHandler.finer(this,this,"getTaskforces","TaskForce added: " +
-				// temptf.getTotalNrShips(true));
-				taskforces.add(temptf);
-			}
-		}
-		return taskforces;
-	}
-
-	public int getPlayerIncomeWithoutCorruption(Player aPlayer, boolean addToIncomeReport) {
-		int income = 0;
-		if (aPlayer.isAlien()) {
-			income = getPlayerIncomeAlien(aPlayer, addToIncomeReport);
-		} else {
-			income = getPlayerIncomeNonAlien(aPlayer, addToIncomeReport);
-		}
-		return income;
-	}
-
-	public int getPlayerIncome(Player aPlayer, boolean addToIncomeReport) {
-		int income = getPlayerIncomeWithoutCorruption(aPlayer, addToIncomeReport);
-		// System.out.println("getPlayerIncome, income1: " + income);
-		income = aPlayer.getIncomeAfterCorruption(income);
-		// System.out.println("getPlayerIncome, income2: " + income);
-		// handle taxes
-		if (income > 0) { // only if not broke
-			income += getPlayerTaxes(aPlayer, income);
-		}
-		return income;
-	}
-
-	public int getPlayerTaxes(Player aPlayer, int income) {
-		int taxes = 0;
-		DiplomacyState lordState = diplomacy.isVassal(aPlayer);
-		if (lordState != null) { // is vassal
-			taxes -= lordState.getTax();
-			if ((income + taxes) < 0) {
-				taxes = -income;
-			}
-		} else { // maybe lord
-			List<DiplomacyState> vassals = diplomacy.getVassalStates(aPlayer);
-			if ((vassals != null) && (vassals.size() > 0)) { // is lord
-				int totalTax = 0;
-				for (DiplomacyState state : vassals) {
-					Player vassalPlayer = state.getOtherPlayer(aPlayer);
-					int vassalIncome = getPlayerIncomeWithoutCorruption(vassalPlayer, false);
-					vassalIncome = vassalPlayer.getIncomeAfterCorruption(vassalIncome);
-					int tax = 0;
-					if (vassalIncome > state.getTax()) {
-						tax = state.getTax();
-					} else {
-						if (vassalIncome > 0) {
-							tax = vassalIncome;
-						}
-					}
-					totalTax += tax;
-				}
-				taxes += totalTax;
-			}
-		}
-		return taxes;
-	}
-
-	public int getPlayerIncomeAlien(Player aPlayer, boolean addToIncomeReport) {
-		int totIncome = 0;
-		TurnInfo playerTurnInfo = null;
-		if (addToIncomeReport) {
-			playerTurnInfo = aPlayer.getTurnInfo();
-		}
-		for (int j = 0; j < planets.size(); j++) {
-			Planet tempPlanet = (Planet) planets.get(j);
-			List<Spaceship> shipsAtPlanet = getPlayersSpaceshipsOnPlanet(aPlayer, tempPlanet);
-			if (tempPlanet.getPlayerInControl() == aPlayer) {
-				int tmpInc = tempPlanet.getIncomeAlien(aPlayer.getFaction().getOpenPlanetBonus(),
-						aPlayer.getFaction().getClosedPlanetBonus(), playerTurnInfo)
-						+ getVIPIncomeBonus(aPlayer, tempPlanet, playerTurnInfo);
-				Logger.finer("alien base income: " + tmpInc);
-				totIncome += tmpInc;
-				// add income bonus for buildings.
-
-				totIncome += getPlanetBuildingsBonus(tempPlanet, playerTurnInfo);
-				Logger.finest("alien base income: " + tmpInc);
-
-				// totIncome += getShipIncomeOwn(shipsAtPlanet,tempPlanet.isOpen());
-			}
-			totIncome += getShipIncome(shipsAtPlanet, tempPlanet, playerTurnInfo);
-
-			// else
-			// if (tempPlanet.getPlayerInControl() == null){
-			// if (tempPlanet.getPopulation() > 0){ // razed planets can not give any income
-			// totIncome += getShipIncomeNeutral(shipsAtPlanet,tempPlanet.isOpen());
-			// }
-			// }else
-			// if (tempPlanet.getPlayerInControl().getFaction() == aPlayer.getFaction()){
-			// totIncome += getShipIncomeFriendly(shipsAtPlanet,tempPlanet.isOpen());
-			// }else{ // enemy planet
-			// totIncome += getShipIncomeEnemy(shipsAtPlanet,tempPlanet.isOpen());
-			// }
-		}
-		return totIncome;
-	}
-
-	public int getPlayerIncomeNonAlien(Player aPlayer, boolean addToIncomeReport) {
-		int totIncome = 0;
-		TurnInfo playerTurnInfo = null;
-		if (addToIncomeReport) {
-			playerTurnInfo = aPlayer.getTurnInfo();
-		}
-		for (int j = 0; j < planets.size(); j++) {
-			Planet tempPlanet = (Planet) planets.get(j);
-			List<Spaceship> shipsAtPlanet = getPlayersSpaceshipsOnPlanet(aPlayer, tempPlanet);
-			// Logger.finest("shipsAtPlanet " + shipsAtPlanet.size());
-			if (tempPlanet.getPlayerInControl() == aPlayer) {
-				Logger.finest("tempPlanet " + tempPlanet.getName());
-				int tmpInc = tempPlanet.getIncome(aPlayer.getFaction().getOpenPlanetBonus(),
-						aPlayer.getFaction().getClosedPlanetBonus(), playerTurnInfo)
-						+ getVIPIncomeBonus(aPlayer, tempPlanet, playerTurnInfo);
-				Logger.finest("tmpInc " + tmpInc);
-				totIncome = totIncome + tmpInc;
-				Logger.finest("totIncome1 " + totIncome);
-				// add income bonus for Buildings
-				Logger.finest("getPlanetBuildingsBonus(tempPlanet) f�re");
-				totIncome = totIncome + getPlanetBuildingsBonus(tempPlanet, playerTurnInfo);
-				Logger.finest("totIncome2 " + totIncome);
-				Logger.finest("getPlanetBuildingsBonus(tempPlanet) efter");
-				Logger.finest("totIncome3 " + totIncome);
-			}
-			totIncome += getShipIncome(shipsAtPlanet, tempPlanet, playerTurnInfo);
-		}
-		Logger.finest("getPlayerIncomeNonAlien totIncome return " + totIncome);
-		return totIncome;
-	}
-
-	private int getPlanetBuildingsBonus(Planet tempPlanet, TurnInfo playerTurnInfo) {
-		int tempIncom = 0;
-		List<Building> tempBuildigns = tempPlanet.getBuildings();
-		for (Building building : tempBuildigns) {
-			if (tempPlanet.isOpen()) {
-				// if (building.getBuildingType().getOpenPlanetBonus() > tempIncom){
-				if (!building.getBuildingType().isInOrbit() || !tempPlanet.isBesieged()) {
-					int openInc = building.getBuildingType().getOpenPlanetBonus();
-					tempIncom += openInc;
-					if (openInc > 0) {
-						if (playerTurnInfo != null) {
-							playerTurnInfo.addToLatestIncomeReport(IncomeType.BUILDING,
-									building.getUniqueName() + " open planet bonus", tempPlanet.getName(), openInc);
-						}
-					}
-				}
-				// }
-				// removed posility to have minus incom on buildings...
-				/*
-				 * else if(building.getBuildingType().getOpenPlanetBonus() != 0 && tempIncom ==
-				 * 0){// minus inkomst. if(!building.getBuildingType().isInOrbit() ||
-				 * !tempPlanet.isBesieged()){ tempIncom =
-				 * building.getBuildingType().getOpenPlanetBonus(); } }
-				 */
-
-			} else {
-				// LoggingHandler.finer("planet closed",this);
-				// if (building.getBuildingType().getClosedPlanetBonus() > tempIncom){
-				if (!building.getBuildingType().isInOrbit() || !tempPlanet.isBesieged()) {
-					int closedInc = building.getBuildingType().getClosedPlanetBonus();
-					tempIncom += closedInc;
-					if (closedInc > 0) {
-						if (playerTurnInfo != null) {
-							playerTurnInfo.addToLatestIncomeReport(IncomeType.BUILDING,
-									building.getUniqueName() + " closed planet bonus", tempPlanet.getName(), closedInc);
-						}
-					}
-					// }
-					// removed posility to have minus incom on buildings...
-					/*
-					 * else if(building.getBuildingType().getClosedPlanetBonus() != 0 && tempIncom
-					 * == 0){// minus inkomst. if(!building.getBuildingType().isInOrbit() ||
-					 * !tempPlanet.isBesieged()){ tempIncom =
-					 * building.getBuildingType().getClosedPlanetBonus(); } }
-					 */
-
-					// LoggingHandler.finer("tmpIncome: " + tmpIncome,this);
-				}
-			}
-		}
-		return tempIncom;
-	}
-
-	private int getShipIncome(List<Spaceship> shipsAtPlanet, Planet aPlanet, TurnInfo playerTurnInfo) {
-		int tmpIncome = 0;
-		Spaceship aShip = null;
-		for (Spaceship spaceship : shipsAtPlanet) {
-			int shipIncome = getShipIncome(spaceship, aPlanet);
-			if (shipIncome > tmpIncome) {
-				tmpIncome = shipIncome;
-				aShip = spaceship;
-			}
-		}
-		if (tmpIncome > 0) {
-			if (playerTurnInfo != null)
-				playerTurnInfo.addToLatestIncomeReport(IncomeType.SHIP, aShip.getName(), aPlanet.getName(), tmpIncome);
-		}
-		return tmpIncome;
-	}
-
-	private int getShipIncome(Spaceship spaceship, Planet aPlanet) {
-		int income = 0;
-		Player planetPlayer = aPlanet.getPlayerInControl();
-		Player shipPlayer = spaceship.getOwner(); // should never be null
-		if (aPlanet.isOpen()) {
-			if (planetPlayer == null) { // neutral planet
-				income = spaceship.getIncNeutralOpenBonus();
-			} else { // planet not neutral
-				if (planetPlayer == shipPlayer) {
-					spaceship.getIncOwnOpenBonus();
-				} else {
-					DiplomacyState state = diplomacy.getDiplomacyState(shipPlayer, planetPlayer);
-					DiplomacyLevel level = state.getCurrentLevel();
-					if ((level == DiplomacyLevel.CONFEDERACY) | (level == DiplomacyLevel.ALLIANCE)
-							| (level == DiplomacyLevel.LORD)) {
-						spaceship.getIncFrendlyOpenBonus();
-					} else if ((level == DiplomacyLevel.CEASE_FIRE) | (level == DiplomacyLevel.PEACE)) {
-						spaceship.getIncNeutralOpenBonus();
-					} else if ((level == DiplomacyLevel.WAR) | (level == DiplomacyLevel.ETERNAL_WAR)) {
-						spaceship.getIncEnemyOpenBonus();
-					}
-				}
-			}
-		} else { // closed planet
-			if (planetPlayer == null) { // neutral planet
-				income = spaceship.getIncNeutralClosedBonus();
-			} else { // planet not neutral
-				if (planetPlayer == shipPlayer) {
-					spaceship.getIncOwnClosedBonus();
-				} else {
-					DiplomacyState state = diplomacy.getDiplomacyState(shipPlayer, planetPlayer);
-					DiplomacyLevel level = state.getCurrentLevel();
-					if ((level == DiplomacyLevel.CONFEDERACY) | (level == DiplomacyLevel.ALLIANCE)
-							| (level == DiplomacyLevel.LORD)) {
-						spaceship.getIncFrendlyClosedBonus();
-					} else if ((level == DiplomacyLevel.CEASE_FIRE) | (level == DiplomacyLevel.PEACE)) {
-						spaceship.getIncNeutralClosedBonus();
-					} else if ((level == DiplomacyLevel.WAR) | (level == DiplomacyLevel.ETERNAL_WAR)) {
-						spaceship.getIncEnemyClosedBonus();
-					}
-				}
-			}
-		}
-		return income;
-	}
-
-	private int getVIPIncomeBonus(Player aPlayer, Planet aPlanet, TurnInfo playerTurnInfo) {
-		int incomeBonus = 0;
-		if (!aPlanet.isBesieged()) {
-			VIP tempVIP = findVIPEconomicBonus(aPlanet, aPlayer);
-			if (tempVIP != null) {
-				if (aPlanet.isOpen()) {
-					incomeBonus = tempVIP.getOpenIncBonus();
-					if (playerTurnInfo != null)
-						playerTurnInfo.addToLatestIncomeReport(IncomeType.VIP, tempVIP.getName() + " open planet bonus",
-								aPlanet.getName(), incomeBonus);
-				} else {
-					incomeBonus = tempVIP.getClosedIncBonus();
-					if (playerTurnInfo != null)
-						playerTurnInfo.addToLatestIncomeReport(IncomeType.VIP,
-								tempVIP.getName() + " closed planet bonus", aPlanet.getName(), incomeBonus);
-				}
-			}
-		}
-		return incomeBonus;
-	}
-
-	public int getPlayerFreeUpkeep(Player aPlayer) {
-		int totUpkeepIncome = getPlayerFreeUpkeepWithoutCorruption(aPlayer);
-		totUpkeepIncome = aPlayer.getUpkeepAfterCorruption(totUpkeepIncome);
-		return totUpkeepIncome;
-	}
-
-	public int getPlayerFreeUpkeepWithoutCorruption(Player aPlayer) {
-		int totUpkeepIncome = 0;
-		for (int i = 0; i < planets.size(); i++) {
-			Planet tempPlanet = (Planet) planets.get(i);
-			if (tempPlanet.getPlayerInControl() == aPlayer) {
-				totUpkeepIncome = totUpkeepIncome + tempPlanet.getUpkeep();
-			}
-		}
-		return totUpkeepIncome;
-	}
-
-	public int getPlayerUpkeepCost(Player aPlayer) {
-		int totUpkeepCost = 0;
-		for (int j = 0; j < spaceships.size(); j++) {
-			Spaceship tempss = spaceships.get(j);
-			if (tempss.getOwner() == aPlayer) {
-				totUpkeepCost = totUpkeepCost + tempss.getUpkeep();
-			}
-		}
-		return totUpkeepCost;
-	}
-
-	public int getPlayerUpkeepShips(Player aPlayer) {
-		int totUpkeepCost = 0;
-		int totUpkeepIncome = 0;
-		int totUpkeep;
-		totUpkeepIncome = getPlayerFreeUpkeep(aPlayer);
-		totUpkeepCost = getPlayerUpkeepCost(aPlayer);
-		totUpkeep = totUpkeepCost - totUpkeepIncome;
-		if (totUpkeep < 0) {
-			totUpkeep = 0;
-		}
-		return totUpkeep;
-	}
-
-	public int getPlayerUpkeepVIPs(Player aPlayer) {
-		int totUpkeepCost = 0;
-
-		for (int j = 0; j < allVIPs.size(); j++) {
-			VIP tempVIP = (VIP) allVIPs.get(j);
-			if (tempVIP.getBoss() == aPlayer) {
-				totUpkeepCost = totUpkeepCost + tempVIP.getUpkeep();
-			}
-		}
-
-		return totUpkeepCost;
-	}
-
-	public int getPlayerUpkeepTroops(Player aPlayer) {
-		int totUpkeepCost = 0;
-		for (Planet aPlanet : planets) {
-			int totTroopsCost = getTroopsUpKeepPlanet(aPlayer, aPlanet);
-			if (totTroopsCost > 0) {
-				totUpkeepCost = totUpkeepCost + totTroopsCost;
-			}
-		}
-		return totUpkeepCost;
-	}
-
-	public int getTroopsUpKeepPlanet(Player aPlayer, Planet aPlanet) {
-		// get all players troops on this planet and compute support costs
-		int upkeepOnPlanet = getTroopsCostPlanet(aPlayer, aPlanet);
-		// get free upkeep for this planet (if any)
-		int freeTroopUpkeep = 0;
-		if (aPlanet.getPlayerInControl() == aPlayer) {
-			freeTroopUpkeep = aPlanet.getResistance();
-		}
-		// tot cost = cost - upkeep
-		int totTroopsCost = upkeepOnPlanet - freeTroopUpkeep;
-		return totTroopsCost;
-	}
-
-	public int getTroopsCostPlanet(Player aPlayer, Planet aPlanet) {
-		List<Troop> troopsAtPlanet = getPlayersTroopsOnPlanet(aPlayer, aPlanet);
-		int upkeep = 0;
-		for (Troop aTroop : troopsAtPlanet) {
-			upkeep = upkeep + aTroop.getUpkeep();
-		}
-		return upkeep;
 	}
 
 	public void removeShip(Spaceship ss) {
@@ -3255,86 +1698,14 @@ public class Galaxy implements Serializable {
 		return players;
 	}
 
-	public List<String> getAllDestinationsStrings(Planet location, boolean longRange, Player aPlayer) {
-		return getAllDestinationsStrings(location, longRange, aPlayer, false);
-	}
-
-	public List<String> getAllDestinationsStrings(Planet location, boolean longRange, Player aPlayer,
-			boolean ownPlanetsOnly) {
-		Logger.finer("getAllDestinationsStrings, location: " + location + " longRange: " + longRange);
-		// first find if there is a spaceport on the planet
-		boolean hasSpacePort = false;
-		hasSpacePort = location.hasSpacePort();
-		List<String> alldest = new LinkedList<String>();
-		for (int i = 0; i < planetConnections.size(); i++) {
-			PlanetConnection temppc = (PlanetConnection) planetConnections.get(i);
-			Logger.finer("PC: " + temppc);
-			// first check if this connection includes location at all
-			Planet planetOtherEnd = temppc.getOtherEnd(location, true);
-			if (planetOtherEnd != null) {
-				Logger.finer("PlanetOtherEnd: " + planetOtherEnd.getName());
-				boolean bothHaveValidSpacePorts = false;
-				if (hasSpacePort) {
-					Logger.finer(" hasSpacePort");
-					// check if the other planet belongs to the same faction
-					boolean friendlyPlayer = false;
-					Player tmpPlayer = planetOtherEnd.getPlayerInControl();
-					if (tmpPlayer != null) { // planet is not neutral
-						Logger.finer("  planet is not neutral");
-						if (diplomacy.friendlySpaceports(aPlayer, tmpPlayer)) {
-							Logger.finer("  friendly player");
-							friendlyPlayer = true;
-						}
-						// Faction tmpFaction = tmpPlayer.getFaction();
-						// if (tmpFaction.equals(aPlayer.getFaction())){
-						// Logger.finer(" same faction");
-						// sameFaction = true;
-						// }
-					}
-					// then check if there is a spaceport on the other planet
-					if (friendlyPlayer) {
-						if (planetOtherEnd.hasSpacePort()) {
-							Logger.finer("ss2 is spaceport");
-							bothHaveValidSpacePorts = true;
-						}
-					}
-				}
-				boolean add = false;
-				if (bothHaveValidSpacePorts) {
-					Logger.finer("bothHaveValidSpacePorts!");
-					add = true;
-				} else {
-					if (longRange) { // ship is long range
-						Logger.finer("ship is long range!");
-						add = true;
-					} else {
-						if (!temppc.isLongRange()) { // ship is short range but so is connection range
-							Logger.finer("ship is short range but so is connection range");
-							add = true;
-						}
-					}
-				}
-				if (add & ownPlanetsOnly) {
-					if (planetOtherEnd.getPlayerInControl() != aPlayer) {
-						add = false;
-					}
-				}
-				if (add) {
-					alldest.add(planetOtherEnd.getName());
-				}
-			}
-		}
-		return alldest;
-	}
-
 	public List<Planet> getAllDestinations(Planet location, boolean longRange) {
 		List<Planet> alldest = new ArrayList<Planet>();
-		Planet tempPlanet = null;
+		BasePlanet tempPlanet = null;
 		for (int i = 0; i < planetConnections.size(); i++) {
-			PlanetConnection temppc = (PlanetConnection) planetConnections.get(i);
+			PlanetConnection temppc = planetConnections.get(i);
 			tempPlanet = temppc.getOtherEnd(location, longRange);
 			if (tempPlanet != null) { // there is a connection within range
-				alldest.add(tempPlanet);
+				alldest.add(getPlanet(tempPlanet.getName()));
 			}
 		}
 		return alldest;
@@ -3375,25 +1746,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return hasShipsInSystem;
-	}
-
-	/**
-	 * Checks if allies to the player have any ships on the planet. If so the player
-	 * should get information about the planet.
-	 * 
-	 * @return
-	 */
-	public boolean isItAlliedShipsInSystem(Player player, Planet planet) {
-		List<Player> allies = getAllies(player, players);
-		boolean haveAllied = false;
-		int i = 0;
-		while (!haveAllied && allies.size() < i) {
-			if (playerHasShipsInSystem(allies.get(i), planet)) {
-				haveAllied = true;
-			}
-			i++;
-		}
-		return haveAllied;
 	}
 
 	public List<Spaceship> getPlayersSpaceshipsOnPlanet(Player aPlayer, Planet aPlanet) {
@@ -3526,21 +1878,6 @@ public class Galaxy implements Serializable {
 		return troopsAtPlanet;
 	}
 
-	public List<Player> getAttackingPlayersWithTroopsOnPlanet(Planet aPlanet) {
-		List<Player> players = new ArrayList<Player>();
-		for (Troop aTroop : troops) {
-			if (aTroop.getOwner() != null
-					&& (aPlanet.getPlayerInControl() == null || (aTroop.getOwner() != aPlanet.getPlayerInControl()
-							&& diplomacy.hostileBesiege(aTroop.getOwner(), aPlanet.getPlayerInControl())))
-					&& aTroop.getPlanetLocation() == aPlanet) {
-				if (!players.contains(aTroop.getOwner())) {
-					players.add(aTroop.getOwner());
-				}
-			}
-		}
-		return players;
-	}
-
 	public List<Troop> getTroopsOnShip(Spaceship sShip) {
 		List<Troop> troopsAtPlanet = new LinkedList<Troop>();
 		for (Troop aTroop : troops) {
@@ -3638,10 +1975,6 @@ public class Galaxy implements Serializable {
 		return nr;
 	}
 
-	public PublicInfo getLastPublicInfo() {
-		return (PublicInfo) publicInfos.get(publicInfos.size() - 1);
-	}
-
 	public List<Spaceship> getSpaceships() {
 		return spaceships;
 	}
@@ -3696,8 +2029,8 @@ public class Galaxy implements Serializable {
 	public Faction findFaction(String uniqueFactionName) {
 		int index = 0;
 		Faction found = null;
-		while ((index < factions.size()) & (found == null)) {
-			Faction tempFaction = (Faction) factions.get(index);
+		while ((index < gameWorld.getFactions().size()) & (found == null)) {
+			Faction tempFaction = gameWorld.getFactions().get(index);
 			if (tempFaction.getName().equalsIgnoreCase(uniqueFactionName)) {
 				found = tempFaction;
 			} else {
@@ -3705,193 +2038,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return found;
-	}
-
-	public Planet getRunToPlanet(Spaceship aSpaceship) {
-		Logger.finer("getRunToPlanet aSpaceship: " + aSpaceship.getName());
-		Planet foundPlanet = null;
-		Planet firstDestination = null;
-		// kolla efter egna planeter
-		foundPlanet = findClosestOwnPlanetFromShip(aSpaceship.getLocation(), aSpaceship.getOwner(), aSpaceship);
-		// om en destinationsplanet har hittats skall den 1:a planeten på väg dit hämtas
-		if (foundPlanet != null) {
-			Logger.finer("foundPlanet: " + foundPlanet.getName());
-			firstDestination = findFirstJumpTowardsPlanet(aSpaceship.getLocation(), foundPlanet, aSpaceship);
-			Logger.finer("firstDestination: " + firstDestination.getName());
-		} else {
-			Logger.finer("no planet found");
-		}
-		return firstDestination;
-	}
-
-	public Planet findClosestOwnPlanetFromShip(Planet aLocation, Player aPlayer, Spaceship aSpaceship) {
-		return findClosestPlanet(aLocation, aPlayer, aSpaceship.getRange(), FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED,
-				null);
-	}
-	
-	private List<Planet> findClosestPlanets(Planet aLocation, Player aPlayer, SpaceshipRange aSpaceshipRange,
-											FindPlanetCriterion aCriterium, List<String> visitedPlanets) {
-		Logger.finer("findClosestOwnPlanetFromShip: " + aLocation.getName());
-		List<Planet> foundPlanets = new ArrayList<Planet>();
-		List<Planet> edgePlanets = new ArrayList<Planet>(); // de planeter som var på gränsen till det genomsökta
-															// området
-		edgePlanets.add(aLocation);
-		List<Planet> newEdgePlanets = new ArrayList<Planet>(); // de planeter som är på gränsen till det genomsökta
-																// området
-		List<Planet> searchedPlanets = new ArrayList<Planet>(); // lägg in alla som genomsökts + startplaneten
-		searchedPlanets.add(aLocation);
-		/*
-		 * // a spaceship cannot retreat back to the planet it retreated from if
-		 * (aLocation != aSpaceship.getRetreatingFrom()){
-		 * searchedPlanets.addElement(aSpaceship.getRetreatingFrom());
-		 * LoggingHandler.fine( this, this, "","adding: " +
-		 * aSpaceship.getRetreatingFrom()); }
-		 */
-		List<Planet> allNeighbours;
-		// loopa tills alla planeter har letats igenom eller minst 1 lämplig planet har
-		// hittats
-		while ((searchedPlanets.size() < planets.size()) & (foundPlanets.size() == 0) & (edgePlanets.size() > 0)) {
-			Logger.finer("in while");
-			// Gå igenom alla edgePlanets
-			for (int i = 0; i < edgePlanets.size(); i++) {
-				Logger.finest("loop edgeplanets");
-				Planet tempPlanet = edgePlanets.get(i);
-				Logger.finest("temp edgeplanet: " + tempPlanet.getName());
-				// Hämta alla grannar till tempPlanet
-				allNeighbours = getAllDestinations(tempPlanet, aSpaceshipRange == SpaceshipRange.LONG);
-				// Gå igenom alla allNeighbours (lägg i newEdgePlanets)
-				for (int j = 0; j < allNeighbours.size(); j++) {
-					Logger.finest("loop neighbours");
-					Planet tempNeighbourPlanet = allNeighbours.get(j);
-					Logger.finest("temp neighbours: " + tempNeighbourPlanet.getName());
-					// kolla att tempNeighbourPlanet inte redan finns i searchedPlanets
-					if ((!searchedPlanets.contains(tempNeighbourPlanet))
-							& (!newEdgePlanets.contains(tempNeighbourPlanet))) {
-						// lägg i newEdgePlanets
-						newEdgePlanets.add(tempNeighbourPlanet);
-						Logger.finest("adding to searched");
-					}
-				}
-			}
-			Logger.finer("loop edge finished");
-			// Gå igenom newEdgePlanets och (och ej belägrade??? kan bara gälla egna
-			// planeter)
-			for (int k = 0; k < newEdgePlanets.size(); k++) {
-				Logger.finest("loop new edge");
-				Planet tempPlanet = newEdgePlanets.get(k);
-				Logger.finest("temp new edgeplanet: " + tempPlanet.getName());
-				boolean alreadyVisited = false;
-				if ((visitedPlanets != null) && (visitedPlanets.contains(tempPlanet.getName()))) {
-					alreadyVisited = true;
-				}
-				if (!alreadyVisited) {
-					if (aCriterium == FindPlanetCriterion.OWN_PLANET_NOT_BESIEGED) {
-						// kolla om planeten tillhör eftersökt spelare
-						if (tempPlanet.getPlayerInControl() == aPlayer) {// om planeter tillhör eftersökt spelare
-							// om den dessutom ej är belägrad, sätt in den i foundPlanets
-							if (!tempPlanet.isBesieged()) {
-								foundPlanets.add(tempPlanet);
-								Logger.finest("adding to found: " + tempPlanet.getName());
-							}
-						}
-					} else if (aCriterium == FindPlanetCriterion.CLOSED) { // only planets not belonging to the player
-						if ((tempPlanet.getPlayerInControl() != aPlayer) & (!tempPlanet.isOpen())) {
-							foundPlanets.add(tempPlanet);
-						}
-					} else if (aCriterium == FindPlanetCriterion.HOSTILE_ASSASSIN_OPEN) {
-						if (tempPlanet.isOpen() & tempPlanet.getPlayerInControl() != null) {
-							if (diplomacy.hostileAssassin(tempPlanet.getPlayerInControl(), aPlayer)) {
-								foundPlanets.add(tempPlanet);
-							}
-						}
-					} else if (aCriterium == FindPlanetCriterion.NEUTRAL_UNTOUCHED) {
-						if (tempPlanet.isOpen() & tempPlanet.getPlayerInControl() == null) { // open neutral
-							foundPlanets.add(tempPlanet);
-						} else { // if closed since the beginning, and assumed neutral
-							MapPlanetInfo mapPlanetInfo = aPlayer.getMapInfos().getLastKnownOwnerInfo(tempPlanet); // should
-																													// return
-																													// null
-																													// if
-																													// no
-																													// info
-																													// about
-																													// owner
-							if ((tempPlanet.getPlayerInControl() != aPlayer) & !tempPlanet.isOpen()
-									& (mapPlanetInfo == null)) {
-								foundPlanets.add(tempPlanet);
-							}
-						}
-					} else if (aCriterium == FindPlanetCriterion.EMPTY_VIP_TRANSPORT_WITHOUT_ORDERS) { // very specific
-																										// criterium
-																										// used by Droid
-																										// GW
-						// List<Spaceship> shipsAtPlanet = getPlayersSpaceshipsOnPlanet(aPlayer,
-						// tempPlanet);
-						// for (Spaceship aShip : shipsAtPlanet){
-						// if (aShip.getName().equals("VIP Transport")){
-						// if (!aPlayer.getOrders().checkShipMove(aShip)){ // if there are no order
-						// already for this ship
-						// if (findAllVIPsOnShip(aShip).size() == 0){ // check that transport is empty
-						// if (!foundPlanets.contains(tempPlanet)){
-						// foundPlanets.add(tempPlanet);
-						// }
-						// }
-						// }
-						// }
-						// }
-						Spaceship foundShip = findEmptyShipWithoutOrders(aPlayer, tempPlanet, "VIP Transport");
-						if (foundShip != null) {
-							if (!foundPlanets.contains(tempPlanet)) {
-								foundPlanets.add(tempPlanet);
-							}
-						}
-					}
-				}
-			}
-			Logger.finest("loop new edge finished");
-			// töm edgePlanets
-			edgePlanets.clear();
-			// kopiera över newEdgePlanets till edgePlanets
-			for (int l = 0; l < newEdgePlanets.size(); l++) {
-				edgePlanets.add(newEdgePlanets.get(l));
-			}
-			// kopiera över newEdgePlanets till searchedPlanets
-			for (int m = 0; m < newEdgePlanets.size(); m++) {
-				searchedPlanets.add(newEdgePlanets.get(m));
-			}
-			// töm newEdgePlanets
-			newEdgePlanets.clear();
-			// log if no more planets can be searched
-			if (edgePlanets.size() == 0) {
-				Logger.finest("egdePlanets is empty, while loop exited");
-			}
-		}
-		return foundPlanets;
-	}
-
-	// aPlayer kan vara null för att leta efter neutrala planeter
-	private Planet findClosestPlanet(Planet aLocation, Player aPlayer, SpaceshipRange aSpaceshipRange,
-									 FindPlanetCriterion aCriterium, List<String> visitedPlanets) {
-		Logger.finer("findClosestOwnPlanetFromShip: " + aLocation.getName());
-		Planet foundPlanet = null;
-		List<Planet> foundPlanets = findClosestPlanets(aLocation, aPlayer, aSpaceshipRange,
-				aCriterium, visitedPlanets);
-		
-		Logger.finest("while finished");
-		// om vektorn.size() > 0, dvs minst 1st lämplig planet har hittats
-		if (foundPlanets.size() > 0) {
-			Logger.finest("foundPlanets.size() > 0");
-			// välj slumpartat en av de planeterna
-			if (foundPlanets.size() > 1) {
-				// Functions.randomize(foundPlanets);
-				Collections.shuffle(foundPlanets);
-			}
-			// sätt foundPlanet till den utslumpade planeten
-			foundPlanet = foundPlanets.get(0);
-		} else {
-			Logger.finest("foundPlanets.size() == 0");
-		}
-		return foundPlanet;
 	}
 
 	public Spaceship findEmptyShipWithoutOrders(Player aPlayer, Planet aPlanet, String shipTypeName) {
@@ -3907,13 +2053,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return foundShip;
-	}
-
-	/**
-	 * Used for VIP who should move toward a planet
-	 */
-	public Planet findFirstMoveTowardsPlanet(Planet aLocation, Planet aDestination) {
-		return findFirstJumpTowardsPlanet(aLocation, aDestination, SpaceshipRange.LONG);
 	}
 
 	/**
@@ -4081,23 +2220,19 @@ public class Galaxy implements Serializable {
 	}
 
 	public List<Faction> getFactions() {
-		return factions;
-	}
-
-	public void setFactions(List<Faction> factions) {
-		this.factions = factions;
+		return gameWorld.getFactions();
 	}
 
 	public List<VIP> getAllVIPs() {
 		return allVIPs;
 	}
 
-	public VIP findVIP(int aUniqueId) {
+	public VIP findVIP(String aUniqueId) {
 		int index = 0;
 		VIP found = null;
 		while ((index < allVIPs.size()) & (found == null)) {
 			VIP tempVIP = (VIP) allVIPs.get(index);
-			if (tempVIP.getId() == aUniqueId) {
+			if (tempVIP.getUniqueId().equals(aUniqueId)) {
 				found = tempVIP;
 			} else {
 				index++;
@@ -4109,8 +2244,8 @@ public class Galaxy implements Serializable {
 	public VIPType findVIPType(String vipTypeName) {
 		int index = 0;
 		VIPType found = null;
-		while ((index < vipTypes.size()) & (found == null)) {
-			VIPType tempVIPType = (VIPType) vipTypes.get(index);
+		while ((index < gameWorld.getVipTypes().size()) & (found == null)) {
+			VIPType tempVIPType = gameWorld.getVipTypes().get(index);
 			// System.out.println(tempVIPType.getName() + " = " + vipTypeName);
 			if (tempVIPType.getName().equalsIgnoreCase(vipTypeName)) {
 				found = tempVIPType;
@@ -4124,8 +2259,8 @@ public class Galaxy implements Serializable {
 	public VIPType findVIPTypeShortName(String vipTypeShortName) {
 		int index = 0;
 		VIPType found = null;
-		while ((index < vipTypes.size()) & (found == null)) {
-			VIPType tempVIPType = (VIPType) vipTypes.get(index);
+		while ((index < gameWorld.getVipTypes().size()) & (found == null)) {
+			VIPType tempVIPType = gameWorld.getVipTypes().get(index);
 			if (tempVIPType.getShortName().equalsIgnoreCase(vipTypeShortName)) {
 				found = tempVIPType;
 			} else {
@@ -4193,7 +2328,7 @@ public class Galaxy implements Serializable {
 		List<SpaceshipType> ssTypes = new LinkedList<SpaceshipType>();
 		// LoggingHandler.fine("Faction: " + aFaction.getName(),this);
 		// LoggingHandler.fine("Ships nr: " + tmpSsTypes.size(),this);
-		for (SpaceshipType aSST : gw.getShipTypes()) {
+		for (SpaceshipType aSST : gameWorld.getShipTypes()) {
 			if (aSST.isReadyToUseInBlackMarket(this)) {
 				ssTypes.add(aSST);
 			}
@@ -4210,7 +2345,7 @@ public class Galaxy implements Serializable {
 	private List<TroopType> getTroopTypesToBlackMarket() {
 		Logger.fine("getTroopTypesToBlackMarket() called");
 		List<TroopType> troopTypes = new LinkedList<TroopType>();
-		for (Faction aFaction : factions) {
+		for (Faction aFaction : gameWorld.getFactions()) {
 			Logger.finer("Faction: " + aFaction.getName());
 			List<TroopType> factionTroopTypes = aFaction.getTroopTypes();
 			Logger.finer("TroopTypes #: " + factionTroopTypes.size());
@@ -4236,18 +2371,12 @@ public class Galaxy implements Serializable {
 		Logger.finer(String.valueOf(freqValue));
 		returnType = getVipFromFrequency(freqValue);
 		Logger.finer(returnType.getName());
-		/*
-		 * while (returnType == null){ int index =
-		 * Functions.getRandomInt(0,vipTypes.size()-1); returnType =
-		 * (VIPType)vipTypes.elementAt(index); if (returnType.isGovernor()){ returnType
-		 * = null; } }
-		 */
 		return returnType;
 	}
 
 	private int getTotalVIPFrequencySum() {
 		int total = 0;
-		for (VIPType aVipType : vipTypes) {
+		for (VIPType aVipType : gameWorld.getVipTypes()) {
 			if (aVipType.isReadyToUseInBlackMarket(this)) {
 				total = total + aVipType.getFrequency().getFrequency();
 			}
@@ -4262,7 +2391,7 @@ public class Galaxy implements Serializable {
 		int counter = 0;
 		Logger.finer(String.valueOf(freqValue));
 		while (aVipType == null) {
-			tmpVipType = (VIPType) vipTypes.get(counter);
+			tmpVipType = gameWorld.getVipTypes().get(counter);
 			if (tmpVipType.isReadyToUseInBlackMarket(this)) {
 				tmpFreqSum = tmpFreqSum + tmpVipType.getFrequency().getFrequency();
 				Logger.finest("tmpFreqSum: " + tmpFreqSum);
@@ -4275,14 +2404,6 @@ public class Galaxy implements Serializable {
 		return aVipType;
 	}
 
-	public BlackMarketOffer findBlackMarketOffer(int aUniqueId) {
-		return blackMarket.findBlackMarketOffer(aUniqueId);
-	}
-
-	public void addBlackMarketBid(BlackMarketBid aBid) {
-		blackMarket.addBlackMarketBid(aBid);
-	}
-
 	// add Black Market message to all except aPlayer
 	public void addBlackMarketMessages(Player aPlayer, String aMessage) {
 		for (int i = 0; i < players.size(); i++) {
@@ -4291,10 +2412,6 @@ public class Galaxy implements Serializable {
 				tempPlayer.addToLatestBlackMarketMessages(aMessage);
 			}
 		}
-	}
-
-	public BlackMarket getBlackMarket() {
-		return blackMarket;
 	}
 
 	public String getStatus() {
@@ -4647,11 +2764,11 @@ public class Galaxy implements Serializable {
 	}
 
 	public GameWorld getGameWorld() {
-		return gw;
+		return gameWorld;
 	}
 
 	public void setGameWorld(GameWorld aGameWorld) {
-		gw = aGameWorld;
+		gameWorld = aGameWorld;
 	}
 
 	public boolean isFTLMasterOnShip(Spaceship aShip) {
@@ -4671,8 +2788,8 @@ public class Galaxy implements Serializable {
 	}
 
 	public List<Faction> getActiveFactions(Faction exceptionFaction) {
-		List<Faction> allFactions = new ArrayList<Faction>();
-		for (Faction aFaction : factions) {
+		List<Faction> allFactions = new ArrayList<>();
+		for (Faction aFaction : gameWorld.getFactions()) {
 			if (!aFaction.getName().equalsIgnoreCase(exceptionFaction.getName())) {
 				allFactions.add(aFaction);
 			}
@@ -4842,8 +2959,8 @@ public class Galaxy implements Serializable {
 	}
 
 	public void setAllFactionsSelectable() {
-		selectableFactionNames = new LinkedList<String>();
-		for (Faction aFaction : factions) {
+		selectableFactionNames = new LinkedList<>();
+		for (Faction aFaction : gameWorld.getFactions()) {
 			selectableFactionNames.add(aFaction.getName());
 		}
 	}
@@ -4871,7 +2988,7 @@ public class Galaxy implements Serializable {
 
 	public String getFactionListString() {
 		StringBuffer sb = new StringBuffer();
-		if (selectableFactionNames.size() == gw.getFactions().size()) {
+		if (selectableFactionNames.size() == gameWorld.getFactions().size()) {
 			sb.append("All");
 		} else {
 			for (String selFactionName : selectableFactionNames) {
@@ -4882,29 +2999,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return sb.toString();
-	}
-
-	public void checkDestroyBuildings(Planet aPlanet, Player aPlayer, boolean autoDestroy) {
-		if (autoDestroy | aPlayer.getPlanetOrderStatuses().isDestroyOrbitalBuildings(aPlanet.getName())) {
-			List<Building> removeBuildings = new ArrayList<Building>();
-			List<Building> buildings = aPlanet.getBuildings();
-			for (Building building : buildings) {
-				if (building.getBuildingType().isInOrbit()) {
-					removeBuildings.add(building);
-				}
-			}
-			for (Building building : removeBuildings) {
-				// skriva meddelanden...
-				aPlayer.getTurnInfo().addToLatestGeneralReport("You have destroyed a "
-						+ building.getBuildingType().getName() + " on " + aPlanet.getName() + ".");
-				if (aPlanet.getPlayerInControl() != null) {
-					aPlanet.getPlayerInControl().getTurnInfo()
-							.addToLatestGeneralReport("Your " + building.getBuildingType().getName() + " on the "
-									+ aPlanet.getName() + " has been destroyed.");
-				}
-				aPlanet.removeBuilding(building.getUniqueId());
-			}
-		}
 	}
 
 	public void removeBuildingsDefeatedAlienPlayer(Player defeatedPlayer) {
@@ -4960,7 +3054,7 @@ public class Galaxy implements Serializable {
 	}
 
 	public boolean hasTroops() {
-		return gw.hasTroops();
+		return gameWorld.hasTroops();
 	}
 
 	public List<VIP> findLandBattleVIPs(Troop aTroop, boolean groupBonus) {
@@ -4979,48 +3073,13 @@ public class Galaxy implements Serializable {
 	}
 
 	public List<VIPType> getVIPType(Alignment findAlignment) {
-		List<VIPType> vipTypes = new LinkedList<VIPType>();
-		for (VIPType aVipType : gw.getVipTypes()) {
+		List<VIPType> vipTypes = new LinkedList<>();
+		for (VIPType aVipType : gameWorld.getVipTypes()) {
 			if (aVipType.getAlignment() == findAlignment) {
 				vipTypes.add(aVipType);
 			}
 		}
 		return vipTypes;
-	}
-
-	public DiplomacyGameType getDiplomacyGameType() {
-		return diplomacy.getDiplomacyGameType();
-	}
-
-	public void setPlayerDiplomacy() {
-		diplomacy.setPlayerDiplomacy();
-	}
-
-	public void setDiplomacyGameType(DiplomacyGameType diplomacyGameType) {
-		diplomacy.setDiplomacyGameType(diplomacyGameType);
-	}
-
-	public List<DiplomacyState> getDiplomacyStates() {
-		return diplomacy.getDiplomacyStates();
-	}
-
-	public DiplomacyState getDiplomacyState(Player player1, Player player2) {
-		return diplomacy.getDiplomacyState(player1, player2);
-	}
-
-	public List<Player> getAllies(Player player, List<Player> players) {
-
-		List<Player> allies = new ArrayList<Player>();
-
-		for (Player aPlayer : players) {
-			if (player != aPlayer) {
-				DiplomacyState diplomacyState = player.getGalaxy().getDiplomacyState(player, aPlayer);
-				if (diplomacyState.getCurrentLevel().isHigher(DiplomacyLevel.PEACE)) {
-					allies.add(aPlayer);
-				}
-			}
-		}
-		return allies;
 	}
 
 	public Planet getPlanet(String planetName) {
@@ -5218,36 +3277,6 @@ public class Galaxy implements Serializable {
 		this.numberOfStartPlanet = numberOfStartPlanet;
 	}
 
-	/**
-	 * Adds a statistics value. Turnnumber will be handled automatically.
-	 */
-	public void addStatistics(StatisticType aStatisticType, Faction aFaction, int value) {
-		addStatistics(aStatisticType, aFaction.getName(), value);
-	}
-
-	/**
-	 * Adds a statistics value. Turnnumber will be handled automatically.
-	 */
-	public void addStatistics(StatisticType aStatisticType, Player aPlayer, int value) {
-		addStatistics(aStatisticType, aPlayer.getName(), value);
-	}
-
-	public void addStatistics(StatisticType aStatisticType, Player aPlayer, int value, boolean cumulative) {
-		addStatistics(aStatisticType, aPlayer.getName(), value, cumulative);
-	}
-
-	public void addStatistics(StatisticType aStatisticType, String aPlayerName, int value) {
-		addStatistics(aStatisticType, aPlayerName, value, false);
-	}
-
-	public void addStatistics(StatisticType aStatisticType, String aPlayerName, int value, boolean cumulative) {
-		statisticsHandler.addStatistics(aStatisticType, aPlayerName, value, cumulative);
-	}
-
-	public StatisticsHandler getStatisticsHandler() {
-		return statisticsHandler;
-	}
-
 	public boolean getFactionGame() {
 		boolean factionGame = false; // if any faction have more than one player
 		List<Faction> foundFactions = new LinkedList<Faction>();
@@ -5259,10 +3288,6 @@ public class Galaxy implements Serializable {
 			}
 		}
 		return factionGame;
-	}
-
-	public Diplomacy getDiplomacy() {
-		return diplomacy;
 	}
 
 	public boolean checkAllInConfederacyOrder(Player thePlayer, List<Player> confPlayers) {
@@ -5304,16 +3329,16 @@ public class Galaxy implements Serializable {
 		return confCounter > 0;
 	}
 
-	public List<DiplomacyState> getPostConfList() {
-		return postConfList;
+	public List<DiplomacyState> getPostConflicts() {
+		return postConflicts;
 	}
 
-	public void setPostConfList(List<DiplomacyState> postConfList) {
-		this.postConfList = postConfList;
+	public void setPostConflicts(List<DiplomacyState> postConfList) {
+		this.postConflicts = postConfList;
 	}
 
 	public void addPostConfList(DiplomacyState addToList) {
-		postConfList.add(addToList);
+		postConflicts.add(addToList);
 	}
 
 	/**
@@ -5366,21 +3391,13 @@ public class Galaxy implements Serializable {
 		return noPlanet;
 	}
 
-	public List<UniqueIdCounter> getCounters(){
-		return counters;
+	public UniqueIdCounter getUniqueIdCounter(CounterType type){
+		return uniqueIdCounters.stream().filter(counter -> counter.getCounterType() == type).findFirst().orElse(createUniqueIdCounter(type));
 	}
 
-	public void setCounter(List<UniqueIdCounter> counters){
-		this.counters = counters;
-	}
-
-	public UniqueIdCounter getUniqueIdCounter(String name){
-		return counters.stream().filter(counter -> counter.getName().equals(name)).findFirst().orElse(createUniqueIdCounter(name));
-	}
-
-	private UniqueIdCounter createUniqueIdCounter(String name){
-		UniqueIdCounter counter = new UniqueIdCounter(name);
-		counters.add(counter);
+	private UniqueIdCounter createUniqueIdCounter(CounterType type){
+		UniqueIdCounter counter = new UniqueIdCounter(type);
+		uniqueIdCounters.add(counter);
 		return counter;
 	}
 

@@ -1,451 +1,466 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
-import spaceraze.util.general.Functions;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
-import spaceraze.world.Alignment;
-import spaceraze.world.Planet;
-import spaceraze.world.Player;
-import spaceraze.world.ShortNameable;
-import spaceraze.world.Spaceship;
-import spaceraze.world.Troop;
-import spaceraze.world.TurnInfo;
-import spaceraze.world.VIP;
-import spaceraze.world.VIPType;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "VIP")
 public class VIP implements Serializable, ShortNameable {
-  static final long serialVersionUID = 1L;
-  private Planet planetLocation = null;
-  private Spaceship shipLocation = null;
-  private Troop troopLocation = null;
-  private Player boss = null;
-  private VIPType vipType = null;
-  private int uniqueId;
-  private int govCounter = -1; // used by diplomats and infestators
-  private int govLastTurn = -1;
-  private int kills = 0;
-  private boolean hasKilled = false;
+    static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "FK_GALAXY")
+    private Galaxy galaxy;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_PLANET")
+    @Column(insertable = false, updatable = false)
+    private Planet planetLocation = null;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_SPACESHIP")
+    @Column(insertable = false, updatable = false)
+    private Spaceship shipLocation = null;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_TROOP")
+    @Column(insertable = false, updatable = false)
+    private Troop troopLocation = null;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_PLAYER")
+    @Column(insertable = false, updatable = false)
+    private Player boss = null;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_VIP_TYPE")
+    @Column(insertable = false, updatable = false)
+    private VIPType vipType = null;
+    private String uniqueId;
+    private int govCounter = -1; // used by diplomats and infestators
+    private int govLastTurn = -1;
+    private int kills = 0;
+    private boolean hasKilled = false;
+    private int buildCost = 0;
+    private int upkeep = 0;
 //  private List<String> visitedPlanetNames; // used by AI to compute how some VIPs should move
 
-  public VIP(VIPType aVIPType, int uniqueId, boolean isFanatic){
-	  // TODO (Tobbe) adding clone on VIPType for research one players VIPs. maybe this will be  a problem then compering VIPs TIPType. If so change to check the VIPType name instead.
-    
-	  vipType = Functions.deepClone(aVIPType);
-	  //vipType = aVIPType;
-	  this.uniqueId = uniqueId;
-	  if(isFanatic){
-		  vipType.setBuildCost(0);
-		  vipType.setUpkeep(0);
-	  }
-  }
+    public VIP(VIPType aVIPType, boolean isFanatic) {
 
-  // används bl.a i Galaxy när nya spelare skapas.  Denna ser inte ut att användas.
-  public VIP(Player newBoss,Planet aPlanet,VIPType aVIPType, int uniqueId){
-    boss = newBoss;
-    planetLocation = aPlanet;
-    vipType = aVIPType;
-    this.uniqueId = uniqueId;
-  }
-  
-  public String getShortName(){
-  	return vipType.getShortName();
-  }
-
-  public String getLocationString(){
-    String locationString = "";
-    if (planetLocation != null){
-      locationString = planetLocation.getName();
-    }else
-    if (troopLocation != null){
-      locationString = troopLocation.getUniqueName();	
-    }else{
-      locationString = shipLocation.getName();
+        vipType = aVIPType;
+        this.uniqueId = UUID.randomUUID().toString();
+        if (!isFanatic) {
+            buildCost = vipType.getBuildCost();
+            upkeep = vipType.getUpkeep();
+        }
     }
-    return locationString;
-  }
 
-  public Planet getLocation(){
-    Planet location = null;
-    if (planetLocation != null){
-    	location = planetLocation;
-    }else
-    if (troopLocation != null){
-    	if (troopLocation.getPlanetLocation() != null){
-    		location = troopLocation.getPlanetLocation();
-    	}else{
-    		location = troopLocation.getShipLocation().getLocation();
-    	}
-    }else{
-    	location = shipLocation.getLocation();
+    // används bl.a i Galaxy när nya spelare skapas. Denna ser inte ut att användas.
+    public VIP(Player newBoss, Planet aPlanet, VIPType aVIPType) {
+        boss = newBoss;
+        planetLocation = aPlanet;
+        vipType = aVIPType;
+        this.uniqueId = UUID.randomUUID().toString();
     }
-    return location;
-  }
 
-  public void moveVIP(Planet moveToPlanet, TurnInfo ti){
-    String oldLocationString = getLocationString();
-    planetLocation = moveToPlanet;
-    shipLocation = null;
-    troopLocation = null;
-    ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + planetLocation.getName() + ".");
-  }
+    public String getShortName() {
+        return vipType.getShortName();
+    }
 
-  public void moveVIP(Spaceship moveToShip, TurnInfo ti){
-    String oldLocationString = getLocationString();
-    planetLocation = null;
-    shipLocation = moveToShip;
-    troopLocation = null;
-    ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + shipLocation.getName() + ".");
-  }
+    public String getLocationString() {
+        String locationString = "";
+        if (planetLocation != null) {
+            locationString = planetLocation.getName();
+        } else if (troopLocation != null) {
+            locationString = troopLocation.getUniqueName();
+        } else {
+            locationString = shipLocation.getName();
+        }
+        return locationString;
+    }
 
-  public void moveVIP(Troop moveToTroop, TurnInfo ti){
-	  String oldLocationString = getLocationString();
-	  planetLocation = null;
-	  shipLocation = null;
-	  troopLocation = moveToTroop;
-	  ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + troopLocation.getUniqueName() + ".");
-  }
+    public Planet getLocation() {
+        Planet location = null;
+        if (planetLocation != null) {
+            location = planetLocation;
+        } else if (troopLocation != null) {
+            if (troopLocation.getPlanetLocation() != null) {
+                location = troopLocation.getPlanetLocation();
+            } else {
+                location = troopLocation.getShipLocation().getLocation();
+            }
+        } else {
+            location = shipLocation.getLocation();
+        }
+        return location;
+    }
 
-  public int getId(){
-    return uniqueId;
-  }
+    public void moveVIP(Planet moveToPlanet, TurnInfo ti) {
+        String oldLocationString = getLocationString();
+        planetLocation = moveToPlanet;
+        shipLocation = null;
+        troopLocation = null;
+        ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + planetLocation.getName() + ".");
+    }
 
-  public String getName(){
-    return vipType.getTypeName();
-  }
+    public void moveVIP(Spaceship moveToShip, TurnInfo ti) {
+        String oldLocationString = getLocationString();
+        planetLocation = null;
+        shipLocation = moveToShip;
+        troopLocation = null;
+        ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + shipLocation.getName() + ".");
+    }
 
-  public List<String> getAbilitiesStrings(){
-    return vipType.getAbilitiesStrings();
-  }
+    public void moveVIP(Troop moveToTroop, TurnInfo ti) {
+        String oldLocationString = getLocationString();
+        planetLocation = null;
+        shipLocation = null;
+        troopLocation = moveToTroop;
+        ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + troopLocation.getUniqueName() + ".");
+    }
 
-  public void setBoss(Player newBoss){
-    boss = newBoss;
-  }
+    public String getName() {
+        return vipType.getTypeName();
+    }
 
-  public void setLocation(Spaceship aShip){
-    shipLocation = aShip;
-    planetLocation = null;
-    troopLocation = null;
-  }
+    public List<String> getAbilitiesStrings() {
+        return vipType.getAbilitiesStrings();
+    }
 
-  public void setLocation(Planet aPlanet){
-    planetLocation = aPlanet;
-    shipLocation = null;
-    troopLocation = null;
-  }
+    public void setBoss(Player newBoss) {
+        boss = newBoss;
+    }
 
-  public void setLocation(Troop aTroop){
-	  planetLocation = null;
-	  shipLocation = null;
-	  troopLocation = aTroop;
-  }
+    public void setLocation(Spaceship aShip) {
+        shipLocation = aShip;
+        planetLocation = null;
+        troopLocation = null;
+    }
 
-  public boolean isDuellist(){
-    return vipType.isDuellist();
-  }
+    public void setLocation(Planet aPlanet) {
+        planetLocation = aPlanet;
+        shipLocation = null;
+        troopLocation = null;
+    }
 
-  public boolean isHardToKill(){
-    return vipType.isHardToKill();
-  }
+    public void setLocation(Troop aTroop) {
+        planetLocation = null;
+        shipLocation = null;
+        troopLocation = aTroop;
+    }
 
-  public boolean isGovernor(){
-    return vipType.isGovernor();
-  }
+    public boolean isDuellist() {
+        return vipType.isDuellist();
+    }
 
-  public boolean isFTLbonus(){
-	return vipType.isFTLbonus();
-  }
+    public boolean isHardToKill() {
+        return vipType.isHardToKill();
+    }
 
-  public boolean isSpy(){
-    return vipType.isSpying();
-  }
+    public boolean isGovernor() {
+        return vipType.isGovernor();
+    }
 
-  public boolean isDiplomat(){
-	  return vipType.isDiplomat();
-  }
+    public boolean isFTLbonus() {
+        return vipType.isFTLbonus();
+    }
 
-  public boolean isCounterSpy(){
-    return vipType.isCounterSpy();
-  }
+    public boolean isSpy() {
+        return vipType.isSpying();
+    }
 
-  public boolean isAssassin(){
-    return vipType.isAssassin();
-  }
-  
-  public int getAssassinationSkill() {
-	  int skill = vipType.getAssassination();
-	  skill = skill + (kills*5);
-	  return skill;
-  }
+    public boolean isDiplomat() {
+        return vipType.isDiplomat();
+    }
 
-  public Player getBoss(){
-    return boss;
-  }
+    public boolean isCounterSpy() {
+        return vipType.isCounterSpy();
+    }
 
-  public boolean onPlanet(){
-    return planetLocation != null;
-  }
+    public boolean isAssassin() {
+        return vipType.isAssassin();
+    }
 
-  public boolean onShip(){
-    return shipLocation != null;
-  }
+    public int getAssassinationSkill() {
+        int skill = vipType.getAssassination();
+        skill = skill + (kills * 5);
+        return skill;
+    }
 
-  public Planet getPlanetLocation(){
-    return planetLocation;
-  }
+    public Player getBoss() {
+        return boss;
+    }
 
-  public Spaceship getShipLocation(){
-    return shipLocation;
-  }
+    public boolean onPlanet() {
+        return planetLocation != null;
+    }
 
-  public Troop getTroopLocation(){
-	  return troopLocation;
-  }
+    public boolean onShip() {
+        return shipLocation != null;
+    }
 
-  public boolean canVisitNeutralPlanets(){
-    return vipType.getCanVisitNeutralPlanets();
-  }
+    public Planet getPlanetLocation() {
+        return planetLocation;
+    }
 
-  public boolean canVisitEnemyPlanets(){
-    return vipType.getCanVisitEnemyPlanets();
-  }
+    public Spaceship getShipLocation() {
+        return shipLocation;
+    }
 
-  public String getTypeName(){
-    return vipType.getTypeName();
-  }
+    public Troop getTroopLocation() {
+        return troopLocation;
+    }
 
-  public int getGovCounter(){
-    return govCounter;
-  }
+    public boolean canVisitNeutralPlanets() {
+        return vipType.getCanVisitNeutralPlanets();
+    }
 
-  public void clearGovCounter(){
-    govCounter = 0;
-  }
+    public boolean canVisitEnemyPlanets() {
+        return vipType.getCanVisitEnemyPlanets();
+    }
 
-  public void incGovCounter(){
-    govCounter = govCounter + 1;
-  }
+    public String getTypeName() {
+        return vipType.getTypeName();
+    }
 
-  public void incGovCounter(int i){
-	  govCounter = govCounter + i;
-  }
-  
-  public int getGovLastTurn(){
-	  return govLastTurn;
-  }
+    public int getGovCounter() {
+        return govCounter;
+    }
 
-  public void clearLastTurn(){
-	  govLastTurn = -1;
-  }
+    public void clearGovCounter() {
+        govCounter = 0;
+    }
 
-  public void setLastTurn(int i){
-	  govLastTurn = i;
-  }
+    public void incGovCounter() {
+        govCounter = govCounter + 1;
+    }
 
-  public void incKills(){
-    kills = kills + 1;
-  }
+    public void incGovCounter(int i) {
+        govCounter = govCounter + i;
+    }
 
-  public int getKills(){
-    return kills;
-  }
+    public int getGovLastTurn() {
+        return govLastTurn;
+    }
 
-  public void clearHasKilled(){
-    hasKilled = false;
-  }
+    public void clearLastTurn() {
+        govLastTurn = -1;
+    }
 
-  public boolean getHasKilled(){
-    return hasKilled;
-  }
+    public void setLastTurn(int i) {
+        govLastTurn = i;
+    }
 
-  public void setHasKilled(){
-    hasKilled = true;
-  }
-  
-  public int getInitDefence(){
-  	return vipType.getInitDefence();
-  }
+    public void incKills() {
+        kills = kills + 1;
+    }
 
-  public int getInitBonus(){
-	  return vipType.getInitBonus();
-  }
+    public int getKills() {
+        return kills;
+    }
 
-  public String getAlignmentString(){
-	  return vipType.getAlignmentString();
-  }
+    public void clearHasKilled() {
+        hasKilled = false;
+    }
 
-  public int getInitSquadronBonus(){
-	  return vipType.getInitFighterSquadronBonus();
-  }
+    public boolean getHasKilled() {
+        return hasKilled;
+    }
 
-  public boolean getShowOnOpenPlanet(){
-  	return vipType.getShowOnOpenPlanet();
-  }
-  
-  public boolean hasResistanceBonus(){
-  	return vipType.getResistanceBonus() > 0;
-  }
+    public void setHasKilled() {
+        hasKilled = true;
+    }
 
-  public int getResistanceBonus(){
-  	return vipType.getResistanceBonus();
-  }
-  
-  public boolean hasPsychWarfareBonus(){
-  	return vipType.getPsychWarfareBonus() > 0;
-  }
-  
-  public int getPsychWarfareBonus(){
-  	return vipType.getPsychWarfareBonus();
-  }
-  
-  public int getOpenIncBonus() {
-	  return vipType.getOpenIncBonus();
-  }
+    public int getInitDefence() {
+        return vipType.getInitDefence();
+    }
 
-  public int getClosedIncBonus() {
-	  return vipType.getClosedIncBonus();
-  }
-  
-  public int getTechBonus(){
-	  return vipType.getTechBonus();
-  }
-  
-  public int getShipBuildBonus(){
-	  
-	  return vipType.getShipBuildBonus();
-  }
-  public int getTroopBuildBonus(){
-	  
-	  return vipType.getTroopBuildBonus();
-  }
-  public int getBuildingBuildBonus(){
-	  return vipType.getBuildingBuildBonus();
-  }
-  /*
-  public int getWharfUpgradeBonus(){
-	  return vipType.getWharfUpgradeBonus();
-  }
-*/
-  public int getDuellistSkill(){
-	  int skill = vipType.getDuellistSkill();
-	  skill = skill + (kills*5);
-	  return skill;
-  }
-  
-  public boolean isWellGuarded(){
-	  return vipType.isWellGuarded();
-  }
-  
-  public boolean isImmuneToCounterEspionage() {
-	  return vipType.isImmuneToCounterEspionage();
-  }
-  
-  public int getCounterEspionage() {
-	  int skill = vipType.getCounterEspionage();
-	  skill = skill + (kills*5);
-	  if (skill > 95){
-		  skill = 95;
-	  }
-	  return skill;
-  }
+    public int getInitBonus() {
+        return vipType.getInitBonus();
+    }
 
-  public boolean getCanVisitEnemyPlanets(){
-	  return vipType.getCanVisitEnemyPlanets();
-  }
-  
-  public boolean isInfestator(){
-	  return vipType.isInfestate();
-  }
-  
-  public boolean isExterminator(){
-	  return vipType.getExterminator() > 0;
-  }
+    public String getAlignmentString() {
+        return vipType.getAlignmentString();
+    }
 
-  public int getExterminatorSkill(){
-	  int skill = vipType.getExterminator();
-	  skill = skill + (kills*5);
-	  if (skill > 95){
-		  skill = 95;
-	  }
-	  return skill;
-  }
-  
-  public boolean hatesDuellist(VIP anotherVIP){
-	  return vipType.getAlignment().hateDuellist(anotherVIP.getAlignment().getName());
-  }
-  
-  public Alignment getAlignment(){
-	  return vipType.getAlignment();
-  }
-  
-  public boolean isBattleVip(){
-	  return vipType.isBattleVip();
-  }
-  
-  public int getAimBonus(){
-	  return vipType.getAimBonus();
-  }
-  
-  public boolean hasAimBonus(){
-	  return getAimBonus() > 0;
-  }
-  
-  public String toString(){
-	  return vipType.getName();
-  }
-  
-  public boolean isLandBattleVIP(){
-	  return vipType.isLandBattleVip();
-  }
+    public int getInitSquadronBonus() {
+        return vipType.getInitFighterSquadronBonus();
+    }
 
-  
+    public boolean getShowOnOpenPlanet() {
+        return vipType.getShowOnOpenPlanet();
+    }
+
+    public boolean hasResistanceBonus() {
+        return vipType.getResistanceBonus() > 0;
+    }
+
+    public int getResistanceBonus() {
+        return vipType.getResistanceBonus();
+    }
+
+    public boolean hasPsychWarfareBonus() {
+        return vipType.getPsychWarfareBonus() > 0;
+    }
+
+    public int getPsychWarfareBonus() {
+        return vipType.getPsychWarfareBonus();
+    }
+
+    public int getOpenIncBonus() {
+        return vipType.getOpenIncBonus();
+    }
+
+    public int getClosedIncBonus() {
+        return vipType.getClosedIncBonus();
+    }
+
+    public int getTechBonus() {
+        return vipType.getTechBonus();
+    }
+
+    public int getShipBuildBonus() {
+
+        return vipType.getShipBuildBonus();
+    }
+
+    public int getTroopBuildBonus() {
+
+        return vipType.getTroopBuildBonus();
+    }
+
+    public int getBuildingBuildBonus() {
+        return vipType.getBuildingBuildBonus();
+    }
+
+    /*
+    public int getWharfUpgradeBonus(){
+        return vipType.getWharfUpgradeBonus();
+    }
+  */
+    public int getDuellistSkill() {
+        int skill = vipType.getDuellistSkill();
+        skill = skill + (kills * 5);
+        return skill;
+    }
+
+    public boolean isWellGuarded() {
+        return vipType.isWellGuarded();
+    }
+
+    public boolean isImmuneToCounterEspionage() {
+        return vipType.isImmuneToCounterEspionage();
+    }
+
+    public int getCounterEspionage() {
+        int skill = vipType.getCounterEspionage();
+        skill = skill + (kills * 5);
+        if (skill > 95) {
+            skill = 95;
+        }
+        return skill;
+    }
+
+    public boolean getCanVisitEnemyPlanets() {
+        return vipType.getCanVisitEnemyPlanets();
+    }
+
+    public boolean isInfestator() {
+        return vipType.isInfestate();
+    }
+
+    public boolean isExterminator() {
+        return vipType.getExterminator() > 0;
+    }
+
+    public int getExterminatorSkill() {
+        int skill = vipType.getExterminator();
+        skill = skill + (kills * 5);
+        if (skill > 95) {
+            skill = 95;
+        }
+        return skill;
+    }
+
+    public boolean hatesDuellist(VIP anotherVIP) {
+        return vipType.getAlignment().hateDuellist(anotherVIP.getAlignment().getName());
+    }
+
+    public Alignment getAlignment() {
+        return vipType.getAlignment();
+    }
+
+    public boolean isBattleVip() {
+        return vipType.isBattleVip();
+    }
+
+    public int getAimBonus() {
+        return vipType.getAimBonus();
+    }
+
+    public boolean hasAimBonus() {
+        return getAimBonus() > 0;
+    }
+
+    public String toString() {
+        return vipType.getName();
+    }
+
+    public boolean isLandBattleVIP() {
+        return vipType.isLandBattleVip();
+    }
+
+
 //  public int getTroopAttacksBonus() {
 //	  return vipType.getTroopAttacksBonus();
 //  }
 
-  public int getLandBattleGroupAttackBonus() {
-	  return vipType.getLandBattleGroupAttackBonus();
-  }
-  
-  public int getBuildCost() {
-		return vipType.getBuildCost();
-  }
+    public int getLandBattleGroupAttackBonus() {
+        return vipType.getLandBattleGroupAttackBonus();
+    }
 
-	
-  public int getUpkeep() {
-	  return vipType.getUpkeep();
-  }
-  
-  public boolean isTroopVIP(){
-	  return vipType.isTroopVIP();
-  }
+    public int getBuildCost() {
+        return buildCost;
+    }
 
-  public boolean isStealth() {
-	  return vipType.isStealth();
-  }
 
-  public int getBombardmentBonus() {
-	  return vipType.getBombardmentBonus();
-  }
+    public int getUpkeep() {
+        return upkeep;
+    }
 
-  public boolean isAttackScreenedSquadron() {
-	  return vipType.isAttackScreenedSquadron();
-  }
+    public boolean isTroopVIP() {
+        return vipType.isTroopVIP();
+    }
 
-  public boolean isAttackScreenedCapital() {
-	  return vipType.isAttackScreenedCapital();
-  }
+    public boolean isStealth() {
+        return vipType.isStealth();
+    }
 
-  public boolean isPlanetarySurvey() {
-	  return vipType.isPlanetarySurvey();
-  }
+    public int getBombardmentBonus() {
+        return vipType.getBombardmentBonus();
+    }
+
+    public boolean isAttackScreenedSquadron() {
+        return vipType.isAttackScreenedSquadron();
+    }
+
+    public boolean isAttackScreenedCapital() {
+        return vipType.isAttackScreenedCapital();
+    }
+
+    public boolean isPlanetarySurvey() {
+        return vipType.isPlanetarySurvey();
+    }
 
 //	public List<String> getVisitedPlanetNames() {
 //		return visitedPlanetNames;
@@ -454,18 +469,18 @@ public class VIP implements Serializable, ShortNameable {
 //	public void setVisitedPlanetNames(List<String> visitedPlanetNames) {
 //		this.visitedPlanetNames = visitedPlanetNames;
 //	}
-  
-  public static VIP getNewVIP(String vipTypeName, GameWorld gameWorld) {
-		VIPType vipType = gameWorld.getVIPTypeByName(vipTypeName);
-		VIP tempVIP = vipType.createNewVIP(true);
-		return tempVIP;
-	}
 
-	public static VIP getNewVIPshortName(String vipTypeShortName, GameWorld gameWorld) {
-		Logger.finer("getNewVIPshortName: " + vipTypeShortName);
-		VIPType vipType = gameWorld.getVIPTypeByShortName(vipTypeShortName);
-		VIP tempVIP = vipType.createNewVIP(true);
-		return tempVIP;
-	}
+    public static VIP getNewVIP(String vipTypeName, GameWorld gameWorld) {
+        VIPType vipType = gameWorld.getVIPTypeByName(vipTypeName);
+        VIP tempVIP = vipType.createNewVIP(true);
+        return tempVIP;
+    }
+
+    public static VIP getNewVIPshortName(String vipTypeShortName, GameWorld gameWorld) {
+        Logger.finer("getNewVIPshortName: " + vipTypeShortName);
+        VIPType vipType = gameWorld.getVIPTypeByShortName(vipTypeShortName);
+        VIP tempVIP = vipType.createNewVIP(true);
+        return tempVIP;
+    }
 
 }

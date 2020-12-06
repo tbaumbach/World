@@ -9,44 +9,92 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.world.diplomacy.GameWorldDiplomacy;
+import spaceraze.world.diplomacy.GameWorldDiplomacyRelation;
 import spaceraze.world.enums.InitiativeMethod;
 
+import javax.persistence.*;
+
 /**
- * @author wmpabod
- *
- * Contains all data for one distinct gameworld primarily used in individual games.
+ * Contains all data for one distinct game world primarily used in individual games.
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "GAME_WORLD")
 public class GameWorld implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private List<SpaceshipType> shipTypes;
-	private List<VIPType> vipTypes;
-	private List<Faction> factions;
-	private List<TroopType> troopTypes;
-	private SpaceshipType neutralSize1,neutralSize2,neutralSize3;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
+	private Long id;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<SpaceshipType> shipTypes = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<VIPType> vipTypes = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<Faction> factions = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<TroopType> troopTypes = new ArrayList<>();
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_NEUTRAL_SHIP_SMALL")
+	private SpaceshipType neutralSize1;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_NEUTRAL_SHIP_MEDIUM")
+	private SpaceshipType neutralSize2;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_NEUTRAL_SHIP_LARGE")
+	private SpaceshipType neutralSize3;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_NEUTRAL_TROOP_TYPE")
 	private TroopType neutralTroopType;
-	private String description,history,shortDescription,howToPlay;
-	private String fileName,fullName,createdByUser,createdDate,changedDate;
-	private String battleSimDefaultShips1,battleSimDefaultShips2;
+
+	private String description;
+	private String history;
+	private String shortDescription;
+	private String howToPlay;
+	private String fileName;
+	private String fullName;
+	private String createdByUser;
+	private String createdDate;
+	private String changedDate;
+	private String battleSimDefaultShips1;
+	private String battleSimDefaultShips2;
 	private final boolean cumulativeBombardment = false; // cannot be changed anymore...
 	private final boolean squadronsSurviveOutsideCarriers = false; // On Non-Friendly Planets, cannot be changed anymore...
 	private InitiativeMethod initMethod = InitiativeMethod.WEIGHTED_1;
 	private int closedNeutralPlanetChance = 60; // %
 	private int razedPlanetChance = 0; // %
-	private Alignments alignments = new Alignments(true);
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<Alignment> alignments = new ArrayList<>();
+
 	private String versionId = "1"; // should be increased every time a new version of a GameWorld is published
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
+	@Builder.Default
+	private List<GameWorldDiplomacyRelation> gameWorldDiplomacyRelations = new ArrayList<>();
 	private GameWorldDiplomacy diplomacy;
 	private int baseBombardmentDamage = 1000; // default value (always kills the troop) 50% hit chance.
 	private boolean adjustScreenedStatus = true;
-	
-	public GameWorld(){
-		shipTypes = new ArrayList<SpaceshipType>();
-		factions = new ArrayList<Faction>();
-		vipTypes = new ArrayList<VIPType>();
-		troopTypes = new ArrayList<TroopType>();
-		diplomacy = new GameWorldDiplomacy();
-	}
 	
 	/**
 	 * Always add a clone...
@@ -54,17 +102,6 @@ public class GameWorld implements Serializable{
 	 */
 	public void addShipType(SpaceshipType sst){
 		shipTypes.add(new SpaceshipType(sst));
-	}
-	
-	public void addFaction(Faction f){
-		factions.add(f);
-		createDiplomacyRelations(f);
-	}
-	
-	private void createDiplomacyRelations(Faction aFaction){
-		for (Faction tmpFaction : factions) {
-			diplomacy.addDefaultRelation(aFaction, tmpFaction);
-		}
 	}
 
 	public void addVipType(VIPType vt){
@@ -108,8 +145,8 @@ public class GameWorld implements Serializable{
     }
 
     public BuildingType getBuildingTypeByName(String btname){
-		Buildings buildings = factions.stream().map(faction -> faction.getBuildings()).filter(buildings1 -> buildings1.getBuildingType(btname) != null).findFirst().orElse(null);
-		BuildingType foundbt = buildings.getBuildingType(btname);
+		Faction faction = factions.stream().filter(faction1 -> faction1.getBuildingType(btname) != null).findFirst().orElse(null);
+		BuildingType foundbt = faction.getBuildingType(btname);
     	if (foundbt != null){
         	Logger.finest("GameWorld.getBuildingTypeByName, btname:" + btname + " -> " + foundbt);
     	}else{ // om detta inträffar så finns det antagligen en felstavning av en buildingType i gameworlden
@@ -444,11 +481,11 @@ public class GameWorld implements Serializable{
 		this.razedPlanetChance = razedPlanetChance;
 	}
 
-	public Alignments getAlignments() {
+	public List<Alignment> getAlignments() {
 		return alignments;
 	}
 
-	public void setAlignments(Alignments alignments) {
+	public void setAlignments(List<Alignment> alignments) {
 		this.alignments = alignments;
 	}
 	
@@ -499,7 +536,7 @@ public class GameWorld implements Serializable{
 
 	public boolean isResearchWorld(){
 		for (Faction faction : factions) {
-			if(faction.getResearch().getAdvantages().size() != 0){
+			if(faction.getResearchAdvantages().size() != 0){
 				return true;
 			}
 		}

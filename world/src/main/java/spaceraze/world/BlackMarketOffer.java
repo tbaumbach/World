@@ -1,62 +1,95 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity()
+@Table(name = "BLACK_MARKET_OFFER")
 public class BlackMarketOffer implements Serializable {
   static final long serialVersionUID = 1L;
-  VIPType offeredVIPType;
-  SpaceshipType offeredShiptype;
-  SpaceshipType offeredShiptypeBlueprint;
-  TroopType offeredTroopType;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "FK_GALAXY")
+  private Galaxy galaxy;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "FK_VIP_TYPE")
+  @Column(insertable = false, updatable = false)
+  VIPType vipType;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "FK_SPACESHIP_TYPE")
+  @Column(insertable = false, updatable = false)
+  SpaceshipType spaceshipType;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "FK_SPACESHIP_TYP_BLUE_PRINT")
+  @Column(insertable = false, updatable = false)
+  SpaceshipType blueprint;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "TROOP_TYPE")
+  @Column(insertable = false, updatable = false)
+  TroopType troopType;
+
   boolean hotStuff;
-  final int uniqueId;
+  int uniqueId;
   int hotStuffAmount;
-  List<BlackMarketBid> bids;
-  //Galaxy g;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "blackMarketOffer")
+  @Builder.Default
+  List<BlackMarketBid> blackMarketBids = new ArrayList<>();
+
   private int lastTurnAction = 0;
 
     public BlackMarketOffer(int uniqueId) {
         this.uniqueId = uniqueId;
-        this.bids = new LinkedList<>();
+        this.blackMarketBids = new LinkedList<>();
     }
 
   public String getString(){
     String returnString = "Hot stuff";
-    if (offeredVIPType != null){
-      returnString = offeredVIPType.getTypeName();
+    if (vipType != null){
+      returnString = vipType.getTypeName();
     }else
-    if (offeredShiptype != null){
-      returnString = offeredShiptype.getName();
+    if (spaceshipType != null){
+      returnString = spaceshipType.getName();
     }else
-    if (offeredTroopType != null){
-        returnString = offeredTroopType.getUniqueName();
+    if (troopType != null){
+        returnString = troopType.getUniqueName();
     }else
-    if (offeredShiptypeBlueprint != null){
-        returnString = "Blueprint: " + offeredShiptypeBlueprint.getName();
+    if (blueprint != null){
+        returnString = "Blueprint: " + blueprint.getName();
     }
     return returnString;
   }
 
   public String getTypeString(){
 	  String returnString = "Illegal goods for sale";
-	  if (offeredVIPType != null){
+	  if (vipType != null){
 		  returnString = "VIP for hire";
 	  }else
-	  if (offeredShiptype != null){
+	  if (spaceshipType != null){
 		  returnString = "Spaceship for sale";
 	  }else
-	  if (offeredTroopType != null){
+	  if (troopType != null){
 		  returnString = "Troop unit for hire";
 	  }else
-	  if (offeredShiptypeBlueprint != null){
+	  if (blueprint != null){
 		  returnString = "Ship blueprint for sale";
 	  }
 	  return returnString;
@@ -67,11 +100,11 @@ public class BlackMarketOffer implements Serializable {
   }
 
   public void addBid(BlackMarketBid aBid){
-    bids.add(aBid);
+    blackMarketBids.add(aBid);
   }
 
   public void resetBids(){
-      bids = new LinkedList<BlackMarketBid>();
+      blackMarketBids = new LinkedList<BlackMarketBid>();
   }
   
   private boolean tooOld(Galaxy galaxy){
@@ -82,8 +115,8 @@ public class BlackMarketOffer implements Serializable {
 	  return old;
   }
 
-  public List<BlackMarketBid> getBids(){
-      return bids;
+  public List<BlackMarketBid> getBlackMarketBids(){
+      return blackMarketBids;
     }
 
     public boolean removeTooOldAndSendMessage(Galaxy galaxy){
@@ -100,8 +133,8 @@ public class BlackMarketOffer implements Serializable {
   }
 
   public void sendRefundingMessages(BlackMarketBid winningBid, Galaxy galaxy){
-    for (int i = 0; i < bids.size(); i++){
-      BlackMarketBid aBid = bids.get(i);
+    for (int i = 0; i < blackMarketBids.size(); i++){
+      BlackMarketBid aBid = blackMarketBids.get(i);
       if (aBid != winningBid){
     	  galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("Your bid of " + aBid.getCost() + " have been refunded.");
       }
@@ -109,8 +142,8 @@ public class BlackMarketOffer implements Serializable {
   }
 
   public void sendDrawMessages(Galaxy galaxy){
-    for (int i = 0; i < bids.size(); i++){
-      BlackMarketBid aBid = bids.get(i);
+    for (int i = 0; i < blackMarketBids.size(); i++){
+      BlackMarketBid aBid = blackMarketBids.get(i);
       galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("The bidding for a " + getString() + " ended in a draw at the cost of " + getHighestBid() + ".");
       galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("The " + getString() + " will remain for sale.");
     }
@@ -119,8 +152,8 @@ public class BlackMarketOffer implements Serializable {
   public BlackMarketBid getHighestBidder(Galaxy galaxy){
     BlackMarketBid maxBid = null;
     boolean draw = false;
-    for (int i = 0; i < bids.size(); i++){
-      BlackMarketBid aBid = bids.get(i);
+    for (int i = 0; i < blackMarketBids.size(); i++){
+      BlackMarketBid aBid = blackMarketBids.get(i);
       if (maxBid == null){
         maxBid = aBid;
         lastTurnAction = galaxy.getTurn();
@@ -141,8 +174,8 @@ public class BlackMarketOffer implements Serializable {
 
   private int getHighestBid(){
     int maxBid = 0;
-    for (int i = 0; i < bids.size(); i++){
-      BlackMarketBid aBid = bids.get(i);
+    for (int i = 0; i < blackMarketBids.size(); i++){
+      BlackMarketBid aBid = blackMarketBids.get(i);
       if (maxBid == 0){
         maxBid = aBid.getCost();
       }else
@@ -158,47 +191,47 @@ public class BlackMarketOffer implements Serializable {
   }
   
   public boolean isShip(){
-	  return offeredShiptype != null;
+	  return spaceshipType != null;
   }
 
   public boolean isShipBlueprint(){
-	  return offeredShiptypeBlueprint != null;
+	  return blueprint != null;
   }
 
   public boolean isVIP(){
-	return offeredVIPType != null;
+	return vipType != null;
   }
 
   public boolean isTroop(){
-	  return offeredTroopType != null;
+	  return troopType != null;
   }
 
   public VIPType getVIPType(){
-	  return offeredVIPType;
+	  return vipType;
   }
 
-  public VIPType getOfferedVIPType() {
-	  return offeredVIPType;
+  public VIPType getVipType() {
+	  return vipType;
   }
 
-  public SpaceshipType getOfferedShiptype() {
-	  return offeredShiptype;
+  public SpaceshipType getSpaceshipType() {
+	  return spaceshipType;
   }
 
-  public SpaceshipType getOfferedShiptypeBlueprint() {
-	  return offeredShiptypeBlueprint;
+  public SpaceshipType getBlueprint() {
+	  return blueprint;
   }
   
   public SpaceshipType getShipType(){
-	  SpaceshipType aSST = offeredShiptype;
+	  SpaceshipType aSST = spaceshipType;
 	  if (aSST == null){
-		  aSST = offeredShiptypeBlueprint;
+		  aSST = blueprint;
 	  }
 	  return aSST;
   }
 
-  public TroopType getOfferedTroopType() {
-	  return offeredTroopType;
+  public TroopType getTroopType() {
+	  return troopType;
   }
   
   public boolean destinationRequired(){
@@ -217,20 +250,20 @@ public class BlackMarketOffer implements Serializable {
         this.lastTurnAction = lastTurnAction;
     }
 
-    public void setOfferedVIPType(VIPType offeredVIPType) {
-        this.offeredVIPType = offeredVIPType;
+    public void setVipType(VIPType vipType) {
+        this.vipType = vipType;
     }
 
-    public void setOfferedShiptype(SpaceshipType offeredShiptype) {
-        this.offeredShiptype = offeredShiptype;
+    public void setSpaceshipType(SpaceshipType spaceshipType) {
+        this.spaceshipType = spaceshipType;
     }
 
-    public void setOfferedShiptypeBlueprint(SpaceshipType offeredShiptypeBlueprint) {
-        this.offeredShiptypeBlueprint = offeredShiptypeBlueprint;
+    public void setBlueprint(SpaceshipType blueprint) {
+        this.blueprint = blueprint;
     }
 
-    public void setOfferedTroopType(TroopType offeredTroopType) {
-        this.offeredTroopType = offeredTroopType;
+    public void setTroopType(TroopType troopType) {
+        this.troopType = troopType;
     }
 
     public void setHotStuffAmount(int hotStuffAmount) {
@@ -238,7 +271,7 @@ public class BlackMarketOffer implements Serializable {
         this.hotStuffAmount = hotStuffAmount;
     }
 
-    public void setBids(List<BlackMarketBid> bids) {
-        this.bids = bids;
+    public void setBlackMarketBids(List<BlackMarketBid> bids) {
+        this.blackMarketBids = bids;
     }
 }

@@ -1,7 +1,24 @@
 package spaceraze.world;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "PLAYER_BUILDING_IMPROVEMENT")
 public class PlayerBuildingImprovement extends BuildingImprovement {
 
+    @ManyToOne
+    @JoinColumn(name = "FK_PLAYER")
+    private Player player;
     private boolean developed;
     private int nrProduced = 0;
 

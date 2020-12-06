@@ -6,35 +6,125 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-import spaceraze.world.enums.HighlightType;
-import spaceraze.util.general.Logger;
+import javax.persistence.*;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "FACTION")
 public class ResearchAdvantage implements Serializable, Cloneable  {
 	static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="ID", nullable = false)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_FACTION")
+	private Faction faction;
 	
-	private String name, description;
-	private boolean developed;
-	private int timeToResearch = 1, researchedTurns = 0;
+	private String name;
+	private String description;
+
+	private int timeToResearch = 1;
+	private int researchedTurns = 0;
 	private int costToResearchOneTurn = 0;
-	private int costToResearchOneTurnInProcent = 0;
+	private int costToResearchOneTurnInPercent = 0;
+	private int openPlanetBonus = 0;
+	private int closedPlanetBonus = 0;
+	private int resistanceBonus = 0;
+
+	@ManyToMany(mappedBy = "parents")
 	private List<ResearchAdvantage> children;
-	@JsonIgnore private List<ResearchAdvantage> parents;
-	private List<SpaceshipType> ships,replaceShips;
-	private int openPlanetBonus = 0,closedPlanetBonus = 0,resistanceBonus = 0;
+
+	@JoinTable(name = "RESEARCH_ADVANTAGE_CHILDREN", joinColumns = {
+			@JoinColumn(name = "PARENT", referencedColumnName = "ID", nullable = false)}, inverseJoinColumns = {
+			@JoinColumn(name = "CHILD", referencedColumnName = "ID", nullable = false)})
+	@ManyToMany
+	@JsonIgnore private List<ResearchAdvantage> parents = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_SPACESHIP",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "SPACESHIP"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<SpaceshipType> ships = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_REPLACE_SPACESHIP",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "SPACESHIP"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<SpaceshipType> replaceShips = new ArrayList<>();
+
+
 
 	private int techBonus = 0; 
 	private boolean canReconstruct = false;
 	private int reconstructCostBase = 0;
 	private int reconstructCostMultiplier = 0;
-	private List<ResearchUpgradeShip> researchUpgradeShip;
-	// TroopTypes
-	private List<TroopType> troops,replaceTroops;
-	private List<ResearchUpgradeTroop> researchUpgradeTroop;
-	private List<BuildingType> buildings,replaceBuildings;
-	private List<ResearchUpgradeBuilding> researchUpgradeBuilding;
-	
-	Corruption corruption;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
+	@Builder.Default
+	private List<ResearchUpgradeShip> researchUpgradeShip = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_TROOP",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "TROOP"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<TroopType> troops = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_REPLACE_TROOP",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "TROOP"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<TroopType> replaceTroops = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
+	@Builder.Default
+	private List<ResearchUpgradeTroop> researchUpgradeTroop = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_BUILDING",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "BUILDING"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<BuildingType> buildings = new ArrayList<>();
+
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "RESEARCH_ADVANTAGE_TO_REPLACE_BUILDING",
+			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
+			inverseJoinColumns = @JoinColumn(name = "BUILDING"))
+	@Column(insertable = false, updatable = false)
+	@Builder.Default
+	private List<BuildingType> replaceBuildings = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
+	@Builder.Default
+	private List<ResearchUpgradeBuilding> researchUpgradeBuilding = new ArrayList<>();
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_CORRUPTION_POINT")
+	CorruptionPoint corruptionPoint;
 	
 	public ResearchAdvantage(String name, String description) {
 	    this.name = name;
@@ -47,7 +137,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		replaceTroops = new ArrayList<>();
 		buildings = new ArrayList<>();
 		replaceBuildings = new ArrayList<>();
-		//corruption = new Corruption();
 		researchUpgradeShip =  new ArrayList<>();
 		researchUpgradeTroop = new ArrayList<>();
 		researchUpgradeBuilding = new ArrayList<>();
@@ -108,8 +197,8 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		if(reconstructCostMultiplier > 0){
 			text+="Reconstruct multiplier cost: " + addplus(reconstructCostMultiplier) + "\n";
 		}
-		if(corruption != null){
-			text+="Corruption: " + corruption.getCorruptionDescription() + "\n";
+		if(corruptionPoint != null){
+			text+="Corruption: " + corruptionPoint.getDescription() + "\n";
 		}
 		
 		for(int i=0;i<researchUpgradeShip.size();i++){			
@@ -131,7 +220,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		if(number > 0){
 			return "+" +number;
 	    }
-	    return new Integer(number).toString();
+	    return Integer.valueOf(number).toString();
 	}
 	
 	@SuppressWarnings("unused")
@@ -156,14 +245,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	
 	public void setDescription(String description){
 		this.description = description;
-	}
-	
-	public boolean isDeveloped(){
-		return developed;
-	}
-	
-	public void setDeveloped(boolean developed){
-		this.developed = developed;
 	}
 	
 	public int getTimeToResearch(){
@@ -479,17 +560,17 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.costToResearchOneTurn = costToResearchOneTurn;
 	}
 
-	public int getCostToResearchOneTurnInProcent() {
-		return costToResearchOneTurnInProcent;
+	public int getCostToResearchOneTurnInPercent() {
+		return costToResearchOneTurnInPercent;
 	}
 
-	public void setCostToResearchOneTurnInProcent(int costToResearchOneTurnInProcent) {
-		this.costToResearchOneTurnInProcent = costToResearchOneTurnInProcent;
+	public void setCostToResearchOneTurnInPercent(int costToResearchOneTurnInProcent) {
+		this.costToResearchOneTurnInPercent = costToResearchOneTurnInProcent;
 	}
 	
-	public boolean isReadyToBeResearchedOn(){
+	public boolean isReadyToBeResearchedOn(Player player){
 		for(int i=0;i < parents.size();i++){
-			if(!parents.get(i).isDeveloped()){
+			if(!parents.get(i).isDeveloped(player)){
 				return false;
 			}
 		}
@@ -521,12 +602,8 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.researchUpgradeBuilding.add(researchUpgradeBuilding);
 	}
 
-	public Corruption getCorruption() {
-		return corruption;
-	}
-
-	public void setCorruption(Corruption corruption) {
-		this.corruption = corruption;
+	public boolean isDeveloped(Player player){
+		return player.getResearchProgress(this.getName()) != null && player.getResearchProgress(this.getName()).isDeveloped();
 	}
 	
 }

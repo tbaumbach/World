@@ -1,25 +1,53 @@
 package spaceraze.world;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Functions;
-import spaceraze.world.Alignment;
+
+import javax.persistence.*;
 
 /**
  * Represents one alignment, with a text identifier/name
  * @author wmpabod
  *
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "ALIGNMENT")
 public class Alignment implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String name,description;
-	private List<String> canHaveVipList = new LinkedList<String>(); // factions from this alignments can have vips from these alignments
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_GAME_WORLD")
+	private GameWorld gameWorld;
+
+	private String name;
+	private String description;
+
+	@JoinTable(name = "CAN_HAVE_VIP_LIST", joinColumns = {
+			@JoinColumn(name = "ID", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+			@JoinColumn(name = "CAN_HAVE_VIP_FROM_ALIGNMENT", referencedColumnName = "id", nullable = false)})
+	@ManyToMany
+	private List<Alignment> canHaveVipList = new ArrayList<>(); // factions from this alignments can have vips from these alignments
 	private boolean duelOwnAlignment = true; // duellists with false will never fight another duellist with the same alignment
-	private List<String> hateDuellistsList = new LinkedList<String>(); // will fight duellists from these alignments even on same side
+	@JoinTable(name = "HATE_DUELLISTS_LIST", joinColumns = {
+			@JoinColumn(name = "ID", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
+			@JoinColumn(name = "CAN_HAVE_VIP_FROM_ALIGNMENT", referencedColumnName = "id", nullable = false)})
+	@ManyToMany
+	private List<Alignment> hateDuellistsList = new ArrayList<>(); // will fight duellists from these alignments even on same side
 	
 	@JsonIgnore
 	  public String getHTMLTableContent(){
@@ -56,22 +84,22 @@ public class Alignment implements Serializable {
 	  
 	private String getCanHaveVIPStringList(){
 		StringBuffer sb = new StringBuffer();
-		for (String alignment : canHaveVipList) {
+		for (Alignment alignment : canHaveVipList) {
 			if (sb.length() > 0){
 				sb.append(", ");
 			}
-			sb.append(alignment);
+			sb.append(alignment.getName());
 		}
 		return sb.toString();
 	}
 
 	private String getHatesDuellistsStringList(){
 		StringBuffer sb = new StringBuffer();
-		for (String alignment : hateDuellistsList) {
+		for (Alignment alignment : hateDuellistsList) {
 			if (sb.length() > 0){
 				sb.append(", ");
 			}
-			sb.append(alignment);
+			sb.append(alignment.getName());
 		}
 		return sb.toString();
 	}
@@ -79,11 +107,9 @@ public class Alignment implements Serializable {
 	public Alignment(String aName){
 		this.name = aName;
 		name = name.substring(0,1).toUpperCase() + name.substring(1);
-		addCanHaveVip(this.name); // can always have vips of the same alignment
 	}
 	
 	public boolean equals(Alignment anotherAlignment){
-//		return this == anotherAlignment; detta borde funka, men testar att j�mf�ra p� namn ist�llet
 		return getName().equalsIgnoreCase(anotherAlignment.getName());
 	}
 	
@@ -91,11 +117,11 @@ public class Alignment implements Serializable {
 		return name.equalsIgnoreCase(aName);
 	}
 	
-	public void addCanHaveVip(String anAlignment){
+	public void addCanHaveVip(Alignment anAlignment){
 		canHaveVipList.add(anAlignment);
 	}
 
-	public void addHateDuellist(String anAlignment){
+	public void addHateDuellist(Alignment anAlignment){
 		hateDuellistsList.add(anAlignment);
 	}
 
@@ -103,11 +129,13 @@ public class Alignment implements Serializable {
 		return findAlignment(aVipAlignment,canHaveVipList);
 	}
 
-	public List<String> getCanHaveVipList(){
-		return canHaveVipList;
+	public List<Alignment> getCanHaveVipList(){
+		ArrayList<Alignment> alignments = new ArrayList<>(canHaveVipList);
+		alignments.add(0, this);
+		return alignments;
 	}
 
-	public List<String> getHateDuellistList(){
+	public List<Alignment> getHateDuellistList(){
 		return hateDuellistsList;
 	}
 
@@ -120,13 +148,13 @@ public class Alignment implements Serializable {
 	 * @param findAlignment 
 	 * @return
 	 */
-	private boolean findAlignment(String findAlignment, List<String> listToSearch){
+	private boolean findAlignment(String findAlignment, List<Alignment> listToSearch){
 		boolean found = false;
 		int index = 0;
 		while ((!found) & (index < listToSearch.size())) {
-			String anAlignment = listToSearch.get(index);
+			Alignment anAlignment = listToSearch.get(index);
 			//LoggingHandler.finer(anAlignment.getName() + ", alignment=" + findAlignment.getName());
-			if (anAlignment.equals(findAlignment)){
+			if (anAlignment.getName().equals(findAlignment)){
 				found = true;
 			}else{
 				index++;
@@ -158,29 +186,6 @@ public class Alignment implements Serializable {
 	
 	public String getName(){
 		return name;
-	}
-
-	@JsonIgnore
-	public String getAlignmentInfoDroid() {
-		  StringBuffer sb = new StringBuffer();
-		  sb.append("<h4>Alignment: ");
-		  sb.append(name);
-		  sb.append("</h4>");
-		  sb.append(description);
-		  sb.append("<p>");
-		  sb.append("A faction of this alignment can have VIPs of these alignments: </b>");
-		  sb.append("<br>");
-		  for (String aAlignment : canHaveVipList) {
-			  sb.append(aAlignment + " alignment");
-			  sb.append("<br>");
-		  }
-		  sb.append("<br>");
-		  sb.append("All VIPs with " + name + " alignment:<br>");
-		  sb.append("[=getviptypesalignment]");
-		  sb.append("<br>");
-		  sb.append("All factions with " + name + " alignment:<br>");
-		  sb.append("[=getfactionsalignment]");
-		  return sb.toString();
 	}
 
 }

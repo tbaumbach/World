@@ -1,35 +1,48 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
-import spaceraze.world.BlackMarketBid;
-import spaceraze.world.BlackMarketOffer;
-import spaceraze.world.Galaxy;
-import spaceraze.world.Player;
+import spaceraze.world.orders.Expense;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "BLACK_MARKET_BID")
 public class BlackMarketBid implements Serializable {
   static final long serialVersionUID = 1L;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @OneToOne(mappedBy = "blackMarketBid")
+  private Expense expense;
+
+  @ManyToOne
+  @JoinColumn(name = "FK_BLACK_MARKET_OFFER")
+  private BlackMarketOffer blackMarketOffer;
+
   private int cost;
-  private BlackMarketOffer aOffer;
+  private int blackMarketOfferUniqueId;
   private String destination;
   private String playerName;
 
-  public BlackMarketBid(int cost,BlackMarketOffer aOffer,String destination) {
+  public BlackMarketBid(int cost,int blackMarketOfferUniqueId,String destination) {
     this.cost = cost;
-    this.aOffer = aOffer;
+    this.blackMarketOfferUniqueId = blackMarketOfferUniqueId;
     this.destination = destination;
   }
 
   public BlackMarketBid(BlackMarketBid oldBlackMarketBid, Galaxy newGalaxy){
     this.cost = oldBlackMarketBid.getCost();
-    this.aOffer = newGalaxy.findBlackMarketOffer(oldBlackMarketBid.getOfferUniqueId());
+    this.blackMarketOfferUniqueId = oldBlackMarketBid.getOfferUniqueId();
     this.destination = oldBlackMarketBid.getDestination();
 	Logger.finest( "BlackMarketBid 1: " + oldBlackMarketBid.getPlayerName());
     this.playerName = oldBlackMarketBid.getPlayerName();
@@ -40,8 +53,8 @@ public class BlackMarketBid implements Serializable {
     return cost;
   }
 
-  public String getText(){
-    String returnString = "You have made a bid for a " + aOffer.getString() + " at the cost " + cost + ".";
+  public static String getBiddingText(BlackMarketOffer aOffer, BlackMarketBid winningBid){
+    String returnString = "You have made a bid for a " + aOffer.getString() + " at the cost " + winningBid.getCost() + ".";
     return returnString;
   }
 
@@ -54,11 +67,7 @@ public class BlackMarketBid implements Serializable {
   }
 
   public int getOfferUniqueId(){
-    return aOffer.getUniqueId();
-  }
-
-  public BlackMarketOffer getOffer(){
-    return aOffer;
+    return blackMarketOfferUniqueId;
   }
 
   public void addPlayer(Player aPlayer){

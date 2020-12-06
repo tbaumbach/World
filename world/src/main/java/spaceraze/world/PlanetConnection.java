@@ -1,9 +1,3 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world;
 
 import java.io.Serializable;
@@ -12,106 +6,123 @@ import java.util.StringTokenizer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import spaceraze.world.Planet;
-import spaceraze.world.PlanetConnection;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class PlanetConnection implements Serializable{
-  static final long serialVersionUID = 1L;
-  Planet p1,p2;
-  boolean longRange;
+import javax.persistence.*;
 
-  public PlanetConnection(String dataString, List<Planet> allPlanets) {
-	StringTokenizer st = new StringTokenizer(dataString,"\t");
-	String planetName1 = st.nextToken();
-	String planetName2 = st.nextToken();
-	longRange = st.nextToken().equalsIgnoreCase("true");
-    p1 = findPlanet(planetName1,allPlanets);
-    p2 = findPlanet(planetName2,allPlanets);
-  }
-  
-  public PlanetConnection cloneConnection(){
-  	return new PlanetConnection(p1,p2,longRange);
-  }
-  
-  private Planet findPlanet(String aPlanetName, List<Planet> allPlanets){
-  	Planet found = null;
-  	int index = 0;
-  	while ((found == null) && (index < allPlanets.size())){
-  		Planet tempPlanet = (Planet)allPlanets.get(index);
-  		if (tempPlanet.getName().equals(aPlanetName)){
-  			found = tempPlanet;
-  		}else{
-  			index++;
-  		}
-  	}
-  	return found;
-  }
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "PLANET_CONNECTION")
+public class PlanetConnection implements Serializable {
+    static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  public PlanetConnection(Planet p1, Planet p2, boolean longRange) {
-    this.p1 = p1;
-    this.p2 = p2;
-    this.longRange = longRange;
-  }
+    //TODO should galaxy have the map instead?
+    @ManyToOne
+    @JoinColumn(name = "FK_GALAXY")
+    private Galaxy galaxy;
 
-  @JsonIgnore
-  public Planet getPlanet1(){
-    return p1;
-  }
+    @ManyToOne
+    @JoinColumn(name = "FK_MAP")
+    private Map map;
 
-  @JsonIgnore
-  public Planet getPlanet2(){
-    return p2;
-  }
-  
-  public String getPlanetName1(){
-    return p1.getName();
-  }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLANET_ONE")
+    @Column(insertable = false, updatable = false)
+    private BasePlanet planetOne;
 
-  public String getPlanetName2(){
-    return p2.getName();
-  }
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PLANET_TWO")
+    @Column(insertable = false, updatable = false)
+    private BasePlanet planetTwo;
 
-  public boolean isLongRange(){
-    return longRange;
-  }
+    @Column(name = "LONG_RANGE")
+    private boolean longRange;
 
-  @JsonIgnore
-  public Planet getOtherEnd(Planet aPlanet, boolean isLongRange){
-    Planet returnPlanet = null;
-    if ((longRange == false) | (isLongRange == longRange)){
-      if (aPlanet == p1){
-        returnPlanet = p2;
-      }else
-      if (aPlanet == p2){
-        returnPlanet = p1;
-      }
+    public PlanetConnection(String dataString, List<BasePlanet> allPlanets) {
+        StringTokenizer st = new StringTokenizer(dataString, "\t");
+        String planetName1 = st.nextToken();
+        String planetName2 = st.nextToken();
+        longRange = st.nextToken().equalsIgnoreCase("true");
+        planetOne = findPlanet(planetName1, allPlanets);
+        planetTwo = findPlanet(planetName2, allPlanets);
     }
-    return returnPlanet;
-  }
 
-  @JsonIgnore
-  public String getSaveString(int index){
-	String retStr = "connection" + index + " = ";
-	retStr = retStr + p1.getName();
-	retStr = retStr + "\t" + p2.getName();
-	retStr = retStr + "\t" + longRange;
-	return retStr;
-  }
-  
-  @JsonIgnore
-  public boolean isConnection(Planet aPlanet1, Planet aPlanet2){
-  	  boolean found = false;
-  	  if ((p1 == aPlanet1) & (p2 == aPlanet2)){
-  	  	found = true;
-  	  }else
-   	  if ((p2 == aPlanet1) & (p1 == aPlanet2)){
-  	  	found = true;
-   	  }
-   	  return found;
-  }
-  
-  public String toString(){
-	  return p1 + " <--> " + p2;
-  }
+    private BasePlanet findPlanet(String aPlanetName, List<BasePlanet> allPlanets) {
+        BasePlanet found = null;
+        int index = 0;
+        while ((found == null) && (index < allPlanets.size())) {
+            BasePlanet tempPlanet = allPlanets.get(index);
+            if (tempPlanet.getName().equals(aPlanetName)) {
+                found = tempPlanet;
+            } else {
+                index++;
+            }
+        }
+        return found;
+    }
+
+    public PlanetConnection(BasePlanet planetOne, BasePlanet planetTwo, boolean longRange) {
+        this.planetOne = planetOne;
+        this.planetTwo = planetTwo;
+        this.longRange = longRange;
+    }
+
+    @JsonIgnore
+    public BasePlanet getPlanetOne() {
+        return planetOne;
+    }
+
+    @JsonIgnore
+    public BasePlanet getPlanetTwo() {
+        return planetTwo;
+    }
+
+    public boolean isLongRange() {
+        return longRange;
+    }
+
+    @JsonIgnore
+    public BasePlanet getOtherEnd(BasePlanet aPlanet, boolean isLongRange) {
+        BasePlanet returnPlanet = null;
+        if ((longRange == false) | (isLongRange == longRange)) {
+            if (aPlanet == planetOne) {
+                returnPlanet = planetTwo;
+            } else if (aPlanet == planetTwo) {
+                returnPlanet = planetOne;
+            }
+        }
+        return returnPlanet;
+    }
+
+    @JsonIgnore
+    public String getSaveString(int index) {
+        String retStr = "connection" + index + " = ";
+        retStr = retStr + planetOne.getName();
+        retStr = retStr + "\t" + planetTwo.getName();
+        retStr = retStr + "\t" + longRange;
+        return retStr;
+    }
+
+    @JsonIgnore
+    public boolean isConnection(BasePlanet aPlanet1, BasePlanet aPlanet2) {
+        boolean found = false;
+        if ((planetOne == aPlanet1) & (planetTwo == aPlanet2)) {
+            found = true;
+        } else if ((planetTwo == aPlanet1) & (planetOne == aPlanet2)) {
+            found = true;
+        }
+        return found;
+    }
+
+    public String toString() {
+        return planetOne + " <--> " + planetTwo;
+    }
 
 }

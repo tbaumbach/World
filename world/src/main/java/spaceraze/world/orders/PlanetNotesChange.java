@@ -1,50 +1,61 @@
 package spaceraze.world.orders;
 
-import java.io.Serializable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import spaceraze.world.PlanetInfos;
-import spaceraze.world.Player;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Handle an order to change the notes text for a planet
- * 
- * @author Paul Bodin
  *
+ * @author Paul Bodin
  */
-public class PlanetNotesChange implements Serializable{
-	  static final long serialVersionUID = 1L;
-	  private String planetName,notesText;
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "PLANET_NOTE_CHANGE")
+public class PlanetNotesChange implements Serializable {
+    static final long serialVersionUID = 1L;
 
-	public String getNotesText() {
-		return notesText;
-	}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	public PlanetNotesChange(String planetName, String notesText){
-		  this.planetName = planetName;
-		  this.notesText = notesText;
-	  }
-	  
-	  public void performPlanetNotes(Player aPlayer){
-		  PlanetInfos pi = aPlayer.getPlanetInfos();
-		  pi.setNotes(planetName, notesText);
-	  }
-	  
-	  public String getText(){
-		  String text = null;
-		  if ("".equals(notesText)){
-			  text = "Empty notes for planet " + planetName + ".";
-		  }else{
-			  text = "Set notes for planet " + planetName + " to \"" + notesText + "\".";
-		  }
-		  return text;
-	  }
+    @ManyToOne
+    @JoinColumn(name = "FK_ORDERS")
+    private Orders orders;
 
-	  public String getPlanetName(){
-		  return planetName;
-	  }
-	  
-	  public void setNotesText(String notesText) {
-		  this.notesText = notesText;
-	  }
+    private String planetName;
+	private String notesText;
+
+    public String getNotesText() {
+        return notesText;
+    }
+
+    public PlanetNotesChange(String planetName, String notesText) {
+        this.planetName = planetName;
+        this.notesText = notesText;
+    }
+
+    public String getText() {
+        String text = null;
+        if ("".equals(notesText)) {
+            text = "Empty notes for planet " + planetName + ".";
+        } else {
+            text = "Set notes for planet " + planetName + " to \"" + notesText + "\".";
+        }
+        return text;
+    }
+
+    public String getPlanetName() {
+        return planetName;
+    }
+
+    public void setNotesText(String notesText) {
+        this.notesText = notesText;
+    }
 
 }

@@ -11,10 +11,11 @@ public enum InitiativeMethod {
 	
 	private String desc;
 	
-	private InitiativeMethod(String aDesc){
+	InitiativeMethod(String aDesc){
 		this.desc = aDesc;
 	}
-	
+
+	//TODO 2020-11-21 think this will save the desc instead of the enemy, test it out.
 	@Override
 	public String toString(){
 		return desc;

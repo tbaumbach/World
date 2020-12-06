@@ -1,5 +1,8 @@
 package spaceraze.world;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -14,9 +17,28 @@ import java.io.Serializable;
  * @author Paul Bodin
  *
  */
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "PLANET_ORDER_STATUS")
 public class PlanetOrderStatus implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private boolean attackIfNeutral,destroyOrbitalBuildings,doNotBesiege;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_PLAYER")
+	private Player player;
+
+	private String planetName;
+	private boolean attackIfNeutral;
+	private boolean destroyOrbitalBuildings;
+	private boolean doNotBesiege;
 	private int maxBombardment;
 
     public boolean isAttackIfNeutral() {

@@ -1,35 +1,38 @@
 package spaceraze.world.report.spacebattle;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "OWN_SPACESHIP")
 public class OwnSpaceship extends SpaceshipState implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_SPACE_BATTLE_REPORT")
+	private SpaceBattleReport spaceBattleReport;
 	
-	private final String name;
-	private final String type;
-	private final boolean screend;
+	private String name;
 	
-	public OwnSpaceship(String name, String type, boolean screend, int hullstatus) {
-		super(hullstatus);
+	public OwnSpaceship(String name, String type, boolean screened, int hullStatus) {
+		super(hullStatus, screened, type);
 		this.name = name;
-		this.type = type;
-		this.screend = screend;
 	}
 	
-	public OwnSpaceship(String name, String type, boolean screend) {
-		this(name, type, screend, 100);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public boolean isScreend() {
-		return screend;
+	public OwnSpaceship(String name, String type, boolean screened) {
+		this(name, type, screened, 100);
 	}
 	
 }

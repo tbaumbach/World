@@ -1,15 +1,32 @@
 package spaceraze.world.report.landbattle;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
-
-public abstract class TroopAttack implements Serializable {
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "TROOP_ATTACK")
+public class TroopAttack implements Serializable {
 	static final long serialVersionUID = 1L;
-	
-	private final String typeName;
-	private final int currentDamageCapacity;
-	private final int damageCapacity;
-	private final boolean artillery; //(aPosition == BattleGroupPosition.SUPPORT) & (aTroop.getTroop().getAttackArtillery() > 0)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String name;
+	private boolean own;
+	private String typeName;
+	private int currentDamageCapacity;
+	private int damageCapacity;
+	private boolean artillery; //(aPosition == BattleGroupPosition.SUPPORT) & (aTroop.getTroop().getAttackArtillery() > 0)
 	
 	public TroopAttack(String typeName, int damageCapacity, int currentDamageCapacity, boolean isArtillery) {
 		this.typeName = typeName;
@@ -34,6 +51,12 @@ public abstract class TroopAttack implements Serializable {
 		return artillery;
 	}
 
-	public abstract String getName();
+
+	public String getTroopName(){
+		if(name != null){
+			return name;
+		}
+		return typeName;
+	}
 
 }

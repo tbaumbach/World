@@ -1,13 +1,28 @@
 package spaceraze.world;
 
-import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Functions;
 
-@SuppressWarnings("unused")
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "RESEARCH_UPGRADE_BUILDNING")
 public class ResearchUpgradeBuilding extends BuildingImprovement {
+
+	@ManyToOne
+	@JoinColumn(name = "FK_RESEARCH_ADVANTAGE")
+	private ResearchAdvantage researchAdvantage;
 
 	public ResearchUpgradeBuilding(String name){
 		super(name);

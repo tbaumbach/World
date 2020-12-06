@@ -2,9 +2,15 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.util.general.Logger;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Player;
+import spaceraze.world.orders.Orders;
+
+import javax.persistence.*;
 
 /**
  * This class is used when a change should be performed.
@@ -15,8 +21,23 @@ import spaceraze.world.Player;
  * The new level is the level of the recipient = otherPlayer. For instance if a change to become 
  * a vassal is sent, the new level i LORD, because the otherPlayer would become Lord.
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "DIPLOMACY_CHANGE")
 public class DiplomacyChange implements Serializable{
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_ORDERS")
+	private Orders orders;
+
 	private String thePlayerName,otherPlayerName;
 	private DiplomacyLevel newLevel;
 	private boolean responseToPreviousOffer; // behövs för att veta om en change är ett svar på ett erbjudande eller inte

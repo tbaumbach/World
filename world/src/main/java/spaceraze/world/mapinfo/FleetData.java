@@ -1,5 +1,8 @@
 package spaceraze.world.mapinfo;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -7,8 +10,25 @@ import java.io.Serializable;
  * 
  * @author Paul Bodin
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "FLEET_DATA")
 public class FleetData implements Serializable  {
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_MAP_PLANET_INFO")
+	private MapPlanetInfo mapPlanetInfo;
+
 	private String ownerGovName; // om owner == null, så är flottan neutral
 	private int maxSize;
 	private boolean civ;

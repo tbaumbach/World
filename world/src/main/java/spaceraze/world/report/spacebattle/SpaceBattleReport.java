@@ -1,17 +1,46 @@
 package spaceraze.world.report.spacebattle;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import spaceraze.world.report.EventReport;
+import spaceraze.world.report.PlanetReport;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@SuperBuilder
+@Entity()
+@Table(name = "SPACE_BATTLE_REPORT")
 public class SpaceBattleReport extends EventReport {
 
-	private static final long serialVersionUID = 1L;
-	private final List<OwnSpaceship> ownSpaceships;
-	private final List<EnemySpaceship> enemySpaceships;
-	private final String enemyName;
-	private final String enemyFaction;
+	@ManyToOne
+	@JoinColumn(name = "FK_PLANET_REPORT")
+	private PlanetReport planetReport;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
+	@Builder.Default
+	private List<SpaceBattleAttack> spaceBattleAttacks = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
+	@Builder.Default
+	private List<OwnSpaceship> ownSpaceships = new ArrayList<>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
+	@Builder.Default
+	private List<EnemySpaceship> enemySpaceships = new ArrayList<>();
+
+	private String enemyName;
+	private String enemyFaction;
 
 	public final static String BATTLE_AGAINST_ENEMY = "Your forces have engaged hostile forces from governor %s.";
 	public final static String BATTLE_AGAINST_NEUTRAL = "Your forces have engaged neutral forces.";
@@ -20,7 +49,7 @@ public class SpaceBattleReport extends EventReport {
 	public final static String OWN_FORCE = "Your initial forces consisted of: %s";
 	public final static String OWN_FIRST_LINE = "Your initial first line forces consisted of: %s";
 	public final static String OWN_SCREEND_LINE = "Your initial screened forces consisted of: %s";
-	public final static String ENEMY_NEUTRAL_FORCE = "%s (neutral) initial forces consisted of: %s";
+	public final static String ENEMY_NEUTRAL_FORCE = "Enemy (Neutral) initial forces consisted of: %s";
 	public final static String ENEMY_FORCE = "Enemy initial forces consisted of: %s";
 	public final static String ENEMY_FIRST_LINE = "Enemy initial first line forces consisted of: %s";
 	public final static String ENEMY_SCREEND_LINE = "Initial screened forces consisted of: %s";
@@ -42,6 +71,7 @@ public class SpaceBattleReport extends EventReport {
 
 	public SpaceBattleReport(List<OwnSpaceship> ownSpaceships, List<EnemySpaceship> enemySpaceships, String enemyName,
 			String enemyFaction) {
+		this.spaceBattleAttacks = new ArrayList<>();
 		this.ownSpaceships = ownSpaceships;
 		this.enemySpaceships = enemySpaceships;
 		this.enemyName = enemyName;
@@ -54,8 +84,19 @@ public class SpaceBattleReport extends EventReport {
 	}
 
 	@Override
-	public String getReports() {
+	public EventReport getParent() {
+		return planetReport;
+	}
+
+	@Override
+	public String getFullReport() {
 		return createReport(true);
+	}
+
+	@Override
+	public List<EventReport> getChildReports() {
+
+		return new ArrayList<>(spaceBattleAttacks);
 	}
 
 	private String createReport(boolean includeChildes) {
@@ -64,7 +105,7 @@ public class SpaceBattleReport extends EventReport {
 		getOwnFleet(stringBuilderReport);
 		getEnemyFleet(stringBuilderReport);
 		if(includeChildes) {
-			stringBuilderReport.append(getChildereports());
+			getChildReports().forEach(eventReport -> stringBuilderReport.append(eventReport.getFullReport()));
 		}
 		getMediumLevelResultReport(stringBuilderReport);
 		getPostBattleReport(stringBuilderReport);
@@ -91,7 +132,7 @@ public class SpaceBattleReport extends EventReport {
 
 	// TODO 2019-12-15 ReportLevel.SHORT
 	private void getLowLevelResultReport(StringBuilder report) {
-		report.append(String.format(BATTLE_DURATION, getChildeReports().size()));
+		report.append(String.format(BATTLE_DURATION, getChildReports().size()));
 		if (isWin()) {
 			report.append(WIN);
 		} else { // lost battle
@@ -117,13 +158,19 @@ public class SpaceBattleReport extends EventReport {
 			report.append(ENEMY_NO_LOST).append("\n");
 		}
 
-		report.append(String.format(BATTLE_DURATION, getChildeReports().size()));
+		report.append(String.format(BATTLE_DURATION, getChildReports().size()));
 		if (isWin()) {
-			report.append(ENEMY_RETRETING_SHIP);
-			report.append(getEnemyShipList(enemySpaceships.stream().filter(EnemySpaceship::isRetret)));
+			String enemyShipList = getEnemyShipList(enemySpaceships.stream().filter(EnemySpaceship::isRetreat));
+			if(!enemyShipList.isEmpty()) {
+				report.append(ENEMY_RETRETING_SHIP);
+				report.append(enemyShipList);
+			}
 		} else { // lost battle
-			report.append(OWN_RETRETING_SHIP);
-			report.append(getOwnShipList(ownSpaceships.stream().filter(OwnSpaceship::isRetret)));
+			String ownShipList = getOwnShipList(ownSpaceships.stream().filter(OwnSpaceship::isRetreat));
+			if(!ownShipList.isEmpty()){
+				report.append(OWN_RETRETING_SHIP);
+				report.append(ownShipList);
+			}
 		}
 	}
 
@@ -151,19 +198,17 @@ public class SpaceBattleReport extends EventReport {
 
 	private void getEnemyFleet(StringBuilder report) {
 		if (enemySpaceships.stream().anyMatch(EnemySpaceship::isScreend)
-				&& ownSpaceships.stream().anyMatch(ship -> !ship.isScreend())) {
+				&& enemySpaceships.stream().anyMatch(ship -> !ship.isScreened())) {
 			report.append(String.format(ENEMY_FIRST_LINE, getEnemyShipList(enemySpaceships.stream().filter(ship -> !ship.isScreend()))));
 			report.append("\n");
 			report.append(String.format(ENEMY_SCREEND_LINE, getEnemyShipList(enemySpaceships.stream().filter(EnemySpaceship::isScreend))));
 			report.append("\n");
-		} else {
-			if (enemyFaction != null) {
-				report.append(String.format(ENEMY_FORCE, getEnemyShipList(enemySpaceships.stream())));
-				report.append("\n");
-			} else { // neutral opponent
-				report.append(String.format(ENEMY_NEUTRAL_FORCE, getEnemyName(), getEnemyShipList(enemySpaceships.stream())));
-				report.append("\n");
-			}
+		} else if (enemyFaction != null) {
+			report.append(String.format(ENEMY_FORCE, getEnemyShipList(enemySpaceships.stream())));
+			report.append("\n");
+		} else { // neutral opponent
+			report.append(String.format(ENEMY_NEUTRAL_FORCE, getEnemyShipList(enemySpaceships.stream())));
+			report.append("\n");
 		}
 	}
 
@@ -176,15 +221,16 @@ public class SpaceBattleReport extends EventReport {
 	}
 
 	private void getOwnFleet(StringBuilder report) {
-		if (ownSpaceships.stream().anyMatch(OwnSpaceship::isScreend)) {
-			report = report.append(String.format(OWN_FIRST_LINE,
-					getOwnShipList(ownSpaceships.stream().filter(ship -> !ship.isScreend()))));
+		if (ownSpaceships.stream().anyMatch(OwnSpaceship::isScreened)
+			&& ownSpaceships.stream().anyMatch(ownSpaceship -> !ownSpaceship.isScreened())) {
+			report.append(String.format(OWN_FIRST_LINE,
+					getOwnShipList(ownSpaceships.stream().filter(ship -> !ship.isScreened()))));
 			report.append("\n");
-			report = report.append(String.format(OWN_SCREEND_LINE,
-					getOwnShipList(ownSpaceships.stream().filter(OwnSpaceship::isScreend))));
+			report.append(String.format(OWN_SCREEND_LINE,
+					getOwnShipList(ownSpaceships.stream().filter(OwnSpaceship::isScreened))));
 			report.append("\n");
 		} else {
-			report = report.append(String.format(OWN_FORCE, getOwnShipList(ownSpaceships.stream())));
+			report.append(String.format(OWN_FORCE, getOwnShipList(ownSpaceships.stream())));
 			report.append("\n");
 		}
 	}

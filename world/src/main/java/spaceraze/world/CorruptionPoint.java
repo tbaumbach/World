@@ -1,8 +1,9 @@
 package spaceraze.world;
 
-import java.io.Serializable;
+import lombok.*;
 
-import spaceraze.world.CorruptionPoint;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Handles one breakpoint for corruption.
@@ -10,24 +11,41 @@ import spaceraze.world.CorruptionPoint;
  * @author WMPABOD
  *
  */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "CORRUPTION_POINT")
 public class CorruptionPoint implements Serializable{
 	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="ID", nullable = false)
+	private Long id;
+
 	private int incomeLimit;
-	private int corrutionPercentage;
+	private int corruptionPercentage;
 	private double incomePercentage;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "FK_CURRUPTION_PONT_NEXT_BREAKPOINT")
 	private CorruptionPoint nextBreakpoint;
 
-	public CorruptionPoint(int anIncomeLimit,int aCorrutionPercentage){
-		incomeLimit = anIncomeLimit;
-		corrutionPercentage = aCorrutionPercentage;
-		incomePercentage = (100 - aCorrutionPercentage)/100.0;
+	public CorruptionPoint(int incomeLimit,int corruptionPercentage){
+		this.incomeLimit = incomeLimit;
+		this.corruptionPercentage = corruptionPercentage;
+		this.incomePercentage = (100 - corruptionPercentage)/100.0;
 	}
 	
 	public String getDescription(){
 		StringBuffer sb = new StringBuffer();
 		sb.append(incomeLimit);
 		sb.append("=");
-		sb.append(corrutionPercentage);
+		sb.append(corruptionPercentage);
 		sb.append("%");
 		if (nextBreakpoint != null){
 			sb.append(",");
@@ -36,8 +54,8 @@ public class CorruptionPoint implements Serializable{
 		return sb.toString();
 	}
 
-	public int getCorrutionPercentage() {
-		return corrutionPercentage;
+	public int getCorruptionPercentage() {
+		return corruptionPercentage;
 	}
 
 	public int getIncomeLimit() {
@@ -54,20 +72,20 @@ public class CorruptionPoint implements Serializable{
 	 * @param income
 	 * @return
 	 */
-	public int getIncomeAfterCorruption(int anIncome){
+	public int getIncomeAfterCorruption(int income){
 		int incomeAfterCorruption = 0;
 		if (nextBreakpoint != null){
 			int nextLimit = nextBreakpoint.getIncomeLimit();
-			if (anIncome < nextLimit){
-				double tmpInc = (anIncome - incomeLimit) * incomePercentage;
+			if (income < nextLimit){
+				double tmpInc = (income - incomeLimit) * incomePercentage;
 				incomeAfterCorruption = (int)Math.round(tmpInc);
 			}else{
 				double tmpInc = (nextLimit - incomeLimit) * incomePercentage;
 				incomeAfterCorruption = (int)Math.round(tmpInc);
-				incomeAfterCorruption += nextBreakpoint.getIncomeAfterCorruption(anIncome);
+				incomeAfterCorruption += nextBreakpoint.getIncomeAfterCorruption(income);
 			}
 		}else{
-			double tmpInc = (anIncome - incomeLimit) * incomePercentage;
+			double tmpInc = (income - incomeLimit) * incomePercentage;
 			incomeAfterCorruption = (int)Math.round(tmpInc);
 		}
 		return incomeAfterCorruption;

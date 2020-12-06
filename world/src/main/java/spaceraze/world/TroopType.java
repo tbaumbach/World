@@ -2,14 +2,32 @@ package spaceraze.world;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.enums.BlackMarketFrequency;
 import spaceraze.world.enums.TroopTargetingType;
 import spaceraze.world.enums.TypeOfTroop;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@Entity()
+@Table(name = "TROOP")
 public class TroopType implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
-	private UniqueIdCounter uic;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "FK_GAME_WORLD")
+	private GameWorld gameWorld;
+
 	// names, description etc
 	private String uniqueName;
 	private String uniqueShortName;
@@ -45,15 +63,16 @@ public class TroopType implements Serializable, Cloneable{
 	private int costBuild;
 	private int upkeep; // count against each planet's individual upkeep value (=production)
 //	worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player.
-	private boolean worldUnique=  false, factionUnique = false, playerUnique =  false;
+	private boolean worldUnique = false;
+	private boolean factionUnique = false;
+	private boolean playerUnique =  false;
 	
-    public TroopType(String aUniqueName, String aUniqueShortName, int aDamageCapacity, int aUpkeep, int aCostBuild, UniqueIdCounter aUic, int anAttackInfantry, int anAttackArmor){
+    public TroopType(String aUniqueName, String aUniqueShortName, int aDamageCapacity, int aUpkeep, int aCostBuild, int anAttackInfantry, int anAttackArmor){
     	this.uniqueName = aUniqueName;
     	this.uniqueShortName = aUniqueShortName;
     	this.damageCapacity = aDamageCapacity;
     	this.upkeep = aUpkeep;
     	this.costBuild = aCostBuild;
-    	this.uic = aUic;
     	this.attackInfantry = anAttackInfantry;
     	this.attackArmored = anAttackArmor;
     }
@@ -316,10 +335,6 @@ public class TroopType implements Serializable, Cloneable{
 		return uniqueShortName;
 	}
 
-    public UniqueIdCounter getUniqueIdCounter(){
-    	return uic;
-    }
-
 	public void setNrProduced(int nrProduced) {
 		this.nrProduced = nrProduced;
 	}
@@ -456,8 +471,8 @@ public class TroopType implements Serializable, Cloneable{
 			if(aPlayer.getOrders().haveTroopTypeBuildOrder(this)){
 				constructible = false;
 			}
-			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getBlackMarket().getCurrentOffers()) {
-				if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getOfferedTroopType().getUniqueName().equals(uniqueName)){
+			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getCurrentOffers()) {
+				if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getTroopType().getUniqueName().equals(uniqueName)){
 					constructible = false;
 				}
 			}
@@ -473,8 +488,8 @@ public class TroopType implements Serializable, Cloneable{
 					if(!isPlayerUnique() && !isFactionUnique()){
 						if(isWorldUnique() && !isWorldUniqueBuild(aGalaxy)){
 							boolean isAlreadyAoffer = false;
-							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getBlackMarket().getCurrentOffers()) {
-								if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getOfferedTroopType().getUniqueName().equals(uniqueName)){
+							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getCurrentOffers()) {
+								if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getTroopType().getUniqueName().equals(uniqueName)){
 									isAlreadyAoffer = true;
 								}
 							}

@@ -7,12 +7,24 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.*;
 import spaceraze.world.enums.TypeOfTroop;
 import spaceraze.util.general.Functions;
 
+import javax.persistence.*;
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity()
+@Table(name = "BUILDNING_TYPE")
 public class BuildingType implements Serializable, Cloneable{
 	static final long serialVersionUID = 1L;
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String name;
 	private String description;
 	private String shortName;
@@ -44,7 +56,17 @@ public class BuildingType implements Serializable, Cloneable{
 	private int cannonRateOfFire = 0;
 	private int cannonHitChance = 50;
 
-	private List<VIPType> buildVIPTypes;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "BUILDNING_TYPE_TO_VIP_TYPE",
+			joinColumns = @JoinColumn(name = "BUILDNING_ID"),
+			inverseJoinColumns = @JoinColumn(name = "VIP_ID"))
+	@Builder.Default
+	private List<VIPType> buildVIPTypes = new ArrayList<>();
+
+	@ElementCollection // TODO do we need to use (fetch = FetchType.EAGER) ?
+	@Enumerated(EnumType.STRING)
+	@Builder.Default
 	private List<TypeOfTroop> typeOfTroop = new ArrayList<>(); // infantry, armored or support
 	private String parentBuildingTypeName;
 	
@@ -52,6 +74,8 @@ public class BuildingType implements Serializable, Cloneable{
 	private int counterEspionage = 0;
 	private int exterminator = 0;
 
+
+	//TODO 2020-11-05 Dessa ser inte ut att användas?
 	// GÖR OM skapa en klass o lägg dessa i den. 
 	// så att troops får en egen klass + så att build troops klassen kan hämta troops bonus från denna klass
 	// adding bonus to troops build on the planet
@@ -72,6 +96,8 @@ public class BuildingType implements Serializable, Cloneable{
 	*/
 
 	public BuildingType(BuildingType original, PlayerBuildingImprovement improvement){
+		this.buildVIPTypes = new ArrayList<>();
+		this.typeOfTroop = new ArrayList<>();
 		this.setName(original.getName());
 		this.setDescription(original.getDescription());
 		this.setShortName(original.getShortName());
@@ -80,6 +106,11 @@ public class BuildingType implements Serializable, Cloneable{
 		this.setAutoDestructWhenConquered(original.isAutoDestructWhenConquered());
 		this.setSelfDestructible(original.isSelfDestructible());
 		this.setDeveloped(improvement.isDeveloped());
+		this.worldUnique = original.isWorldUnique();
+		this.factionUnique = original.isFactionUnique();
+		this.playerUnique = original.isPlayerUnique();
+		this.planetUnique = original.isPlanetUnique();
+
 		this.setOpenPlanetBonus(original.getOpenPlanetBonus() + improvement.getOpenPlanetBonus());
 		this.setClosedPlanetBonus(original.getClosedPlanetBonus() + improvement.getClosedPlanetBonus());
 		this.setTechBonus(original.getTechBonus() + improvement.getTechBonus());
@@ -121,11 +152,12 @@ public class BuildingType implements Serializable, Cloneable{
 		nrProduced = 0;
 		//nextBuildingSteps = new ArrayList<BuildingType>();	
 		buildVIPTypes = new ArrayList<>();
+		typeOfTroop = new ArrayList<>();
 	}
 	
 	 public Building getBuilding(Planet planet, Galaxy g){
 		 nrProduced++;
-		 return new Building(this,null,nrProduced,g, planet);
+		 return new Building(this, nrProduced, g, planet);
 	 }
 	
 	public void setParentBuildingTypeName(String parentBuildingTypeName){
@@ -417,7 +449,6 @@ public class BuildingType implements Serializable, Cloneable{
 		return factionUnique;
 	}
 
-	
 	public boolean isPlanetUnique() {
 		return planetUnique;
 	}
@@ -430,7 +461,6 @@ public class BuildingType implements Serializable, Cloneable{
 		return playerUnique;
 	}
 
-	
 	public boolean isVisibleOnMap() {
 		return visibleOnMap;
 	}
