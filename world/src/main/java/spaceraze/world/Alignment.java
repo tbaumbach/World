@@ -3,9 +3,11 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,12 +39,16 @@ public class Alignment implements Serializable {
 	private String name;
 	private String description;
 
+	@JsonIgnore
 	@JoinTable(name = "CAN_HAVE_VIP_LIST", joinColumns = {
 			@JoinColumn(name = "ID", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
 			@JoinColumn(name = "CAN_HAVE_VIP_FROM_ALIGNMENT", referencedColumnName = "id", nullable = false)})
 	@ManyToMany
 	private List<Alignment> canHaveVipList = new ArrayList<>(); // factions from this alignments can have vips from these alignments
+
 	private boolean duelOwnAlignment = true; // duellists with false will never fight another duellist with the same alignment
+
+	@JsonIgnore
 	@JoinTable(name = "HATE_DUELLISTS_LIST", joinColumns = {
 			@JoinColumn(name = "ID", referencedColumnName = "id", nullable = false)}, inverseJoinColumns = {
 			@JoinColumn(name = "CAN_HAVE_VIP_FROM_ALIGNMENT", referencedColumnName = "id", nullable = false)})
@@ -81,7 +87,17 @@ public class Alignment implements Serializable {
 		  sb.append("</table>");
 		  return sb.toString();
 	  }
-	  
+
+	  @JsonProperty("canHaveVipList")
+	  public List<String> getCanHaveVipName(){
+		return canHaveVipList.stream().map(Alignment::getName).collect(Collectors.toList());
+	  }
+
+	@JsonProperty("hateDuellistsList")
+	public List<String> getHateDuellistsName(){
+		return hateDuellistsList.stream().map(Alignment::getName).collect(Collectors.toList());
+	}
+
 	private String getCanHaveVIPStringList(){
 		StringBuffer sb = new StringBuffer();
 		for (Alignment alignment : canHaveVipList) {
@@ -135,9 +151,6 @@ public class Alignment implements Serializable {
 		return alignments;
 	}
 
-	public List<Alignment> getHateDuellistList(){
-		return hateDuellistsList;
-	}
 
 	public boolean hateDuellist(String findAlignment){
 		return findAlignment(findAlignment,hateDuellistsList);
@@ -187,5 +200,6 @@ public class Alignment implements Serializable {
 	public String getName(){
 		return name;
 	}
+
 
 }

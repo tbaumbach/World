@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,7 @@ public class VIPType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
@@ -34,6 +37,7 @@ public class VIPType implements Serializable {
 
     private String advanteges;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "viptype")
     @JoinColumn(name = "FK_ALIGNMENT")
     private Alignment alignment = null;
@@ -868,5 +872,8 @@ public class VIPType implements Serializable {
         this.howToPlay = howToPlay;
     }
 
-
+    @JsonProperty("alignment")
+    public String getAlignmentName(){
+        return alignment.getName();
+    }
 }

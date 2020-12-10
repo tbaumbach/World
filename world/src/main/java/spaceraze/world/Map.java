@@ -1,6 +1,3 @@
-/*
- * Created on 2005-maj-12
- */
 package spaceraze.world;
 
 import java.io.Serializable;
@@ -20,11 +17,6 @@ import spaceraze.util.properties.PropertiesHandler;
 
 import javax.persistence.*;
 
-/**
- * @author WMPABOD
- *
- * Encapsulates all data for a map instance
- */
 @Setter
 @Getter
 @NoArgsConstructor
@@ -35,6 +27,7 @@ import javax.persistence.*;
 public class Map implements Serializable, Comparable<Map>{
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
 	private Long id;
@@ -42,9 +35,11 @@ public class Map implements Serializable, Comparable<Map>{
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
 	@Builder.Default
 	private List<PlanetConnection> connections = new ArrayList<>();
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
 	@Builder.Default
 	private List<BasePlanet> planets = new ArrayList<>();
+
 	private int maxNrStartPlanets;
 	private String createdDate,changedDate,description;
 	private String authorName; // real name of author
@@ -52,6 +47,7 @@ public class Map implements Serializable, Comparable<Map>{
 	private String fileName; // unique name of map used in filename of properties file
 	private String name; // real name of map
 	private long versionId = 1; // should be increased every time a new version of a map is published
+
 	public Map(String playerLogin,String mapFileName){
 		this(playerLogin + "." + mapFileName);
 		Logger.finer("new Map from draft, mapname: " + mapFileName + " playerLogin" + playerLogin);
@@ -237,10 +233,6 @@ public class Map implements Serializable, Comparable<Map>{
 	}
 
 	@JsonIgnore
-	public List<BasePlanet> getPlanets() {
-		return planets;
-	}
-	
 	public List<String> getPlanetNames() {
 		List<String> planetsName = new ArrayList<String>();
 		for (BasePlanet planet : planets) {

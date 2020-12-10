@@ -19,24 +19,30 @@ import javax.persistence.*;
 @Table(name = "PLANET_CONNECTION")
 public class PlanetConnection implements Serializable {
     static final long serialVersionUID = 1L;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //TODO should galaxy have the map instead?
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_GALAXY")
     private Galaxy galaxy;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_MAP")
     private Map map;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PLANET_ONE")
     @Column(insertable = false, updatable = false)
     private BasePlanet planetOne;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PLANET_TWO")
     @Column(insertable = false, updatable = false)
@@ -74,19 +80,6 @@ public class PlanetConnection implements Serializable {
         this.longRange = longRange;
     }
 
-    @JsonIgnore
-    public BasePlanet getPlanetOne() {
-        return planetOne;
-    }
-
-    @JsonIgnore
-    public BasePlanet getPlanetTwo() {
-        return planetTwo;
-    }
-
-    public boolean isLongRange() {
-        return longRange;
-    }
 
     @JsonIgnore
     public BasePlanet getOtherEnd(BasePlanet aPlanet, boolean isLongRange) {
@@ -121,8 +114,17 @@ public class PlanetConnection implements Serializable {
         return found;
     }
 
+    @JsonIgnore
     public String toString() {
         return planetOne + " <--> " + planetTwo;
+    }
+
+    public String getPlanetOneName(){
+        return planetOne.getName();
+    }
+
+    public String getPlanetOneTwo(){
+        return planetTwo.getName();
     }
 
 }

@@ -2,6 +2,8 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,10 +28,12 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_FACTION_ONE")
 	private Faction faction1;
 
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_FACTION_TWO")
 	private Faction faction2;
@@ -106,12 +110,15 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 		this.startRelation = startRelation;
 	}
 
-	public Faction getFaction1() {
-		return faction1;
+
+	@JsonProperty("faction1")
+	public String getFaction1Name(){
+		return faction1.getName();
 	}
 
-	public Faction getFaction2() {
-		return faction2;
+	@JsonProperty("faction2")
+	public String getFaction2Name(){
+		return faction2.getName();
 	}
 		
 }

@@ -20,6 +20,7 @@ import javax.persistence.Table;
 @Table(name = "RESEARCH_UPGRADE_BUILDNING")
 public class ResearchUpgradeBuilding extends BuildingImprovement {
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "FK_RESEARCH_ADVANTAGE")
 	private ResearchAdvantage researchAdvantage;

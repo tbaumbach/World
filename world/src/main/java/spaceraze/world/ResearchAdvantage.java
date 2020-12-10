@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +42,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	private int closedPlanetBonus = 0;
 	private int resistanceBonus = 0;
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "parents")
 	private List<ResearchAdvantage> children;
 
@@ -47,8 +50,10 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 			@JoinColumn(name = "PARENT", referencedColumnName = "ID", nullable = false)}, inverseJoinColumns = {
 			@JoinColumn(name = "CHILD", referencedColumnName = "ID", nullable = false)})
 	@ManyToMany
-	@JsonIgnore private List<ResearchAdvantage> parents = new ArrayList<>();
+	@JsonIgnore
+	private List<ResearchAdvantage> parents = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_SPACESHIP",
@@ -58,6 +63,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<SpaceshipType> ships = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_REPLACE_SPACESHIP",
@@ -78,6 +84,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<ResearchUpgradeShip> researchUpgradeShip = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_TROOP",
@@ -87,6 +94,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<TroopType> troops = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_REPLACE_TROOP",
@@ -100,6 +108,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<ResearchUpgradeTroop> researchUpgradeTroop = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_BUILDING",
@@ -109,6 +118,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<BuildingType> buildings = new ArrayList<>();
 
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "RESEARCH_ADVANTAGE_TO_REPLACE_BUILDING",
@@ -262,10 +272,17 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public void setResearchedTurns(int researchedTurns){
 		this.researchedTurns = researchedTurns;
 	}
-	
-	public List<ResearchAdvantage> getChildren(){
+
+	@JsonProperty("children")
+	public List<String> getChildrenName(){
 		
-		return this.children;
+		return this.children.stream().map(ResearchAdvantage::getName).collect(Collectors.toList());
+	}
+
+	@JsonProperty("parents")
+	public List<String> getParentsName(){
+
+		return this.parents.stream().map(ResearchAdvantage::getName).collect(Collectors.toList());
 	}
 	
 	public ResearchAdvantage getChild(String key){
@@ -301,10 +318,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		}
 	}
 
-	@JsonIgnore
-	public List<ResearchAdvantage> getParents(){
-		return parents;
-	}
 	
 	public void setParents(List<ResearchAdvantage> parants){
 		this.parents = parants;
@@ -325,18 +338,16 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.ships.add(ship);
 	}
 	
-	@JsonIgnore
-	public List<SpaceshipType> getShips(){
-		return ships;
+	@JsonProperty("ships")
+	public List<String> getShipNames(){
+		return ships.stream().map(SpaceshipType::getName).collect(Collectors.toList());
 	}
-	
-	public List<String> getShipsName(){
-		List<String> shipNames = new ArrayList<String>();
-		for (SpaceshipType Spaceship : ships) {
-			shipNames.add(Spaceship.getName());
-		}
-		return shipNames;
+
+	@JsonProperty("replaceShips")
+	public List<String> getReplaceShipNames(){
+		return replaceShips.stream().map(SpaceshipType::getName).collect(Collectors.toList());
 	}
+
 	
 	public void setShips(List<SpaceshipType> ships){
 		this.ships = ships;
@@ -357,18 +368,16 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public void addTroopType(TroopType aTroopType){
 		troops.add(aTroopType);
 	}
-	
-	@JsonIgnore
-	public List<TroopType> getTroopTypes(){
-		return troops;
+
+
+	@JsonProperty("troops")
+	public List<String> geTroopNames(){
+		return troops.stream().map(TroopType::getUniqueName).collect(Collectors.toList());
 	}
-	
-	public List<String> getTroopTypesName(){
-		List<String> troopNames = new ArrayList<String>();
-		for (TroopType troop : troops) {
-			troopNames.add(troop.getUniqueName());
-		}
-		return troopNames;
+
+	@JsonProperty("replaceTroops")
+	public List<String> getReplaceTroopNames(){
+		return replaceTroops.stream().map(TroopType::getUniqueName).collect(Collectors.toList());
 	}
 	
 	public void setTroopTypes(List<TroopType> newTroops){
@@ -391,9 +400,14 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		buildings.add(aBuildingType);
 	}
 	
-	@JsonIgnore
-	public List<BuildingType> getBuildingTypes(){
-		return buildings;
+	@JsonProperty("buildings")
+	public List<String> getBuildingTypesNames(){
+		return buildings.stream().map(BuildingType::getName).collect(Collectors.toList());
+	}
+
+	@JsonProperty("replaceBuildings")
+	public List<String> getReplaceBuildingTypesNames(){
+		return replaceBuildings.stream().map(BuildingType::getName).collect(Collectors.toList());
 	}
 	
 	public List<String> getBuildingTypesName(){
@@ -423,20 +437,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.replaceShips.add(ship);
 	}
 
-	@JsonIgnore
-	public List<SpaceshipType> getReplaceShips() {
-		return replaceShips;
-	}
-	
-	public List<String> getReplaceShipsName(){
-		List<String> shipNames = new ArrayList<String>();
-		for (SpaceshipType Spaceship : replaceShips) {
-			shipNames.add(Spaceship.getName());
-		}
-		return shipNames;
-	}
-	
-	
 	public void setReplaceShips(List<SpaceshipType> replaceShips) {
 		this.replaceShips = replaceShips;
 	}
@@ -457,19 +457,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.replaceTroops.add(aTroopType);
 	}
 
-	@JsonIgnore
-	public List<TroopType> getReplaceTroopTypes() {
-		return replaceTroops;
-	}
-	
-	public List<String> getReplaceTroopTypesName(){
-		List<String> troopNames = new ArrayList<String>();
-		for (TroopType troop : replaceTroops) {
-			troopNames.add(troop.getUniqueName());
-		}
-		return troopNames;
-	}
-
 	public BuildingType getReplaceBuildingType(String name){
 		BuildingType found = null;
 		int counter = 0;
@@ -485,21 +472,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public void addReplaceType(BuildingType aBuildingType){
 		replaceBuildings.add(aBuildingType);
 	}
-	
-	@JsonIgnore
-	public List<BuildingType> getReplaceBuildingTypes(){
-		return replaceBuildings;
-	}
-	
-	public List<String> getReplaceBuildingTypesName(){
-		List<String> buildingNames = new ArrayList<String>();
-		for (BuildingType building : replaceBuildings) {
-			buildingNames.add(building.getName());
-		}
-		return buildingNames;
-	}
-	
-	
+
 	public void setReplaceBuildingTypes(List<BuildingType> newBuildings){
 		replaceBuildings = newBuildings;
 	}

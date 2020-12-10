@@ -3,6 +3,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.StringTokenizer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,10 +17,13 @@ import javax.persistence.*;
 @Table(name = "BASE_PLANET")
 public class BasePlanet implements Serializable{
     static final long serialVersionUID = 1L;
+
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_MAP")
     private Map map;
@@ -57,7 +61,8 @@ public class BasePlanet implements Serializable{
         this.possibleStartPlanet = possibleStartPlanet;
     }
 
-    public String getSaveString(int index){
+    @JsonIgnore
+    public String getSaveString(int index){ //TODO 2020-12-09 Remove after JPA are in full power
         String retStr = "planet" + index + " = ";
         retStr = retStr + getName();
         retStr = retStr + "\t" + getX();
@@ -67,6 +72,7 @@ public class BasePlanet implements Serializable{
         return retStr;
     }
 
+    @JsonIgnore
     public BasePlanet clonePlanet(){
         return new BasePlanet(x, y, z, name, possibleStartPlanet);
     }
@@ -74,6 +80,7 @@ public class BasePlanet implements Serializable{
     /**
      * Transform x & y coors for use on map web pages
      */
+    @JsonIgnore
     public void changeScale(double scaleMod){
         x = (int)Math.round(x * scaleMod);
         y = (int)Math.round(y * scaleMod);

@@ -19,6 +19,7 @@ import javax.persistence.Table;
 public class ResearchUpgradeShip extends SpaceshipImprovements {
 	static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "FK_RESEARCH_ADVANTAGE")
 	private ResearchAdvantage researchAdvantage;

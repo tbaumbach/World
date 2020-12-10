@@ -1,5 +1,6 @@
 package spaceraze.world.diplomacy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 @Table(name = "GAME_WORLD_DIPLOMACY_RELATION")
 public class GameWorldDiplomacyRelation extends DiplomacyRelation  {
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;

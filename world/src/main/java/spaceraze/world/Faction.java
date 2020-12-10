@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import spaceraze.util.general.Logger;
 
@@ -51,13 +52,14 @@ public class Faction implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "FK_SHIP_TYPE"))
     @Column(insertable = false, updatable = false)
     @Builder.Default
-    private List<SpaceshipType> spaceshipsTypes = new ArrayList<>();
+    private List<SpaceshipType> spaceshipTypes = new ArrayList<>();
 
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
     private int resistanceBonus = 0;
     private int totalPop; // used when counting winning conditions
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_ALIGNMENT")
     @Column(insertable = false, updatable = false)
@@ -135,20 +137,16 @@ public class Faction implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "faction")
     @Builder.Default
     private List<ResearchAdvantage> researchAdvantages = new ArrayList<>();
-    private int numberOfSimultaneouslyResearchAdvantages = 1;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faction")
-    @Builder.Default
-    private List<Alignment> allAlignments = new ArrayList<>();
+    private int numberOfSimultaneouslyResearchAdvantages = 1;
 
     public Faction(String newName, String colorHexValue, Alignment alignment) {
         this.name = newName;
         this.colorHexValue = colorHexValue;
         this.alignment = alignment;
-        spaceshipsTypes = new ArrayList<>();
+        spaceshipTypes = new ArrayList<>();
         researchAdvantages = new ArrayList<>();
         buildings = new ArrayList<>();
-        allAlignments = new ArrayList<>();
         numberOfSimultaneouslyResearchAdvantages = 1;
         startingBuildings = new ArrayList<>();
         troopTypes = new ArrayList<>();
@@ -313,18 +311,18 @@ public class Faction implements Serializable {
      *
      */
     public void addSpaceshipType(SpaceshipType sst) {
-        spaceshipsTypes.add(new SpaceshipType(sst));
+        spaceshipTypes.add(sst);
     }
 
     @JsonIgnore
     public List<SpaceshipType> getSpaceshipTypes() {
-        return spaceshipsTypes;
+        return spaceshipTypes;
     }
 
     public List<String> getSpaceshipTypesName() {
 
         List<String> shipsName = new ArrayList<>();
-        for (SpaceshipType spaceshipType : spaceshipsTypes) {
+        for (SpaceshipType spaceshipType : spaceshipTypes) {
             shipsName.add(spaceshipType.getName());
         }
         return shipsName;
@@ -334,12 +332,9 @@ public class Faction implements Serializable {
         return getName().equalsIgnoreCase(anotherFaction.getName());
     }
 
-    public Alignment getAlignment() {
+    @JsonProperty("alignment")
+    public Alignment getAlignmentName() {
         return alignment;
-    }
-
-    public void setAlignment(Alignment alignment) {
-        this.alignment = alignment;
     }
 
     @JsonIgnore
@@ -475,8 +470,8 @@ public class Faction implements Serializable {
     public SpaceshipType getSpaceshipTypeByName(String sstname) {
         SpaceshipType foundsst = null;
         int i = 0;
-        while ((i < spaceshipsTypes.size()) & (foundsst == null)) {
-            SpaceshipType tempsst = (SpaceshipType) spaceshipsTypes.get(i);
+        while ((i < spaceshipTypes.size()) & (foundsst == null)) {
+            SpaceshipType tempsst = (SpaceshipType) spaceshipTypes.get(i);
             if (tempsst.getName().equalsIgnoreCase(sstname)) {
                 foundsst = tempsst;
             } else {
