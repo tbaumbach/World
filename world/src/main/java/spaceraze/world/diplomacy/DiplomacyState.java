@@ -27,10 +27,6 @@ public class DiplomacyState implements Serializable{
 	@JoinColumn(name = "FK_GALAXY_STATES")
 	private Galaxy galaxy_states;
 
-	@ManyToOne
-	@JoinColumn(name = "FK_GALAXY_POST_CONFLICTS")
-	private Galaxy galaxy_post_conflicts;
-
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_PLAYER_ONE", insertable = false, updatable = false)
 	private Player player1;

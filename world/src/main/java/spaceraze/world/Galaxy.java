@@ -141,10 +141,6 @@ public class Galaxy implements Serializable {
 
 	private DiplomacyGameType diplomacyGameType;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy_post_conflicts")
-	@Builder.Default
-	private List<DiplomacyState> postConflicts = new ArrayList<>();
-
 	public Galaxy(Map aMap, String gameName, int steps, GameWorld aGameWorld) {
 		this.mapFileName = aMap.getFileName();
 		this.mapFullName = aMap.getNameFull();
@@ -158,7 +154,6 @@ public class Galaxy implements Serializable {
 		allVIPs = new ArrayList<>();
 		troops = new ArrayList<>();
 		uniqueIdCounters = new ArrayList<>();
-		postConflicts = new ArrayList<>();
 		diplomacyStates = new ArrayList<>();
 		allStatistics = new ArrayList<>();
 		currentOffers = new ArrayList<>();

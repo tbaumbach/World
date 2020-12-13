@@ -30,12 +30,12 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_FACTION_ONE")
+	@JoinColumn(name = "FK_FACTION_ONE", insertable = false, updatable = false)
 	private Faction faction1;
 
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_FACTION_TWO")
+	@JoinColumn(name = "FK_FACTION_TWO", insertable = false, updatable = false)
 	private Faction faction2;
 
 	private DiplomacyLevel highestRelation;
