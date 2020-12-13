@@ -25,7 +25,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity()
+@Entity(name="GameWorld")
 @Table(name = "GAME_WORLD")
 public class GameWorld implements Serializable{
 	private static final long serialVersionUID = 1L;

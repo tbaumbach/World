@@ -2,11 +2,11 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spaceraze.util.general.Logger;
-import spaceraze.world.Galaxy;
 import spaceraze.world.Player;
 import spaceraze.world.orders.Orders;
 
@@ -26,6 +26,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity()
 @Table(name = "DIPLOMACY_OFFER")
 public class DiplomacyOffer implements Serializable {
@@ -83,14 +84,6 @@ public class DiplomacyOffer implements Serializable {
 		}
 		return isOtherPlayer;
 	}
-	
-	public Player getThePlayer(Galaxy aGalaxy){
-		return aGalaxy.getPlayer(thePlayerName);
-	}
-
-	public Player getOtherPlayer(Galaxy aGalaxy){
-		return aGalaxy.getPlayer(otherPlayerName);
-	}
 
 	public DiplomacyLevel getSuggestedLevel(){
 		return suggestedLevel;
@@ -104,12 +97,5 @@ public class DiplomacyOffer implements Serializable {
 		this.offerPerformed = offerPerformed;
 	}
 
-	public String getOtherPlayerName() {
-		return otherPlayerName;
-	}
-
-	public String getThePlayerName() {
-		return thePlayerName;
-	}
 	
 }

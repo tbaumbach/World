@@ -23,8 +23,7 @@ public class Building implements Serializable, Cloneable{
 
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_BUILDNING_TYPE")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_BUILDNING_TYPE", insertable = false, updatable = false)
 	private BuildingType buildingType;
 
 	@ManyToOne

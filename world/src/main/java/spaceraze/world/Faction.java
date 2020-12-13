@@ -61,13 +61,11 @@ public class Faction implements Serializable {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_ALIGNMENT")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_ALIGNMENT", insertable = false, updatable = false)
     private Alignment alignment; // must be set
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_VIP_TYPE_GOVERNOR")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_VIP_TYPE_GOVERNOR", insertable = false, updatable = false)
     private VIPType governorVIPType;
 
     @ManyToMany(cascade = CascadeType.ALL)

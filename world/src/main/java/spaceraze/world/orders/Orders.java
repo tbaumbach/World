@@ -40,9 +40,10 @@ public class Orders implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /*
     @OneToOne(mappedBy = "orders")
     private Player player;
-
+    */
     private boolean abandonGame;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")

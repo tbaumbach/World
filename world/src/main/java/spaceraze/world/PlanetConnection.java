@@ -38,14 +38,12 @@ public class PlanetConnection implements Serializable {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PLANET_ONE")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "PLANET_ONE", insertable = false, updatable = false)
     private BasePlanet planetOne;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PLANET_TWO")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "PLANET_TWO", insertable = false, updatable = false)
     private BasePlanet planetTwo;
 
     @Column(name = "LONG_RANGE")

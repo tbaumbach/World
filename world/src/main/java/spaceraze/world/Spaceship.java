@@ -30,39 +30,31 @@ public class Spaceship implements Serializable, Comparable<Spaceship>, ShortName
 	private Galaxy galaxy;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_TYPE")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_SPACESHIP_TYPE", insertable = false, updatable = false)
 	private SpaceshipType sst;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLAYER")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLAYER", insertable = false, updatable = false)
 	private Player owner;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_LOCATION", insertable = false, updatable = false)
 	private Planet location;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_OLD_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_OLD_LOCATION", insertable = false, updatable = false)
 	private Planet oldLocation;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_RUNNING_FROM")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_RUNNING_FROM", insertable = false, updatable = false)
 	private Planet runningFrom; // original planet where the ship was forced to start running from
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_RUNNING_TO")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_RUNNING_TO", insertable = false, updatable = false)
 	private Planet runningTo;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_CARRIER")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_SPACESHIP_CARRIER", insertable = false, updatable = false)
 	private Spaceship carrierLocation;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_OLD_CARRIER")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_SPACESHIP_OLD_CARRIER", insertable = false, updatable = false)
 	private Spaceship oldCarrierLocation;
 
 	private String name;

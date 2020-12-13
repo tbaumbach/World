@@ -27,24 +27,19 @@ public class VIP implements Serializable, ShortNameable {
     private Galaxy galaxy;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_PLANET")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_PLANET", insertable = false, updatable = false)
     private Planet planetLocation = null;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_SPACESHIP")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_SPACESHIP", insertable = false, updatable = false)
     private Spaceship shipLocation = null;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_TROOP")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_TROOP", insertable = false, updatable = false)
     private Troop troopLocation = null;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_PLAYER")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_PLAYER", insertable = false, updatable = false)
     private Player boss = null;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_VIP_TYPE")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_VIP_TYPE", insertable = false, updatable = false)
     private VIPType vipType = null;
     private String uniqueId;
     private int govCounter = -1; // used by diplomats and infestators

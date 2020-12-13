@@ -42,8 +42,7 @@ public class Planet extends BasePlanet{
     @JoinColumn(name = "FK_LAST KNOWN_PLAYER_IN_CONTROL")
     private Player lastKnownPlayerInControl = null;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "REACH_FROM")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "REACH_FROM", insertable = false, updatable = false)
     private Planet reachFrom;
     private boolean hasNeverSurrendered = true;
     private int rangeToClosestFriendly; // used in Galaxy when computing startplanet location

@@ -28,25 +28,21 @@ public class Troop implements Serializable, Cloneable{
 	private Galaxy galaxy;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_TROOP_TYPE")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_TROOP_TYPE", insertable = false, updatable = false)
 	private TroopType troopType;
 	private String uniqueName;
 	private String uniqueShortName;
 	private int currentDC,maxDC;
 	private BattleGroupPosition position;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLAYER")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLAYER", insertable = false, updatable = false)
 	private Player owner = null;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_LOCATION", insertable = false, updatable = false)
 	private Planet planetLocation;
 	private int lastPlanetMoveTurn;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_SPACESHIP_LOCATION", insertable = false, updatable = false)
 	private Spaceship shipLocation;
 	private int kills;
 	private int uniqueId;
@@ -57,12 +53,10 @@ public class Troop implements Serializable, Cloneable{
 	private int attackArtillery;
 	// used when moving
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLANET_OLD_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLANET_OLD_LOCATION", insertable = false, updatable = false)
 	private Planet oldPlanetLocation;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_OLD_LOCATION")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_SPACESHIP_OLD_LOCATION", insertable = false, updatable = false)
 	private Spaceship oldShipLocation;
 
 	public Troop(TroopType aTroopType, int aNrProduced, int aTotalTechBonus, int anUniqueId ){

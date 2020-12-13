@@ -27,23 +27,19 @@ public class BlackMarketOffer implements Serializable {
   private Galaxy galaxy;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "FK_VIP_TYPE")
-  @Column(insertable = false, updatable = false)
+  @JoinColumn(name = "FK_VIP_TYPE", insertable = false, updatable = false)
   VIPType vipType;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "FK_SPACESHIP_TYPE")
-  @Column(insertable = false, updatable = false)
+  @JoinColumn(name = "FK_SPACESHIP_TYPE", insertable = false, updatable = false)
   SpaceshipType spaceshipType;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "FK_SPACESHIP_TYP_BLUE_PRINT")
-  @Column(insertable = false, updatable = false)
+  @JoinColumn(name = "FK_SPACESHIP_TYP_BLUE_PRINT", insertable = false, updatable = false)
   SpaceshipType blueprint;
 
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "TROOP_TYPE")
-  @Column(insertable = false, updatable = false)
+  @JoinColumn(name = "TROOP_TYPE", insertable = false, updatable = false)
   TroopType troopType;
 
   boolean hotStuff;

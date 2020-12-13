@@ -32,18 +32,15 @@ public class DiplomacyState implements Serializable{
 	private Galaxy galaxy_post_conflicts;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLAYER_ONE")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLAYER_ONE", insertable = false, updatable = false)
 	private Player player1;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLAYER_TWO")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLAYER_TWO", insertable = false, updatable = false)
 	private Player player2;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_PLAYER_LORD")
-	@Column(insertable = false, updatable = false)
+	@JoinColumn(name = "FK_PLAYER_LORD", insertable = false, updatable = false)
 	private Player lord;
 
 	private DiplomacyLevel currentLevel;
