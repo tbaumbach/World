@@ -20,9 +20,6 @@ import spaceraze.world.Troop;
 import spaceraze.world.TroopType;
 import spaceraze.world.VIP;
 import spaceraze.world.VIPType;
-import spaceraze.world.diplomacy.DiplomacyChange;
-import spaceraze.world.diplomacy.DiplomacyLevel;
-import spaceraze.world.diplomacy.DiplomacyOffer;
 
 import javax.persistence.*;
 
@@ -105,14 +102,6 @@ public class Orders implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     @Builder.Default
-    private List<DiplomacyOffer> diplomacyOffers = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
-    private List<DiplomacyChange> diplomacyChanges = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<PlanetNotesChange> planetNotesChanges = new ArrayList<>();
 
     public Orders(Player p) {
@@ -126,69 +115,12 @@ public class Orders implements Serializable {
         }
     }
 
-    public boolean haveConfOrder(Player anotherPlayer) {
-        return checkDiplomacyChange(anotherPlayer, DiplomacyLevel.CONFEDERACY);
-    }
-
-    public boolean haveConfOffer(Player anotherPlayer) {
-        return checkDiplomacyOffer(anotherPlayer, DiplomacyLevel.CONFEDERACY);
-    }
-
     private void addExpenses(Expense aExpense) {
         expenses.add(aExpense);
     }
 
     private void removeExpense(Expense aExpense) {
         expenses.remove(aExpense);
-    }
-
-    public DiplomacyOffer findDiplomacyOffer(Player otherPlayer) {
-        DiplomacyOffer foundOffer = null;
-        int counter = 0;
-        while ((foundOffer == null) & (counter < diplomacyOffers.size())) {
-            DiplomacyOffer anOffer = diplomacyOffers.get(counter);
-            if (anOffer.getOtherPlayerName().equals(otherPlayer.getName())) {
-                foundOffer = anOffer;
-            } else {
-                counter++;
-            }
-        }
-        return foundOffer;
-    }
-
-    public DiplomacyChange findDiplomacyChange(Player otherPlayer) {
-        Logger.finest("otherPlayer.getName(): " + otherPlayer.getName());
-        DiplomacyChange foundChange = null;
-        int counter = 0;
-        Logger.finest("diplomacyChanges.size(): " + diplomacyChanges.size());
-        while ((foundChange == null) & (counter < diplomacyChanges.size())) {
-            DiplomacyChange aChange = diplomacyChanges.get(counter);
-            Logger.finest("aChange.getOtherPlayerName(): " + aChange.getOtherPlayerName());
-            if (aChange.getOtherPlayerName().equalsIgnoreCase(otherPlayer.getName())) {
-                foundChange = aChange;
-            } else {
-                counter++;
-            }
-        }
-        return foundChange;
-    }
-
-    public boolean diplomacyOrderExist(Player otherPlayer) {
-        boolean found = false;
-        DiplomacyOffer tmpOffer = findDiplomacyOffer(otherPlayer);
-        if (tmpOffer != null) {
-            Logger.fine("found = true: " + tmpOffer);
-            found = true;
-        } else {
-            Logger.fine("Change?");
-            DiplomacyChange tmpChange = findDiplomacyChange(otherPlayer);
-            Logger.fine("tmpChange: " + tmpChange);
-            if (tmpChange != null) {
-                Logger.fine("found = true: " + tmpChange);
-                found = true;
-            }
-        }
-        return found;
     }
 
     public List<Expense> getExpenses() {
@@ -255,14 +187,6 @@ public class Orders implements Serializable {
 
     public List<PlanetNotesChange> getPlanetNotesChanges() {
         return planetNotesChanges;
-    }
-
-    public List<DiplomacyOffer> getDiplomacyOffers() {
-        return diplomacyOffers;
-    }
-
-    public List<DiplomacyChange> getDiplomacyChanges() {
-        return diplomacyChanges;
     }
 
     public PlanetNotesChange getPlanetNotesChange(Planet aPlanet) {
@@ -623,120 +547,6 @@ public class Orders implements Serializable {
             }
         }
         return found;
-    }
-
-    // aPlayer only needed to access galaxy???
-    public boolean checkDiplomacyConfLordVassal(Player aPlayer) {
-        boolean found = false;
-        List<Player> players = aPlayer.getGalaxy().getPlayers();
-        DiplomacyLevel[] levels = {DiplomacyLevel.CONFEDERACY, DiplomacyLevel.VASSAL, DiplomacyLevel.LORD};
-        for (DiplomacyLevel level : levels) {
-            for (Player player : players) {
-                if (checkDiplomacy(player, level)) {
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    // aPlayer only needed to access galaxy???
-    public boolean checkDiplomacyConfVassal(Player aPlayer) {
-        boolean found = false;
-        List<Player> players = aPlayer.getGalaxy().getPlayers();
-        DiplomacyLevel[] levels = {DiplomacyLevel.CONFEDERACY, DiplomacyLevel.VASSAL};
-        for (DiplomacyLevel level : levels) {
-            for (Player player : players) {
-                if (checkDiplomacyReversedLordVassalOrders(player, level)) {
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    /**
-     * Check for diplomacy order
-     *
-     * @param otherPlayer
-     * @param newLevel
-     * @return
-     */
-    public boolean checkDiplomacy(Player otherPlayer, DiplomacyLevel newLevel) {
-        boolean found = false;
-        Logger.fine("checkDiplomacy: " + otherPlayer.getGovernorName() + " " + newLevel.name());
-        for (DiplomacyChange aChange : diplomacyChanges) {
-            if (aChange.isPlayerAndLevel(otherPlayer, newLevel)) {
-                Logger.fine("aChange found = true: " + aChange);
-                found = true;
-            }
-        }
-        if (!found) {
-            for (DiplomacyOffer anOffer : diplomacyOffers) {
-                if (anOffer.isPlayerAndLevel(otherPlayer, newLevel)) {
-                    Logger.fine("anOffer found = true: " + anOffer);
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    public boolean checkDiplomacyReversedLordVassalOrders(Player otherPlayer, DiplomacyLevel newLevel) {
-        boolean found = false;
-        for (DiplomacyChange aChange : diplomacyChanges) {
-            DiplomacyLevel tmpLevel = newLevel;
-            if (newLevel == DiplomacyLevel.LORD) {
-                tmpLevel = DiplomacyLevel.VASSAL;
-            } else if (newLevel == DiplomacyLevel.VASSAL) {
-                tmpLevel = DiplomacyLevel.LORD;
-            }
-            if (aChange.isPlayerAndLevel(otherPlayer, tmpLevel)) {
-                found = true;
-            }
-        }
-        if (!found) {
-            for (DiplomacyOffer anOffer : diplomacyOffers) {
-                DiplomacyLevel tmpLevel = newLevel;
-                if (newLevel == DiplomacyLevel.LORD) {
-                    tmpLevel = DiplomacyLevel.VASSAL;
-                } else if (newLevel == DiplomacyLevel.VASSAL) {
-                    tmpLevel = DiplomacyLevel.LORD;
-                }
-                if (anOffer.isPlayerAndLevel(otherPlayer, tmpLevel)) {
-                    found = true;
-                }
-            }
-        }
-        return found;
-    }
-
-    public boolean checkDiplomacyChange(Player otherPlayer, DiplomacyLevel newLevel) {
-        boolean found = false;
-        for (DiplomacyChange aChange : diplomacyChanges) {
-            if (aChange.isPlayerAndLevel(otherPlayer, newLevel)) {
-                found = true;
-            }
-        }
-        return found;
-    }
-
-    public boolean checkDiplomacyOffer(Player otherPlayer, DiplomacyLevel newLevel) {
-        boolean found = false;
-        for (DiplomacyOffer anOffer : diplomacyOffers) {
-            if (anOffer.isPlayerAndLevel(otherPlayer, newLevel)) {
-                found = true;
-            }
-        }
-        return found;
-    }
-
-    public void addDiplomacyOffer(DiplomacyOffer newDiplomacyOffer) {
-        diplomacyOffers.add(newDiplomacyOffer);
-    }
-
-    public void addDiplomacyChange(DiplomacyChange newDiplomacyChange) {
-        diplomacyChanges.add(newDiplomacyChange);
     }
 
     // check if there exist a planet move order for this troop

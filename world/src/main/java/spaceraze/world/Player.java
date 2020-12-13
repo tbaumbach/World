@@ -2,14 +2,10 @@ package spaceraze.world;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import lombok.*;
 import spaceraze.util.general.Logger;
-import spaceraze.world.diplomacy.DiplomacyChange;
-import spaceraze.world.diplomacy.DiplomacyLevel;
-import spaceraze.world.diplomacy.DiplomacyOffer;
 import spaceraze.world.enums.HighlightType;
 import spaceraze.world.mapinfo.MapInfos;
 import spaceraze.world.orders.Expense;
@@ -87,10 +83,6 @@ public class Player implements Serializable{
     @Builder.Default
     private List<ResearchProgress> researchProgresses = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
-    private List<DiplomacyOffer> diplomacyOffers = new ArrayList<>(); // current offers (from others players) for the current turn
-    
     // Copy from Faction
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
@@ -130,7 +122,6 @@ public class Player implements Serializable{
         buildingImprovements = new ArrayList<>();
         planetInformations = new ArrayList<>();
         researchProgresses = new ArrayList<>();
-        diplomacyOffers = new ArrayList<>();
         planetOrderStatuses = new ArrayList<>();
         playerReports = new ArrayList<>();
     }
@@ -174,28 +165,6 @@ public class Player implements Serializable{
 
     public void setReportLevel(ReportLevel newReportLevel){
     	reportLevel = newReportLevel;
-    }
-
-    public void resetDiplomacyOffers(){
-    	diplomacyOffers = new LinkedList<>();
-    }
-    
-    public void addDiplomacyOffer(DiplomacyOffer anOffer){
-    	diplomacyOffers.add(anOffer);
-    }
-    
-    public DiplomacyOffer findDiplomacyOffer(Player otherPlayer){
-    	DiplomacyOffer foundOffer = null;
-    	int counter = 0;
-    	while ((foundOffer == null) & (counter < diplomacyOffers.size())){
-    		DiplomacyOffer tmpOffer = diplomacyOffers.get(counter);
-    		if (tmpOffer.isOtherPlayer(otherPlayer)){
-    			foundOffer = tmpOffer;
-    		}else{
-    			counter++;
-    		}
-    	}
-    	return foundOffer;
     }
 
     public TurnInfo getTurnInfo(){
@@ -845,17 +814,6 @@ public class Player implements Serializable{
 	      orders.addBuildVIP(building, vipTypes, this);
 	    }
 
-	public boolean orderExist(Player otherPlayer, DiplomacyLevel aLevel){
-		return orders.checkDiplomacy(otherPlayer,aLevel);
-	}
-
-	public DiplomacyOffer getDiplomacyOffer(Player otherPlayer){
-		return orders.findDiplomacyOffer(otherPlayer);
-	}
-
-	public DiplomacyChange getDiplomacyChange(Player otherPlayer){
-		return orders.findDiplomacyChange(otherPlayer);
-	}
 
 	public int getLatestMessageIdFromServer() {
 		return latestMessageIdFromServer;
@@ -871,14 +829,6 @@ public class Player implements Serializable{
 
 	public void setMessageId(int messageId) {
 		this.messageId = messageId;
-	}
-	
-	public boolean haveConfOrder(Player anotherPlayer){
-		return orders.haveConfOrder(anotherPlayer);
-	}
-
-	public boolean haveConfOffer(Player anotherPlayer){
-		return orders.haveConfOffer(anotherPlayer);
 	}
 
     public boolean isWin() {

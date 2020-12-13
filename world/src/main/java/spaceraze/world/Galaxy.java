@@ -3290,57 +3290,6 @@ public class Galaxy implements Serializable {
 		return factionGame;
 	}
 
-	public boolean checkAllInConfederacyOrder(Player thePlayer, List<Player> confPlayers) {
-		int confCounter = 0;
-		Logger.fine("thePlayer: " + thePlayer);
-		for (Player confPlayer : confPlayers) {
-			Logger.fine("confPlayer: " + confPlayer);
-			if (confPlayer.haveConfOrder(thePlayer)) {
-				Logger.fine("confCounter: " + confCounter);
-				confCounter++;
-			}
-		}
-		return confCounter == confPlayers.size();
-	}
-
-	public boolean checkAllInConfederacyOffer(Player thePlayer, List<Player> confPlayers) {
-		int confCounter = 0;
-		Logger.finer("thePlayer: " + thePlayer);
-		for (Player confPlayer : confPlayers) {
-			Logger.finer("confPlayer: " + confPlayer);
-			if (confPlayer.haveConfOffer(thePlayer)) {
-				Logger.finer("confCounter: " + confCounter);
-				confCounter++;
-			}
-		}
-		return confCounter == confPlayers.size();
-	}
-
-	public boolean checkConfederacyOfferExist(Player thePlayer, List<Player> confPlayers) {
-		int confCounter = 0;
-		Logger.finer("thePlayer: " + thePlayer);
-		for (Player confPlayer : confPlayers) {
-			Logger.finer("confPlayer: " + confPlayer);
-			if (confPlayer.haveConfOffer(thePlayer)) {
-				Logger.finer("confCounter: " + confCounter);
-				confCounter++;
-			}
-		}
-		return confCounter > 0;
-	}
-
-	public List<DiplomacyState> getPostConflicts() {
-		return postConflicts;
-	}
-
-	public void setPostConflicts(List<DiplomacyState> postConfList) {
-		this.postConflicts = postConfList;
-	}
-
-	public void addPostConfList(DiplomacyState addToList) {
-		postConflicts.add(addToList);
-	}
-
 	/**
 	 * find the VIP with the highest bombardmentbonus on any of the sips in the list
 	 *
