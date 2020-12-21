@@ -269,92 +269,6 @@ public class Galaxy implements Serializable {
 		return highestResistanceBonus;
 	}
 
-	public VIP findVIPResistanceBonus(Planet aPlanet, Player aPlayer) {
-		VIP foundVIP = null;
-		int bonus = 0;
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			if ((tempVIP.getBoss() == aPlayer) & (tempVIP.getPlanetLocation() == aPlanet)) {
-				if (tempVIP.getResistanceBonus() > bonus) {
-					bonus = tempVIP.getResistanceBonus();
-					foundVIP = tempVIP;
-				}
-			}
-		}
-		return foundVIP;
-	}
-
-	/**
-	 *
-	 * @param aShip
-	 *            a capital ship
-	 * @param aPlayer
-	 * @return
-	 */
-	public int findVIPhighestInitBonusCapitalShip(Spaceship aShip, Player aPlayer) {
-		int initBonus = 0;
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			if ((tempVIP.getBoss() == aPlayer) & (tempVIP.getShipLocation() == aShip)) {
-				if (tempVIP.getInitBonus() > initBonus) {
-					initBonus = tempVIP.getInitBonus();
-				}
-			}
-		}
-		return initBonus;
-	}
-
-	public int findVIPhighestInitBonusSquadron(Spaceship aShip, Player aPlayer) {
-		int initSquadronBonus = 0;
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			if ((tempVIP.getBoss() == aPlayer) & (tempVIP.getShipLocation() == aShip)) {
-				if (tempVIP.getInitSquadronBonus() > initSquadronBonus) {
-					initSquadronBonus = tempVIP.getInitSquadronBonus();
-				}
-			}
-		}
-		Logger.finer("initSquadronBonus: " + initSquadronBonus);
-		return initSquadronBonus;
-	}
-
-	public boolean findVIPcanAttackScreened(Spaceship firingShip) {
-		boolean found = false;
-		int index = 0;
-		while ((!found) & index < allVIPs.size()) {
-			VIP aVIP = allVIPs.get(index);
-			if (aVIP.getShipLocation() == firingShip) {
-				if (firingShip.isSquadron()) {
-					if (aVIP.isAttackScreenedSquadron()) {
-						found = true;
-					}
-				} else { // capital ship
-					if (aVIP.isAttackScreenedCapital()) {
-						found = true;
-					}
-				}
-			}
-			if (!found) {
-				index++;
-			}
-		}
-		return found;
-	}
-
-	public int findVIPhighestInitDefence(Spaceship aShip, Player aPlayer) {
-		int initDefence = 0;
-		for (int i = 0; i < allVIPs.size(); i++) {
-			VIP tempVIP = (VIP) allVIPs.get(i);
-			if ((tempVIP.getInitDefence() > 0) & (tempVIP.getBoss() == aPlayer)
-					& (tempVIP.getShipLocation() == aShip)) {
-				if (tempVIP.getInitDefence() > initDefence) {
-					initDefence = tempVIP.getInitDefence();
-				}
-			}
-		}
-		return initDefence;
-	}
-
 	public VIP findSurveyVIPonShip(Planet aPlanet, Player aPlayer) {
 		VIP foundVIP = null;
 		int i = 0;
@@ -1692,29 +1606,6 @@ public class Galaxy implements Serializable {
 		return found;
 	}
 
-	public SpaceshipType getRandomCommonShiptype() {
-		SpaceshipType returnType = null;
-		SpaceshipType tempShipType = null;
-		List<SpaceshipType> allAvailableTypes = getShiptypesToBlackMarket();
-		int totalFrequencypoint = 0;
-		for (SpaceshipType spaceshipType : allAvailableTypes) {
-			totalFrequencypoint += spaceshipType.getBlackMarketFrequency().getFrequency();
-		}
-
-		int freqValue = Functions.getRandomInt(0, totalFrequencypoint - 1);
-		int counter = 0;
-		int tmpFreqSum = 0;
-		while (returnType == null) {
-			tempShipType = allAvailableTypes.get(counter);
-			tmpFreqSum = tmpFreqSum + tempShipType.getBlackMarketFrequency().getFrequency();
-			if (tmpFreqSum > freqValue) {
-				returnType = tempShipType;
-			}
-			counter++;
-		}
-		return returnType;
-	}
-
 	public TroopType getRandomCommonTroopType() {
 		TroopType aTroopType = null;
 		TroopType tempTroopType = null;
@@ -1737,25 +1628,6 @@ public class Galaxy implements Serializable {
 		}
 
 		return aTroopType;
-	}
-
-	/**
-	 * Searches through all sst lists for all factions, limited by the turn number
-	 * (no medium+ on turn 1 etc)
-	 *
-	 * @return
-	 */
-	private List<SpaceshipType> getShiptypesToBlackMarket() {
-		Logger.fine("getShiptypesToBlackMarket() called");
-		List<SpaceshipType> ssTypes = new LinkedList<SpaceshipType>();
-		// LoggingHandler.fine("Faction: " + aFaction.getName(),this);
-		// LoggingHandler.fine("Ships nr: " + tmpSsTypes.size(),this);
-		for (SpaceshipType aSST : gameWorld.getShipTypes()) {
-			if (aSST.isReadyToUseInBlackMarket(this)) {
-				ssTypes.add(aSST);
-			}
-		}
-		return ssTypes;
 	}
 
 	/**

@@ -29,10 +29,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	private Galaxy galaxy;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_SPACESHIP_TYPE", insertable = false, updatable = false)
-	private SpaceshipType sst;
-
-	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_PLAYER", insertable = false, updatable = false)
 	private Player owner;
 
@@ -59,6 +55,8 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	private String name;
 	private String uniqueName;
 	private String uniqueShortName;
+	@Enumerated(EnumType.STRING)
+	private SpaceShipSize size;
 	private int shields;
 	private int damagecapacity;
 	private int currentdc;
@@ -89,6 +87,7 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	private int bombardment;
 	private boolean noRetreat = false;
 	private int psychWarfare;
+	@Enumerated(EnumType.STRING)
 	private SpaceshipRange range;
 	private boolean initSupport = false;
 	private int increaseInitiative;
@@ -106,6 +105,8 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	private boolean visibleOnMap;
 	private boolean lookAsCivilian;
 	private int troopCapacity;
+	private int squadronCapacity;
+	@Enumerated(EnumType.STRING)
 	private SpaceShipSize supply;
 
 	// construktorn skall ej anropas direkt, utan spaceshiptype.getShip skall
@@ -113,8 +114,9 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	public Spaceship(SpaceshipType sst, String name,
 			int nrProduced, VIP vipWithBonus, int factionTechBonus,
 			int buildingBonus) {
-		this.sst = sst;
+
 		this.typeKey = sst.getKey();
+		this.size = sst.getSize();
 		uniqueName = sst.getName() + " - " + nrProduced;
 		uniqueShortName = sst.getShortName() + " - " + nrProduced;
 		this.key = UUID.randomUUID().toString();
@@ -190,6 +192,7 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 		this.visibleOnMap = sst.isVisibleOnMap();
 		this.lookAsCivilian = sst.isLookAsCivilian();
 		this.troopCapacity = sst.getTroopCapacity();
+		this.squadronCapacity = sst.getSquadronCapacity();
 		this.supply = sst.getSupply();
 	}
 
@@ -241,11 +244,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 
 	public Planet getLocation() {
 		return location;
-	}
-
-	//TODO 2012-12-16 Gör om så att Squadron blir en size.
-	public boolean isSquadron() {
-		return sst.isSquadron();
 	}
 
 	public int getDamageCapacity() {
@@ -345,15 +343,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 
 	public void setOldCarrierLocation(Spaceship carrier){
 		this.oldCarrierLocation = carrier;
-	}
-
-
-	public void updateSquadronLocation() {
-		if (isSquadron()) {
-			if (carrierLocation != null) {
-				location = carrierLocation.getLocation();
-			}
-		}
 	}
 
 	public void setDestroyed() {

@@ -230,7 +230,7 @@ public class ResearchUpgradeShip extends SpaceshipImprovements {
     		text+="\n-Armor Huge: " + addplus(getArmorHuge());
     	}
     	if(getSupply() != null){
-    		text+="\n-Supply ships size: " + getSupply().getName();
+    		text+="\n-Supply ships size: " + getSupply().getDescription();
     	}
 
     	if(getSquadronCapacity() != 0){

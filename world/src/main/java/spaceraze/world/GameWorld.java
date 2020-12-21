@@ -418,21 +418,6 @@ public class GameWorld implements Serializable{
 		}
 		return battleVips;
 	}
-
-	// TODO Remove
-	@JsonIgnore
-	public boolean hasSquadrons(){
-		boolean hasSquadrons = false;
-		int i = 0;
-		while ((i < shipTypes.size()) && (!hasSquadrons)){
-			SpaceshipType sst = (SpaceshipType)shipTypes.get(i);
-			if (sst.isSquadron()){
-				hasSquadrons = true;
-			}
-			i++;
-		}
-		return hasSquadrons;
-	}
 	
 	public boolean hasTroops(){
 		return troopTypes.size() > 0;

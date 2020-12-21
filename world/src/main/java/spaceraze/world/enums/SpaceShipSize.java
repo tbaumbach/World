@@ -7,20 +7,20 @@ import java.util.List;
 public enum SpaceShipSize {
 
     NONE("NONE", "None", 0, 0),
-  //  SQUADRON("SQUADRON", "Squadron", 1, 75),
+    SQUADRON("SQUADRON", "Squadron", 1, 75),
     SMALL("SMALL", "Small", 1, 150),
     MEDIUM("MEDIUM", "Medium", 2, 450),
     LARGE("LARGE", "Large", 3, 750),
     HUGE("Huge", "Huge", 5, 1200);
 
     private String id;
-    private String name;
+    private String description;
     private int slots;
     private int compareSize;
 
-    SpaceShipSize(String id, String name, int slots, int compareSize){
+    SpaceShipSize(String id, String description, int slots, int compareSize){
         this.id = id;
-        this.name = name;
+        this.description = description;
         this.slots = slots;
         this.compareSize = compareSize;
     }
@@ -29,8 +29,8 @@ public enum SpaceShipSize {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
     public int getSlots(){

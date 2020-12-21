@@ -31,7 +31,7 @@ public enum SpaceshipTargetingType {
 
 	public int getTargetingWeight(Spaceship aShip){
 		int targetingWeight = 0;
-		if (aShip.isSquadron()){
+		if (aShip.getSize() == SpaceShipSize.SQUADRON){
 			targetingWeight = squadronWeight;
 		}else{
 			targetingWeight = capitalWeight;

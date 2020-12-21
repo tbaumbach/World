@@ -78,7 +78,6 @@ public class SpaceshipType implements Serializable{
     private int weaponsStrengthSquadron;
     private int squadronCapacity;
     private SpaceshipTargetingType targetingType = null;
-    private boolean squadron = false;
     private String description,history;
     private String shortDescription;
     private String advantages;
@@ -220,78 +219,7 @@ public class SpaceshipType implements Serializable{
         }
         
         
-    }    	
-    /* Not in use any more, never change value of a type
-    public SpaceshipType(SpaceshipType oldsst){
-        this.uniqueId = UUID.randomUUID().toString();
-        this.name = oldsst.getName();
-        this.shortName = oldsst.getShortName();
-        this.size = oldsst.getSize();
-        this.range = oldsst.getRange();
-        this.shields = oldsst.getShields();
-        this.upkeep = oldsst.getUpkeep();
-        this.buildCost = oldsst.getBuildCost(null);
-        this.bombardment = oldsst.getBombardment();
-        this.noRetreat = oldsst.getNoRetreat();
-        this.hits = oldsst.getHits();
-        this.setInitSupport(oldsst.getInitSupport());
-        if (oldsst.getInitSupport()){
-        	this.increaseInitiative = oldsst.getInitSupportBonus();
-        }else{
-        	this.increaseInitiative = oldsst.getInitiativeBonus();
-        }
-        this.initDefence = oldsst.getInitDefence();
-        this.weaponsStrengthSmall = oldsst.getWeaponsStrengthSmall(); 
-        this.weaponsStrengthMedium = oldsst.getWeaponsStrengthMedium();
-        this.weaponsStrengthLarge = oldsst.getWeaponsStrengthLarge(); 
-        this.weaponsStrengthHuge = oldsst.getWeaponsStrengthHuge();
-        this.weaponsMaxSalvoesMedium = oldsst.getWeaponsMaxSalvoesMedium();
-        this.weaponsMaxSalvoesLarge = oldsst.getWeaponsMaxSalvoesLarge();
-        this.weaponsMaxSalvoesHuge = oldsst.getWeaponsMaxSalvoesHuge();
-        this.supply = oldsst.getSupply();
-        this.armorSmall = oldsst.getArmorSmall();
-        this.armorMedium = oldsst.getArmorMedium();
-        this.armorLarge = oldsst.getArmorLarge();
-        this.armorHuge = oldsst.getArmorHuge();
-        this.planetarySurvey = oldsst.isPlanetarySurvey();
-//        this.siegeBonus = oldsst.getSiegeBonus();
-//        this.troops = oldsst.getTroops();
-        this.psychWarfare = oldsst.getPsychWarfare();
-        this.targetingType = oldsst.getTargetingType();
-        this.squadronCapacity = oldsst.getSquadronCapacity();
-        this.weaponsStrengthSquadron = oldsst.getWeaponsStrengthSquadron();
-        this.squadron = oldsst.isSquadron();
-        this.description = oldsst.getDescription();
-        this.history = oldsst.getHistory();
-        this.incEnemyClosedBonus = oldsst.incEnemyClosedBonus;
-        this.incEnemyOpenBonus = oldsst.incEnemyOpenBonus;
-        this.incFriendlyClosedBonus = oldsst.incFriendlyClosedBonus;
-        this.incFriendlyOpenBonus = oldsst.incFriendlyOpenBonus;
-        this.incNeutralClosedBonus = oldsst.incNeutralClosedBonus;
-        this.incNeutralOpenBonus = oldsst.incNeutralOpenBonus;
-        this.incOwnClosedBonus = oldsst.incOwnClosedBonus;
-        this.incOwnOpenBonus = oldsst.incOwnOpenBonus;
-        this.canAttackScreenedShips = oldsst.canAttackScreenedShips;
-        this.civilian = oldsst.civilian;
-        this.lookAsCivilian = oldsst.lookAsCivilian;
-        this.canBlockPlanet = oldsst.canBlockPlanet;
-        this.visibleOnMap = oldsst.isVisibleOnMap();
-        this.availableToBuild = oldsst.isAvailableToBuild();
-        this.troopCapacity = oldsst.getTroopCapacity();
-        this.worldUnique = oldsst.isWorldUnique();
-        this.factionUnique = oldsst.isFactionUnique();
-        this.playerUnique = oldsst.isPlayerUnique();
-        this.alwaysRetreat = oldsst.isAlwaysRetreat();
-        this.screened = oldsst.isScreened();
-        
-        this.advantages = oldsst.getAdvantages();
-        this.disadvantages = oldsst.getDisadvantages();
-        this.canAppearOnBlackMarket = oldsst.isCanAppearOnBlackMarket();
-        this.blackMarketFrequency = oldsst.getBlackMarketFrequency();
-        this.blackmarketFirstTurn = oldsst.getBlackmarketFirstTurn();
-        this.bluePrintFirstTurn = oldsst.getBluePrintFirstTurn();
-        this.bluePrintFrequency = oldsst.getBluePrintFrequency();
-    }*/
+    }
 
     /**
      * Used to get players SpaceshipType updated by PlayerSpaceshipType.
@@ -337,7 +265,6 @@ public class SpaceshipType implements Serializable{
         this.psychWarfare = originSpaceshipType.getPsychWarfare() + playerSpaceshipImprovement.getPsychWarfare();
         this.targetingType = originSpaceshipType.getTargetingType();
         this.squadronCapacity = originSpaceshipType.getSquadronCapacity() + playerSpaceshipImprovement.getSquadronCapacity();
-        this.squadron = originSpaceshipType.isSquadron();
         this.description = playerSpaceshipImprovement.getDescription() != null ? playerSpaceshipImprovement.getDescription() : originSpaceshipType.getDescription();
         this.history = playerSpaceshipImprovement.getHistory() != null ? playerSpaceshipImprovement.getHistory() : originSpaceshipType.getHistory();
         this.incEnemyClosedBonus = originSpaceshipType.incEnemyClosedBonus + playerSpaceshipImprovement.getIncEnemyClosedBonus();
@@ -490,14 +417,6 @@ public class SpaceshipType implements Serializable{
 	
 	public int getWeaponsStrengthSmall() {
 		return weaponsStrengthSmall;
-	}
-
-	public boolean isSquadron() {
-		return squadron;
-	}
-	
-	public void setSquadron(boolean newValue){
-		squadron = newValue;
 	}
 
 	public boolean isCanAppearOnBlackMarket() {
@@ -654,25 +573,6 @@ public class SpaceshipType implements Serializable{
 	@JsonIgnore
 	public SpaceshipTargetingType getTargetingType(){
 		return targetingType;
-	}
-		
-	public String getShipType(){
-		String type = "Capital Ship";
-		if (isSquadron()){
-			if (targetingType == SpaceshipTargetingType.ANTIAIR){
-				type = "Fighter Squadron";
-			}else
-			if (targetingType == SpaceshipTargetingType.ANTIMBU){
-				type = "Bomber Squadron";
-			}else{ // ALLROUND
-				type = "Multirole Squadron";
-			}
-		}
-		return type;
-	}
-
-	public boolean isDefenceShip(){
-		return !isCivilian() & !squadron & (range == SpaceshipRange.NONE); 
 	}
 	
 	@JsonIgnore
@@ -930,82 +830,7 @@ public class SpaceshipType implements Serializable{
 	public void setPlayerUnique(boolean playerUnique) {
 		this.playerUnique = playerUnique;
 	}
-	
-	public boolean isConstructible(Player aPlayer){
-	//	LoggingHandler.fine("isConstructible aPlayer: " + aPlayer.getName() + " SpaceType namn: " + name);
-	//	LoggingHandler.fine("isWorldUnique isFactionUnique isPlayerUnique : " + isWorldUnique() + " " + isFactionUnique() + " " +isPlayerUnique());
-		
-		boolean constructible =  true;
-		if(!isAvailableToBuild()){
-			constructible = false;
-		}else if((isWorldUnique() && isWorldUniqueBuild(aPlayer.getGalaxy())) || (isFactionUnique() && isFactionUniqueBuild(aPlayer)) || (isPlayerUnique() && isPlayerUniqueBuild(aPlayer))){
-			constructible = false;
-		}else if(isWorldUnique() || isFactionUnique() || isPlayerUnique()){
-		//	LoggingHandler.fine("isWorldUnique/isFactionUnique/isPlayerUnique check orders ");
-			// check if a build order already exist
-			if(aPlayer.getOrders().haveSpaceshipTypeBuildOrder(this)){
-				constructible = false;
-			}
-			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getCurrentOffers()) {
-				if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getSpaceshipType().getName().equals(name)){
-					constructible = false;
-				}
-			}
-		}
-		return constructible;
-	}
-	
-	@JsonIgnore
-	public boolean isReadyToUseInBlackMarket(Galaxy aGalaxy){
-		boolean constructible =  false;
-		
-		if (aGalaxy.getTurn() >= getBlackmarketFirstTurn()){
-			if (getRange().canMove() | isSquadron()){
-				if (isCanAppearOnBlackMarket()){
-					if(!isPlayerUnique() && !isFactionUnique()){
-						if(isWorldUnique() && !isWorldUniqueBuild(aGalaxy)){
-							boolean isAlreadyAoffer = false;
-							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getCurrentOffers()) {
-								if(aBlackMarketOffer.isShip() && aBlackMarketOffer.getSpaceshipType().getName().equals(name)){
-									isAlreadyAoffer = true;
-								}
-							}
-							if(!isAlreadyAoffer){
-								boolean haveBuildingOrder = false;
-								for (Player tempPlayer : aGalaxy.getPlayers()) {
-									if(tempPlayer.getOrders().haveSpaceshipTypeBuildOrder(this)){
-										haveBuildingOrder = true;
-									}
-								}
-								if(!haveBuildingOrder){
-									constructible =  true;
-								}
-							}
-						}else{
-							constructible = true;
-						}
-					}
-				}
-			}
-		}
-		return constructible;
-	}
-	
-	@JsonIgnore
-	public boolean isBluePrintReadyToUseInBlackMarket(int turn){
-		boolean constructible =  false;
-		
-		if (turn >= getBluePrintFirstTurn()){
-			if (bluePrintFrequency != BlackMarketFrequency.NEVER){
-				if(!isPlayerUnique() && !isFactionUnique() && !isWorldUnique()){
-					constructible = true;
-				}
-			}
-		}
-		
-		return constructible;
-	}
-	
+
 	public void setPsychWarfare(int newPsychWarfare) {
 		psychWarfare = newPsychWarfare;
 	}
@@ -1065,42 +890,5 @@ public class SpaceshipType implements Serializable{
 	public void setScreened(boolean screened) {
 		this.screened = screened;
 	}
-	
-	public boolean isCapitalShip(){
-		return !isCivilian() & !isSquadron() & (getRange() != SpaceshipRange.NONE);
-	}
-	
-	public boolean isCarrier() {
-		return getSquadronCapacity() > 0;
-	}
-
-	/**
-	 * Trader ships is defined by this method as a civilian ship who have bonus in at least one open planet income bonus
-	 */
-	public boolean isTrader() {
-		return isCivilian() & (incEnemyOpenBonus > 0) | (incNeutralOpenBonus > 0) | (incFriendlyOpenBonus > 0) | (incOwnOpenBonus > 0);
-	}
-
-	/**
-	 * Smuggler ships is defined by this method as a civilian ship who have bonus in at least one closed planet income bonus
-	 */
-	public boolean isSmuggler() {
-		return isCivilian() & ((incEnemyClosedBonus > 0) | (incNeutralClosedBonus > 0) | (incFriendlyClosedBonus > 0) | (incOwnClosedBonus > 0));
-	}
-	
-	/**
-	 * Any ship that have psych warfare > 0
-	 * @return true if psych warfare > 0
-	 */
-	/*public boolean isPsychWarfare(){
-		return psychWarfare > 0;
-	}*/
-
-    /**
-     * @return true if small capital psych warfare shiptype
-     */
-    public boolean isSmallPsychWarfareShiptype(){
-    	return isCapitalShip() & psychWarfare > 0 & (getSize().getSlots() == 1) & !isCarrier(); // !isCarrier() is added to exclude Bug small meteorite
-    }
 
 }
