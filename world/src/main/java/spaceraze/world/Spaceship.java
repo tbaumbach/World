@@ -248,10 +248,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 		return owner;
 	}
 
-	public void addKill() {
-		kills++;
-	}
-
 	public void setKills(int newKills) {
 		kills = newKills;
 	}
