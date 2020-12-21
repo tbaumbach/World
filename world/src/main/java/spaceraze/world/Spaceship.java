@@ -196,28 +196,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 		this.supply = sst.getSupply();
 	}
 
-	/*
-	 * public void clearRetreatPlanets(){ runningFrom = null; runningTo = null; }
-	 */
-
-	// return part of shot that will penetrate the shields
-	public int shipShieldsHit(int rawDamage) {
-		int penetrating = 0;
-		if (currentShields < rawDamage) {
-			penetrating = rawDamage - currentShields;
-		}
-		Logger.finer( "rawDamage: " + rawDamage + " penetrating: " + penetrating);
-		return penetrating;
-	}
-	
-	/**
-	 * @return a percentage of remaning DC
-	 */
-	public int getHullStrength(){
-		int hullStrength = (int) Math.round((100.0 * currentdc)	/ damagecapacity);
-		return hullStrength;
-	}
-
 	public boolean isDestroyed() {
 		return currentdc == 0;
 	}
@@ -298,13 +276,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 		oldLocation = newOldLocation;
 	}
 
-	public void performRepairs() {
-		currentdc = damagecapacity;
-		if (owner != null) {
-			owner.addToGeneral("Your ship " + name + " at "	+ location.getName() + " has been repaired up to full damage capacity.");
-		}
-	}
-
 	public boolean isRetreating() {
 		return retreating;
 	}
@@ -357,14 +328,6 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 		sb.append(" Carrier location: " + carrierLocation);
 		sb.append(" Owner: " + owner);
 		return sb.toString();
-	}
-
-	/**
-	 * Used by BattleSim for client
-	 * @param damagePercent
-	 */
-	public void setDamage(int damagePercent){
-		currentdc = (int) Math.round(currentdc * ((100.0-damagePercent)/100.0));
 	}
 	
 	@Override
