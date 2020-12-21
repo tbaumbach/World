@@ -288,10 +288,6 @@ public class Player implements Serializable{
         turnInfo.addToLatestHighlights(str,type);
       }
 
-    public void addToShipsLostInSpace(Spaceship ss){
-        turnInfo.addToLatestShipsLostInSpace(ss);
-    }
-
     public void addToTroopsLostInSpace(Troop aTroop){
         turnInfo.addToLatestTroopsLostInSpace(aTroop);
     }

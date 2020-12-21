@@ -155,9 +155,9 @@ public class BuildingType implements Serializable, Cloneable{
 		typeOfTroop = new ArrayList<>();
 	}
 	
-	 public Building getBuilding(Planet planet, Galaxy g){
+	 public Building getBuilding(Planet planet, int uniqueId){
 		 nrProduced++;
-		 return new Building(this, nrProduced, g, planet);
+		 return new Building(this, nrProduced, uniqueId, planet);
 	 }
 	
 	public void setParentBuildingTypeName(String parentBuildingTypeName){

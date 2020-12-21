@@ -285,7 +285,7 @@ public class Orders implements Serializable {
 
         int found = -1;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (aShip.getUniqueId() == screenedShips.get(i)) {
+            if (aShip.getKey() == screenedShips.get(i)) {
                 found = i;
             }
         }
@@ -298,14 +298,14 @@ public class Orders implements Serializable {
         // finns det en screened ship order redan?
         int found = -1;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (aShip.getUniqueId() == screenedShips.get(i)) {
+            if (aShip.getKey() == screenedShips.get(i)) {
                 found = i;
             }
         }
         if (found > -1) { // ta bort den
             screenedShips.remove(found);
         } else { // annars l�gg till den
-            screenedShips.add(aShip.getUniqueId());
+            screenedShips.add(aShip.getKey());
         }
     }
 
@@ -588,7 +588,7 @@ public class Orders implements Serializable {
             TroopToCarrierMovement tempMove = troopToCarrierMoves.get(i);
             if (tempMove.isThisTroop(aTroop)) {
                 found = true;
-                if (tempMove.getDestinationCarrierId().equals(aCarrier.getUniqueId())) {
+                if (tempMove.getDestinationCarrierId().equals(aCarrier.getKey())) {
                     moveToCarrier = true;
                 }
             } else {
@@ -1024,7 +1024,7 @@ public class Orders implements Serializable {
     }
 
     public void addShipSelfDestruct(Spaceship currentss) {
-        shipSelfDestructs.add(currentss.getUniqueId());
+        shipSelfDestructs.add(currentss.getKey());
     }
 
     public void addTroopSelfDestruct(Troop aTroop) {
@@ -1049,7 +1049,7 @@ public class Orders implements Serializable {
 
     public void removeShipSelfDestruct(Spaceship currentss) {
         for (int i = 0; i < shipSelfDestructs.size(); i++) {
-            if (shipSelfDestructs.get(i) == currentss.getUniqueId()) {
+            if (shipSelfDestructs.get(i) == currentss.getKey()) {
                 shipSelfDestructs.remove(i);
             }
         }
@@ -1122,7 +1122,7 @@ public class Orders implements Serializable {
     public boolean getShipSelfDestruct(Spaceship ss) {
         boolean found = false;
         for (int i = 0; i < shipSelfDestructs.size(); i++) {
-            if (ss.getUniqueId() == shipSelfDestructs.get(i)) {
+            if (ss.getKey() == shipSelfDestructs.get(i)) {
                 found = true;
             }
         }
@@ -1154,7 +1154,7 @@ public class Orders implements Serializable {
     public boolean getScreenedShip(Spaceship ss) {
         boolean found = false;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (ss.getUniqueId() == screenedShips.get(i)) {
+            if (ss.getKey() == screenedShips.get(i)) {
                 found = true;
             }
         }

@@ -95,13 +95,9 @@ public class GameWorld implements Serializable{
 	private GameWorldDiplomacy diplomacy;
 	private int baseBombardmentDamage = 1000; // default value (always kills the troop) 50% hit chance.
 	private boolean adjustScreenedStatus = true;
-	
-	/**
-	 * Always add a clone...
-	 * @param sst
-	 */
+
 	public void addShipType(SpaceshipType sst){
-		shipTypes.add(new SpaceshipType(sst));
+		shipTypes.add(sst);
 	}
 
 	public void addVipType(VIPType vt){

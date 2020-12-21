@@ -2,6 +2,7 @@
 package spaceraze.world;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,6 +39,7 @@ public class SpaceshipType implements Serializable{
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
 
+    private String key;
     private String name;
     private String shortName;
     private SpaceShipSize size;
@@ -99,27 +101,9 @@ public class SpaceshipType implements Serializable{
     private int troopCapacity;
 
     private boolean screened = false;
-    
-//    private int weaponsAirToGround;
-//    private int nrAirToGoundAttacks = 3;
+
 //  worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player.
 	private boolean worldUnique=  false, factionUnique = false, playerUnique =  false;
-	/*
-	public int getNrAirToGoundAttacks() {
-		return nrAirToGoundAttacks;
-	}
-
-	public void setNrAirToGoundAttacks(int nrAirToGoundAttacks) {
-		this.nrAirToGoundAttacks = nrAirToGoundAttacks;
-	}
-
-	public int getWeaponsAirToGround() {
-		return weaponsAirToGround;
-	}
-
-	public void setWeaponsAirToGround(int weaponsAirToGround) {
-		this.weaponsAirToGround = weaponsAirToGround;
-	}*/
 
 	public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall){
     	this(name,shortName, size,shields,hits,range,upkeep,buildCost, weaponsStrengthSmall,0);
@@ -201,6 +185,7 @@ public class SpaceshipType implements Serializable{
     }
 	
     public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall, int weaponsStrengthSquadron){
+        this.key = UUID.randomUUID().toString();
         this.name = name;
         this.shortName = shortName;
         this.size = size;
@@ -236,8 +221,9 @@ public class SpaceshipType implements Serializable{
         
         
     }    	
-
+    /* Not in use any more, never change value of a type
     public SpaceshipType(SpaceshipType oldsst){
+        this.uniqueId = UUID.randomUUID().toString();
         this.name = oldsst.getName();
         this.shortName = oldsst.getShortName();
         this.size = oldsst.getSize();
@@ -292,8 +278,6 @@ public class SpaceshipType implements Serializable{
         this.visibleOnMap = oldsst.isVisibleOnMap();
         this.availableToBuild = oldsst.isAvailableToBuild();
         this.troopCapacity = oldsst.getTroopCapacity();
-     //   this.weaponsAirToGround = oldsst.getWeaponsAirToGround();
-     //   this.nrAirToGoundAttacks = oldsst.getNrAirToGoundAttacks();
         this.worldUnique = oldsst.isWorldUnique();
         this.factionUnique = oldsst.isFactionUnique();
         this.playerUnique = oldsst.isPlayerUnique();
@@ -307,12 +291,13 @@ public class SpaceshipType implements Serializable{
         this.blackmarketFirstTurn = oldsst.getBlackmarketFirstTurn();
         this.bluePrintFirstTurn = oldsst.getBluePrintFirstTurn();
         this.bluePrintFrequency = oldsst.getBluePrintFrequency();
-    }
+    }*/
 
     /**
      * Used to get players SpaceshipType updated by PlayerSpaceshipType.
      */
     public SpaceshipType(SpaceshipType originSpaceshipType, PlayerSpaceshipImprovement playerSpaceshipImprovement){
+        this.key = originSpaceshipType.key;
         this.name = originSpaceshipType.getName();
         this.shortName = originSpaceshipType.getShortName();
         this.size = originSpaceshipType.getSize();
@@ -326,11 +311,11 @@ public class SpaceshipType implements Serializable{
         //Why can't we research hitpoints?
         this.hits = originSpaceshipType.getHits();
 
-        this.setInitSupport(originSpaceshipType.getInitSupport());
-        if (originSpaceshipType.getInitSupport()){
-            this.increaseInitiative = originSpaceshipType.getInitSupportBonus() + playerSpaceshipImprovement.getIncreaseInitiative();
+        this.setInitSupport(originSpaceshipType.isInitSupport());
+        if (originSpaceshipType.isInitSupport()){
+            this.increaseInitiative = originSpaceshipType.getIncreaseInitiative() + playerSpaceshipImprovement.getIncreaseInitiative();
         }else{
-            this.increaseInitiative = originSpaceshipType.getInitiativeBonus() + playerSpaceshipImprovement.getIncreaseInitiative();
+            this.increaseInitiative = originSpaceshipType.getIncreaseInitiative() + playerSpaceshipImprovement.getIncreaseInitiative();
         }
         this.initDefence = originSpaceshipType.getInitDefence() + playerSpaceshipImprovement.getInitDefence();
         this.weaponsStrengthSquadron = originSpaceshipType.getWeaponsStrengthSquadron() + playerSpaceshipImprovement.getWeaponsStrengthSquadron();
@@ -396,10 +381,6 @@ public class SpaceshipType implements Serializable{
     public int getUpkeep(){
       return upkeep;
     }
-    
-    public boolean getInitSupport(){
-    	return initSupport;
-    }
 
     public void setBuildCost(int buildCost){
     	this.buildCost = buildCost;
@@ -439,14 +420,7 @@ public class SpaceshipType implements Serializable{
     public int getShields(){
       return shields;
     }
-/*
- * public int getRealWeapons(){ return getVirtualShip().getWeapons(); }
- * 
- * public int getRealShields(){ return getVirtualShip().getShields(); }
- * 
- * public int getRealDamageCapacity(){ return
- * getVirtualShip().getDamageCapacity(); }
- */
+
     public String getName(){
       return name;
     }
@@ -454,53 +428,13 @@ public class SpaceshipType implements Serializable{
     public String getShortName(){
       return shortName;
     }
-/*
- * public int getDamageCapacity(){ return damagecapacity; }
- */
-    public int getInitiativeBonus(){
-    	int tmpInitBonus = 0;
-    	if (!initSupport){
-    		tmpInitBonus = increaseInitiative;
-    	}
-    	return tmpInitBonus;
-    }
-
-    public int getInitSupportBonus(){
-    	int tmpInitSupportBonus = 0;
-    	if (initSupport){
-    		tmpInitSupportBonus = increaseInitiative;
-    	}
-    	return tmpInitSupportBonus;
-    }
 
     public int getInitDefence(){
         return initDefence;
       }
 
-    @JsonIgnore
-    public String getRangeString(){
-/*
- * String returnValue = "short"; if (range == LONG){ returnValue = "long"; }else
- * if (range == NONE){ returnValue = "none"; } return returnValue;
- */
-    	return range.toLowercaseString();
-    }
-
-    public boolean getNoRetreat(){
-      return noRetreat;
-    }
-
     public void setNoRetreat(boolean newValue){
       noRetreat = newValue;
-    }
-
-    @JsonIgnore
-    public String getNoRetreatString(){
-      String returnString = "No";
-      if (noRetreat){
-        returnString = "Yes";
-      }
-      return returnString;
     }
 
 	public int getWeaponsMaxSalvoesHuge() {
@@ -735,10 +669,6 @@ public class SpaceshipType implements Serializable{
 			}
 		}
 		return type;
-	}
-	
-	public SpaceshipType copy(){
-		return new SpaceshipType(this);
 	}
 
 	public boolean isDefenceShip(){

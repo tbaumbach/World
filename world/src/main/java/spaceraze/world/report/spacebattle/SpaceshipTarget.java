@@ -25,7 +25,7 @@ public class SpaceshipTarget implements Serializable {
 	private String name;
 	private String typeName;
 	private int currentShield;
-	private int shield; // TODO debugga detta, detta ska vara maximala skölden, d.v.s. kills ska vara medräknat.
+	private int shield;
 	private int currentDamageCapacity;
 	private int damageCapacity;
 	private boolean own;

@@ -35,9 +35,9 @@ public class Building implements Serializable, Cloneable{
     
     //  construktorn skall ej anropas direkt, utan BuildingType.getBuilding skall
 	// användas istället    
-    public Building(BuildingType buildingType, int nrProduced, Galaxy galaxy, Planet location){
+    public Building(BuildingType buildingType, int nrProduced, int uniqueId, Planet location){
     	this.buildingType = buildingType;
-    	this.uniqueId = galaxy.getUniqueIdCounter(CounterType.BUILDING).getUniqueId();
+    	this.uniqueId = uniqueId;
 		this.setLocation(location);
 //		if (name != null) {
 //			this.name = name;

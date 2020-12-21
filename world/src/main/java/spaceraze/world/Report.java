@@ -98,10 +98,6 @@ public class Report implements Serializable {
         highlights.add(new Highlight(str, type));
     }
 
-    public void addShipLostInSpace(Spaceship ss) {
-        shipsLostInSpace.add(CanBeLostInSpace.builder().lostInSpaceString(ss.getType().getName()).owner(ss.getOwner() != null ? ss.getOwner().getGovernorName() : null).build()); // TODO 2020-11-28 This should be replaced by EvenReport logic. So add the lost ships to the new specific created Report (for the typ of event) extending EvenReport. Try to reuse the EnemySpaceship and OwnSpaceship
-    }
-
     public void addTroopLostInSpace(Troop aTroop) {
 
         troopsLostInSpace.add(CanBeLostInSpace.builder().lostInSpaceString(aTroop.getTroopType().getUniqueName()).owner(aTroop.getOwner() != null ? aTroop.getOwner().getGovernorName() : null).build()); // TODO 2020-11-28 This should be replaced by EvenReport logic. So add the lost ships to the new specific created Report (for the typ of event) extending EvenReport. Try to reuse the EnemySpaceship and OwnSpaceship

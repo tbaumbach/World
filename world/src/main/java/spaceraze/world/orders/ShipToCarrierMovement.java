@@ -38,8 +38,8 @@ public class ShipToCarrierMovement implements Serializable {
     //Spaceship destinationCarrier;
 
     public ShipToCarrierMovement(Spaceship ss, Spaceship destinationCarrier) {
-        this.spaceShipUniqueId = ss.getUniqueId();
-        this.destinationCarrier = destinationCarrier.getUniqueId();
+        this.spaceShipUniqueId = ss.getKey();
+        this.destinationCarrier = destinationCarrier.getKey();
     }
 
     public String getDestinationCarrierId() {
@@ -75,10 +75,10 @@ public class ShipToCarrierMovement implements Serializable {
     }
 
     public boolean isThisShip(Spaceship sSpaceship) {
-        return sSpaceship.getUniqueId() == spaceShipUniqueId;
+        return sSpaceship.getKey() == spaceShipUniqueId;
     }
 
     public boolean isThisDestination(Spaceship aCarrier) {
-        return aCarrier.getUniqueId() == destinationCarrier;
+        return aCarrier.getKey() == destinationCarrier;
     }
 }

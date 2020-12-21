@@ -7,6 +7,7 @@ import java.util.List;
 public enum SpaceShipSize {
 
     NONE("NONE", "None", 0, 0),
+  //  SQUADRON("SQUADRON", "Squadron", 1, 75),
     SMALL("SMALL", "Small", 1, 150),
     MEDIUM("MEDIUM", "Medium", 2, 450),
     LARGE("LARGE", "Large", 3, 750),

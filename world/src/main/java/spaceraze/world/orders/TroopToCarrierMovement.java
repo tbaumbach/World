@@ -42,7 +42,7 @@ public class TroopToCarrierMovement implements Serializable{
 
   public TroopToCarrierMovement(Troop theTroop, Spaceship destinationCarrier){
     this.troopId = theTroop.getUniqueId();
-    this.destinationCarrierId = destinationCarrier.getUniqueId();
+    this.destinationCarrierId = destinationCarrier.getKey();
   }
 
  
@@ -87,6 +87,6 @@ public class TroopToCarrierMovement implements Serializable{
   }
 
   public boolean isThisDestination(Spaceship aCarrier){
-	  return aCarrier.getUniqueId() == destinationCarrierId;
+	  return aCarrier.getKey() == destinationCarrierId;
   }
 }

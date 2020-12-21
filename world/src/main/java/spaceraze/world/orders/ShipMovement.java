@@ -32,7 +32,7 @@ public class ShipMovement implements Serializable {
 	private String spaceShipID;
 	
 	public ShipMovement(Spaceship ss, Planet destination) {
-		this.spaceShipID = ss.getUniqueId();
+		this.spaceShipID = ss.getKey();
 		this.planetName = destination.getName();
 		this.owner = ss.getOwner().getName();
 	}
@@ -62,7 +62,7 @@ public class ShipMovement implements Serializable {
 	}
 
 	public boolean isThisShip(Spaceship sSpaceship) {
-		return sSpaceship.getUniqueId() == spaceShipID;
+		return sSpaceship.getKey() == spaceShipID;
 	}
 
 	public String getDestinationName() {
