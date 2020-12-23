@@ -34,10 +34,6 @@ public class TroopTarget implements Serializable {
 		this.damageCapacity = damageCapacity;
 		this.currentDamageCapacity = currentDamageCapacity;
 	}
-	
-	public TroopTarget(Troop troop) {
-		this(troop.getTroopType().getUniqueName(), troop.getMaxDC(), troop.getCurrentDC());
-	}
 
 	public String getTypeName() {
 		return typeName;

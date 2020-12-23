@@ -77,7 +77,7 @@ public class VIP implements Serializable, ShortNameable {
         if (planetLocation != null) {
             locationString = planetLocation.getName();
         } else if (troopLocation != null) {
-            locationString = troopLocation.getUniqueName();
+            locationString = troopLocation.getName();
         } else {
             locationString = shipLocation.getName();
         }
@@ -121,7 +121,7 @@ public class VIP implements Serializable, ShortNameable {
         planetLocation = null;
         shipLocation = null;
         troopLocation = moveToTroop;
-        ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + troopLocation.getUniqueName() + ".");
+        ti.addToLatestVIPReport(vipType.getTypeName() + " has moved from " + oldLocationString + " to " + troopLocation.getName() + ".");
     }
 
     public String getName() {

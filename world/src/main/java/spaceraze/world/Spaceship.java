@@ -151,12 +151,12 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 
 //		LoggingHandler.fine( this, null, "setData", "weaponsStrengthSmall: " + weaponsStrengthSmall);
 
-		weaponsSalvoesMedium = sst.getWeaponsMaxSalvoesMedium();
-		weaponsSalvoesLarge = sst.getWeaponsMaxSalvoesLarge();
-		weaponsSalvoesHuge = sst.getWeaponsMaxSalvoesHuge();
-		weaponsMaxSalvosMedium = sst.getWeaponsMaxSalvoesMedium();
-		weaponsMaxSalvosLarge = sst.getWeaponsMaxSalvoesLarge();
-		weaponsMaxSalvosHuge = sst.getWeaponsMaxSalvoesHuge();
+		weaponsSalvoesMedium = sst.getWeaponsMaxSalvosMedium();
+		weaponsSalvoesLarge = sst.getWeaponsMaxSalvosLarge();
+		weaponsSalvoesHuge = sst.getWeaponsMaxSalvosHuge();
+		weaponsMaxSalvosMedium = sst.getWeaponsMaxSalvosMedium();
+		weaponsMaxSalvosLarge = sst.getWeaponsMaxSalvosLarge();
+		weaponsMaxSalvosHuge = sst.getWeaponsMaxSalvosHuge();
 
 		shields = (int) Math.round(sst.getShields() * techBonus);
 

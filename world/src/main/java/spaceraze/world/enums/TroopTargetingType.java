@@ -1,6 +1,5 @@
 package spaceraze.world.enums;
 
-import spaceraze.world.Troop;
 
 public enum TroopTargetingType {
 	ANTIINFANTRY(75,25,0,"Anti Infantry"),
@@ -13,7 +12,7 @@ public enum TroopTargetingType {
 	private int screenedWeight;
 	private String retStr;
 	
-	private TroopTargetingType(int anInfantryWeight, int aTanksWeight, int aScreenedWeight, String aRetStr){
+	TroopTargetingType(int anInfantryWeight, int aTanksWeight, int aScreenedWeight, String aRetStr){
 		infantryWeight = anInfantryWeight;
 		tanksWeight = aTanksWeight;
 		screenedWeight = aScreenedWeight;
@@ -36,6 +35,7 @@ public enum TroopTargetingType {
 		return screenedWeight;
 	}
 
+	/*
 	public int getTargetingWeight(Troop aTroop){
 		int targetingWeight = 0;
 		if (aTroop.getPosition() == BattleGroupPosition.SUPPORT){
@@ -47,5 +47,5 @@ public enum TroopTargetingType {
 			targetingWeight = infantryWeight;
 		}
 		return targetingWeight;
-	}
+	}*/
 }

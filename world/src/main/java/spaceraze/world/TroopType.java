@@ -1,6 +1,7 @@
 package spaceraze.world;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +29,9 @@ public class TroopType implements Serializable, Cloneable{
 	@JoinColumn(name = "FK_GAME_WORLD")
 	private GameWorld gameWorld;
 
-	// names, description etc
-	private String uniqueName;
-	private String uniqueShortName;
+	private String key;
+	private String name;
+	private String shortName;
 	private String description;
 	private String history;
 	private String advantages;
@@ -68,8 +69,9 @@ public class TroopType implements Serializable, Cloneable{
 	private boolean playerUnique =  false;
 	
     public TroopType(String aUniqueName, String aUniqueShortName, int aDamageCapacity, int aUpkeep, int aCostBuild, int anAttackInfantry, int anAttackArmor){
-    	this.uniqueName = aUniqueName;
-    	this.uniqueShortName = aUniqueShortName;
+		this.key = UUID.randomUUID().toString();
+    	this.name = aUniqueName;
+    	this.shortName = aUniqueShortName;
     	this.damageCapacity = aDamageCapacity;
     	this.upkeep = aUpkeep;
     	this.costBuild = aCostBuild;
@@ -78,8 +80,9 @@ public class TroopType implements Serializable, Cloneable{
     }
 
     public TroopType(TroopType originalType, PlayerTroopImprovement improvement){
-		this.uniqueName = originalType.getUniqueName();
-		this.uniqueShortName = originalType.getUniqueShortName();
+    	this.key = originalType.getKey();
+		this.name = originalType.getName();
+		this.shortName = originalType.getShortName();
 		this.description = originalType.getDescription();
 		this.history = originalType.getHistory();
 		this.advantages = originalType.getAdvantages();
@@ -89,7 +92,7 @@ public class TroopType implements Serializable, Cloneable{
 		this.typeOfTroop = originalType.getTypeOfTroop();
 		this.damageCapacity = originalType.getDamageCapacity() + improvement.getDamageCapacity();
 		this.upkeep = originalType.getUpkeep() + improvement.getCostSupport();
-		this.costBuild = originalType.getCostBuild(null) + improvement.getCostBuild();
+		this.costBuild = originalType.getCostBuild() + improvement.getCostBuild();
 		this.attackInfantry = originalType.getAttackInfantry() + improvement.getAttackArtillery();
 		this.attackArmored = originalType.getAttackArmored() + improvement.getAttackArmored();
 		this.attackArtillery = originalType.getAttackArtillery() + improvement.getAttackArtillery();
@@ -122,7 +125,7 @@ public class TroopType implements Serializable, Cloneable{
     
     @Override
     public String toString(){
-    	return uniqueName + " (" + uniqueShortName + ")";
+    	return name + " (" + shortName + ")";
     }
     
     public Troop getTroop(VIP vipWithTechBonus, int factionTechBonus, int buildingTechBonus, int uniqueId){
@@ -196,20 +199,6 @@ public class TroopType implements Serializable, Cloneable{
 	public void setBlackMarketFrequency(BlackMarketFrequency blackMarketFrequency) {
 		this.blackMarketFrequency = blackMarketFrequency;
 	}
-	
-	public int getCostBuild(VIP vipWithBonus) {
-		int tempBuildCost = costBuild;
-		if (vipWithBonus != null){
-			int vipBuildbonus = 100 - vipWithBonus.getTroopBuildBonus();
-			double tempBuildBonus = vipBuildbonus / 100.0;
-			tempBuildCost = (int) Math.round(tempBuildCost * tempBuildBonus);
-			if (tempBuildCost < 1){
-				tempBuildCost = 1;
-			}
-		}
-		return tempBuildCost;
-		
-	}
 
 	public void setCostBuild(int costBuild) {
 		this.costBuild = costBuild;
@@ -229,33 +218,6 @@ public class TroopType implements Serializable, Cloneable{
 
 	public void setDamageCapacity(int damageCapacity) {
 		this.damageCapacity = damageCapacity;
-	}
-	
-	public String getTotalDescription(){
-		String totalDescription = "";
-    	
-		if(advantages != null && !advantages.equals("")){
-    		totalDescription += "Advantages: " + advantages + "\n\n";
-        }
-    	if(disadvantages != null && !disadvantages.equals("")){
-    		totalDescription += "Disadvantages: " + disadvantages + "\n\n";
-        }
-    	
-    	if(shortDescription != null && !shortDescription.equals("")){
-    		totalDescription += "Short Description\n";
-        	totalDescription += shortDescription + "\n\n";
-    	}
-    	
-    	if(description != null && !description.equals("")){
-    		totalDescription +="Description\n";
-        	totalDescription += description + "\n\n";
-    	}
-    	if(history != null && !history.equals("")){
-    		totalDescription +="History\n";
-        	totalDescription += history;
-    	}
-    	
-    	return totalDescription;
 	}
 
 	public String getDescription() {
@@ -327,12 +289,12 @@ public class TroopType implements Serializable, Cloneable{
 		return nrProduced;
 	}
 
-	public String getUniqueName() {
-		return uniqueName;
+	public String getName() {
+		return name;
 	}
 
-	public String getUniqueShortName() {
-		return uniqueShortName;
+	public String getShortName() {
+		return shortName;
 	}
 
 	public void setNrProduced(int nrProduced) {
@@ -386,15 +348,6 @@ public class TroopType implements Serializable, Cloneable{
 	public void setFiringBackPenalty(int firingBackPenalty) {
 		this.firingBackPenalty = firingBackPenalty;
 	}
-
-	/*public boolean isAvailableToBuild() {
-		return availableToBuild;
-	}
-
-	public void setAvailableToBuild(boolean availableToBuild) {
-		this.availableToBuild = availableToBuild;
-	}*/
-
 	public int getLandBattleGroupAttacksBonus() {
 		return landBattleGroupAttacksBonus;
 	}
@@ -422,97 +375,13 @@ public class TroopType implements Serializable, Cloneable{
 	public boolean isPlayerUnique() {
 		return playerUnique;
 	}
-	
-	public String getUniqueString(){
-		String uniqueString = "";
-  
-		if(playerUnique){
-			uniqueString = "Player unique";
-		}else
-		if(factionUnique){
-			uniqueString = "Faction unique";
-		}else
-		if(worldUnique){
-			uniqueString = "World unique";
-		}
-  
-		return uniqueString;
-	}
 
-	public boolean isFactionUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().troopTypeExist(this, aPlayer.getFaction(), null);
-	}
-
-	public boolean isPlayerUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().troopTypeExist(this, null, aPlayer);
-	}
-
-	public boolean isWorldUniqueBuild(Galaxy aGalaxy) {
-		return aGalaxy.troopTypeExist(this, null, null);
-	}
-	
 	public void setFactionUnique(boolean factionUnique) {
 		this.factionUnique = factionUnique;
 	}
 
 	public void setPlayerUnique(boolean playerUnique) {
 		this.playerUnique = playerUnique;
-	}
-	
-	
-	public boolean isConstructible(Player aPlayer){
-		boolean constructible =  true;
-		if(!isCanBuild()){
-			constructible = false;
-		}else if((isWorldUnique() && isWorldUniqueBuild(aPlayer.getGalaxy())) || (isFactionUnique() && isFactionUniqueBuild(aPlayer)) || (isPlayerUnique() && isPlayerUniqueBuild(aPlayer))){
-			constructible = false;
-		}else if(isWorldUnique() || isFactionUnique() || isPlayerUnique()){
-			// check if a build order already exist
-			if(aPlayer.getOrders().haveTroopTypeBuildOrder(this)){
-				constructible = false;
-			}
-			for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getCurrentOffers()) {
-				if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getTroopType().getUniqueName().equals(uniqueName)){
-					constructible = false;
-				}
-			}
-		}
-		return constructible;
-	}
-	
-	public boolean isReadyToUseInBlackMarket(Galaxy aGalaxy){
-		boolean constructible =  false;
-		if(aGalaxy.getTurn() >= getBlackmarketFirstTurn()){
-			if (isSpaceshipTravel()){
-				if (isCanAppearOnBlackMarket()){
-					if(!isPlayerUnique() && !isFactionUnique()){
-						if(isWorldUnique() && !isWorldUniqueBuild(aGalaxy)){
-							boolean isAlreadyAoffer = false;
-							for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getCurrentOffers()) {
-								if(aBlackMarketOffer.isTroop() && aBlackMarketOffer.getTroopType().getUniqueName().equals(uniqueName)){
-									isAlreadyAoffer = true;
-								}
-							}
-							
-							if(!isAlreadyAoffer){
-								boolean haveBuildingOrder = false;
-								for (Player tempPlayer : aGalaxy.getPlayers()) {
-									if(tempPlayer.getOrders().haveTroopTypeBuildOrder(this)){
-										haveBuildingOrder = true;
-									}
-								}
-								if(!haveBuildingOrder){
-									constructible =  true;
-								}
-							}
-						}else{
-							constructible = true;
-						}
-					}
-				}
-			}
-		}
-		return constructible;
 	}
 	
 

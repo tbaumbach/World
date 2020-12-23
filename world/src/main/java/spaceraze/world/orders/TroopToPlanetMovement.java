@@ -39,19 +39,6 @@ public class TroopToPlanetMovement implements Serializable {
         this.turn = turn;
     }
 
-
-    public void performMove(TurnInfo ti, Galaxy aGalaxy) {
-        Troop aTroop = aGalaxy.findTroop(troopId);
-        Planet aPlanet = aGalaxy.getPlanet(planetName);
-        if (aTroop == null || aPlanet == null) {
-            Logger.severe("performMove Error: troopId= " + troopId + " planetName= " + planetName);
-        } else {
-            Logger.finest("performMove: " + aTroop.getUniqueName() + " destination: " + aPlanet.getName());
-            aTroop.move(aPlanet, ti);
-            aTroop.setLastPlanetMoveTurn(turn);
-        }
-    }
-
     public String getDestinationName() {
         return planetName;
     }
@@ -70,7 +57,7 @@ public class TroopToPlanetMovement implements Serializable {
 
     public String getText(Galaxy aGalaxy) {
         Troop aTroop = aGalaxy.findTroop(troopId);
-        return "Move " + aTroop.getUniqueName() + " from " + aTroop.getShipLocation().getName() + " to " + getDestinationName() + ".";
+        return "Move " + aTroop.getName() + " from " + aTroop.getShipLocation().getName() + " to " + getDestinationName() + ".";
     }
 
     public boolean isThisTroop(Troop aTroop) {

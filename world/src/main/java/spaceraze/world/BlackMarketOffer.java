@@ -66,7 +66,7 @@ public class BlackMarketOffer implements Serializable {
       returnString = spaceshipType.getName();
     }else
     if (troopType != null){
-        returnString = troopType.getUniqueName();
+        returnString = troopType.getName();
     }else
     if (blueprint != null){
         returnString = "Blueprint: " + blueprint.getName();

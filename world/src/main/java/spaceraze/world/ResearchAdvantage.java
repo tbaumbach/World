@@ -358,7 +358,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		int counter = 0;
 		while((found == null) & (counter < troops.size())){
 			TroopType tempTroopType = troops.get(counter);
-			if(tempTroopType.getUniqueName().equals(name)){
+			if(tempTroopType.getName().equals(name)){
 				found = tempTroopType;
 			}
 		}
@@ -372,12 +372,12 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 
 	@JsonProperty("troops")
 	public List<String> geTroopNames(){
-		return troops.stream().map(TroopType::getUniqueName).collect(Collectors.toList());
+		return troops.stream().map(TroopType::getName).collect(Collectors.toList());
 	}
 
 	@JsonProperty("replaceTroops")
 	public List<String> getReplaceTroopNames(){
-		return replaceTroops.stream().map(TroopType::getUniqueName).collect(Collectors.toList());
+		return replaceTroops.stream().map(TroopType::getName).collect(Collectors.toList());
 	}
 	
 	public void setTroopTypes(List<TroopType> newTroops){
@@ -446,7 +446,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		int counter = 0;
 		while((found == null) & (counter < replaceTroops.size())){
 			TroopType tempTroopType = replaceTroops.get(counter);
-			if(tempTroopType.getUniqueName().equals(name)){
+			if(tempTroopType.getName().equals(name)){
 				found = tempTroopType;
 			}
 		}

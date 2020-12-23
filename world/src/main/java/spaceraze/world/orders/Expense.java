@@ -76,7 +76,7 @@ public class Expense implements Serializable {
   public Expense(String temptype, Building tempBuilding, TroopType tempTroopType, String aPlayername){
     this.planetName = tempBuilding.getLocation().getName();
     //this.troopType = tempTroopType;
-    this.troopTypeName = tempTroopType.getUniqueName();
+    this.troopTypeName = tempTroopType.getName();
     this.type = temptype;
     currentBuildingId = tempBuilding.getUniqueId();
     playerName =aPlayername;

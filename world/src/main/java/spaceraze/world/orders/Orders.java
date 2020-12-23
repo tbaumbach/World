@@ -1004,7 +1004,7 @@ public class Orders implements Serializable {
     public boolean haveTroopTypeBuildOrder(TroopType aTroopType) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aTroopType.getUniqueName().equals(tempExpense.getTroopTypeName())) {
+            if (aTroopType.getName().equals(tempExpense.getTroopTypeName())) {
                 return true;
             }
         }

@@ -107,11 +107,6 @@ public class TurnInfo implements Serializable {
         r.addHighlight(str, type);
     }
     @Transient
-    public void addToLatestTroopsLostInSpace(Troop aTroop) {
-        Report r = generalReports.get(generalReports.size() - 1);
-        r.addTroopLostInSpace(aTroop);
-    }
-    @Transient
     public void addToLatestExpenseReport(String str) {
         Report r = expenseReports.get(expenseReports.size() - 1);
         r.addReport(str);

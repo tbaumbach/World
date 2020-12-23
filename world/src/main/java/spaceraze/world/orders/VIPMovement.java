@@ -86,9 +86,9 @@ public class VIPMovement implements Serializable {
             }
         } else { // troop
             if (longName) {
-                returnValue = aGalaxy.findTroop(troopDestination).getUniqueName();
+                returnValue = aGalaxy.findTroop(troopDestination).getName();
             } else {
-                returnValue = aGalaxy.findTroop(troopDestination).getUniqueShortName();
+                returnValue = aGalaxy.findTroop(troopDestination).getShortName();
             }
 
         }

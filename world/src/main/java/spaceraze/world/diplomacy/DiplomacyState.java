@@ -2,6 +2,7 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity()
 @Table(name = "DIPLOMACY_STATE")
 public class DiplomacyState implements Serializable{
@@ -24,8 +26,8 @@ public class DiplomacyState implements Serializable{
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_GALAXY_STATES")
-	private Galaxy galaxy_states;
+	@JoinColumn(name = "FK_GALAXY")
+	private Galaxy galaxy;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_PLAYER_ONE", insertable = false, updatable = false)

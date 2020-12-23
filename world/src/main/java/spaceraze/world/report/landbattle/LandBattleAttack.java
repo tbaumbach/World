@@ -159,7 +159,7 @@ public class LandBattleAttack extends EventReport implements Serializable {
 
 	private void attack(StringBuilder builder) {
 		String attDesc = getAttackLevelDescription(attMultiplier);
-		if(troopAttack instanceof OwnTroopAttack) {
+		if(troopAttack.isOwn()) {
 			builder.append(String.format(OWN_ATTACK, troopAttack.isArtillery() ? ARTILLERY : TROOP, troopAttack.getName(), Functions.getDeterminedForm(attDesc), attDesc, damage, troopTarget.getName(), troopTarget.getCurrentDamageCapacity() < 1 ? TARGET_DESTROYED : getTargetTroopDamageCapacityAfterFight() + "%"));
 		} else {
 			builder.append(String.format(ENEMY_ATTACK, troopAttack.isArtillery() ? ARTILLERY : TROOP, troopAttack.getName(), Functions.getDeterminedForm(attDesc), attDesc, damage, troopTarget.getName(), troopTarget.getCurrentDamageCapacity() < 1 ? TARGET_DESTROYED : getTargetTroopDamageCapacityAfterFight() + "%"));
@@ -171,7 +171,7 @@ public class LandBattleAttack extends EventReport implements Serializable {
 	private void counterAttack(StringBuilder builder) {
 		if(counterMultiplier > 0) {
 			String attDesc = getAttackLevelDescription(counterMultiplier);
-			if(troopTarget instanceof OwnTroopTarget) {
+			if(troopTarget.isOwn()) {
 				builder.append(String.format(OWN_COUNTERFIRE, attDesc, counterDamage, troopTarget.getName(), troopTarget.getCurrentDamageCapacity() < 1 ? TARGET_DESTROYED : getAttackerTroopDamageCapacityAfterFight() + "%"));
 			}else {
 				builder.append(String.format(ENEMY_COUNTERFIRE, attDesc, counterDamage, troopAttack.getName(), troopTarget.getCurrentDamageCapacity() < 1 ? TARGET_DESTROYED : getAttackerTroopDamageCapacityAfterFight() + "%"));

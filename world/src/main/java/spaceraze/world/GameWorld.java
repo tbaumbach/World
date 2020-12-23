@@ -161,7 +161,7 @@ public class GameWorld implements Serializable{
     	int i = 0;
     	while ((i < troopTypes.size()) & (foundtt == null)){
     		TroopType temptt = troopTypes.get(i);
-    		if (temptt.getUniqueName().equalsIgnoreCase(ttname)){
+    		if (temptt.getName().equalsIgnoreCase(ttname)){
     			foundtt = temptt;
     		}else{
     			i++;
@@ -207,7 +207,7 @@ public class GameWorld implements Serializable{
     	int i = 0;
     	while ((i < troopTypes.size()) & (foundtt == null)){
     		TroopType temptt = troopTypes.get(i);
-    		if (temptt.getUniqueShortName().equalsIgnoreCase(ttshortname)){
+    		if (temptt.getShortName().equalsIgnoreCase(ttshortname)){
     			foundtt = temptt;
     		}else{
     			i++;
@@ -488,7 +488,7 @@ public class GameWorld implements Serializable{
 	}
 	
 	public String getNeutralTroopTypename() {
-		return neutralTroopType.getUniqueName();
+		return neutralTroopType.getName();
 	}
 
 	public void setNeutralTroopType(TroopType neutralTroopType) {

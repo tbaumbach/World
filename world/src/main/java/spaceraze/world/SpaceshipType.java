@@ -59,9 +59,9 @@ public class SpaceshipType implements Serializable{
     private int weaponsStrengthMedium;
     private int weaponsStrengthLarge;
     private int weaponsStrengthHuge;
-    private int weaponsMaxSalvoesMedium; // if Integer.MAX then treat as infinite
-    private int weaponsMaxSalvoesLarge;
-    private int weaponsMaxSalvoesHuge;
+    private int weaponsMaxSalvosMedium; // if Integer.MAX then treat as infinite
+    private int weaponsMaxSalvosLarge;
+    private int weaponsMaxSalvosHuge;
     private int armorSmall;
     private int armorMedium;
     private int armorLarge;
@@ -107,64 +107,6 @@ public class SpaceshipType implements Serializable{
 	public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall){
     	this(name,shortName, size,shields,hits,range,upkeep,buildCost, weaponsStrengthSmall,0);
     }
-	
-	@JsonIgnore
-    public String getIncomeOpenString(){
-    	StringBuffer sb = new StringBuffer();
-        if (getIncOwnOpenBonus() > 0){
-            sb.append(getIncOwnOpenBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncFriendlyOpenBonus() > 0){
-            sb.append(getIncFriendlyOpenBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncNeutralOpenBonus() > 0){
-            sb.append(getIncNeutralOpenBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncEnemyOpenBonus() > 0){
-            sb.append(getIncEnemyOpenBonus());
-        }else{
-        	sb.append("-");
-        }
-    	return sb.toString();
-    }
-
-	@JsonIgnore
-    public String getIncomeClosedString(){
-    	StringBuffer sb = new StringBuffer();
-        if (getIncOwnClosedBonus() > 0){
-            sb.append(getIncOwnClosedBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncFriendlyClosedBonus() > 0){
-            sb.append(getIncFriendlyClosedBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncNeutralClosedBonus() > 0){
-            sb.append(getIncNeutralClosedBonus());
-        }else{
-        	sb.append("-");
-        }
-        sb.append(" / ");
-        if (getIncEnemyClosedBonus() > 0){
-            sb.append(getIncEnemyClosedBonus());
-        }else{
-        	sb.append("-");
-        }
-    	return sb.toString();
-    }
     
     /**
      * Constructor for civilian ships
@@ -180,7 +122,10 @@ public class SpaceshipType implements Serializable{
     	setCivilian(true);
     	setLookAsCivilian(true);
     	setCanBlockPlanet(false);
-        setArmor(0,0,0,0);
+    	this.armorSmall = 0;
+    	this.armorMedium = 0;
+    	this.armorLarge = 0;
+    	this.armorHuge = 0;
     }
 	
     public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall, int weaponsStrengthSquadron){
@@ -196,11 +141,22 @@ public class SpaceshipType implements Serializable{
         this.weaponsStrengthSmall = weaponsStrengthSmall;
         this.weaponsStrengthSquadron = weaponsStrengthSquadron;
         // default armor
-        setStandardArmorLevels();
+        if (size == SpaceShipSize.MEDIUM){
+            armorSmall = 25;
+        }else
+        if (size == SpaceShipSize.LARGE){
+            armorSmall = 50;
+            armorMedium = 25;
+        }else
+        if (size == SpaceShipSize.HUGE){
+            armorSmall = 75;
+            armorMedium = 50;
+            armorLarge = 25;
+        }
         // Default (almost) infinite number of salvoes
-        this.weaponsMaxSalvoesMedium = Integer.MAX_VALUE;
-        this.weaponsMaxSalvoesLarge = Integer.MAX_VALUE;
-        this.weaponsMaxSalvoesHuge = Integer.MAX_VALUE;
+        this.weaponsMaxSalvosMedium = Integer.MAX_VALUE;
+        this.weaponsMaxSalvosLarge = Integer.MAX_VALUE;
+        this.weaponsMaxSalvosHuge = Integer.MAX_VALUE;
         // default targeting type
         targetingType = SpaceshipTargetingType.ANTIMBU;
         
@@ -232,7 +188,7 @@ public class SpaceshipType implements Serializable{
         this.range = playerSpaceshipImprovement.getRange() != null ? playerSpaceshipImprovement.getRange() : originSpaceshipType.getRange();
         this.shields = originSpaceshipType.getShields() + playerSpaceshipImprovement.getShields();
         this.upkeep = originSpaceshipType.getUpkeep() + playerSpaceshipImprovement.getUpkeep();
-        this.buildCost = originSpaceshipType.getBuildCost(null) + playerSpaceshipImprovement.getBuildCost();
+        this.buildCost = originSpaceshipType.getBuildCost() + playerSpaceshipImprovement.getBuildCost();
         this.bombardment = originSpaceshipType.getBombardment() + playerSpaceshipImprovement.getBombardment();
         this.noRetreat = playerSpaceshipImprovement.isNoRetreat();
 
@@ -240,20 +196,16 @@ public class SpaceshipType implements Serializable{
         this.hits = originSpaceshipType.getHits();
 
         this.setInitSupport(originSpaceshipType.isInitSupport());
-        if (originSpaceshipType.isInitSupport()){
-            this.increaseInitiative = originSpaceshipType.getIncreaseInitiative() + playerSpaceshipImprovement.getIncreaseInitiative();
-        }else{
-            this.increaseInitiative = originSpaceshipType.getIncreaseInitiative() + playerSpaceshipImprovement.getIncreaseInitiative();
-        }
+        this.increaseInitiative = originSpaceshipType.getIncreaseInitiative() + playerSpaceshipImprovement.getIncreaseInitiative();
         this.initDefence = originSpaceshipType.getInitDefence() + playerSpaceshipImprovement.getInitDefence();
         this.weaponsStrengthSquadron = originSpaceshipType.getWeaponsStrengthSquadron() + playerSpaceshipImprovement.getWeaponsStrengthSquadron();
         this.weaponsStrengthSmall = originSpaceshipType.getWeaponsStrengthSmall() + playerSpaceshipImprovement.getWeaponsStrengthSmall();
         this.weaponsStrengthMedium = originSpaceshipType.getWeaponsStrengthMedium() + playerSpaceshipImprovement.getWeaponsStrengthMedium();
         this.weaponsStrengthLarge = originSpaceshipType.getWeaponsStrengthLarge() + playerSpaceshipImprovement.getWeaponsStrengthLarge();
         this.weaponsStrengthHuge = originSpaceshipType.getWeaponsStrengthHuge() + playerSpaceshipImprovement.getWeaponsStrengthHuge();
-        this.weaponsMaxSalvoesMedium = originSpaceshipType.getWeaponsMaxSalvoesMedium() + playerSpaceshipImprovement.getWeaponsMaxSalvosMedium();
-        this.weaponsMaxSalvoesLarge = originSpaceshipType.getWeaponsMaxSalvoesLarge() + playerSpaceshipImprovement.getWeaponsMaxSalvosLarge();
-        this.weaponsMaxSalvoesHuge = originSpaceshipType.getWeaponsMaxSalvoesHuge() + playerSpaceshipImprovement.getWeaponsMaxSalvosHuge();
+        this.weaponsMaxSalvosMedium = originSpaceshipType.getWeaponsMaxSalvosMedium() + playerSpaceshipImprovement.getWeaponsMaxSalvosMedium();
+        this.weaponsMaxSalvosLarge = originSpaceshipType.getWeaponsMaxSalvosLarge() + playerSpaceshipImprovement.getWeaponsMaxSalvosLarge();
+        this.weaponsMaxSalvosHuge = originSpaceshipType.getWeaponsMaxSalvosHuge() + playerSpaceshipImprovement.getWeaponsMaxSalvosHuge();
         this.supply = playerSpaceshipImprovement.getSupply()  != null ? playerSpaceshipImprovement.getSupply() : originSpaceshipType.getSupply();
         this.armorSmall = originSpaceshipType.getArmorSmall() + playerSpaceshipImprovement.getArmorSmall();
         this.armorMedium = originSpaceshipType.getArmorMedium() + playerSpaceshipImprovement.getArmorMedium();
@@ -312,20 +264,6 @@ public class SpaceshipType implements Serializable{
     public void setBuildCost(int buildCost){
     	this.buildCost = buildCost;
     }
-    
-    @JsonIgnore
-    public int getBuildCost(VIP vipWithBonus){
-      int tempBuildCost = buildCost;
-      if (vipWithBonus != null){
-    	  int vipBuildbonus = 100 - vipWithBonus.getShipBuildBonus();
-    	  double tempBuildBonus = vipBuildbonus / 100.0;
-    	  tempBuildCost = (int) Math.round(tempBuildCost * tempBuildBonus);
-    	  if (tempBuildCost < 1){
-    		  tempBuildCost = 1;
-    	  }
-      }
-      return tempBuildCost;
-    }
 
     @JsonIgnore
     public Spaceship getShip(VIP vipWithBonus, int factionTechBonus, int buildingBonus, int uniqueId){
@@ -363,45 +301,6 @@ public class SpaceshipType implements Serializable{
     public void setNoRetreat(boolean newValue){
       noRetreat = newValue;
     }
-
-	public int getWeaponsMaxSalvoesHuge() {
-		return weaponsMaxSalvoesHuge;
-	}
-	
-	public int getWeaponsMaxSalvoesLarge() {
-		return weaponsMaxSalvoesLarge;
-	}
-	
-	public int getWeaponsMaxSalvoesMedium() {
-		return weaponsMaxSalvoesMedium;
-	}
-
-	@JsonIgnore
-	public String getWeaponsMaxSalvoesMediumString() {
-		String retStr = "0";
-		if ((weaponsMaxSalvoesMedium > 0) & (weaponsMaxSalvoesMedium < Integer.MAX_VALUE)){
-			retStr = String.valueOf(weaponsMaxSalvoesMedium);
-		}
-		return retStr;
-	}
-
-	@JsonIgnore
-	public String getWeaponsMaxSalvoesLargeString() {
-		String retStr = "0";
-		if ((weaponsMaxSalvoesLarge > 0) & (weaponsMaxSalvoesLarge < Integer.MAX_VALUE)){
-			retStr = String.valueOf(weaponsMaxSalvoesLarge);
-		}
-		return retStr;
-	}
-
-	@JsonIgnore
-	public String getWeaponsMaxSalvoesHugeString() {
-		String retStr = "0";
-		if ((weaponsMaxSalvoesHuge > 0) & (weaponsMaxSalvoesHuge < Integer.MAX_VALUE)){
-			retStr = String.valueOf(weaponsMaxSalvoesHuge);
-		}
-		return retStr;
-	}
 
 	public int getWeaponsStrengthHuge() {
 		return weaponsStrengthHuge;
@@ -458,21 +357,6 @@ public class SpaceshipType implements Serializable{
 	public void setArmorSmall(int armorSmall) {
 		this.armorSmall = armorSmall;
 	}
-	
-	public void setStandardArmorLevels(){
-		if (size == SpaceShipSize.MEDIUM){
-			armorSmall = 25;
-		}else
-		if (size == SpaceShipSize.LARGE){
-			armorSmall = 50;
-			armorMedium = 25;
-		}else
-		if (size == SpaceShipSize.HUGE){
-			armorSmall = 75;
-			armorMedium = 50;
-			armorLarge = 25;
-		}
-	}
 
 	public boolean isPlanetarySurvey() {
 		return planetarySurvey;
@@ -522,16 +406,16 @@ public class SpaceshipType implements Serializable{
 		this.psychWarfare = newPsychWarfare;
 	}
 
-	public void setWeaponsMaxSalvoesHuge(int weaponsMaxSalvoesHuge) {
-		this.weaponsMaxSalvoesHuge = weaponsMaxSalvoesHuge;
+	public void setWeaponsMaxSalvosHuge(int weaponsMaxSalvosHuge) {
+		this.weaponsMaxSalvosHuge = weaponsMaxSalvosHuge;
 	}
 
-	public void setWeaponsMaxSalvoesLarge(int weaponsMaxSalvoesLarge) {
-		this.weaponsMaxSalvoesLarge = weaponsMaxSalvoesLarge;
+	public void setWeaponsMaxSalvosLarge(int weaponsMaxSalvosLarge) {
+		this.weaponsMaxSalvosLarge = weaponsMaxSalvosLarge;
 	}
 
-	public void setWeaponsMaxSalvoesMedium(int weaponsMaxSalvoesMedium) {
-		this.weaponsMaxSalvoesMedium = weaponsMaxSalvoesMedium;
+	public void setWeaponsMaxSalvosMedium(int weaponsMaxSalvosMedium) {
+		this.weaponsMaxSalvosMedium = weaponsMaxSalvosMedium;
 	}
 
 	public void setWeaponsStrengthHuge(int weaponsStrengthHuge) {
@@ -569,38 +453,9 @@ public class SpaceshipType implements Serializable{
 	public void setTargetingType(SpaceshipTargetingType aTargetingType){
 		targetingType = aTargetingType;
 	}
-	
-	@JsonIgnore
+
 	public SpaceshipTargetingType getTargetingType(){
 		return targetingType;
-	}
-	
-	@JsonIgnore
-	public String getTotalDescription(){
-		String totalDescription = "";
-    	
-		if(advantages != null && !advantages.equals("")){
-    		totalDescription += "Advantages: " + advantages + "\n\n";
-        }
-    	if(disadvantages != null && !disadvantages.equals("")){
-    		totalDescription += "Disadvantages: " + disadvantages + "\n\n";
-        }
-    	
-    	if(shortDescription != null && !shortDescription.equals("")){
-    		totalDescription += "Short Description\n";
-        	totalDescription += shortDescription + "\n\n";
-    	}
-    	
-    	if(description != null && !description.equals("")){
-    		totalDescription +="Description\n";
-        	totalDescription += description + "\n\n";
-    	}
-    	if(history != null && !history.equals("")){
-    		totalDescription +="History\n";
-        	totalDescription += history;
-    	}
-    	
-    	return totalDescription;
 	}
 
 	public String getDescription() {
@@ -714,19 +569,6 @@ public class SpaceshipType implements Serializable{
 	public void setLookAsCivilian(boolean lookAsCivilian) {
 		this.lookAsCivilian = lookAsCivilian;
 	}
-	
-	public void setArmor(int... armorValues){
-		armorSmall = armorValues[0];
-		if (armorValues.length > 1){
-			armorMedium = armorValues[1];
-			if (armorValues.length > 2){
-				armorLarge = armorValues[2];
-				if (armorValues.length > 3){
-					armorHuge = armorValues[3];
-				}
-			}
-		}
-	}
 
 	public boolean isVisibleOnMap() {
 		return visibleOnMap;
@@ -793,34 +635,6 @@ public class SpaceshipType implements Serializable{
 	
 	public boolean isPlayerUnique() {
 		return playerUnique;
-	}
-	
-	public String getUniqueString(){
-		String uniqueString = "";
-  
-		if(playerUnique){
-			uniqueString = "Player unique";
-		}else
-		if(factionUnique){
-			uniqueString = "Faction unique";
-		}else
-		if(worldUnique){
-			uniqueString = "World unique";
-		}
-  
-		return uniqueString;
-	}
-
-	public boolean isPlayerUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().spaceshipTypeExist(this, null, aPlayer);
-	}
-
-	public boolean isWorldUniqueBuild(Galaxy aGalaxy) {
-		return aGalaxy.spaceshipTypeExist(this, null, null);
-	}
-
-	public boolean isFactionUniqueBuild(Player aPlayer) {
-		return aPlayer.getGalaxy().spaceshipTypeExist(this, aPlayer.getFaction(), null);
 	}
 
 	public void setFactionUnique(boolean factionUnique) {

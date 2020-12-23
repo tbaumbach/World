@@ -368,7 +368,7 @@ public class Faction implements Serializable {
     public List<String> getStartingTroopsName() {
         List<String> troops = new ArrayList<String>();
         for (TroopType troopType : startingTroops) {
-            troops.add(troopType.getUniqueName());
+            troops.add(troopType.getName());
         }
         return troops;
     }
@@ -385,7 +385,7 @@ public class Faction implements Serializable {
     public List<String> getTroopTypesName() {
         List<String> troops = new ArrayList<>();
         for (TroopType troopType : troopTypes) {
-            troops.add(troopType.getUniqueName());
+            troops.add(troopType.getName());
         }
         return troops;
     }
@@ -455,7 +455,7 @@ public class Faction implements Serializable {
         int i = 0;
         while ((i < troopTypes.size()) & (foundtt == null)) {
             TroopType temptt = troopTypes.get(i);
-            if (temptt.getUniqueName().equalsIgnoreCase(ttname)) {
+            if (temptt.getName().equalsIgnoreCase(ttname)) {
                 foundtt = temptt;
             } else {
                 i++;
