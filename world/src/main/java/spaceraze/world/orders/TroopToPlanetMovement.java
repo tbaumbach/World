@@ -5,11 +5,9 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spaceraze.util.general.Logger;
 import spaceraze.world.Galaxy;
 import spaceraze.world.Planet;
 import spaceraze.world.Troop;
-import spaceraze.world.TurnInfo;
 
 import javax.persistence.*;
 
@@ -29,12 +27,12 @@ public class TroopToPlanetMovement implements Serializable {
     @JoinColumn(name = "FK_ORDERS")
     private Orders orders;
 
-    private int troopId;
+    private String troopKey;
     private String planetName;
     private int turn;
 
-    public TroopToPlanetMovement(Troop theTroop, Planet destination, int turn) {
-        this.troopId = theTroop.getUniqueId();
+    public TroopToPlanetMovement(Troop troop, Planet destination, int turn) {
+        this.troopKey = troop.getKey();
         this.planetName = destination.getName();
         this.turn = turn;
     }
@@ -45,27 +43,6 @@ public class TroopToPlanetMovement implements Serializable {
 
     public Planet getDestination(Galaxy aGalaxy) {
         return aGalaxy.getPlanet(planetName);
-    }
-
-    public int getTroopId() {
-        return troopId;
-    }
-
-    public Troop getTroop(Galaxy aGalaxy) {
-        return aGalaxy.findTroop(troopId);
-    }
-
-    public String getText(Galaxy aGalaxy) {
-        Troop aTroop = aGalaxy.findTroop(troopId);
-        return "Move " + aTroop.getName() + " from " + aTroop.getShipLocation().getName() + " to " + getDestinationName() + ".";
-    }
-
-    public boolean isThisTroop(Troop aTroop) {
-        return aTroop.getUniqueId() == troopId;
-    }
-
-    public boolean isThisDestination(Planet aPlanet) {
-        return aPlanet.getName().equalsIgnoreCase(planetName);
     }
 
     public int getTurn() {

@@ -74,7 +74,7 @@ public class Orders implements Serializable {
     @ElementCollection
     @CollectionTable(name = "DESTROY_TROOP")
     @Builder.Default
-    private List<Integer> troopSelfDestructs = new ArrayList<>();
+    private List<String> troopSelfDestructs = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_VIP")
     @Builder.Default
@@ -143,26 +143,12 @@ public class Orders implements Serializable {
         return troopToPlanetMoves;
     }
 
-    public List<Integer> getTroopSelfDestructs() {
-        return troopSelfDestructs;
-    }
-
     public List<String> getVIPSelfDestructs() {
         return VIPSelfDestructs;
     }
 
     public List<VIPMovement> getVIPMoves() {
         return VIPMoves;
-    }
-
-    public List<VIPMovement> getVIPMoves(Planet aPlanet) {
-        List<VIPMovement> vipMoves = new LinkedList<VIPMovement>();
-        for (VIPMovement aVIPMovement : VIPMoves) {
-            if (aPlanet.getName().equals(aVIPMovement.getPlanetDestinationName())) {
-                vipMoves.add(aVIPMovement);
-            }
-        }
-        return vipMoves;
     }
 
     public List<String> getPlanetVisibilities() {
@@ -332,7 +318,7 @@ public class Orders implements Serializable {
         // remove troop moves to planet
         List<TroopToPlanetMovement> removeList2 = new ArrayList<TroopToPlanetMovement>();
         for (TroopToPlanetMovement aTroopToPlanetMovement : troopToPlanetMoves) {
-            if (aTroopToPlanetMovement.isThisDestination(inPlanet)) {
+            if (inPlanet.getName().equalsIgnoreCase(aTroopToPlanetMovement.getPlanetName())) {
                 removeList2.add(aTroopToPlanetMovement);
             }
         }
@@ -428,260 +414,8 @@ public class Orders implements Serializable {
         }
     }
 
-    public void addNewShipMove(Spaceship ss, Planet destination) {
-        // f�rst kolla om det finns en gammal order f�r detta skepp som skall tas bort
-        int found = -1;
-        for (int i = 0; i < shipMoves.size(); i++) {
-            ShipMovement tempShipMove = (ShipMovement) shipMoves.get(i);
-            if (tempShipMove.isThisShip(ss)) {
-                found = i;
-            }
-        }
-        if (found > -1) {
-            shipMoves.remove(found);
-        }
-        if (destination != null) {
-            shipMoves.add(new ShipMovement(ss, destination));
-        }
-    }
-
-    public void addNewTroopToPlanetMove(Troop aTroop, Planet destination, int turn) {
-        // f�rst kolla om det finns en gammal order f�r detta skepp som skall tas bort
-        int found = -1;
-        for (int i = 0; i < troopToPlanetMoves.size(); i++) {
-            TroopToPlanetMovement tempTroopToPlanetMove = troopToPlanetMoves.get(i);
-            if (tempTroopToPlanetMove.isThisTroop(aTroop)) {
-                found = i;
-            }
-        }
-        if (found > -1) {
-            troopToPlanetMoves.remove(found);
-        }
-        if (destination != null) {
-            troopToPlanetMoves.add(new TroopToPlanetMovement(aTroop, destination, turn));
-        }
-    }
-
-    public void addNewTroopToCarrierMove(Troop aTroop, Spaceship destinationCarrier) {
-        // f�rst kolla om det finns en gammal order f�r detta skepp som skall tas bort
-        int found = -1;
-        for (int i = 0; i < troopToCarrierMoves.size(); i++) {
-            TroopToCarrierMovement tempTroopToCarrierMove = troopToCarrierMoves.get(i);
-            if (tempTroopToCarrierMove.isThisTroop(aTroop)) {
-                found = i;
-            }
-        }
-        if (found > -1) {
-            troopToCarrierMoves.remove(found);
-        }
-        if (destinationCarrier != null) {
-            troopToCarrierMoves.add(new TroopToCarrierMovement(aTroop, destinationCarrier));
-        }
-    }
-
-    public void addNewShipToCarrierMove(Spaceship ss, Spaceship destinationCarrier) {
-        // först kolla om det finns en gammal order f�r detta skepp som skall tas bort
-        int found = -1;
-        for (int i = 0; i < shipToCarrierMoves.size(); i++) {
-            ShipToCarrierMovement tempShipToCarrierMove = (ShipToCarrierMovement) shipToCarrierMoves.get(i);
-            if (tempShipToCarrierMove.isThisShip(ss)) {
-                found = i;
-            }
-        }
-        if (found > -1) {
-            shipToCarrierMoves.remove(found);
-        }
-        if (destinationCarrier != null) {
-            shipToCarrierMoves.add(new ShipToCarrierMovement(ss, destinationCarrier));
-        }
-    }
-
-    public void addNewVIPMove(VIP aVIP, Object destination) {
-        // först kolla om det finns en gammal order f�r denna vip som skall tas bort
-        int found = -1;
-        for (int i = 0; i < VIPMoves.size(); i++) {
-            VIPMovement tempVIPMove = VIPMoves.get(i);
-            if (tempVIPMove.isThisVIP(aVIP)) {
-                found = i;
-            }
-        }
-        if (found > -1) {
-            VIPMoves.remove(found);
-        }
-        if (destination != null) {
-            if (destination instanceof Planet) {
-                VIPMoves.add(new VIPMovement(aVIP, (Planet) destination));
-            } else if (destination instanceof Spaceship) {
-                VIPMoves.add(new VIPMovement(aVIP, (Spaceship) destination));
-            } else { // troop move
-                VIPMoves.add(new VIPMovement(aVIP, (Troop) destination));
-            }
-        }
-    }
-
-    // kolla om det finns en gammal order f�r detta skepp
-    public boolean checkShipMove(Spaceship ss) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < shipMoves.size())) {
-            ShipMovement tempShipMove = (ShipMovement) shipMoves.get(i);
-            if (tempShipMove.isThisShip(ss)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // kolla om det finns en gammal order för detta VIP
-    public boolean checkVIPMove(VIP vip) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < VIPMoves.size())) {
-            VIPMovement tempVIPMove = (VIPMovement) VIPMoves.get(i);
-            if (tempVIPMove.isThisVIP(vip)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // check if there exist a planet move order for this troop
-    public boolean checkTroopToPlanetMove(Troop aTroop) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < troopToPlanetMoves.size())) {
-            TroopToPlanetMovement tempMove = troopToPlanetMoves.get(i);
-            if (tempMove.isThisTroop(aTroop)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // check if there exist a carrier move order for this troop
-    public boolean checkTroopToCarrierMove(Troop aTroop) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < troopToCarrierMoves.size())) {
-            TroopToCarrierMovement tempMove = troopToCarrierMoves.get(i);
-            if (tempMove.isThisTroop(aTroop)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // check if there exist a carrier move order for this troop to aCarrier
-    public boolean checkTroopToCarrierMove(Troop aTroop, Spaceship aCarrier) {
-        boolean found = false;
-        boolean moveToCarrier = false;
-        int i = 0;
-        while ((found == false) & (i < troopToCarrierMoves.size())) {
-            TroopToCarrierMovement tempMove = troopToCarrierMoves.get(i);
-            if (tempMove.isThisTroop(aTroop)) {
-                found = true;
-                if (tempMove.getDestinationCarrierId().equals(aCarrier.getKey())) {
-                    moveToCarrier = true;
-                }
-            } else {
-                i++;
-            }
-        }
-        return moveToCarrier;
-    }
-
-    // kolla om det finns en gammal order f�r detta skepp
-    public boolean checkShipToCarrierMove(Spaceship ss) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < shipToCarrierMoves.size())) {
-            ShipToCarrierMovement tempShipToCarrierMove = (ShipToCarrierMovement) shipToCarrierMoves.get(i);
-            if (tempShipToCarrierMove.isThisShip(ss)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // kolla om det finns en gammal order f�r detta skepp
-    public boolean checkShipToCarrierMove(Spaceship aSqd, Spaceship aCarrier) {
-        boolean found = false;
-        int i = 0;
-        while ((found == false) & (i < shipToCarrierMoves.size())) {
-            ShipToCarrierMovement tempShipToCarrierMove = (ShipToCarrierMovement) shipToCarrierMoves.get(i);
-            if (tempShipToCarrierMove.isThisShip(aSqd)) {
-                if (tempShipToCarrierMove.isThisDestination(aCarrier)) {
-                    found = true;
-                } else {
-                    i++;
-                }
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    // kolla hur m�nga moveToCarrier orders det finns till den anvivna carriern
-    public int countShipToCarrierMoves(Spaceship aCarrier) {
-        int count = 0;
-        for (ShipToCarrierMovement aShipToCarrierMove : shipToCarrierMoves) {
-//		LoggingHandler.finest( "STCM dest" + aShipToCarrierMove.getDestinationCarrier().getName());
-            if (aShipToCarrierMove.isThisDestination(aCarrier)) {
-                count++;
-                Logger.finest("adding carrier count = " + count);
-            }
-        }
-        return count;
-    }
-
-    // count how many troops are ordered to move to acarrier
-    public int countTroopToCarrierMoves(Spaceship aCarrier) {
-        int count = 0;
-        for (TroopToCarrierMovement aTroopToCarrierMove : troopToCarrierMoves) {
-            if (aTroopToCarrierMove.isThisDestination(aCarrier)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    // count how many troops are ordered to move from a carrier to a planet
-    public int countTroopToPlanetMoves(Spaceship aCarrier, Planet aPlanet, Galaxy aGalaxy) {
-        int count = 0;
-        for (TroopToPlanetMovement aTroopToPlanetMove : troopToPlanetMoves) {
-            if (aTroopToPlanetMove.getTroop(aGalaxy).getShipLocation() == aCarrier) {
-                if (aTroopToPlanetMove.isThisDestination(aPlanet)) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    // count how many troops are ordered to move to a planet
-    public List<TroopToPlanetMovement> getTroopToPlanetMoves(Planet aPlanet) {
-        List<TroopToPlanetMovement> troopMoves = new LinkedList<TroopToPlanetMovement>();
-        for (TroopToPlanetMovement aTroopToPlanetMove : troopToPlanetMoves) {
-            if (aTroopToPlanetMove.isThisDestination(aPlanet)) {
-                troopMoves.add(aTroopToPlanetMove);
-            }
-        }
-        return troopMoves;
-    }
-
     public void addNewTransaction(int aSum, Player recipient) {
-        // f�rst kolla om det finns en gammal transaktion som skall tas bort
+        // först kolla om det finns en gammal transaktion som skall tas bort
         int findIndex = -1;
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
@@ -698,156 +432,6 @@ public class Orders implements Serializable {
         if (aSum > 0) {
             addExpenses(new Expense("transaction", recipient, aSum));
         }
-    }
-
-    public Planet getDestination(Spaceship tempss, Galaxy aGalaxy) {
-        Planet dest = null;
-        boolean found = false;
-        int i = 0;
-        ShipMovement tempShipMove = null;
-        while ((i < shipMoves.size()) & !found) {
-            tempShipMove = (ShipMovement) shipMoves.get(i);
-            if (tempShipMove.isThisShip(tempss)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-
-            dest = aGalaxy.getPlanet(tempShipMove.getDestinationName());
-        }
-        return dest;
-    }
-
-    public Planet getDestinationPlanet(Troop aTroop, Galaxy aGalaxy) {
-        Planet dest = null;
-        boolean found = false;
-        int i = 0;
-        TroopToPlanetMovement tempMove = null;
-        while ((i < troopToPlanetMoves.size()) & !found) {
-            tempMove = troopToPlanetMoves.get(i);
-            if (tempMove.isThisTroop(aTroop)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-            dest = tempMove.getDestination(aGalaxy);
-        }
-        return dest;
-    }
-
-    public Spaceship getDestinationCarrier(Spaceship tempss, Galaxy aGalaxy) {
-        Spaceship dest = null;
-        boolean found = false;
-        int i = 0;
-        ShipToCarrierMovement tempShipToCarrierMove = null;
-        while ((i < shipToCarrierMoves.size()) & !found) {
-            tempShipToCarrierMove = (ShipToCarrierMovement) shipToCarrierMoves.get(i);
-            if (tempShipToCarrierMove.isThisShip(tempss)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-            dest = tempShipToCarrierMove.getDestinationCarrier(aGalaxy);
-        }
-        return dest;
-    }
-
-    public Spaceship getTroopDestinationCarrier(Troop aTroop, Galaxy aGalaxy) {
-        Spaceship dest = null;
-        boolean found = false;
-        int i = 0;
-        TroopToCarrierMovement tempTroopToCarrierMove = null;
-        while ((i < troopToCarrierMoves.size()) & !found) {
-            tempTroopToCarrierMove = (TroopToCarrierMovement) troopToCarrierMoves.get(i);
-            if (tempTroopToCarrierMove.isThisTroop(aTroop)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-            dest = tempTroopToCarrierMove.getDestinationCarrier(aGalaxy);
-        }
-        return dest;
-    }
-
-    public String getDestinationName(Spaceship tempss, Galaxy aGalaxy) {
-        String destName = "";
-        Planet destination = getDestination(tempss, aGalaxy);
-        if (destination != null) {
-            destName = destination.getName();
-        }
-        return destName;
-    }
-
-    public String getDestinationPlanetName(Troop aTroop, Galaxy aGalaxy) {
-        String destName = "";
-        Planet destination = getDestinationPlanet(aTroop, aGalaxy);
-        if (destination != null) {
-            destName = destination.getName();
-        }
-        return destName;
-    }
-
-    public String getDestinationCarrierName(Spaceship tempss, Galaxy aGalaxy) {
-        String destName = "";
-        Spaceship destination = getDestinationCarrier(tempss, aGalaxy);
-        if (destination != null) {
-            destName = destination.getName();
-        }
-        return destName;
-    }
-
-    public String getDestinationCarrierShortName(Spaceship tempss, Galaxy aGalaxy) {
-        String destName = "";
-        Spaceship destination = getDestinationCarrier(tempss, aGalaxy);
-        if (destination != null) {
-            destName = destination.getShortName();
-        }
-        return destName;
-    }
-
-    public String getTroopDestinationCarrierName(Troop aTroop, Galaxy aGalaxy) {
-        String destName = "";
-        Spaceship destination = getTroopDestinationCarrier(aTroop, aGalaxy);
-        if (destination != null) {
-            destName = destination.getName();
-        }
-        return destName;
-    }
-
-    public String getTroopDestinationCarrierShortName(Troop aTroop, Galaxy aGalaxy) {
-        String destName = "";
-        Spaceship destination = getTroopDestinationCarrier(aTroop, aGalaxy);
-        if (destination != null) {
-            destName = destination.getShortName();
-        }
-        return destName;
-    }
-
-    public String getDestinationName(VIP tempVIP, Galaxy aGalaxy, boolean longName) {
-        String destName = "";
-        boolean found = false;
-        int i = 0;
-        VIPMovement tempVIPMove = null;
-        while ((i < VIPMoves.size()) & !found) {
-            tempVIPMove = VIPMoves.get(i);
-            if (tempVIPMove.isThisVIP(tempVIP)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        if (found) {
-            destName = tempVIPMove.getDestinationName(longName, aGalaxy);
-        }
-        return destName;
     }
 
     public void addBuildShip(Building aBuilding, SpaceshipType sst, Player aPlayer) {
@@ -994,7 +578,7 @@ public class Orders implements Serializable {
     public boolean haveVIPTypeBuildOrder(VIPType aVIPType) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aVIPType.getName().equals(tempExpense.getVipTypeName())) {
+            if (aVIPType.getKey().equals(tempExpense.getTypeVIPKey())) {
                 return true;
             }
         }
@@ -1028,7 +612,7 @@ public class Orders implements Serializable {
     }
 
     public void addTroopSelfDestruct(Troop aTroop) {
-        troopSelfDestructs.add(aTroop.getUniqueId());
+        troopSelfDestructs.add(aTroop.getKey());
     }
 
     public void addVIPSelfDestruct(VIP aVIP) {
@@ -1036,7 +620,7 @@ public class Orders implements Serializable {
         int found = -1;
         for (int i = 0; i < VIPMoves.size(); i++) {
             VIPMovement tempVIPMove = VIPMoves.get(i);
-            if (tempVIPMove.isThisVIP(aVIP)) {
+            if (aVIP.getKey().equalsIgnoreCase(tempVIPMove.getVipKey())) {
                 found = i;
             }
         }
@@ -1044,7 +628,7 @@ public class Orders implements Serializable {
             VIPMoves.remove(found);
         }
 
-        VIPSelfDestructs.add(aVIP.getUniqueId());
+        VIPSelfDestructs.add(aVIP.getKey());
     }
 
     public void removeShipSelfDestruct(Spaceship currentss) {
@@ -1057,7 +641,7 @@ public class Orders implements Serializable {
 
     public void removeTroopSelfDestruct(Troop aTroop) {
         for (int i = 0; i < troopSelfDestructs.size(); i++) {
-            if (troopSelfDestructs.get(i) == aTroop.getUniqueId()) {
+            if (troopSelfDestructs.get(i).equalsIgnoreCase(aTroop.getKey())) {
                 troopSelfDestructs.remove(i);
             }
         }
@@ -1065,7 +649,7 @@ public class Orders implements Serializable {
 
     public void removeVIPSelfDestruct(VIP aVIP) {
         for (int i = 0; i < VIPSelfDestructs.size(); i++) {
-            if (VIPSelfDestructs.get(i) == aVIP.getUniqueId()) {
+            if (VIPSelfDestructs.get(i) == aVIP.getKey()) {
                 VIPSelfDestructs.remove(i);
             }
         }
@@ -1129,22 +713,11 @@ public class Orders implements Serializable {
         return found;
     }
 
-    public boolean getTroopSelfDestruct(Troop aTroop) {
-        boolean found = false;
-        for (int i = 0; i < troopSelfDestructs.size(); i++) {
-            int tempTroop = troopSelfDestructs.get(i);
-            if (tempTroop == aTroop.getUniqueId()) {
-                found = true;
-            }
-        }
-        return found;
-    }
-
     public boolean getVIPSelfDestruct(VIP aVIP) {
         boolean found = false;
         for (int i = 0; i < VIPSelfDestructs.size(); i++) {
             String tempVIP = VIPSelfDestructs.get(i);
-            if (tempVIP == aVIP.getUniqueId()) {
+            if (tempVIP == aVIP.getKey()) {
                 found = true;
             }
         }
@@ -1177,7 +750,7 @@ public class Orders implements Serializable {
         int i = 0;
         while ((i < VIPMoves.size()) & (vipStays)) {
             VIPMovement tempVIPMove = VIPMoves.get(i);
-            if (tempVIPMove.isThisVIP(tempEngineer)) {
+            if (tempEngineer.getKey().equalsIgnoreCase(tempVIPMove.getVipKey())) {
                 vipStays = false;
             } else {
                 i++;

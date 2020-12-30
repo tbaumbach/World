@@ -266,8 +266,8 @@ public class SpaceshipType implements Serializable{
     }
 
     @JsonIgnore
-    public Spaceship getShip(VIP vipWithBonus, int factionTechBonus, int buildingBonus, int uniqueId){
-      return new Spaceship(this, null, 0, vipWithBonus, factionTechBonus,buildingBonus);
+    public Spaceship getShip(int vipTechBonus, int factionTechBonus, int buildingBonus, int uniqueId){
+      return new Spaceship(this, null, 0, vipTechBonus, factionTechBonus,buildingBonus);
     }
 
     public SpaceShipSize getSize(){

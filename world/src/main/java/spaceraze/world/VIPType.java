@@ -1,13 +1,12 @@
 package spaceraze.world;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +17,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity()
 @Table(name = "VIP_TYPE")
 public class VIPType implements Serializable {
@@ -25,6 +25,8 @@ public class VIPType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String key;
 
     @JsonIgnore
     @ManyToOne
@@ -67,7 +69,7 @@ public class VIPType implements Serializable {
     private int closedIncBonus; // increase income on closed planet
     private boolean canVisitEnemyPlanets = false;
     private boolean canVisitNeutralPlanets = false;
-    private int duellist; // may duel with other duellists, value = skill
+    private int duellistSkill; // may duel with other duellists, value = skill
     private boolean hardToKill; // cannot be killed by ship destroyed or planet conquered/razed
     private boolean wellGuarded; // cannot be assassinated
     private boolean governor; // player looses if a vip with this ability dies
@@ -79,7 +81,6 @@ public class VIPType implements Serializable {
     private int aimBonus; // increases the chance to fire against the most damage ship.
     //  private int troopAttacksBonus;
     private int landBattleGroupAttackBonus; // bonus percentage to all own troops attack strength in a landbattle. Not cimulative.
-    // tillagda av Paul 100511
     private boolean stealth; // makes a ship invisible on the map
     private int bombardmentBonus; // increase bombardment for a fleet (with a bombardment of at least 1)
     private boolean attackScreenedSquadron; // enables a squadron to attack screened enemy ships
@@ -102,229 +103,10 @@ public class VIPType implements Serializable {
     private boolean playerUnique = false;
 
     public VIPType(String name, String shortName, Alignment alignment) {
+        this.key = UUID.randomUUID().toString();
         this.name = name;
         this.shortName = shortName;
         this.alignment = alignment;
-    }
-
-    @JsonIgnore
-    public String getHTMLTableContent() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<table border=\"0\" cellspacing=\"4\" cellpadding=\"0\" class=\"sr\">\n");
-//	  sb.append("<tr><td>&nbsp;</td></tr>\n");
-        sb.append("<tr>");
-        sb.append("<td>Name</td>");
-        sb.append("<td>Short Name</td>");
-        sb.append("<td>Alignment</td>");
-        sb.append("<td>Frequency</td>");
-        sb.append("</tr>\n");
-        sb.append("<tr>");
-        sb.append("<td>" + name + "</td>");
-        sb.append("<td>" + shortName + "</td>");
-        sb.append("<td>" + alignment.toString() + "</td>");
-        if (governor) {
-            sb.append("<td>-</td>");
-        } else {
-            sb.append("<td>" + getFrequencyString() + "</td>");
-        }
-        sb.append("</tr>\n");
-        if (description != null) {
-            sb.append("<tr>");
-            sb.append("<td>Description:</td>");
-            sb.append("<td colspan=\"4\">" + description + "</td>");
-            sb.append("</tr>\n");
-        }
-        List<String> abilities = getAbilitiesStrings();
-        for (String aStr : abilities) {
-            sb.append("<tr>");
-            sb.append("<td>");
-            sb.append(aStr + "<br>");
-            sb.append("</td>");
-            sb.append("</tr>\n");
-        }
-        sb.append("</table>");
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public String getHTMLTableContentNO() {
-        StringBuffer sb = new StringBuffer();
-        String RowName = shortName;
-        sb.append("<tr style='display:inline' class='ListTextRow' id='" + RowName + "A' onMouseOver='TranparentRow(\"" + RowName + "\",5,1);' onMouseOut='TranparentRow(\"" + RowName + "\",5,0);' onclick='ShowLayer(\"" + shortName + "\");ShowLayer(\"" + shortName + "A\");ShowLayer(\"" + shortName + "B\");'>");
-        sb.append("<td class='ListText' id='" + RowName + "1' WIDTH='10'></td>");
-        sb.append("<td class='ListText' id='" + RowName + "2'><div class='SolidText'>" + name + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "3'><div class='SolidText'>" + shortName + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "4'><div class='SolidText'>" + alignment.toString() + "</div></td>");
-        if (governor) {
-            sb.append("<td class='ListText' id='" + RowName + "5'><div class='SolidText'>Governor</div></td>");
-        } else {
-            sb.append("<td class='ListText' id='" + RowName + "5'><div class='SolidText'>" + getFrequencyString() + "</div></td>");
-        }
-        sb.append("</tr>\n");
-
-        sb.append("<tr  onclick='ShowLayer(\"" + shortName + "\");ShowLayer(\"" + shortName + "A\");ShowLayer(\"" + shortName + "B\");'  id='" + RowName + "B' class='ListTextRow' style='display:none'>");
-        sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' WIDTH='10'></td>");
-        sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + name + "</div></td>");
-        sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + shortName + "</div></td>");
-        sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;'><div class='SolidText'>" + alignment.toString() + "</div></td>");
-
-        if (governor) {
-            sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' id='" + RowName + "5'><div class='SolidText'>Governor</div></td>");
-        } else {
-            sb.append("<td class='ListTextDark' style='border-top: #000 1px solid;' id='" + RowName + "5'><div class='SolidText'>" + getFrequencyString() + "</div></td>");
-        }
-        sb.append("</tr>\n");
-
-
-        sb.append("<tr onclick='ShowLayer(\"" + shortName + "\");ShowLayer(\"" + shortName + "A\");ShowLayer(\"" + shortName + "B\");' class='ListTextRow' style=' display:none'id=" + RowName + "><td style='border-bottom: #000 1px solid;border-top: #000 1px solid;' class='ListTextLight' WIDTH='10'></td><td style='border-bottom: #000 1px solid;border-top: #000 1px solid;' class='ListTextLight' colspan='4'><div class='SolidText'>");
-
-        if (description != null) {
-
-            sb.append("<b>Description:</b><br>");
-            sb.append(description);
-            sb.append("<br><br>");
-        }
-        List<String> abilities = getAbilitiesStrings();
-
-        sb.append("<b>Bonus:</b><br>");
-        for (String aStr : abilities) {
-            sb.append(aStr + "<br>");
-        }
-        sb.append("<br>\n");
-        sb.append("</div></td></tr>");
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public List<String> getAbilitiesStrings() {  // add info about how easily/hard the VIP dies?   And info about where this VIP may travel?
-        List<String> allStrings = new LinkedList<String>();
-        if (assassination > 0) {
-            allStrings.add("Assassin: " + assassination + "%");
-        }
-        if (counterEspionage > 0) {
-            allStrings.add("Counter-espionage: " + counterEspionage + "%");
-        }
-        if (spying) {
-            allStrings.add("Spy");
-        }
-        if (initBonus > 0) {
-            allStrings.add("Initiative bonus: " + initBonus + "%");
-        }
-        if (initSupportBonus > 0) {
-            allStrings.add("Initiative support bonus: " + initSupportBonus + "%");
-        }
-        if (initDefence > 0) {
-            allStrings.add("Initiative defence: " + initDefence + "%");
-        }
-        if (psychWarfareBonus > 0) {
-            allStrings.add("Psych warfare bonus: " + psychWarfareBonus);
-        }
-
-        if (shipBuildBonus > 0) {
-            allStrings.add("Ships build bonus: " + shipBuildBonus + "%");
-        }
-        if (troopBuildBonus > 0) {
-            allStrings.add("Troops build bonus: " + troopBuildBonus + "%");
-        }
-        if (buildingBuildBonus > 0) {
-            allStrings.add("Buidings build bonus: " + buildingBuildBonus + "%");
-        }
-        if (techBonus > 0) {
-            allStrings.add("Tech bonus: " + techBonus + "%");
-        }
-        if (openIncBonus > 0) {
-            allStrings.add("Open planet income bonus: " + openIncBonus);
-        }
-        if (closedIncBonus > 0) {
-            allStrings.add("Closed planet income bonus: " + closedIncBonus);
-        }
-        if (canVisitEnemyPlanets) {
-            allStrings.add("Can visit enemy planets");
-        }
-        if (canVisitNeutralPlanets) {
-            allStrings.add("Can visit neutral planets");
-        }
-        if (duellist > 0) {
-            allStrings.add("Duellist, skill: " + getDuellistSkillString());
-        }
-        if (hardToKill) {
-            allStrings.add("Hard to kill: not killed by destroyed ships or lost planets");
-        }
-        if (wellGuarded) {
-            allStrings.add("Cannot be assassinated");
-        }
-        if (governor) {
-            allStrings.add("Governor");
-        }
-        if (FTLbonus) {
-            allStrings.add("Boosts range of ships");
-        }
-        if (diplomat) {
-            allStrings.add("Diplomat: can persuade neutral planets to join you (only non-alien factions)");
-        }
-        if (infestate) {
-            allStrings.add("Infestate: can infestate planets to join you");
-        }
-        if (showOnOpenPlanet) {
-            allStrings.add("Visible on open planets");
-        }
-        if (immuneToCounterEspionage) {
-            allStrings.add("Immune to enemy counter-espionage");
-        }
-        if (initFighterSquadronBonus > 0) {
-            allStrings.add("Squadron initiative bonus: " + initFighterSquadronBonus + "%");
-        }
-        if (resistanceBonus > 0) {
-            allStrings.add("Resistance bonus: " + resistanceBonus);
-        }
-        if (exterminator > 0) {
-            allStrings.add("Exterminator: " + exterminator + "%");
-        }
-//    if (troopAttacksBonus > 0){
-//    	allStrings.add("Troop number attacks bonus: +" + troopAttacksBonus);
-//    }
-        if (landBattleGroupAttackBonus > 0) {
-            allStrings.add("Troops attack bonus: +" + landBattleGroupAttackBonus);
-        }
-        if (stealth) {
-            allStrings.add("Makes a ship invisible on the map");
-        }
-        if (bombardmentBonus > 0) {
-            allStrings.add("Increase bombardment with +" + bombardmentBonus + " for a fleet (with a bombardment of at least 1)");
-        }
-        if (attackScreenedSquadron) {
-            allStrings.add("Enables a squadron to attack screened enemy ships");
-        }
-        if (attackScreenedCapital) {
-            allStrings.add("Enables a capital ship to attack screened enemy ships");
-        }
-        if (planetarySurvey) {
-            allStrings.add("On a ship, act as spy on closed planets");
-        }
-        if (worldUnique) {
-            allStrings.add("Is World Unique");
-        }
-        if (factionUnique) {
-            allStrings.add("Is Faction Unique");
-        }
-        if (playerUnique) {
-            allStrings.add("Is Player Unique");
-        }
-
-
-        return allStrings;
-    }
-
-    public String getDuellistSkillString() {
-        String skillStr = "None";
-        if (duellist == DUELLIST_APPRENTICE) {
-            skillStr = "Apprentice";
-        } else if (duellist == DUELLIST_VETERAN) {
-            skillStr = "Average";
-        } else if (duellist == DUELLIST_MASTER) {
-            skillStr = "Master";
-        }
-        return skillStr;
     }
 
     public String getFrequencyString() {
@@ -333,17 +115,6 @@ public class VIPType implements Serializable {
 
     public String getAlignmentString() {
         return alignment.toString();
-    }
-
-    public VIP createNewVIP(boolean isFanatic) {
-        return new VIP(this, isFanatic);
-    }
-
-    public VIP createNewVIP(Player aBoss, Planet planetLocation, boolean isFanatic) {
-        VIP tempVIP = createNewVIP(isFanatic);
-        tempVIP.setBoss(aBoss);
-        tempVIP.setLocation(planetLocation);
-        return tempVIP;
     }
 
     public String getTypeName() {
@@ -362,11 +133,11 @@ public class VIPType implements Serializable {
         return initDefence;
     }
 
-    public boolean getCanVisitEnemyPlanets() {
+    public boolean isCanVisitEnemyPlanets() {
         return canVisitEnemyPlanets;
     }
 
-    public boolean getCanVisitNeutralPlanets() {
+    public boolean isCanVisitNeutralPlanets() {
         return canVisitNeutralPlanets;
     }
 
@@ -384,10 +155,6 @@ public class VIPType implements Serializable {
 
     public int getAssassination() {
         return assassination;
-    }
-
-    public boolean isAssassin() {
-        return assassination > 0;
     }
 
     public void setAssassination(int assassination) {
@@ -418,16 +185,8 @@ public class VIPType implements Serializable {
         this.diplomat = diplomat;
     }
 
-    public int getDuellistSkill() {
-        return duellist;
-    }
-
-    public boolean isDuellist() {
-        return duellist > 0;
-    }
-
     public void setDuellistSkill(int duellist) {
-        this.duellist = duellist;
+        this.duellistSkill = duellist;
     }
 
     public boolean isFTLbonus() {
@@ -566,31 +325,6 @@ public class VIPType implements Serializable {
         this.immuneToCounterEspionage = immuneToCounterEspionage;
     }
 
-    public boolean isBattleVip() {
-//	  LoggingHandler.finer("isBattleVip(): " + name);
-        boolean battleVIP = false;
-        if (initBonus > 0) {
-            battleVIP = true;
-        } else if (initSupportBonus > 0) {
-            battleVIP = true;
-        } else if (initDefence > 0) {
-            battleVIP = true;
-        } else if (initFighterSquadronBonus > 0) {
-            battleVIP = true;
-        } else if (aimBonus > 0) {
-            battleVIP = true;
-        }
-        return battleVIP;
-    }
-
-    public boolean isLandBattleVip() {
-        boolean battleVIP = false;
-        if (landBattleGroupAttackBonus > 0) {
-            battleVIP = true;
-        }
-        return battleVIP;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -679,197 +413,8 @@ public class VIPType implements Serializable {
         this.playerUnique = playerUnique;
     }
 
-    public boolean isFactionUniqueBuild(Player aPlayer) {
-        return aPlayer.getGalaxy().vipTypeExist(this, aPlayer.getFaction(), null);
-    }
-
-    public boolean isPlayerUniqueBuild(Player aPlayer) {
-        return aPlayer.getGalaxy().vipTypeExist(this, null, aPlayer);
-    }
-
-    public boolean isWorldUniqueBuild(Galaxy aGalaxy) {
-        return aGalaxy.vipTypeExist(this, null, null);
-    }
-
     public void setFactionUnique(boolean factionUnique) {
         this.factionUnique = factionUnique;
-    }
-
-    public String getUniqueString() {
-        String uniqueString = "";
-
-        if (playerUnique) {
-            uniqueString = "Player unique";
-        } else if (factionUnique) {
-            uniqueString = " Faction unique";
-        } else if (worldUnique) {
-            uniqueString = "World unique";
-        }
-
-        return uniqueString;
-    }
-
-
-    public boolean isConstructible(Player aPlayer) {
-        boolean constructible = true;
-		
-		/*if(!isAvailableToBuild()){
-			constructible = false;
-		}else*/
-        if ((isWorldUnique() && isWorldUniqueBuild(aPlayer.getGalaxy())) || (isFactionUnique() && isFactionUniqueBuild(aPlayer)) || (isPlayerUnique() && isPlayerUniqueBuild(aPlayer))) {
-            constructible = false;
-        } else if (!aPlayer.getFaction().getAlignment().canHaveVip(alignment.getName())) {
-            constructible = false;
-        } else if (isWorldUnique() || isFactionUnique() || isPlayerUnique()) {
-            // check if a build order already exist
-            if (aPlayer.getOrders().haveVIPTypeBuildOrder(this)) {
-                constructible = false;
-            }
-            for (BlackMarketOffer aBlackMarketOffer : aPlayer.getGalaxy().getCurrentOffers()) {
-                if (aBlackMarketOffer.isVIP() && aBlackMarketOffer.getVipType().getName().equals(name)) {
-                    constructible = false;
-                }
-            }
-        }
-
-        return constructible;
-    }
-
-
-    public boolean isReadyToUseInBlackMarket(Galaxy aGalaxy) {
-        boolean constructible = false;
-        if (!isGovernor()) {
-            if (!isPlayerUnique() && !isFactionUnique()) {
-                if (isWorldUnique() && !isWorldUniqueBuild(aGalaxy)) {
-                    boolean isAlreadyAoffer = false;
-                    for (BlackMarketOffer aBlackMarketOffer : aGalaxy.getCurrentOffers()) {
-                        if (aBlackMarketOffer.isVIP() && aBlackMarketOffer.getVipType().getName().equals(name)) {
-                            isAlreadyAoffer = true;
-                        }
-                    }
-
-                    if (!isAlreadyAoffer) {
-                        boolean haveBuildingOrder = false;
-                        for (Player tempPlayer : aGalaxy.getPlayers()) {
-                            if (tempPlayer.getOrders().haveVIPTypeBuildOrder(this)) {
-                                haveBuildingOrder = true;
-                            }
-                        }
-                        if (!haveBuildingOrder) {
-                            constructible = true;
-                        }
-                    }
-                } else {
-                    constructible = true;
-                }
-            }
-        }
-        return constructible;
-    }
-	
-	
-	
-	/*
-	public boolean isConstructible(){
-		boolean constructible =  true;
-		if(!isAvailableToBuild()){
-			constructible = false;
-		}else if((isWorldUnique() && isWorldUniqueBuild()) || (isFactionUnique() && isFactionUniqueBuild()) || (isPlayerUnique() && isPlayerUniqueBuild())){
-			constructible = false;
-		}
-		return constructible;
-	}
-	*/
-
-    public int getBuildingBuildBonus() {
-        return buildingBuildBonus;
-    }
-
-    public void setBuildingBuildBonus(int buildingBuildBonus) {
-        this.buildingBuildBonus = buildingBuildBonus;
-    }
-
-    public int getShipBuildBonus() {
-        return shipBuildBonus;
-    }
-
-    public void setShipBuildBonus(int shipBuildBonus) {
-        this.shipBuildBonus = shipBuildBonus;
-    }
-
-    public int getTroopBuildBonus() {
-        return troopBuildBonus;
-    }
-
-    public void setTroopBuildBonus(int troopBuildBonus) {
-        this.troopBuildBonus = troopBuildBonus;
-    }
-
-    public boolean isTroopVIP() {
-        boolean isTroopVIP = false;
-        //	if(troopAttacksBonus > 0){
-        //		isTroopVIP = true;
-        //	}else
-        if (landBattleGroupAttackBonus > 0) {
-            isTroopVIP = true;
-        }
-        return isTroopVIP;
-    }
-
-    public String getAdvanteges() {
-        return advanteges;
-    }
-
-    public void setAdvanteges(String advanteges) {
-        this.advanteges = advanteges;
-    }
-
-    public boolean isStealth() {
-        return stealth;
-    }
-
-    public void setStealth(boolean stealth) {
-        this.stealth = stealth;
-    }
-
-    public int getBombardmentBonus() {
-        return bombardmentBonus;
-    }
-
-    public void setBombardmentBonus(int bombardmentBonus) {
-        this.bombardmentBonus = bombardmentBonus;
-    }
-
-    public boolean isAttackScreenedSquadron() {
-        return attackScreenedSquadron;
-    }
-
-    public void setAttackScreenedSquadron(boolean attackScreenedSquadron) {
-        this.attackScreenedSquadron = attackScreenedSquadron;
-    }
-
-    public boolean isAttackScreenedCapital() {
-        return attackScreenedCapital;
-    }
-
-    public void setAttackScreenedCapital(boolean attackScreenedCapital) {
-        this.attackScreenedCapital = attackScreenedCapital;
-    }
-
-    public boolean isPlanetarySurvey() {
-        return planetarySurvey;
-    }
-
-    public void setPlanetarySurvey(boolean planetarySurvey) {
-        this.planetarySurvey = planetarySurvey;
-    }
-
-    public String getHowToPlay() {
-        return howToPlay;
-    }
-
-    public void setHowToPlay(String howToPlay) {
-        this.howToPlay = howToPlay;
     }
 
     @JsonProperty("alignment")

@@ -358,54 +358,6 @@ public class Player implements Serializable{
       orders.removeIncRes(aPlanet, this.getGalaxy());
     }
 
-    public void addShipMove(Spaceship ss, Planet destination){
-      orders.addNewShipMove(ss,destination);
-    }
-
-    public void addTroopToPlanetMove(Troop aTroop, Planet destination){
-    	orders.addNewTroopToPlanetMove(aTroop,destination, galaxy.getTurn());
-    }
-
-    public void addTroopToCarrierMove(Troop aTroop, Spaceship destinationCarrier){
-    	orders.addNewTroopToCarrierMove(aTroop,destinationCarrier);
-    }
-
-    public void addShipToCarrierMove(Spaceship ss, Spaceship destinationCarrier){
-    	orders.addNewShipToCarrierMove(ss,destinationCarrier);
-    }
-
-    public void addVIPMove(VIP aVIP,Object destination){
-      orders.addNewVIPMove(aVIP,destination);
-    }
-
-    public String getShipDestinationName(Spaceship ss){
-      return orders.getDestinationName(ss, galaxy);
-    }
-
-    public String getTroopDestinationPlanetName(Troop aTroop){
-    	return orders.getDestinationPlanetName(aTroop, galaxy);
-    }
-
-    public String getShipDestinationCarrierName(Spaceship ss){
-        return orders.getDestinationCarrierName(ss, galaxy);
-    }
-
-    public String getShipDestinationCarrierShortName(Spaceship ss){
-        return orders.getDestinationCarrierShortName(ss, galaxy);
-    }
-
-    public String getTroopDestinationCarrierName(Troop aTroop){
-        return orders.getTroopDestinationCarrierName(aTroop, galaxy);
-    }
-
-    public String getTroopDestinationCarrierShortName(Troop aTroop){
-        return orders.getTroopDestinationCarrierShortName(aTroop, galaxy);
-    }
-
-    public String getVIPDestinationName(VIP aVIP,boolean longName){
-      return orders.getDestinationName(aVIP, galaxy, longName);
-    }
-
     public void addBuildShip(Building building, SpaceshipType sst){
       orders.addBuildShip(building, sst, this);
     }
@@ -462,10 +414,6 @@ public class Player implements Serializable{
       return orders.getShipSelfDestruct(ss);
     }
 
-    public boolean getTroopSelfDestruct(Troop aTroop){
-        return orders.getTroopSelfDestruct(aTroop);
-    }
-
     public boolean getBuildingSelfDestruct(Building building){
       return orders.getBuildingSelfDestruct(building);
     }
@@ -474,56 +422,6 @@ public class Player implements Serializable{
       return homePlanet;
     }
 
-  public boolean checkMove(Spaceship ss){
-	  return checkShipToCarrierMove(ss) | checkShipMove(ss);
-  }
-  
-  public boolean checkShipMove(Spaceship ss){
-    return orders.checkShipMove(ss);
-  }
-
-  public boolean checkVIPMove(VIP vip){
-	  return orders.checkVIPMove(vip);
-  }
-
-  public boolean checkTroopToPlanetMove(Troop aTroop){
-	  return orders.checkTroopToPlanetMove(aTroop);
-  }
-
-  public boolean checkTroopToCarrierMove(Troop aTroop){
-	  return orders.checkTroopToCarrierMove(aTroop);
-  }
-
-  public boolean checkTroopToCarrierMove(Troop aTroop, Spaceship aCarrier){
-	  return orders.checkTroopToCarrierMove(aTroop,aCarrier);
-  }
-
-  public boolean checkTroopMove(Troop aTroop){
-	  boolean moving = false;
-	  if (checkTroopToCarrierMove(aTroop)){
-		  moving = true;
-	  }else
-	  if (checkTroopToPlanetMove(aTroop)){
-		  moving = true;
-	  }
-	  return moving;
-  }
-
-  public boolean checkShipToCarrierMove(Spaceship ss){
-	  return orders.checkShipToCarrierMove(ss);
-  }
-
-  public boolean checkShipToCarrierMove(Spaceship aSqd, Spaceship aCarrier){
-	  return orders.checkShipToCarrierMove(aSqd,aCarrier);
-  }
-
-  public int countShipToCarrierMoves(Spaceship aCarrier){
-	  return orders.countShipToCarrierMoves(aCarrier);
-  }
-
-  public int countTroopToCarrierMoves(Spaceship aCarrier){
-	  return orders.countTroopToCarrierMoves(aCarrier);
-  }
 
   public BlackMarketBid getBidToOffer(BlackMarketOffer tempOffer){
     BlackMarketBid tempBid = null;

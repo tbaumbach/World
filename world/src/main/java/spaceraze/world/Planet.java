@@ -223,10 +223,6 @@ public class Planet extends BasePlanet{
         return besieged;
     }
 
-    public boolean checkSurrender(Galaxy g){
-        return (resistance + g.getVIPResBonus(this,playerInControl)) < 1;
-    }
-
     public int getShield(){
     	int biggestShield=0;
     	for(int i=0; i < buildings.size(); i++){
@@ -250,70 +246,6 @@ public class Planet extends BasePlanet{
     public void besiegedAfterInconclusiveLandbattle(){
     	Logger.fine("besiegedAfterInconclusiveLandbattle");
         setBesieged(true);
-    }
-
-    public void infectedByAttacker(Player attacker){
-    	attacker.addToHighlights(getName(),HighlightType.TYPE_PLANET_INFESTATED);
-    	attacker.addToGeneral("You have infected the planet " + getName());
-    	setProd(0);
-    	setResistance(1 + attacker.getFaction().getResistanceBonus());
-    	setPlayerInControl(attacker);
-    	if (isHasNeverSurrendered()){
-    		setHasNeverSurrendered(false);
-    		// lägg till en slumpvis VIP till infestator spelaren
-    		VIP aVIP = attacker.getGalaxy().maybeAddVIP(attacker);
-    		if (aVIP != null){
-    			aVIP.setLocation(this);
-    			attacker.addToVIPReport("When you conquered " + getName() + " you have found a " + aVIP.getName() + " who has joined your service.");
-    			attacker.addToHighlights(aVIP.getName(),HighlightType.TYPE_VIP_JOINS);
-    		}
-    	}
-    }
-    
-    public void joinsVisitingDiplomat(VIP tempVIP, boolean addInfoToPlayer){
-      resistance = resistance + tempVIP.getBoss().getFaction().getResistanceBonus();  // olika typer av spelare f�r olika res p� nyer�vrade planeter?
-      if(addInfoToPlayer){
-    	  tempVIP.getBoss().addToGeneral("The neutral planet " + getName() + " has been convinced by your " + tempVIP.getName() + " to join your forces!");
-      	tempVIP.getBoss().addToHighlights(getName(),HighlightType.TYPE_PLANET_JOINS);
-      }
-      if (hasNeverSurrendered){
-        hasNeverSurrendered = false;
-        // l�gg till en slumpvis VIP till denna spelare
-        VIP aVIP = tempVIP.getBoss().getGalaxy().maybeAddVIP(tempVIP.getBoss());
-        if (aVIP != null){
-          aVIP.setLocation(this);
-          if(addInfoToPlayer){
-          	tempVIP.getBoss().addToVIPReport("When you conquered " + getName() + " you have found a " + aVIP.getName() + " who has joined your service.");
-          	tempVIP.getBoss().addToHighlights(aVIP.getName(),HighlightType.TYPE_VIP_JOINS);
-          }
-        }
-      }
-      playerInControl = tempVIP.getBoss();
-    }
-
-    public void joinsVisitingInfestator(VIP tempInf){
-    	population = 0;
-        resistance = resistance + tempInf.getBoss().getFaction().getResistanceBonus();
-        // destroy all buildings, when an alien conquers a planet it is always razed in the process
-        buildings = new ArrayList<Building>();
-       // spaceStation = null;
-        tempInf.getBoss().addToGeneral("The planet " + getName() + " has been infected by your " + tempInf.getName() + " to join your forces!");
-        tempInf.getBoss().addToHighlights(getName(),HighlightType.TYPE_PLANET_JOINS);
-        if (hasNeverSurrendered){
-        	hasNeverSurrendered = false;
-        	// lägg till en slumpvis VIP till denna spelare
-        	VIP aVIP = tempInf.getBoss().getGalaxy().maybeAddVIP(tempInf.getBoss());
-        	if (aVIP != null){
-        		aVIP.setLocation(this);
-        		tempInf.getBoss().addToVIPReport("When you conquered " + getName() + " you have found a " + aVIP.getName() + " who has joined your service.");
-        		tempInf.getBoss().addToHighlights(aVIP.getName(),HighlightType.TYPE_VIP_JOINS);
-        	}
-        }
-        if (playerInControl != null){
-            playerInControl.addToGeneral("The planet " + getName() + " has been infected by Governor " + tempInf.getBoss().getGovernorName() + " and is lost!");
-            playerInControl.addToHighlights(getName(),HighlightType.TYPE_OWN_PLANET_INFESTATED);
-        }
-        playerInControl = tempInf.getBoss();
     }
 
     public void peace(){

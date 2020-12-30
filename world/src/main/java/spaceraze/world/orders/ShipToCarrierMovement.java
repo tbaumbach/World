@@ -1,9 +1,3 @@
-//Title:        SpaceRaze
-//Author:       Paul Bodin
-//Description:  Javabaserad version av Spaceraze.
-//Bygger p� Spaceraze Galaxy fast skall fungera mera som Wigges webbaserade variant.
-//Detta Javaprojekt omfattar serversidan av spelet.
-
 package spaceraze.world.orders;
 
 import java.io.Serializable;
@@ -11,7 +5,6 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spaceraze.world.Galaxy;
 import spaceraze.world.Spaceship;
 
 import javax.persistence.*;
@@ -32,53 +25,12 @@ public class ShipToCarrierMovement implements Serializable {
     @JoinColumn(name = "FK_ORDERS")
     private Orders orders;
 
-    private String spaceShipUniqueId;
-    private String destinationCarrier;
-    //Spaceship ss;
-    //Spaceship destinationCarrier;
+    private String spaceShipKey;
+    private String destinationCarrierKey;
 
     public ShipToCarrierMovement(Spaceship ss, Spaceship destinationCarrier) {
-        this.spaceShipUniqueId = ss.getKey();
-        this.destinationCarrier = destinationCarrier.getKey();
+        this.spaceShipKey = ss.getKey();
+        this.destinationCarrierKey = destinationCarrier.getKey();
     }
 
-    public String getDestinationCarrierId() {
-        return destinationCarrier;
-    }
-
-    public Spaceship getDestinationCarrier(Galaxy aGalaxy) {
-        Spaceship aSpaceshipCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrier);
-        return aSpaceshipCarrier;
-    }
-
-    public String getSpaceshipId() {
-        return spaceShipUniqueId;
-    }
-
-  /* beh�vs ej???
-  public String getSpaceshipUniqueName(){
-    return ss.getUniqueName();
-  }
-  */
-
-    public String getText(Galaxy aGalaxy) {
-        Spaceship aSpaceship = aGalaxy.findSpaceshipByUniqueId(spaceShipUniqueId);
-        Spaceship aSpaceshipCarrier = aGalaxy.findSpaceshipByUniqueId(destinationCarrier);
-
-        String retStr = null;
-        if (aSpaceship.getLocation() != null) {
-            retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
-        } else {
-            retStr = "Move " + aSpaceship.getName() + " from " + aSpaceship.getCarrierLocation().getName() + " to " + aSpaceshipCarrier.getName() + ".";
-        }
-        return retStr;
-    }
-
-    public boolean isThisShip(Spaceship sSpaceship) {
-        return sSpaceship.getKey() == spaceShipUniqueId;
-    }
-
-    public boolean isThisDestination(Spaceship aCarrier) {
-        return aCarrier.getKey() == destinationCarrier;
-    }
 }

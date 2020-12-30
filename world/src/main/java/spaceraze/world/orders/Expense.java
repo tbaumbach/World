@@ -34,6 +34,7 @@ public class Expense implements Serializable {
 	private int currentBuildingId = 0;//byggnaden som bygger enheten.
   	private String troopTypeName;
   	private String typeVIPName;
+    private String typeVIPKey;
   	private String playerName=""; // Du eller player som mot tar en gåva.
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -86,6 +87,7 @@ public class Expense implements Serializable {
   public Expense(String temptype, Building tempBuilding, VIPType tempVIPTYPE, String aPlayername){
     this.planetName = tempBuilding.getLocation().getName();
     this.typeVIPName = tempVIPTYPE.getName();
+    this.typeVIPKey = tempVIPTYPE.getKey();
     this.type = temptype;
     currentBuildingId = tempBuilding.getUniqueId();
     playerName =aPlayername;
@@ -296,10 +298,6 @@ public class Expense implements Serializable {
 
 public String getTroopTypeName() {
 	return troopTypeName;
-}
-
-public String getVipTypeName() {
-	return typeVIPName;
 }
 
 public int getCurrentBuildingId(){

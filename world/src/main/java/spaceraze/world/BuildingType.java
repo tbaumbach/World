@@ -116,7 +116,7 @@ public class BuildingType implements Serializable, Cloneable{
 		this.setTechBonus(original.getTechBonus() + improvement.getTechBonus());
 		this.setWharfSize(improvement.getWharfSize() > 0 ? improvement.getWharfSize() : original.getWharfSize());
 		this.setTroopSize(improvement.getTroopSize() > 0 ? improvement.getTroopSize() : original.getTroopSize());
-		this.setBuildCost(improvement.getBuildCost() > 0 ? improvement.getBuildCost() : original.getBuildCost(null));
+		this.setBuildCost(improvement.getBuildCost() > 0 ? improvement.getBuildCost() : original.getBuildCost(0));
 		this.setSpaceport(improvement.isChangeSpaceport() ? improvement.isSpaceport() : original.isSpaceport());
 		this.nrProduced = improvement.getNrProduced();
 		this.setVisibleOnMap(improvement.isChangeVisibleOnMap() ? improvement.isVisibleOnMap() : original.isVisibleOnMap());
@@ -330,10 +330,10 @@ public class BuildingType implements Serializable, Cloneable{
 	*/
 
 
-	public int getBuildCost(VIP vipWithBonus){
+	public int getBuildCost(int vipBuildBonus){
       int tempBuildCost = buildCost;
-      if (vipWithBonus != null){
-    	  int vipBuildbonus = 100 - vipWithBonus.getBuildingBuildBonus();
+      if (vipBuildBonus > 0){
+    	  int vipBuildbonus = 100 - vipBuildBonus;
     	  double tempBuildBonus = vipBuildbonus / 100.0;
     	  tempBuildCost = (int) Math.round(tempBuildCost * tempBuildBonus);
     	  if (tempBuildCost < 1){

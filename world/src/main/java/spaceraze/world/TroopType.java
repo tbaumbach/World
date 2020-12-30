@@ -128,14 +128,12 @@ public class TroopType implements Serializable, Cloneable{
     	return name + " (" + shortName + ")";
     }
     
-    public Troop getTroop(VIP vipWithTechBonus, int factionTechBonus, int buildingTechBonus, int uniqueId){
+    public Troop getTroop(int vipTechBonus, int factionTechBonus, int buildingTechBonus, int uniqueId){
     	nrProduced++;
     	int totalTechBonus = 0;
-    	if (vipWithTechBonus != null){
-    		totalTechBonus = vipWithTechBonus.getTechBonus();
-    	}
-    	totalTechBonus += factionTechBonus; 
+    	totalTechBonus += factionTechBonus;
     	totalTechBonus += buildingTechBonus;
+		totalTechBonus += vipTechBonus;
     	Troop tmpTroop = new Troop(this, nrProduced, totalTechBonus, uniqueId);
     	return tmpTroop;
     }

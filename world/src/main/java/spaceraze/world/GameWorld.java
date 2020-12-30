@@ -391,34 +391,6 @@ public class GameWorld implements Serializable{
 		this.battleSimDefaultShips2 = battleSimDefaultShips2;
 	}
 
-	@JsonIgnore
-	public List<VIPType> getBattleVIPtypes(){
-		Logger.finer("getBattleVIPtypes()");
-		List<VIPType> battleVips = new ArrayList<VIPType>();
-		for (Object o : vipTypes) {
-			VIPType aVIPtype = (VIPType)o;
-//			LoggingHandler.finest("a vip: " + aVIPtype.getName());
-			if (aVIPtype.isBattleVip()){
-//				LoggingHandler.finest("  adding: " + aVIPtype.getName());
-				battleVips.add(aVIPtype);
-			}
-		}
-		return battleVips;
-	}
-
-	@JsonIgnore
-	public List<VIPType> getLandBattleVIPtypes(){
-		Logger.finer("getLandBattleVIPtypes()");
-		List<VIPType> battleVips = new ArrayList<VIPType>();
-		for (Object o : vipTypes) {
-			VIPType aVIPtype = (VIPType)o;
-			if (aVIPtype.isLandBattleVip()){
-				battleVips.add(aVIPtype);
-			}
-		}
-		return battleVips;
-	}
-	
 	public boolean hasTroops(){
 		return troopTypes.size() > 0;
 	}

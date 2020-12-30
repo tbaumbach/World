@@ -17,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity()
 @Table(name = "SPACESHIP")
-public class Spaceship implements Serializable, ShortNameable, Cloneable {
+public class Spaceship implements Serializable, Cloneable {
 	static final long serialVersionUID = 1L;
 
 	@Id
@@ -112,7 +112,7 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 	// construktorn skall ej anropas direkt, utan spaceshiptype.getShip skall
 	// användas istället
 	public Spaceship(SpaceshipType sst, String name,
-			int nrProduced, VIP vipWithBonus, int factionTechBonus,
+			int nrProduced, int vipTechBonus, int factionTechBonus,
 			int buildingBonus) {
 
 		this.typeKey = sst.getKey();
@@ -127,16 +127,11 @@ public class Spaceship implements Serializable, ShortNameable, Cloneable {
 			this.name = uniqueName;
 		}
 		this.screened = sst.isScreened();
-		setData(sst, vipWithBonus, factionTechBonus, buildingBonus);
+		setData(sst, vipTechBonus, factionTechBonus, buildingBonus);
 	}
 
-	private void setData(SpaceshipType sst, VIP vipWithBonus, int factionTechBonus, int buildingBonus) {
-		int tech = 100 + factionTechBonus;
-		tech = tech + buildingBonus;
-		if (vipWithBonus != null) {
-			tech = tech + vipWithBonus.getTechBonus();
-//			LoggingHandler.fine( this, null, "setData","vipWithBonus.getTechBonus(): " + vipWithBonus.getTechBonus());
-		}
+	private void setData(SpaceshipType sst, int vipTechBonus, int factionTechBonus, int buildingBonus) {
+		int tech = 100 + factionTechBonus + buildingBonus + vipTechBonus;
 		techWhenBuilt = tech - 100;
 		double techBonus = tech / 100.0;
 		// int tonnage = sst.getTonnage();
