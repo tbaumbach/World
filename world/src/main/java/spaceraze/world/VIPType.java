@@ -40,7 +40,7 @@ public class VIPType implements Serializable {
     private String advanteges;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "viptype")
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_ALIGNMENT")
     private Alignment alignment = null;
     // determines who can have this VIP

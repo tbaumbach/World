@@ -307,10 +307,6 @@ public class Spaceship implements Serializable, Cloneable {
 		this.oldCarrierLocation = carrier;
 	}
 
-	public void setDestroyed() {
-		currentdc = 0;
-	}
-
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();

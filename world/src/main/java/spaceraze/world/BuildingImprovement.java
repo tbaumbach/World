@@ -43,18 +43,6 @@ public class BuildingImprovement implements Serializable {
     private int counterEspionage = 0;
     private int exterminator = 0;
 
-    private int troopHitBonus = 0; // % on troops bild on planet
-    private int troopAttackBonus = 0; // % % on troops bild on planet
-    private int troopDefenceBonus = 0; // % % on troops bild on planet
-    private int troopSupportBonus = 0; // % % on troops bild on planet
-    private int defenceBonus = 0; // %
-    private int supportDefenceBonus = 0; // %
-
-    // (Tobbe) Dessa användes inte. Samma egenskaper som VIPar har och skall kanske användas i framtiden. Skall vara i % form.
-    private int shipTechBonus = 0; // %  on ships bild on planet
-    private int shipBuildBonus; // decreases build cost of ships
-    private int troopBuildBonus; // decreases build cost of troops
-
     public BuildingImprovement(String name){
         this.name = name;
     }
@@ -207,75 +195,4 @@ public class BuildingImprovement implements Serializable {
         this.exterminator = exterminator;
     }
 
-    public int getTroopHitBonus() {
-        return troopHitBonus;
-    }
-
-    public void setTroopHitBonus(int troopHitBonus) {
-        this.troopHitBonus = troopHitBonus;
-    }
-
-    public int getTroopAttackBonus() {
-        return troopAttackBonus;
-    }
-
-    public void setTroopAttackBonus(int troopAttackBonus) {
-        this.troopAttackBonus = troopAttackBonus;
-    }
-
-    public int getTroopDefenceBonus() {
-        return troopDefenceBonus;
-    }
-
-    public void setTroopDefenceBonus(int troopDefenceBonus) {
-        this.troopDefenceBonus = troopDefenceBonus;
-    }
-
-    public int getTroopSupportBonus() {
-        return troopSupportBonus;
-    }
-
-    public void setTroopSupportBonus(int troopSupportBonus) {
-        this.troopSupportBonus = troopSupportBonus;
-    }
-
-    public int getDefenceBonus() {
-        return defenceBonus;
-    }
-
-    public void setDefenceBonus(int defenceBonus) {
-        this.defenceBonus = defenceBonus;
-    }
-
-    public int getSupportDefenceBonus() {
-        return supportDefenceBonus;
-    }
-
-    public void setSupportDefenceBonus(int supportDefenceBonus) {
-        this.supportDefenceBonus = supportDefenceBonus;
-    }
-
-    public int getShipTechBonus() {
-        return shipTechBonus;
-    }
-
-    public void setShipTechBonus(int shipTechBonus) {
-        this.shipTechBonus = shipTechBonus;
-    }
-
-    public int getShipBuildBonus() {
-        return shipBuildBonus;
-    }
-
-    public void setShipBuildBonus(int shipBuildBonus) {
-        this.shipBuildBonus = shipBuildBonus;
-    }
-
-    public int getTroopBuildBonus() {
-        return troopBuildBonus;
-    }
-
-    public void setTroopBuildBonus(int troopBuildBonus) {
-        this.troopBuildBonus = troopBuildBonus;
-    }
 }

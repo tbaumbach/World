@@ -32,47 +32,19 @@ public class PlanetConnection implements Serializable {
     private Galaxy galaxy;
 
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "FK_MAP")
-    private Map map;
-
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PLANET_ONE", insertable = false, updatable = false)
-    private BasePlanet planetOne;
+    private Planet planetOne;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PLANET_TWO", insertable = false, updatable = false)
-    private BasePlanet planetTwo;
+    private Planet planetTwo;
 
     @Column(name = "LONG_RANGE")
     private boolean longRange;
 
-    public PlanetConnection(String dataString, List<BasePlanet> allPlanets) {
-        StringTokenizer st = new StringTokenizer(dataString, "\t");
-        String planetName1 = st.nextToken();
-        String planetName2 = st.nextToken();
-        longRange = st.nextToken().equalsIgnoreCase("true");
-        planetOne = findPlanet(planetName1, allPlanets);
-        planetTwo = findPlanet(planetName2, allPlanets);
-    }
-
-    private BasePlanet findPlanet(String aPlanetName, List<BasePlanet> allPlanets) {
-        BasePlanet found = null;
-        int index = 0;
-        while ((found == null) && (index < allPlanets.size())) {
-            BasePlanet tempPlanet = allPlanets.get(index);
-            if (tempPlanet.getName().equals(aPlanetName)) {
-                found = tempPlanet;
-            } else {
-                index++;
-            }
-        }
-        return found;
-    }
-
-    public PlanetConnection(BasePlanet planetOne, BasePlanet planetTwo, boolean longRange) {
+    public PlanetConnection(Planet planetOne, Planet planetTwo, boolean longRange) {
         this.planetOne = planetOne;
         this.planetTwo = planetTwo;
         this.longRange = longRange;
@@ -93,15 +65,6 @@ public class PlanetConnection implements Serializable {
     }
 
     @JsonIgnore
-    public String getSaveString(int index) {
-        String retStr = "connection" + index + " = ";
-        retStr = retStr + planetOne.getName();
-        retStr = retStr + "\t" + planetTwo.getName();
-        retStr = retStr + "\t" + longRange;
-        return retStr;
-    }
-
-    @JsonIgnore
     public boolean isConnection(BasePlanet aPlanet1, BasePlanet aPlanet2) {
         boolean found = false;
         if ((planetOne == aPlanet1) & (planetTwo == aPlanet2)) {
@@ -115,14 +78,6 @@ public class PlanetConnection implements Serializable {
     @JsonIgnore
     public String toString() {
         return planetOne + " <--> " + planetTwo;
-    }
-
-    public String getPlanetOneName(){
-        return planetOne.getName();
-    }
-
-    public String getPlanetOneTwo(){
-        return planetTwo.getName();
     }
 
 }

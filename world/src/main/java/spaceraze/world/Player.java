@@ -61,18 +61,14 @@ public class Player implements Serializable{
     private int treasury;
     private int totalPop;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_FACTION")
-    @Column(insertable = false, updatable = false)
-    private Faction faction;
+    private String factionKey;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
     @Builder.Default
     private List<PlanetInformation> planetInformations = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_PLANET")
-    @Column(insertable = false, updatable = false)
+    @JoinColumn(name = "FK_PLANET", insertable = false, updatable = false)
     private Planet homePlanet;
 //    public boolean writeUpkeep = false;
     private boolean retreatingGovernor = false;
@@ -83,7 +79,6 @@ public class Player implements Serializable{
     @Builder.Default
     private List<ResearchProgress> researchProgresses = new ArrayList<>();
 
-    // Copy from Faction
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
     private int resistanceBonus = 0;
@@ -131,9 +126,9 @@ public class Player implements Serializable{
     	galaxy = ag;
     }
 
-    public Player(String name, String password, Galaxy g, String governorName, String factionName, Planet homePlanet, List<PlanetOrderStatus> planetOrderStatuses){
+    public Player(String name, String password, Galaxy g, String governorName, Faction faction, Planet homePlanet, List<PlanetOrderStatus> planetOrderStatuses){
         this(null);
-        Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + factionName);
+        Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + faction.getName());
     	this.name = name;
         this.password = password;
         this.governorName = governorName.replace('#',' ');
@@ -142,7 +137,7 @@ public class Player implements Serializable{
         turnInfo = new TurnInfo();
         turnInfo.newTurn();
         treasury = 0;
-        faction = g.findFaction(factionName);
+        this.factionKey = faction.getKey();
         this.homePlanet = homePlanet;
 
         //      Copy from Faction
@@ -362,28 +357,12 @@ public class Player implements Serializable{
       orders.addBuildShip(building, sst, this);
     }
 
-    public void removeUpgradeBuilding(Building building){
-      orders.removeUpgradeBuilding(building, this.getGalaxy());
-    }
-
-    public void addUpgradeBuilding(Building currentBuilding, BuildingType newBuilding){
-      orders.addUpgradeBuilding(currentBuilding, newBuilding, this);
-    }
-
     public void setAbandonGame(boolean abandonGame){
         orders.setAbandonGame(abandonGame);
-    }
-    
-    public boolean isAbandonGame(){
-    	return orders.isAbandonGame();
     }
 
     public String getGovernorName(){
       return governorName;
-    }
-
-    public Faction getFaction(){
-      return faction;
     }
 
     public void addShipSelfDestruct(Spaceship currentss){
@@ -612,7 +591,6 @@ public class Player implements Serializable{
 		String tmpStr = "";
 		tmpStr += "Player: " + name + " (";
 		tmpStr += governorName + ") - ";
-		tmpStr += faction.getName();
 		return tmpStr;
 	}
 
@@ -620,10 +598,6 @@ public class Player implements Serializable{
 		return turnDefeated;
 	}
 
-	public boolean isAlien(){
-		return faction.isAlien();
-	}
-	
 	public boolean isFinishedThisTurn() {
 		return finishedThisTurn;
 	}
@@ -735,10 +709,6 @@ public class Player implements Serializable{
 
 	public MapInfos getMapInfos() {
 		return mapPlanetInfos;		
-	}
-
-	public void setFaction(Faction faction) {
-		this.faction = faction;
 	}
 
 	public List<PlayerReport> getPlayerReports() {

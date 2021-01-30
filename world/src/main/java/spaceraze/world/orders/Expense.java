@@ -31,7 +31,7 @@ public class Expense implements Serializable {
   	private String planetName;
  	private String spaceshipTypeName;
   	private String buildingTypeName;
-	private int currentBuildingId = 0;//byggnaden som bygger enheten.
+	private String buildingKey;
   	private String troopTypeName;
   	private String typeVIPName;
     private String typeVIPKey;
@@ -69,7 +69,7 @@ public class Expense implements Serializable {
     //sst = tempsst;
     spaceshipTypeName = tempsst.getName();
     this.type = temptype;
-    currentBuildingId = tempBuilding.getUniqueId();
+    this.buildingKey = tempBuilding.getKey();
     playerName =aPlayername;
   }
   
@@ -79,7 +79,7 @@ public class Expense implements Serializable {
     //this.troopType = tempTroopType;
     this.troopTypeName = tempTroopType.getName();
     this.type = temptype;
-    currentBuildingId = tempBuilding.getUniqueId();
+      this.buildingKey = tempBuilding.getKey();
     playerName =aPlayername;
   }
   
@@ -89,7 +89,7 @@ public class Expense implements Serializable {
     this.typeVIPName = tempVIPTYPE.getName();
     this.typeVIPKey = tempVIPTYPE.getKey();
     this.type = temptype;
-    currentBuildingId = tempBuilding.getUniqueId();
+      this.buildingKey = tempBuilding.getKey();
     playerName =aPlayername;
   }
   
@@ -100,7 +100,7 @@ public class Expense implements Serializable {
 	  this.type = temptype;
 	  this.planetName = planet.getName();
 	  if(tempBuilding!= null){
-		  currentBuildingId = tempBuilding.getUniqueId();
+          this.buildingKey = tempBuilding.getKey();
 	  }
 	  playerName =aPlayername;
   }
@@ -155,36 +155,12 @@ public class Expense implements Serializable {
   
   public boolean isBuildBuildingAt(Planet aPlanet){
 	    boolean returnValue = false;
-	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (currentBuildingId == 0)){
+	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (buildingKey == null)){
 	      returnValue = true;
 	    }
 	    return returnValue;
 	}
-  
-  public boolean isUpgradeBuilding(Building aBuilding){
-	    boolean returnValue = false;
-	    if ((type.equalsIgnoreCase("building")) && (currentBuildingId > 0) && (currentBuildingId == aBuilding.getUniqueId()) && (buildingTypeName != null)){
-	      returnValue = true;
-	    }
-	    return returnValue;
-	}
-/*
-  public boolean isBuildWharfAt(Planet aPlanet){
-    boolean returnValue = false;
-    if ((type.equalsIgnoreCase("newwharf")) & (aPlanet == planet)){
-      returnValue = true;
-    }
-    return returnValue;
-  }
 
-  public boolean isBuildSpaceStationAt(Planet aPlanet){
-	  boolean returnValue = false;
-	  if ((type.equalsIgnoreCase("newspacestation")) & (aPlanet == planet)){
-		  returnValue = true;
-	  }
-	  return returnValue;
-  }
-*/
   public boolean isIncPopAt(Planet aPlanet){
     boolean returnValue = false;
     if ((type.equalsIgnoreCase("pop")) & (aPlanet.getName().equalsIgnoreCase(planetName))){
@@ -200,48 +176,6 @@ public class Expense implements Serializable {
     }
     return returnValue;
   }
-
-  public boolean isBuildingBuildingShip(Building aBuilding){
-	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getName());
-	  Logger.finer("type currentBuildingId aBuilding.getUniqueId()" + type + " " + currentBuildingId + " " + aBuilding.getUniqueId());
-	    boolean isBilding = false;
-	    if (type.equalsIgnoreCase("buildship")){
-	      if (currentBuildingId == aBuilding.getUniqueId()){
-	    	  isBilding = true;
-	      }
-	    }
-	    return isBilding;
-	  }
-  
-  public boolean isBuildingBuildingTroop(Building aBuilding){
-	    boolean isBilding = false;
-	    if (type.equalsIgnoreCase("buildtroop")){
-	      if (currentBuildingId == aBuilding.getUniqueId()){
-	    	  isBilding = true;
-	      }
-	    }
-	    return isBilding;
-	  }
-  
-  public boolean isBuildingBuildingVIP(Building aBuilding){
-	    boolean isBilding = false;
-	    if (type.equalsIgnoreCase("buildVIP")){
-	      if (currentBuildingId == aBuilding.getUniqueId()){
-	    	  isBilding = true;
-	      }
-	    }
-	    return isBilding;
-	  }
-  
-  /*public boolean isWharfBuilding(OrbitalWharf aWharf){
-    boolean isWharf = false;
-    if (type.equalsIgnoreCase("buildship")){
-      if (ow == aWharf){
-        isWharf = true;
-      }
-    }
-    return isWharf;
-  }*/
 
   public boolean isReconstructAt(Planet aPlanet){
 	  boolean returnValue = false;
@@ -260,17 +194,11 @@ public class Expense implements Serializable {
   }
 
   public boolean isBuilding(Building aBuilding){
-	  Logger.finer("############");
-	  Logger.finer("aBuilding.getUniqueName(): " + aBuilding.getName());
-	  Logger.finer("type.equalsIgnoreCase(building): " + type.equalsIgnoreCase("building"));
-	  Logger.finer("currentBuildingId > 0: " + (currentBuildingId > 0));
-	  Logger.finer("aBuilding.getUniqueId() == currentBuildingId: " + (aBuilding.getUniqueId() == currentBuildingId));
-	  Logger.finer("type currentBuildingId aBuilding.getUniqueId()" + type + " " + currentBuildingId + " " + aBuilding.getUniqueId());
-	  return ((type.equalsIgnoreCase("building")) && currentBuildingId > 0 && (aBuilding.getUniqueId() == currentBuildingId));
+	  return ((type.equalsIgnoreCase("building")) && buildingKey != null && (aBuilding.getKey().equalsIgnoreCase(buildingKey)));
   }
   
   public boolean isBuilding(Planet aPlanet){
-	  return ((type.equalsIgnoreCase("building")) && aPlanet.getName().equalsIgnoreCase(planetName) && currentBuildingId == 0);
+	  return ((type.equalsIgnoreCase("building")) && aPlanet.getName().equalsIgnoreCase(planetName) && buildingKey == null);
   }
   
   public boolean isResearchOrder(String researchName){
@@ -298,10 +226,6 @@ public class Expense implements Serializable {
 
 public String getTroopTypeName() {
 	return troopTypeName;
-}
-
-public int getCurrentBuildingId(){
-	return currentBuildingId;
 }
 
 public ResearchOrder getResearchOrder(){

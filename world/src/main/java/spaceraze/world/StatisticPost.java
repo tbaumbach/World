@@ -29,6 +29,7 @@ public class StatisticPost implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "STATISTIC_POST_VALUES")
+    @Column(name = "VALUE")
     @Builder.Default
     private List<Integer> values = new ArrayList<>();
 

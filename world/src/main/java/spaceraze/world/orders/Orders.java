@@ -70,7 +70,7 @@ public class Orders implements Serializable {
     @ElementCollection
     @CollectionTable(name = "DESTROY_BUILDNING")
     @Builder.Default
-    private List<Integer> buildingSelfDestructs = new ArrayList<>();
+    private List<String> buildingSelfDestructs = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_TROOP")
     @Builder.Default
@@ -167,7 +167,7 @@ public class Orders implements Serializable {
         return screenedShips;
     }
 
-    public List<Integer> getBuildingSelfDestructs() {
+    public List<String> getBuildingSelfDestructs() {
         return buildingSelfDestructs;
     }
 
@@ -449,108 +449,6 @@ public class Orders implements Serializable {
         addExpenses(new Expense("buildVIP", aBuilding, vt, aPlayer.getName()));
     }
 
-    public void removeAllBuildShip(Building aBuilding, Galaxy aGalaxy) {
-        int nrFoundIndexes = 0;
-        int[] removeIndexes = new int[expenses.size()];
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isBuildingBuildingShip(aBuilding)) {
-                Logger.finest("Shall remove: " + nrFoundIndexes);
-                removeIndexes[nrFoundIndexes] = i;
-                nrFoundIndexes++;
-            }
-        }
-        for (int j = nrFoundIndexes - 1; j >= 0; j--) {
-            Logger.finest("Removing: " + j);
-            Logger.finest("Removing: " + expenses.get(j).getSpaceshipTypeName());
-            removeExpense(expenses.get(removeIndexes[j]));
-        }
-    }
-
-    public void removeAllBuildTroop(Building aBuilding, Galaxy aGalaxy) {
-        int nrFoundIndexes = 0;
-        int[] removeIndexes = new int[expenses.size()];
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isBuildingBuildingTroop(aBuilding)) {
-                Logger.finest("Shall remove: " + nrFoundIndexes);
-                removeIndexes[nrFoundIndexes] = i;
-                nrFoundIndexes++;
-            }
-        }
-        for (int j = nrFoundIndexes - 1; j >= 0; j--) {
-            Logger.finest("Removing: " + j);
-            removeExpense(expenses.get(removeIndexes[j]));
-        }
-    }
-
-    public void removeBuildVIP(Building aBuilding, Galaxy aGalaxy) {
-        int foundIndexes = -1;
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isBuildingBuildingVIP(aBuilding)) {
-                foundIndexes = i;
-            }
-        }
-        if (foundIndexes >= 0) {
-            removeExpense(expenses.get(foundIndexes));
-        }
-    }
-
-    public void removeUpgradeBuilding(Building aBuilding, Galaxy aGalaxy) {
-        int findIndex = -1;
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isUpgradeBuilding(aBuilding)) {
-                findIndex = i;
-            }
-        }
-        if (findIndex > -1) {
-            removeExpense(expenses.get(findIndex));
-        }
-    }
-
-    public void addUpgradeBuilding(Building currentBuilding, BuildingType newBuilding, Player aPlayer) {
-        // skapa ny order om inte varvet redan �r satt att uppgradera
-        if (!alreadyUpgrading(currentBuilding)) {
-            addExpenses(new Expense("building", newBuilding, aPlayer.getName(), currentBuilding.getLocation(), currentBuilding));
-        }
-    }
-
-
-    public boolean alreadyUpgrading(Building currentBuilding) {
-        boolean found = false;
-        int i = 0;
-        while ((i < expenses.size()) && (!found)) {
-            Logger.finer("alreadyUpgrading lop index: " + i);
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isBuilding(currentBuilding)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
-
-    /**
-     * Check if there already exist a reconstruct order for this planet
-     *
-     * @return
-     */
-    public boolean alreadyReconstructing(Planet aPlanet) {
-        boolean found = false;
-        int i = 0;
-        while ((i < expenses.size()) & (!found)) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isReconstructAt(aPlanet)) {
-                found = true;
-            } else {
-                i++;
-            }
-        }
-        return found;
-    }
 
     public boolean haveSpaceshipTypeBuildOrder(SpaceshipType aSpaceshipType) {
         for (int i = 0; i < expenses.size(); i++) {
@@ -563,11 +461,11 @@ public class Orders implements Serializable {
     }
 
 
-    public boolean haveBuildingTypeBuildOrder(BuildingType aBuildingType, int buildingId) {
+    public boolean haveBuildingTypeBuildOrder(BuildingType aBuildingType, String buildingKey) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
             if (aBuildingType.getName().equals(tempExpense.getBuildingTypeName())) {
-                if (buildingId < 0 || buildingId != tempExpense.getCurrentBuildingId()) {
+                if (buildingKey == null || buildingKey.equalsIgnoreCase(tempExpense.getBuildingKey())) {
                     return true;
                 }
             }
@@ -593,18 +491,6 @@ public class Orders implements Serializable {
             }
         }
         return false;
-    }
-
-
-    public String getVIPBuild(Building currentBuilding) {
-        String tempVIPName = null;
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isBuildingBuildingVIP(currentBuilding)) {
-                tempVIPName = tempExpense.getVIPType();
-            }
-        }
-        return tempVIPName;
     }
 
     public void addShipSelfDestruct(Spaceship currentss) {
@@ -657,12 +543,12 @@ public class Orders implements Serializable {
 
 
     public void addBuildingSelfDestruct(Building currentBuilding) {
-        buildingSelfDestructs.add(currentBuilding.getUniqueId());
+        buildingSelfDestructs.add(currentBuilding.getKey());
     }
 
     public void removeBuildingSelfDestruct(Building currentBuilding) {
         for (int i = 0; i < buildingSelfDestructs.size(); i++) {
-            if (buildingSelfDestructs.get(i) == currentBuilding.getUniqueId()) {
+            if (buildingSelfDestructs.get(i).equalsIgnoreCase(currentBuilding.getKey())) {
                 buildingSelfDestructs.remove(i);
             }
         }
@@ -737,26 +623,11 @@ public class Orders implements Serializable {
     public boolean getBuildingSelfDestruct(Building aBuilding) {
         boolean found = false;
         for (int i = 0; i < buildingSelfDestructs.size(); i++) {
-            if (buildingSelfDestructs.get(i) == aBuilding.getUniqueId()) {
+            if (buildingSelfDestructs.get(i).equalsIgnoreCase(aBuilding.getKey())) {
                 found = true;
             }
         }
         return found;
-    }
-
-    // leta igenom alla VIPMoves och kolla om någon av dem förflyttar iväg denna vip
-    public boolean VIPWillStay(VIP tempEngineer) {
-        boolean vipStays = true;
-        int i = 0;
-        while ((i < VIPMoves.size()) & (vipStays)) {
-            VIPMovement tempVIPMove = VIPMoves.get(i);
-            if (tempEngineer.getKey().equalsIgnoreCase(tempVIPMove.getVipKey())) {
-                vipStays = false;
-            } else {
-                i++;
-            }
-        }
-        return vipStays;
     }
 
     public Expense getBidToOffer(BlackMarketOffer tempOffer) {
@@ -789,19 +660,6 @@ public class Orders implements Serializable {
         return researchOrder;
     }
 
-    public ResearchOrder getResearchOrder(String name) {
-        for (int i = 0; i < researchOrder.size(); i++) {
-            if (researchOrder.get(i).getAdvantageName().equals(name)) {
-                return researchOrder.get(i);
-            }
-        }
-        return null;
-    }
-
-    public void setResearchOrders(List<ResearchOrder> researchOrder) {
-        this.researchOrder = researchOrder;
-    }
-
     public void addResearchOrder(ResearchOrder researchOrder, Player p) {
         this.researchOrder.add(researchOrder);
         if (researchOrder.getCost() > 0) {
@@ -810,20 +668,6 @@ public class Orders implements Serializable {
 
 
         //Expense(String temptype, ResearchOrder ro, Player aPlayer, int aSum){
-    }
-
-    public void removeResearchOrder(ResearchOrder researchOrder, Galaxy aGalaxy) {
-        int findIndex = -1;
-        for (int i = 0; i < expenses.size(); i++) {
-            Expense tempExpense = (Expense) expenses.get(i);
-            if (tempExpense.isResearchOrder(researchOrder.getAdvantageName())) {
-                findIndex = i;
-            }
-        }
-        if (findIndex > -1) {
-            removeExpense(expenses.get(findIndex));
-        }
-        this.researchOrder.remove(researchOrder);
     }
 
     public void removeResearchOrder(String rOrder, Galaxy aGalaxy) {

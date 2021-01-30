@@ -3,9 +3,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.UUID;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.enums.BlackMarketFrequency;
 import spaceraze.world.enums.TroopTargetingType;
@@ -16,8 +14,10 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity()
-@Table(name = "TROOP")
+@Table(name = "TROOP_TYPE")
 public class TroopType implements Serializable, Cloneable{
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,6 @@ public class TroopType implements Serializable, Cloneable{
 	private String advantages;
 	private String disadvantages;
 	private String shortDescription;
-	private int nrProduced; // used to create unique name for a Troop object 
 	// attack values
 	private int attackInfantry;
 	private int attackArmored;
@@ -56,7 +55,7 @@ public class TroopType implements Serializable, Cloneable{
 //	private boolean attackScreened;  // if true unit can be set to flanker
 	private BattleGroupPosition defaultPosition = BattleGroupPosition.FIRST_LINE;
 	private boolean canBuild = true; // determines if a player with this trooptype can build this type
-	private boolean visible = true; // if false other players cannot see the troop on the map
+	private boolean visible = true; // if false other players cannot see the troop on the
 	private boolean canAppearOnBlackMarket = true;
 	private TroopTargetingType targetingType = TroopTargetingType.ALLROUND;
 	private int landBattleGroupAttacksBonus;
@@ -88,7 +87,6 @@ public class TroopType implements Serializable, Cloneable{
 		this.advantages = originalType.getAdvantages();
 		this.disadvantages = originalType.getDisadvantages();
 		this.shortDescription = originalType.getShortDescription();
-		this.nrProduced = originalType.getNrProduced();
 		this.typeOfTroop = originalType.getTypeOfTroop();
 		this.damageCapacity = originalType.getDamageCapacity() + improvement.getDamageCapacity();
 		this.upkeep = originalType.getUpkeep() + improvement.getCostSupport();
@@ -96,7 +94,7 @@ public class TroopType implements Serializable, Cloneable{
 		this.attackInfantry = originalType.getAttackInfantry() + improvement.getAttackArtillery();
 		this.attackArmored = originalType.getAttackArmored() + improvement.getAttackArmored();
 		this.attackArtillery = originalType.getAttackArtillery() + improvement.getAttackArtillery();
-		this.spaceshipTravel = improvement.isSpaceshipTravel() ? improvement.isSpaceshipTravel() : originalType.isSpaceshipTravel();
+		this.spaceshipTravel = improvement.isChangeSpaceshipTravel() ? improvement.isSpaceshipTravel() : originalType.isSpaceshipTravel();
 		this.canAppearOnBlackMarket = originalType.isCanAppearOnBlackMarket();
 		this.blackMarketFrequency = originalType.getBlackMarketFrequency();
 		this.blackmarketFirstTurn = originalType.getBlackmarketFirstTurn();
@@ -116,7 +114,6 @@ public class TroopType implements Serializable, Cloneable{
     	TroopType tmpTroopType = null;
     	try {
 			tmpTroopType = (TroopType)super.clone();
-			tmpTroopType.setNrProduced(0);
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -126,16 +123,6 @@ public class TroopType implements Serializable, Cloneable{
     @Override
     public String toString(){
     	return name + " (" + shortName + ")";
-    }
-    
-    public Troop getTroop(int vipTechBonus, int factionTechBonus, int buildingTechBonus, int uniqueId){
-    	nrProduced++;
-    	int totalTechBonus = 0;
-    	totalTechBonus += factionTechBonus;
-    	totalTechBonus += buildingTechBonus;
-		totalTechBonus += vipTechBonus;
-    	Troop tmpTroop = new Troop(this, nrProduced, totalTechBonus, uniqueId);
-    	return tmpTroop;
     }
 
 	public String getAdvantages() {
@@ -283,20 +270,12 @@ public class TroopType implements Serializable, Cloneable{
 		this.spaceshipTravel = spaceshipTravel;
 	}
 
-	public int getNrProduced() {
-		return nrProduced;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public String getShortName() {
 		return shortName;
-	}
-
-	public void setNrProduced(int nrProduced) {
-		this.nrProduced = nrProduced;
 	}
 
 	public boolean isCanBuild() {

@@ -9,6 +9,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,6 +37,7 @@ public class Faction implements Serializable {
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
 
+    private String key;
     private String colorHexValue; // ex: red = "FF0000"
     private String name;
     private String shortName;
@@ -57,7 +59,6 @@ public class Faction implements Serializable {
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
     private int resistanceBonus = 0;
-    private int totalPop; // used when counting winning conditions
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
@@ -106,9 +107,11 @@ public class Faction implements Serializable {
     @Builder.Default
     private List<TroopType> troopTypes = new ArrayList<>(); // these trooptypes is available to build by new players
 
+    @Builder.Default
     private int techBonus = 0; // %
     private boolean alien;
     private boolean canReconstruct = false;
+    @Builder.Default
     private int reconstructCostBase = 8;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -139,6 +142,7 @@ public class Faction implements Serializable {
     private int numberOfSimultaneouslyResearchAdvantages = 1;
 
     public Faction(String newName, String colorHexValue, Alignment alignment) {
+        this.key = UUID.randomUUID().toString();
         this.name = newName;
         this.colorHexValue = colorHexValue;
         this.alignment = alignment;
@@ -180,14 +184,6 @@ public class Faction implements Serializable {
 
     public boolean isFaction(String aName) {
         return name.equalsIgnoreCase(aName);
-    }
-
-    public void setTotalPop(int newPop) {
-        totalPop = newPop;
-    }
-
-    public int getTotalPop() {
-        return totalPop;
     }
 
     public String getName() {
@@ -382,39 +378,14 @@ public class Faction implements Serializable {
         return troopTypes;
     }
 
-    public List<String> getTroopTypesName() {
-        List<String> troops = new ArrayList<>();
-        for (TroopType troopType : troopTypes) {
-            troops.add(troopType.getName());
-        }
-        return troops;
-    }
-
     @JsonIgnore
     public List<SpaceshipType> getStartingShipTypes() {
         return startingShipTypes;
     }
 
-    public List<String> getStartingShipTypesName() {
-
-        List<String> shipsName = new ArrayList<>();
-        for (SpaceshipType spaceshipType : startingShipTypes) {
-            shipsName.add(spaceshipType.getName());
-        }
-        return shipsName;
-    }
-
     @JsonIgnore
     public List<BuildingType> getStartingBuildings() {
         return startingBuildings;
-    }
-
-    public List<String> getStartingBuildingsname() {
-        List<String> buildings = new ArrayList<>();
-        for (BuildingType buildingType : startingBuildings) {
-            buildings.add(buildingType.getName());
-        }
-        return buildings;
     }
 
     public int getTechBonus() {
@@ -436,14 +407,6 @@ public class Faction implements Serializable {
     @JsonIgnore
     public List<VIPType> getStartingVIPTypes() {
         return startingVIPTypes;
-    }
-
-    public List<String> getStartingVIPTypesName() {
-        List<String> vips = new ArrayList<>();
-        for (VIPType vipType : startingVIPTypes) {
-            vips.add(vipType.getName());
-        }
-        return vips;
     }
 
     public void addStartingVIPType(VIPType aStartingVIPType) {

@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.StringTokenizer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
 @Setter
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
-@Entity()
-@Table(name = "BASE_PLANET")
+@SuperBuilder
+@MappedSuperclass
 public class BasePlanet implements Serializable{
     static final long serialVersionUID = 1L;
 
@@ -22,11 +22,6 @@ public class BasePlanet implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "FK_MAP")
-    private Map map;
 
     private double x;
     private double y;
@@ -70,11 +65,6 @@ public class BasePlanet implements Serializable{
         retStr = retStr + "\t" + getZ();
         retStr = retStr + "\t" + isPossibleStartPlanet();
         return retStr;
-    }
-
-    @JsonIgnore
-    public BasePlanet clonePlanet(){
-        return new BasePlanet(x, y, z, name, possibleStartPlanet);
     }
 
     /**

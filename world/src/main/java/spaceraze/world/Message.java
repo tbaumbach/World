@@ -52,67 +52,6 @@ public class Message implements Serializable,Comparable<Message> {
 	  this.turn = aMessage.turn;
 	  this.uniqueId = uniqueIdCounter;
   }
-  
-  public String getRecipientString(Galaxy aGalaxy) {
-    String recieverString = "";
-    if (type.equalsIgnoreCase("faction")){ // meddelandet skall till alla i en Faction
-      recieverString = "Faction: " + recipientFaction;
-    }else
-    if (type.equalsIgnoreCase("private")){ // meddelandet ska till en separat spelare
-      recieverString = "Govenor: " + aGalaxy.getPlayer(recipientPlayer).getGovernorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
-    }else
-    if (type.equalsIgnoreCase("all")){ // meddelandet ska till en separat spelare
-      recieverString = "Public message";
-    }
-    return recieverString;
-  }
-
-  public String getRecipientString2(Galaxy aGalaxy) {
-	  String recieverString = "";
-	  if (type.equalsIgnoreCase("faction")){ // meddelandet skall till alla i en Faction
-		  recieverString = recipientFaction + " faction";
-	  }else
-		  if (type.equalsIgnoreCase("private")){ // meddelandet ska till en separat spelare
-			  recieverString = "Govenor " + aGalaxy.getPlayer(recipientPlayer).getGovernorName() + " (" +aGalaxy.getPlayer(recipientPlayer).getFaction().getName() + ")";
-		  }else
-			  if (type.equalsIgnoreCase("all")){ // meddelandet ska till en separat spelare
-				  recieverString = "all governors";
-			  }
-	  return recieverString;
-  }
-
-  public boolean haveSameReciever(Message aMessage, Galaxy aGalaxy){
-    boolean same = false;
-    if ((recipientFaction != null) & aMessage.getRecipientFaction().equals(recipientFaction)){
-      same = true;
-    }else
-    if ((recipientPlayer != null) & aMessage.getRecipientPlayer(aGalaxy).getName().equals(recipientPlayer)){
-      same = true;
-    }else
-    if ((aMessage.getRecipientFaction() == null) & (aMessage.getRecipientPlayer(aGalaxy) == null) & (recipientFaction == null) & (recipientPlayer == null)){
-      same = true;
-    }
-    return same;
-  }
-
-  public boolean haveReciever(Object recipient, Galaxy aGalaxy){
-	Logger.finest( "haveReciever: ");
-    boolean same = false;
-    if ((recipient == null) & (recipientFaction == null) & (recipientPlayer == null)){
-      same = true;
-    }else
-    if (recipient instanceof Faction){
-      if ((recipientFaction != null) & (((Faction)recipient).getName().equalsIgnoreCase(recipientFaction))){
-        same = true;
-      }
-    }else
-    if (recipient instanceof Player){
-      if ((recipientPlayer != null) & (((Player)recipient) == aGalaxy.getPlayer(recipientPlayer))){
-        same = true;
-      }
-    }
-    return same;
-  }
 
   public String getContent(){
     return content;
@@ -144,30 +83,6 @@ public class Message implements Serializable,Comparable<Message> {
   
   public void setTurn(int turn) {
 	  this.turn = turn;
-  }
-  
-  public String getRecievedMessageListString(Galaxy aGalaxy){
-	  StringBuffer strBuff = new StringBuffer();
-	  if(!read){
-		  strBuff.append("NEW "); 
-	  }
-	  strBuff.append("Turn " + turn);
-	  if (aGalaxy.getPlayer(sender) != null){
-		  strBuff.append(" from Governor " + aGalaxy.getPlayer(sender).getGovernorName());
-	  }else{
-		  strBuff.append(" from " + sender);
-	  }
-	  strBuff.append(" to " + getRecipientString2(aGalaxy));
-	  strBuff.append(": " + content);
-	  return strBuff.toString();
-  }
-
-  public String getSentMessageListString(Galaxy aGalaxy){
-	  StringBuffer strBuff = new StringBuffer();
-	  strBuff.append("Turn " + turn);
-	  strBuff.append(" to " + getRecipientString2(aGalaxy));
-	  strBuff.append(": " + content);
-	  return strBuff.toString();
   }
 
   public int compareTo(Message tmpMessage) {
