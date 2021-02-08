@@ -18,7 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity()
-@Table(name = "FACTION")
+@Table(name = "RESEARCH_ADVANTAGE")
 public class ResearchAdvantage implements Serializable, Cloneable  {
 	static final long serialVersionUID = 1L;
 

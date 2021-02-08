@@ -32,10 +32,20 @@ public class TroopType implements Serializable, Cloneable{
 	private String key;
 	private String name;
 	private String shortName;
+
+	@Column(length = 4000)
 	private String description;
+
+	@Column(length = 4000)
 	private String history;
+
+	@Column(length = 4000)
 	private String advantages;
+
+	@Column(length = 4000)
 	private String disadvantages;
+
+	@Column(length = 4000)
 	private String shortDescription;
 	// attack values
 	private int attackInfantry;

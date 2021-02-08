@@ -41,11 +41,23 @@ public class Faction implements Serializable {
     private String colorHexValue; // ex: red = "FF0000"
     private String name;
     private String shortName;
+
+    @Column(length = 4000)
     private String description;
+
+    @Column(length = 4000)
     private String history;
+
+    @Column(length = 4000)
     private String shortDescription;
+
+    @Column(length = 4000)
     private String advantages;
+
+    @Column(length = 4000)
     private String disadvantages;
+
+    @Column(length = 4000)
     private String howToPlay;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

@@ -37,7 +37,8 @@ public class VIPType implements Serializable {
     private String name; // required, must be unique
     private String shortName; // required, must be unique
 
-    private String advanteges;
+    @Column(length = 4000)
+    private String advantages;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)

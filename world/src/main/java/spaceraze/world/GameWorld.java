@@ -66,9 +66,16 @@ public class GameWorld implements Serializable{
 	@JoinColumn(name = "FK_NEUTRAL_TROOP_TYPE")
 	private TroopType neutralTroopType;
 
+	@Column(name = "DESCRIPTION", length = 4000)
 	private String description;
+
+	@Column(name = "HISTORY", length = 4000)
 	private String history;
+
+	@Column(length = 4000)
 	private String shortDescription;
+
+	@Column(length = 4000)
 	private String howToPlay;
 	private String fileName;
 	private String fullName;

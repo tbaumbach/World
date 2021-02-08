@@ -26,8 +26,12 @@ public class BuildingType implements Serializable, Cloneable{
 	private Long id;
 	private String name;
 	private String key;
+
+	@Column(length = 4000)
 	private String description;
 	private String shortName;
+
+	@Column(length = 4000)
 	private String advantages;
 	private boolean inOrbit = false;
 	private boolean autoDestructWhenConquered;

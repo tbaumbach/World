@@ -78,7 +78,12 @@ public class SpaceshipType implements Serializable{
     private int weaponsStrengthSquadron;
     private int squadronCapacity;
     private SpaceshipTargetingType targetingType = null;
-    private String description,history;
+
+    @Column(name = "DESCRIPTION", length = 4000)
+    private String description;
+
+    @Column(name = "HISTORY", length = 4000)
+	private String history;
     private String shortDescription;
     private String advantages;
     private String disadvantages;
