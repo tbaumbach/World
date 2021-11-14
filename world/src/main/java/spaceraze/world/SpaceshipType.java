@@ -42,6 +42,8 @@ public class SpaceshipType implements Serializable{
     private String key;
     private String name;
     private String shortName;
+
+	@Enumerated(EnumType.STRING)
     private SpaceShipSize size;
     int shields;
     int upkeep;
@@ -51,6 +53,7 @@ public class SpaceshipType implements Serializable{
     int increaseInitiative;
     int initDefence;
 
+	@Enumerated(EnumType.STRING)
     private SpaceshipRange range;
     int psychWarfare;
     boolean noRetreat = false;
@@ -66,17 +69,22 @@ public class SpaceshipType implements Serializable{
     private int armorMedium;
     private int armorLarge;
     private int armorHuge;
+
+	@Enumerated(EnumType.STRING)
     private SpaceShipSize supply = SpaceShipSize.NONE; //max size of ship that can be resupplied
     private boolean canAppearOnBlackMarket = true;
+	@Enumerated(EnumType.STRING)
     private BlackMarketFrequency blackMarketFrequency = BlackMarketFrequency.COMMON;
     private int blackmarketFirstTurn = 0;
     private int bluePrintFirstTurn = 0;
+	@Enumerated(EnumType.STRING)
     private BlackMarketFrequency bluePrintFrequency = BlackMarketFrequency.COMMON;
     
     private boolean planetarySurvey;
     private boolean canAttackScreenedShips;
     private int weaponsStrengthSquadron;
     private int squadronCapacity;
+	@Enumerated(EnumType.STRING)
     private SpaceshipTargetingType targetingType = null;
 
     @Column(name = "DESCRIPTION", length = 4000)

@@ -47,6 +47,7 @@ public class VIPType implements Serializable {
     // determines who can have this VIP
     // if duellist is true - determines if this duellist will
     // attack another duellist in the same system
+    @Enumerated(EnumType.STRING)
     private BlackMarketFrequency frequency = BlackMarketFrequency.COMMON; // how often is this VIPType found. Default => common => 100
 
     // Abilities

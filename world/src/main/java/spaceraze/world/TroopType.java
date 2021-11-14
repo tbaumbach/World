@@ -56,17 +56,21 @@ public class TroopType implements Serializable, Cloneable{
 	private int dropPenalty = 1; // lowers the number of attacks on the first turn when dropped on a planet
 	private int firingBackPenalty = 10;  // lowers the damage roll when firing back when under attack
 	private int nrAttacks = 3; // number of attacks each turn
+	@Enumerated(EnumType.STRING)
 	private TypeOfTroop typeOfTroop = TypeOfTroop.INFANTRY; // infantry, armored or support
 	private boolean spaceshipTravel = true; // if false a unit can't leave the planet where it is built
+	@Enumerated(EnumType.STRING)
 	private BlackMarketFrequency blackMarketFrequency = BlackMarketFrequency.COMMON;
 	private int blackmarketFirstTurn = 0;
 	
 	
 //	private boolean attackScreened;  // if true unit can be set to flanker
+@Enumerated(EnumType.STRING)
 	private BattleGroupPosition defaultPosition = BattleGroupPosition.FIRST_LINE;
 	private boolean canBuild = true; // determines if a player with this trooptype can build this type
 	private boolean visible = true; // if false other players cannot see the troop on the
 	private boolean canAppearOnBlackMarket = true;
+	@Enumerated(EnumType.STRING)
 	private TroopTargetingType targetingType = TroopTargetingType.ALLROUND;
 	private int landBattleGroupAttacksBonus;
 	// costs

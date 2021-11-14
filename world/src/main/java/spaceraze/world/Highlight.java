@@ -38,6 +38,8 @@ public class Highlight implements Comparable<Highlight>, Serializable{
 	private Report report;
 
 	private String text,text2;
+
+	@Enumerated(EnumType.STRING)
 	private HighlightType type;
 	
 	public Highlight(String text, HighlightType type){

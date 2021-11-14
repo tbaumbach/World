@@ -86,6 +86,7 @@ public class GameWorld implements Serializable{
 	private String battleSimDefaultShips2;
 	private final boolean cumulativeBombardment = false; // cannot be changed anymore...
 	private final boolean squadronsSurviveOutsideCarriers = false; // On Non-Friendly Planets, cannot be changed anymore...
+	@Enumerated(EnumType.STRING)
 	private InitiativeMethod initMethod = InitiativeMethod.WEIGHTED_1;
 	private int closedNeutralPlanetChance = 60; // %
 	private int razedPlanetChance = 0; // %

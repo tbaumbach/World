@@ -3,11 +3,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,6 +28,8 @@ public class Map implements Serializable, Comparable<Map>{
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
 	private Long id;
 
+	private String key;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
 	@Builder.Default
 	private List<MapPlanetConnection> connections = new ArrayList<>();
@@ -41,12 +39,17 @@ public class Map implements Serializable, Comparable<Map>{
 	private List<MapPlanet> planets = new ArrayList<>();
 
 	private int maxNrStartPlanets;
-	private String createdDate,changedDate,description;
+	private String createdDate;
+	private String changedDate;
+	private String description;
 	private String authorName; // real name of author
-	private String authorLogin; // authors unique spaceraze login
+	private String author; // authors unique spaceraze login
 	private String fileName; // unique name of map used in filename of properties file
 	private String name; // real name of map
 	private long versionId = 1; // should be increased every time a new version of a map is published
+
+	@Enumerated(EnumType.STRING)
+	private MapStatus status;
 
 	public Map(String playerLogin,String mapFileName){
 		this(playerLogin + "." + mapFileName);
@@ -73,6 +76,7 @@ public class Map implements Serializable, Comparable<Map>{
 	
 	// creating a map from a published map
 	public void initMap(String mapFileName, Properties props){
+		this.key = UUID.randomUUID().toString();
 		Logger.finest("Init Map from mapName: " + mapFileName);
 		planets = getPlanets(props);
 		connections = getConnections(props, List.copyOf(planets));
@@ -83,7 +87,7 @@ public class Map implements Serializable, Comparable<Map>{
 			versionId = Long.parseLong(props.getProperty("version"));
 		}
 		fileName = props.getProperty("mapFileName");
-		authorLogin = props.getProperty("authorLogin");
+		author = props.getProperty("authorLogin");
 		authorName = props.getProperty("author");
 		description = props.getProperty("description");
 		Logger.finest("description: " + description);
@@ -151,12 +155,12 @@ public class Map implements Serializable, Comparable<Map>{
 		return authorName;
 	}
 
-	public String getAuthorLogin() {
-		return authorLogin;
+	public String getAuthor() {
+		return author;
 	}
 	
-	public void setAuthorLogin(String newAuthorLogin){
-		authorLogin = newAuthorLogin;
+	public void setAuthor(String newAuthorLogin){
+		author = newAuthorLogin;
 	}
 
 	public String getChangedDate() {
@@ -189,11 +193,6 @@ public class Map implements Serializable, Comparable<Map>{
 			}
 		}
 		return nrShortConnections;
-	}
-	
-	public double getNrPlanetConnectionsRatio(){
-		double ratio = getNrPlanets()/getNrConnections();
-		return ratio;
 	}
 
 	public double getAverageNrConnections(){
@@ -384,7 +383,7 @@ public class Map implements Serializable, Comparable<Map>{
 		s = s + "# File created by: MapHandler.getMapData(Map)\n";
 		s = s + "\n";
 		s = s + "author = " + getAuthorName() + "\n";
-		s = s + "authorLogin = " + getAuthorLogin() + "\n";
+		s = s + "authorLogin = " + getAuthor() + "\n";
 		s = s + "\n";
 		s = s + "description = " + getDescription() + "\n";
 		s = s + "\n";

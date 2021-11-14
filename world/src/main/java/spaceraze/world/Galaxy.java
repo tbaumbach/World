@@ -121,13 +121,14 @@ public class Galaxy implements Serializable {
 	@Builder.Default
 	private List<Statistics> allStatistics = new ArrayList<>();
 
+	@Enumerated(EnumType.STRING)
 	private StatisticGameType statisticGameType;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
 	@Builder.Default
 	private List<DiplomacyState> diplomacyStates = new ArrayList<>(); // current states between all players
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private DiplomacyGameType diplomacyGameType;
 
 	public Galaxy(Map aMap, String gameName, int steps, GameWorld aGameWorld) {
