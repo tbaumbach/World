@@ -37,8 +37,8 @@ public class VIP implements Serializable {
     @JoinColumn(name = "FK_PLAYER", insertable = false, updatable = false)
     private Player boss = null;
 
-    private String key;
-    private String typeKey;
+    private String uuid;
+    private String typeUuid;
     private int govCounter = -1; // used by diplomats and infestators
     private int govLastTurn = -1;
     private int kills = 0;
@@ -47,8 +47,8 @@ public class VIP implements Serializable {
     private int upkeep = 0;
 
     public VIP(VIPType aVIPType, boolean isFanatic) {
-        this.key = UUID.randomUUID().toString();
-        this.typeKey = aVIPType.getKey();
+        this.uuid = UUID.randomUUID().toString();
+        this.typeUuid = aVIPType.getUuid();
         if (!isFanatic) {
             buildCost = aVIPType.getBuildCost();
             upkeep = aVIPType.getUpkeep();

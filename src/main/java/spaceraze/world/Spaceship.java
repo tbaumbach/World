@@ -61,8 +61,9 @@ public class Spaceship implements Serializable, Cloneable {
 	private int damagecapacity;
 	private int currentdc;
 	private int currentShields;
-	private String key;
-	private String typeKey;
+	private String uuid;
+	private String typeUuid;
+	private int productionNumber;
 	private int kills;
 	private boolean screened = false;
 	private boolean retreating = false;
@@ -112,14 +113,15 @@ public class Spaceship implements Serializable, Cloneable {
 	// construktorn skall ej anropas direkt, utan spaceshiptype.getShip skall
 	// användas istället
 	public Spaceship(SpaceshipType sst, String name,
-			int nrProduced, int vipTechBonus, int factionTechBonus,
+			int productionNumber, int vipTechBonus, int factionTechBonus,
 			int buildingBonus) {
 
-		this.typeKey = sst.getKey();
+		this.typeUuid = sst.getUuid();
 		this.size = sst.getSize();
-		uniqueName = sst.getName() + " - " + nrProduced;
-		uniqueShortName = sst.getShortName() + " - " + nrProduced;
-		this.key = UUID.randomUUID().toString();
+		uniqueName = sst.getName() + " - " + productionNumber;
+		uniqueShortName = sst.getShortName() + " - " + productionNumber;
+		this.productionNumber = productionNumber;
+		this.uuid = UUID.randomUUID().toString();
 		kills = 0;
 		if (name != null) {
 			this.name = name;

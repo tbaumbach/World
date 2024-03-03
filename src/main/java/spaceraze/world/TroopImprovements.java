@@ -21,7 +21,7 @@ public class TroopImprovements implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String typeId;
+    private String typeUuid;
     private int attackInfantry;
     private int attackArmored;
     private int attackArtillery;
@@ -33,12 +33,12 @@ public class TroopImprovements implements Serializable {
     private int costBuild;
     private int costSupport;
 
-    public TroopImprovements(String typeId){
-        this.typeId = typeId;
+    public TroopImprovements(String typeUuid){
+        this.typeUuid = typeUuid;
     }
 
-    public String getTypeId(){
-        return typeId;
+    public String getTypeUuid(){
+        return typeUuid;
     }
 
     public int getAttackInfantry() {

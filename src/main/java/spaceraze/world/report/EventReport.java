@@ -23,7 +23,7 @@ public abstract class EventReport implements Serializable, ReportInterface{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private int index;
+	private int sortOrder;
 
 	public String getFullReport() {
 		StringBuilder stringBuilderReport = new StringBuilder(getReport());

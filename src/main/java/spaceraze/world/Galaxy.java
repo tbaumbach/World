@@ -89,9 +89,16 @@ public class Galaxy implements Serializable {
 	@Column(name="started_by_player") //TODO change to id.
 	private String startedByPlayer; // contains the login of the player who started this game
 
+	/*
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "FK_GAME_WORLD")
 	private GameWorld gameWorld;
+	*/
+
+	@Transient
+	private GameWorld gameWorld;
+
+	private String gameWorldUuid;
 
 	//Start game parameters. Move to own class?
 
@@ -137,6 +144,7 @@ public class Galaxy implements Serializable {
 		this.gameName = gameName;
 		this.steps = steps;
 		this.gameWorld = aGameWorld;
+		this.gameWorldUuid =aGameWorld.getUuid();
 		planets = new ArrayList<>();
 		players = new ArrayList<>();
 		spaceships = new ArrayList<>();
@@ -246,10 +254,6 @@ public class Galaxy implements Serializable {
 	}
 
 
-	public SpaceshipType findSpaceshipType(String findname) {
-		return gameWorld.getSpaceshipTypeByName(findname);
-	}
-
 	public List<Planet> getPlanets() {
 		return planets;
 	}
@@ -273,7 +277,7 @@ public class Galaxy implements Serializable {
 	}
 
 	// enklare variant av getPlayer som ej används vid inloggning
-	public Player getPlayer(String name) {
+	public Player getPlayerByUserName(String name) {
 		Logger.finer("name: " + name);
 		int i = 0;
 		Player found = null;
@@ -377,32 +381,18 @@ public class Galaxy implements Serializable {
 		return p;
 	}
 
-	public Spaceship findSpaceshipByUniqueId(String uniqueId) {
+	public Spaceship findSpaceshipByUuid(String uuid) {
 		Spaceship ss = null;
 		int i = 0;
 		while ((ss == null) & (i < spaceships.size())) {
 			Spaceship temp = spaceships.get(i);
-			if (temp.getKey().equals(uniqueId)) {
+			if (temp.getUuid().equals(uuid)) {
 				ss = temp;
 			} else {
 				i++;
 			}
 		}
 		return ss;
-	}
-
-	public TroopType findTroopType(String ttname) {
-		TroopType tt = null;
-		int i = 0;
-		while ((tt == null) & (i < gameWorld.getTroopTypes().size())) {
-			TroopType aTT = gameWorld.getTroopTypes().get(i);
-			if (aTT.getName().equals(ttname)) {
-				tt = aTT;
-			} else {
-				i++;
-			}
-		}
-		return tt;
 	}
 
 	public List<Player> getSoloConfederacyWinner() {
@@ -648,7 +638,7 @@ public class Galaxy implements Serializable {
 		int nr = 0;
 		for (int i = 0; i < players.size(); i++) {
 			Player aPlayer = (Player) players.get(i);
-			if (aPlayer.getFactionKey().equals(aFaction.getKey())) {
+			if (aPlayer.getFactionUuid().equals(aFaction.getUuid())) {
 				nr++;
 			}
 		}
@@ -665,7 +655,7 @@ public class Galaxy implements Serializable {
 		int nr = 0;
 		for (int i = 0; i < players.size(); i++) {
 			Player aPlayer = (Player) players.get(i);
-			if (aPlayer.getFactionKey().equals(aFaction.getKey()) && !aPlayer.isDefeated()) {
+			if (aPlayer.getFactionUuid().equals(aFaction.getUuid()) && !aPlayer.isDefeated()) {
 				nr++;
 			}
 		}
@@ -676,7 +666,7 @@ public class Galaxy implements Serializable {
 		List<Player> factionPlayers = new ArrayList<Player>();
 		for (int i = 0; i < players.size(); i++) {
 			Player aPlayer = (Player) players.get(i);
-			if (aPlayer.getFactionKey().equals(aFaction.getKey())) {
+			if (aPlayer.getFactionUuid().equals(aFaction.getUuid())) {
 				factionPlayers.add(aPlayer);
 			}
 		}
@@ -687,7 +677,7 @@ public class Galaxy implements Serializable {
 		int nr = 0;
 		for (int i = 0; i < players.size(); i++) {
 			Player aPlayer = (Player) players.get(i);
-			if (aPlayer.getFactionKey().equals(aFaction.getKey())) {
+			if (aPlayer.getFactionUuid().equals(aFaction.getUuid())) {
 				if (!aPlayer.isDefeated()) {
 					nr++;
 				}

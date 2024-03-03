@@ -2,12 +2,10 @@ package spaceraze.world;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +25,9 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Column(name="ID", nullable = false)
 	private Long id;
 
+	private String uuid;
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "FK_FACTION")
 	private Faction faction;
@@ -42,36 +43,20 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	private int closedPlanetBonus = 0;
 	private int resistanceBonus = 0;
 
-	@JsonIgnore
-	@ManyToMany(mappedBy = "parents")
-	private List<ResearchAdvantage> children;
-
-	@JoinTable(name = "RESEARCH_ADVANTAGE_CHILDREN", joinColumns = {
-			@JoinColumn(name = "PARENT", referencedColumnName = "ID", nullable = false)}, inverseJoinColumns = {
-			@JoinColumn(name = "CHILD", referencedColumnName = "ID", nullable = false)})
-	@ManyToMany
-	@JsonIgnore
-	private List<ResearchAdvantage> parents = new ArrayList<>();
-
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_SPACESHIP",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "SPACESHIP"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_CHILDREN")
 	@Builder.Default
-	private List<SpaceshipType> ships = new ArrayList<>();
+	private List<String> children = new ArrayList<>();
 
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_REPLACE_SPACESHIP",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "SPACESHIP"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_SPACESHIP")
 	@Builder.Default
-	private List<SpaceshipType> replaceShips = new ArrayList<>();
+	private List<String> ships = new ArrayList<>();
+
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_SPACESHIP")
+	@Builder.Default
+	private List<String> replaceShips = new ArrayList<>();
 
 
 
@@ -84,49 +69,29 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	@Builder.Default
 	private List<ResearchUpgradeShip> researchUpgradeShip = new ArrayList<>();
 
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_TROOP",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "TROOP"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_TROOP")
 	@Builder.Default
-	private List<TroopType> troops = new ArrayList<>();
+	private List<String> troops = new ArrayList<>();
 
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_REPLACE_TROOP",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "TROOP"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_TROOP")
 	@Builder.Default
-	private List<TroopType> replaceTroops = new ArrayList<>();
+	private List<String> replaceTroops = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
 	@Builder.Default
 	private List<ResearchUpgradeTroop> researchUpgradeTroop = new ArrayList<>();
 
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_BUILDING",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "BUILDING"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_BUILDINGS")
 	@Builder.Default
-	private List<BuildingType> buildings = new ArrayList<>();
+	private List<String> buildings = new ArrayList<>();
 
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "RESEARCH_ADVANTAGE_TO_REPLACE_BUILDING",
-			joinColumns = @JoinColumn(name = "RESEARCH_ADVANTAGE"),
-			inverseJoinColumns = @JoinColumn(name = "BUILDING"))
-	@Column(insertable = false, updatable = false)
+	@ElementCollection
+	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_BUILDING")
 	@Builder.Default
-	private List<BuildingType> replaceBuildings = new ArrayList<>();
+	private List<String> replaceBuildings = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
 	@Builder.Default
@@ -137,10 +102,11 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	CorruptionPoint corruptionPoint;
 	
 	public ResearchAdvantage(String name, String description) {
+		this.uuid = UUID.randomUUID().toString();
 	    this.name = name;
 	    this.description = description;
 	    children = new ArrayList<>();
-		parents = new ArrayList<>();
+		//parents = new ArrayList<>();
 		ships = new ArrayList<>();
 		replaceShips = new ArrayList<>();
 		troops = new ArrayList<>();
@@ -153,11 +119,11 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	}
 
 	public ResearchAdvantage clone(){
-		
+		//TODO När används den här? ser inte rätt ut.
 		try {
 			ResearchAdvantage temp = (ResearchAdvantage)super.clone();
 			temp.children = new ArrayList<>();
-			temp.parents = new ArrayList<>();
+			//temp.parents = new ArrayList<>();
 			temp.researchUpgradeShip = new ArrayList<>();
 			for(int i=0;i<researchUpgradeShip.size();i++){
 				temp.researchUpgradeShip.add(researchUpgradeShip.get(i));
@@ -172,7 +138,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 			for(int i=0;i<researchUpgradeBuilding.size();i++){
 				temp.researchUpgradeBuilding.add(researchUpgradeBuilding.get(i));
 			}
-			
+
 			return temp;
 		}
 		catch (CloneNotSupportedException e) {
@@ -180,67 +146,6 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
         }
 	}
 
-	@JsonIgnore
-	public String getResearchText(){
-    	String text;
-    	
-    	text= "";
-    	
-    	if(openPlanetBonus > 0){
-			text+="Open planet bonus: " + addplus(openPlanetBonus) + "\n";
-		}
-		if(closedPlanetBonus > 0){
-			text+="Closed planet bonus: " + addplus(closedPlanetBonus) + "\n";
-		}
-		if(resistanceBonus > 0){
-			text+="Resistance bonus: " + addplus(resistanceBonus) + "\n";
-		}
-		if(techBonus > 0){
-			text+="Tech bonus: " + addplus(techBonus) + "%\n";
-		}
-		if(canReconstruct){
-			text+="Can reconstruct planets\n";
-		}
-		if(reconstructCostBase > 0){
-			text+="Reconstruct cost base: " + addplus(reconstructCostBase) + "\n";
-		}
-		if(reconstructCostMultiplier > 0){
-			text+="Reconstruct multiplier cost: " + addplus(reconstructCostMultiplier) + "\n";
-		}
-		if(corruptionPoint != null){
-			text+="Corruption: " + corruptionPoint.getDescription() + "\n";
-		}
-		
-		for(int i=0;i<researchUpgradeShip.size();i++){			
-			text+= "\n" + researchUpgradeShip.get(i).getResearchText();
-		}
-		
-		for (ResearchUpgradeTroop aResearchTroopType: researchUpgradeTroop) {
-			text += "\n" + aResearchTroopType.getResearchText();
-		}
-
-		for (ResearchUpgradeBuilding aResearchBuildingType: researchUpgradeBuilding) {
-			text += "\n" + aResearchBuildingType.getResearchText();
-		}
-		
-    	return text;
-	}
-	
-	private String addplus(int number){
-		if(number > 0){
-			return "+" +number;
-	    }
-	    return Integer.valueOf(number).toString();
-	}
-	
-	@SuppressWarnings("unused")
-	private String addYesOrNo(boolean test){
-	   	if(test){
-	   		return "Yes";
-	   	}
-	   	return "No";
-	}
-	
 	public String getName(){
 		return name;
 	}
@@ -273,208 +178,41 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 		this.researchedTurns = researchedTurns;
 	}
 
-	@JsonProperty("children")
-	public List<String> getChildrenName(){
-		
-		return this.children.stream().map(ResearchAdvantage::getName).collect(Collectors.toList());
-	}
 
-	@JsonProperty("parents")
-	public List<String> getParentsName(){
-
-		return this.parents.stream().map(ResearchAdvantage::getName).collect(Collectors.toList());
-	}
-	
-	public ResearchAdvantage getChild(String key){
-		Iterator<ResearchAdvantage> it = children.iterator();
-		while(it.hasNext()){
-			ResearchAdvantage temp = it.next();
-			if(temp.getName().equals(key)){
-				return temp;
-			}
-		}
-		return null;
-	}
-	
-	public void addChild(ResearchAdvantage child){		
-		addChild(child,true);
-	}
-
-	public void addParent(ResearchAdvantage parent){
-		addParent(parent,true);
-	}
-
-	private void addChild(ResearchAdvantage child, boolean addParentToChild){		
-		this.children.add(child);
-		if (addParentToChild){
-			child.addParent(this,false);
-		}
-	}
-
-	private void addParent(ResearchAdvantage parent, boolean addChildToParent){
-		this.parents.add(parent);
-		if (addChildToParent){
-			parent.addChild(this,false);
-		}
-	}
-
-	
-	public void setParents(List<ResearchAdvantage> parants){
-		this.parents = parants;
-	}
-		
-	public SpaceshipType getShip(String name){
-		Iterator<SpaceshipType> it = ships.iterator();
-		while(it.hasNext()){
-			SpaceshipType tempShip = it.next();
-			if(tempShip.getName().equals(name)){
-				return tempShip;
-			}
-		}
-		return null;
+	public void addChild(ResearchAdvantage child){
+		this.children.add(child.getUuid());
 	}
 
 	public void addShip(SpaceshipType ship){
-		this.ships.add(ship);
-	}
-	
-	@JsonProperty("ships")
-	public List<String> getShipNames(){
-		return ships.stream().map(SpaceshipType::getName).collect(Collectors.toList());
+		this.ships.add(ship.getUuid());
 	}
 
-	@JsonProperty("replaceShips")
-	public List<String> getReplaceShipNames(){
-		return replaceShips.stream().map(SpaceshipType::getName).collect(Collectors.toList());
-	}
-
-	
-	public void setShips(List<SpaceshipType> ships){
+	public void setShips(List<String> ships){
 		this.ships = ships;
-	}
-	
-	public TroopType getTroopType(String name){
-		TroopType found = null;
-		int counter = 0;
-		while((found == null) & (counter < troops.size())){
-			TroopType tempTroopType = troops.get(counter);
-			if(tempTroopType.getName().equals(name)){
-				found = tempTroopType;
-			}
-		}
-		return found;
 	}
 
 	public void addTroopType(TroopType aTroopType){
-		troops.add(aTroopType);
+		troops.add(aTroopType.getUuid());
 	}
 
-
-	@JsonProperty("troops")
-	public List<String> geTroopNames(){
-		return troops.stream().map(TroopType::getName).collect(Collectors.toList());
-	}
-
-	@JsonProperty("replaceTroops")
-	public List<String> getReplaceTroopNames(){
-		return replaceTroops.stream().map(TroopType::getName).collect(Collectors.toList());
-	}
-	
-	public void setTroopTypes(List<TroopType> newTroops){
+	public void setTroopTypes(List<String> newTroops){
 		troops = newTroops;
 	}
 
-	public BuildingType getBuildingType(String name){
-		BuildingType found = null;
-		int counter = 0;
-		while((found == null) & (counter < buildings.size())){
-			BuildingType tempBuildingType = buildings.get(counter);
-			if(tempBuildingType.getName().equals(name)){
-				found = tempBuildingType;
-			}
-		}
-		return found;
-	}
-
 	public void addBuildingType(BuildingType aBuildingType){
-		buildings.add(aBuildingType);
-	}
-	
-	@JsonProperty("buildings")
-	public List<String> getBuildingTypesNames(){
-		return buildings.stream().map(BuildingType::getName).collect(Collectors.toList());
-	}
-
-	@JsonProperty("replaceBuildings")
-	public List<String> getReplaceBuildingTypesNames(){
-		return replaceBuildings.stream().map(BuildingType::getName).collect(Collectors.toList());
-	}
-	
-	public List<String> getBuildingTypesName(){
-		List<String> buildingNames = new ArrayList<String>();
-		for (BuildingType building : buildings) {
-			buildingNames.add(building.getName());
-		}
-		return buildingNames;
-	}
-	
-	public void setBuildingTypes(List<BuildingType> newBuildings){
-		buildings = newBuildings;
-	}
-	
-	public SpaceshipType getReplaceShip(String name){
-		Iterator<SpaceshipType> it = replaceShips.iterator();
-		while(it.hasNext()){
-			SpaceshipType tempShip = it.next();
-			if(tempShip.getName().equals(name)){
-				return tempShip;
-			}
-		}
-		return null;
+		buildings.add(aBuildingType.getUuid());
 	}
 
 	public void addReplaceShip(SpaceshipType ship){
-		this.replaceShips.add(ship);
-	}
-
-	public void setReplaceShips(List<SpaceshipType> replaceShips) {
-		this.replaceShips = replaceShips;
-	}
-	
-	public TroopType getReplaceTroopType(String name){
-		TroopType found = null;
-		int counter = 0;
-		while((found == null) & (counter < replaceTroops.size())){
-			TroopType tempTroopType = replaceTroops.get(counter);
-			if(tempTroopType.getName().equals(name)){
-				found = tempTroopType;
-			}
-		}
-		return found;
+		this.replaceShips.add(ship.getUuid());
 	}
 
 	public void addReplaceTroopTypes(TroopType aTroopType){
-		this.replaceTroops.add(aTroopType);
+		this.replaceTroops.add(aTroopType.getUuid());
 	}
 
-	public BuildingType getReplaceBuildingType(String name){
-		BuildingType found = null;
-		int counter = 0;
-		while((found == null) & (counter < replaceBuildings.size())){
-			BuildingType tempBuildingType = replaceBuildings.get(counter);
-			if(tempBuildingType.getName().equals(name)){
-				found = tempBuildingType;
-			}
-		}
-		return found;
-	}
-
-	public void addReplaceType(BuildingType aBuildingType){
-		replaceBuildings.add(aBuildingType);
-	}
-
-	public void setReplaceBuildingTypes(List<BuildingType> newBuildings){
-		replaceBuildings = newBuildings;
+	public void addReplaceType(String uuid){
+		replaceBuildings.add(uuid);
 	}
 
 	public boolean isCanReconstruct() {
@@ -540,16 +278,7 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	public void setCostToResearchOneTurnInPercent(int costToResearchOneTurnInProcent) {
 		this.costToResearchOneTurnInPercent = costToResearchOneTurnInProcent;
 	}
-	
-	public boolean isReadyToBeResearchedOn(Player player){
-		for(int i=0;i < parents.size();i++){
-			if(!parents.get(i).isDeveloped(player)){
-				return false;
-			}
-		}
-		return true;	
-	}
-	
+
 	public int getReconstructCostMultiplier() {
 		return reconstructCostMultiplier;
 	}

@@ -60,7 +60,7 @@ public class BlackMarketOffer implements Serializable {
   public String getString(){
     String returnString = "Hot stuff";
     if (vipType != null){
-      returnString = vipType.getTypeName();
+      returnString = vipType.getName();
     }else
     if (spaceshipType != null){
       returnString = spaceshipType.getName();
@@ -132,7 +132,7 @@ public class BlackMarketOffer implements Serializable {
     for (int i = 0; i < blackMarketBids.size(); i++){
       BlackMarketBid aBid = blackMarketBids.get(i);
       if (aBid != winningBid){
-    	  galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("Your bid of " + aBid.getCost() + " have been refunded.");
+    	  galaxy.getPlayerByUserName(aBid.getPlayerName()).addToLatestBlackMarketMessages("Your bid of " + aBid.getCost() + " have been refunded.");
       }
     }
   }
@@ -140,8 +140,8 @@ public class BlackMarketOffer implements Serializable {
   public void sendDrawMessages(Galaxy galaxy){
     for (int i = 0; i < blackMarketBids.size(); i++){
       BlackMarketBid aBid = blackMarketBids.get(i);
-      galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("The bidding for a " + getString() + " ended in a draw at the cost of " + getHighestBid() + ".");
-      galaxy.getPlayer(aBid.getPlayerName()).addToLatestBlackMarketMessages("The " + getString() + " will remain for sale.");
+      galaxy.getPlayerByUserName(aBid.getPlayerName()).addToLatestBlackMarketMessages("The bidding for a " + getString() + " ended in a draw at the cost of " + getHighestBid() + ".");
+      galaxy.getPlayerByUserName(aBid.getPlayerName()).addToLatestBlackMarketMessages("The " + getString() + " will remain for sale.");
     }
   }
 

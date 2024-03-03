@@ -25,7 +25,7 @@ public class BuildingType implements Serializable, Cloneable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String key;
+	private String uuid;
 
 	@Column(length = 4000)
 	private String description;
@@ -79,7 +79,7 @@ public class BuildingType implements Serializable, Cloneable{
 
 
 	public BuildingType(BuildingType original, PlayerBuildingImprovement improvement){
-		this.key = original.getKey();
+		this.uuid = original.getUuid();
 		this.buildVIPTypes = new ArrayList<>();
 		this.typeOfTroop = new ArrayList<>();
 		this.setName(original.getName());
@@ -122,7 +122,7 @@ public class BuildingType implements Serializable, Cloneable{
 	}
 	
 	public BuildingType(String name, String shortName, int buildCost){
-		this.key = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID().toString();
 		this.buildVIPTypes = new ArrayList<>();
 		this.typeOfTroop = new ArrayList<>();
 		setName(name);

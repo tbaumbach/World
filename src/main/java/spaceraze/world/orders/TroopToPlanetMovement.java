@@ -32,7 +32,7 @@ public class TroopToPlanetMovement implements Serializable {
     private int turn;
 
     public TroopToPlanetMovement(Troop troop, Planet destination, int turn) {
-        this.troopKey = troop.getKey();
+        this.troopKey = troop.getUuid();
         this.planetName = destination.getName();
         this.turn = turn;
     }

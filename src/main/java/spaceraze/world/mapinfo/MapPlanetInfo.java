@@ -62,6 +62,7 @@ public class MapPlanetInfo implements Serializable {
 	@Builder.Default
 	private List<FleetData> fleetsOther = new ArrayList<>(); // max size f�r neutrala och andra flottor, inkl civila skepp
 	private boolean razed;
+	@Column(name = "isOpen")
 	private boolean open;
 	private boolean besieged;
 	private String prod;

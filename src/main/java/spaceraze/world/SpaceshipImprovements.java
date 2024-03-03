@@ -20,7 +20,7 @@ public abstract class SpaceshipImprovements implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String typeId;
+    private String typeUuid;
     private int shields;
     private int upkeep;
     private int buildCost;
@@ -72,12 +72,12 @@ public abstract class SpaceshipImprovements implements Serializable {
     private boolean changeCanBlockPlanet = false;
     private boolean changeVisibleOnMap = false;
 
-    public SpaceshipImprovements(String typeId){
-        this.typeId = typeId;
+    public SpaceshipImprovements(String typeUuid){
+        this.typeUuid = typeUuid;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getTypeUuid() {
+        return typeUuid;
     }
 
     public int getShields() {

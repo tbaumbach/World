@@ -28,15 +28,8 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_FACTION_ONE", insertable = false, updatable = false)
-	private Faction faction1;
-
-	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "FK_FACTION_TWO", insertable = false, updatable = false)
-	private Faction faction2;
+	private String factionOne;
+	private String factionTwo;
 
 	private DiplomacyLevel highestRelation;
 	private DiplomacyLevel startRelation;
@@ -44,15 +37,15 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 	
 	/**
 	 * Create a default relation between two factions
-	 * @param aFaction1 a faction
-	 * @param aFaction2 another faction (can be same as faction1)
+	 * @param factionOne a faction
+	 * @param factionTwo another faction (can be same as faction1)
 	 */
-	public DiplomacyRelation(Faction aFaction1, Faction aFaction2){
-		faction1 = aFaction1;
-		faction2 = aFaction2;
+	public DiplomacyRelation(String factionOne, String factionTwo){
+		this.factionOne = factionOne;
+		this.factionTwo = factionTwo;
 		highestRelation = DiplomacyLevel.CONFEDERACY;
 		lowestRelation = DiplomacyLevel.ETERNAL_WAR;
-		if (faction1 == faction2){
+		if (this.factionOne.equals(this.factionTwo)){
 			startRelation = DiplomacyLevel.PEACE;
 		}else{
 			startRelation = DiplomacyLevel.WAR;
@@ -72,18 +65,12 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 	
 	@Override
 	public String toString(){
-		return "DiplomacyRelation (" + faction1.getName() + "-" + faction2.getName() + "), highest: " + highestRelation + ", lowest: " + lowestRelation + ", start: " + startRelation;
+		return "DiplomacyRelation (" + factionOne + "-" + factionTwo + "), highest: " + highestRelation + ", lowest: " + lowestRelation + ", start: " + startRelation;
 	}
 	
 	public boolean isRelation(Faction aFaction1,Faction aFaction2){
-		boolean found = false;
-		if ((faction1 == aFaction1) & (faction2 == aFaction2)){
-			found = true;
-		}else
-		if ((faction1 == aFaction2) & (faction2 == aFaction1)){
-			found = true;
-		}
-		return found;
+		return (factionOne.equals(aFaction1.getUuid()) && factionTwo.equals(aFaction2.getUuid())) ||
+				(factionOne.equals(aFaction2.getUuid()) && factionTwo.equals(aFaction1.getUuid()));
 	}
 
 	public DiplomacyLevel getHighestRelation() {
@@ -110,15 +97,5 @@ public  abstract class DiplomacyRelation implements Serializable, Cloneable {
 		this.startRelation = startRelation;
 	}
 
-
-	@JsonProperty("faction1")
-	public String getFaction1Name(){
-		return faction1.getName();
-	}
-
-	@JsonProperty("faction2")
-	public String getFaction2Name(){
-		return faction2.getName();
-	}
 		
 }

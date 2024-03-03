@@ -32,6 +32,7 @@ public class Alignment implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "FK_GAME_WORLD")
 	private GameWorld gameWorld;
@@ -120,7 +121,8 @@ public class Alignment implements Serializable {
 		return sb.toString();
 	}
 
-	public Alignment(String aName){
+	public Alignment(String aName, GameWorld gameWorld){
+		this.gameWorld = gameWorld;
 		this.name = aName;
 		name = name.substring(0,1).toUpperCase() + name.substring(1);
 	}

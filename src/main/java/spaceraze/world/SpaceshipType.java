@@ -35,11 +35,12 @@ public class SpaceshipType implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
 
-    private String key;
+    private String uuid;
     private String name;
     private String shortName;
 
@@ -142,7 +143,7 @@ public class SpaceshipType implements Serializable{
     }
 	
     public SpaceshipType(String name, String shortName, SpaceShipSize size, int shields, int hits, SpaceshipRange range, int upkeep, int buildCost, int weaponsStrengthSmall, int weaponsStrengthSquadron){
-        this.key = UUID.randomUUID().toString();
+        this.uuid = UUID.randomUUID().toString();
         this.name = name;
         this.shortName = shortName;
         this.size = size;
@@ -194,7 +195,7 @@ public class SpaceshipType implements Serializable{
      * Used to get players SpaceshipType updated by PlayerSpaceshipType.
      */
     public SpaceshipType(SpaceshipType originSpaceshipType, PlayerSpaceshipImprovement playerSpaceshipImprovement){
-        this.key = originSpaceshipType.key;
+        this.uuid = originSpaceshipType.uuid;
         this.name = originSpaceshipType.getName();
         this.shortName = originSpaceshipType.getShortName();
         this.size = originSpaceshipType.getSize();

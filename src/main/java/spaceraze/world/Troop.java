@@ -27,8 +27,8 @@ public class Troop implements Serializable, Cloneable{
 
 	private String name;
 	private String shortName;
-	private String key;
-	private String typeKey;
+	private String uuid;
+	private String typeUuid;
 	private int currentDamageCapacity;
 	private int damageCapacity;
 	@OneToOne(cascade = CascadeType.ALL)
@@ -42,7 +42,7 @@ public class Troop implements Serializable, Cloneable{
 	@JoinColumn(name = "FK_SPACESHIP_LOCATION", insertable = false, updatable = false)
 	private Spaceship shipLocation;
 	private int kills;
-	private int uniqueId;
+	private int productionNumber;
 	private int techWhenBuilt; // needed for land battle sim
 	// attack values
 	private int attackInfantry;
@@ -60,12 +60,12 @@ public class Troop implements Serializable, Cloneable{
 	@JoinColumn(name = "FK_SPACESHIP_OLD_LOCATION", insertable = false, updatable = false)
 	private Spaceship oldShipLocation;
 
-	public Troop(TroopType troopType, int aNrProduced, int aTotalTechBonus, int anUniqueId ){
-		this.key = UUID.randomUUID().toString();
-		this.typeKey = troopType.getKey();
-		this.name = troopType.getName() + " - " + aNrProduced;
-		this.shortName = troopType.getShortName() + " - " + aNrProduced;
-		this.uniqueId = anUniqueId;
+	public Troop(TroopType troopType, int productionNumber, int aTotalTechBonus){
+		this.uuid = UUID.randomUUID().toString();
+		this.typeUuid = troopType.getUuid();
+		this.name = troopType.getName() + " - " + productionNumber;
+		this.shortName = troopType.getShortName() + " - " + productionNumber;
+		this.productionNumber = productionNumber;
 		setData(aTotalTechBonus, troopType);
 	}
 	
@@ -137,14 +137,6 @@ public class Troop implements Serializable, Cloneable{
 
 	public void setAttackInfantry(int attackInfantry) {
 		this.attackInfantry = attackInfantry;
-	}
-
-	public int getUniqueId() {
-		return uniqueId;
-	}
-
-	public void setUniqueId(int uniqueId) {
-		this.uniqueId = uniqueId;
 	}
 
 	public String getName() {

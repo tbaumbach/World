@@ -5,7 +5,6 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spaceraze.util.general.Logger;
 import spaceraze.world.*;
 
 import javax.persistence.*;
@@ -29,12 +28,11 @@ public class Expense implements Serializable {
 
   	private String type;
   	private String planetName;
- 	private String spaceshipTypeName;
-  	private String buildingTypeName;
-	private String buildingKey;
-  	private String troopTypeName;
-  	private String typeVIPName;
-    private String typeVIPKey;
+ 	private String spaceshipTypeUuid;
+  	private String buildingTypeUuid;
+	private String buildingUuid;
+  	private String troopTypeUuid;
+    private String typeVIPUuid;
   	private String playerName=""; // Du eller player som mot tar en gåva.
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -67,9 +65,9 @@ public class Expense implements Serializable {
   public Expense(String temptype, Building tempBuilding, SpaceshipType tempsst, String aPlayername){
     this.planetName = tempBuilding.getLocation().getName();
     //sst = tempsst;
-    spaceshipTypeName = tempsst.getName();
+    spaceshipTypeUuid = tempsst.getUuid();
     this.type = temptype;
-    this.buildingKey = tempBuilding.getKey();
+    this.buildingUuid = tempBuilding.getUuid();
     playerName =aPlayername;
   }
   
@@ -77,30 +75,29 @@ public class Expense implements Serializable {
   public Expense(String temptype, Building tempBuilding, TroopType tempTroopType, String aPlayername){
     this.planetName = tempBuilding.getLocation().getName();
     //this.troopType = tempTroopType;
-    this.troopTypeName = tempTroopType.getName();
+    this.troopTypeUuid = tempTroopType.getUuid();
     this.type = temptype;
-      this.buildingKey = tempBuilding.getKey();
+      this.buildingUuid = tempBuilding.getUuid();
     playerName =aPlayername;
   }
   
 //bygga ny VIP, type = "buildVIP"
   public Expense(String temptype, Building tempBuilding, VIPType tempVIPTYPE, String aPlayername){
     this.planetName = tempBuilding.getLocation().getName();
-    this.typeVIPName = tempVIPTYPE.getName();
-    this.typeVIPKey = tempVIPTYPE.getKey();
+    this.typeVIPUuid = tempVIPTYPE.getUuid();
     this.type = temptype;
-      this.buildingKey = tempBuilding.getKey();
+    this.buildingUuid = tempBuilding.getUuid();
     playerName =aPlayername;
   }
   
 //bygga ny byggnad, type = "building"
   public Expense(String temptype, BuildingType tempbuildingType, String aPlayername,Planet planet, Building tempBuilding){
 	  //this.buildingType = tempbuildingType;
-	  this.buildingTypeName = tempbuildingType.getName();
+	  this.buildingTypeUuid = tempbuildingType.getUuid();
 	  this.type = temptype;
 	  this.planetName = planet.getName();
 	  if(tempBuilding!= null){
-          this.buildingKey = tempBuilding.getKey();
+          this.buildingUuid = tempBuilding.getUuid();
 	  }
 	  playerName =aPlayername;
   }
@@ -132,13 +129,8 @@ public class Expense implements Serializable {
     return ow.getId();
   }
 */
-  public String getSpaceshipTypeName(){
-    return spaceshipTypeName;
-  }
-  
-  
-  public String getVIPType(){
-	  return this.typeVIPName;
+  public String getSpaceshipTypeUuid(){
+    return spaceshipTypeUuid;
   }
 
   public BlackMarketBid getBlackMarketBid(){
@@ -147,7 +139,7 @@ public class Expense implements Serializable {
   
   public boolean isBuildBuildingAt(Planet aPlanet, BuildingType aBuildingType){
 	    boolean returnValue = false;
-	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (buildingTypeName.equalsIgnoreCase(aBuildingType.getName()))){
+	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (buildingTypeUuid.equalsIgnoreCase(aBuildingType.getName()))){
 	      returnValue = true;
 	    }
 	    return returnValue;
@@ -155,7 +147,7 @@ public class Expense implements Serializable {
   
   public boolean isBuildBuildingAt(Planet aPlanet){
 	    boolean returnValue = false;
-	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (buildingKey == null)){
+	    if ((type.equalsIgnoreCase("building")) & (aPlanet.getName().equalsIgnoreCase(planetName)) & (buildingUuid == null)){
 	      returnValue = true;
 	    }
 	    return returnValue;
@@ -194,11 +186,11 @@ public class Expense implements Serializable {
   }
 
   public boolean isBuilding(Building aBuilding){
-	  return ((type.equalsIgnoreCase("building")) && buildingKey != null && (aBuilding.getKey().equalsIgnoreCase(buildingKey)));
+	  return ((type.equalsIgnoreCase("building")) && buildingUuid != null && (aBuilding.getUuid().equalsIgnoreCase(buildingUuid)));
   }
   
   public boolean isBuilding(Planet aPlanet){
-	  return ((type.equalsIgnoreCase("building")) && aPlanet.getName().equalsIgnoreCase(planetName) && buildingKey == null);
+	  return ((type.equalsIgnoreCase("building")) && aPlanet.getName().equalsIgnoreCase(planetName) && buildingUuid == null);
   }
   
   public boolean isResearchOrder(String researchName){
@@ -216,16 +208,16 @@ public class Expense implements Serializable {
     return sum;
   }
 
-  public String getBuildingTypeName() {
-	  return buildingTypeName;
+  public String getBuildingTypeUuid() {
+	  return buildingTypeUuid;
   }
 
   public void setBuildingType(BuildingType buildingType) {
-	  this.buildingTypeName = buildingType.getName();
+	  this.buildingTypeUuid = buildingType.getName();
   }
 
-public String getTroopTypeName() {
-	return troopTypeName;
+public String getTroopTypeUuid() {
+	return troopTypeUuid;
 }
 
 public ResearchOrder getResearchOrder(){

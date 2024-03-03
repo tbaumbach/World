@@ -33,11 +33,12 @@ public class Faction implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
 
-    private String key;
+    private String uuid;
     private String colorHexValue; // ex: red = "FF0000"
     private String name;
     private String shortName;
@@ -59,14 +60,11 @@ public class Faction implements Serializable {
 
     @Column(length = 4000)
     private String howToPlay;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_SHIP_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_SHIP_TYPE"))
-    @Column(insertable = false, updatable = false)
+
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_SHIP_TYPE")
     @Builder.Default
-    private List<SpaceshipType> spaceshipTypes = new ArrayList<>();
+    private List<String> spaceshipTypes = new ArrayList<>();
 
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
@@ -74,50 +72,34 @@ public class Faction implements Serializable {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_ALIGNMENT", insertable = false, updatable = false)
+    @JoinColumn(name = "FK_ALIGNMENT") //@JoinColumn(name = "FK_ALIGNMENT", insertable = false, updatable = false)
     private Alignment alignment; // must be set
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_VIP_TYPE_GOVERNOR", insertable = false, updatable = false)
+    @OneToOne()//@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_VIP_TYPE_GOVERNOR") //@JoinColumn(name = "FK_VIP_TYPE_GOVERNOR", insertable = false, updatable = false)
     private VIPType governorVIPType;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_STARTING_VIP_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_VIP_TYPE"))
-    @Column(insertable = false, updatable = false)
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_STARTING_VIP_TYPE")
     @Builder.Default
-    private List<VIPType> startingVIPTypes = new ArrayList<>();
+    private List<String> startingVIPTypes = new ArrayList<>();
 
     private int nrStartingRandomVIPs = 1;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_STARTING_SHIP_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_SHIP_TYPE"))
-    @Column(insertable = false, updatable = false)
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_STARTING_SHIP_TYPE")
     @Builder.Default
-    private List<SpaceshipType> startingShipTypes = new ArrayList<>();
+    private List<String> startingShipTypes = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_STARTING_TROOP_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_TROOP_TYPE"))
-    @Column(insertable = false, updatable = false)
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_STARTING_TROOP_TYPE")
     @Builder.Default
-    private List<TroopType> startingTroops = new ArrayList<>(); // players shall start with troops of the trooptypes in this list
+    private List<String> startingTroops = new ArrayList<>(); // players shall start with troops of the trooptypes in this list
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_TROOP_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_SHIP_TYPE"))
-    @Column(insertable = false, updatable = false)
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_TROOP_TYPE")
     @Builder.Default
-    private List<TroopType> troopTypes = new ArrayList<>(); // these trooptypes is available to build by new players
+    private List<String> troopTypes = new ArrayList<>(); // these trooptypes is available to build by new players
 
     @Builder.Default
     private int techBonus = 0; // %
@@ -134,27 +116,23 @@ public class Faction implements Serializable {
     @Builder.Default
     private List<BuildingType> buildings = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "FACTION_TO_STARTING_BUILDNING_TYPE",
-            joinColumns = @JoinColumn(name = "FK_FACTION"),
-            inverseJoinColumns = @JoinColumn(name = "FK_TROOP_TYPE"))
-    @Column(insertable = false, updatable = false)
+    @ElementCollection
+    @CollectionTable(name = "FACTION_TO_STARTING_BUILDNING_TYPE")
     @Builder.Default
-    private List<BuildingType> startingBuildings = new ArrayList<>();
+    private List<String> startingBuildings = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_CORRUPTION_POINT")
     CorruptionPoint corruptionPoint;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faction")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faction", fetch = FetchType.EAGER)
     @Builder.Default
     private List<ResearchAdvantage> researchAdvantages = new ArrayList<>();
 
     private int numberOfSimultaneouslyResearchAdvantages = 1;
 
     public Faction(String newName, String colorHexValue, Alignment alignment) {
-        this.key = UUID.randomUUID().toString();
+        this.uuid = UUID.randomUUID().toString();
         this.name = newName;
         this.colorHexValue = colorHexValue;
         this.alignment = alignment;
@@ -312,26 +290,12 @@ public class Faction implements Serializable {
         return retVal;
     }
 
-    /**
-     * Always create a clone and add
-     *
-     */
     public void addSpaceshipType(SpaceshipType sst) {
-        spaceshipTypes.add(sst);
+        spaceshipTypes.add(sst.getUuid());
     }
 
-    @JsonIgnore
-    public List<SpaceshipType> getSpaceshipTypes() {
+    public List<String> getSpaceshipTypes() {
         return spaceshipTypes;
-    }
-
-    public List<String> getSpaceshipTypesName() {
-
-        List<String> shipsName = new ArrayList<>();
-        for (SpaceshipType spaceshipType : spaceshipTypes) {
-            shipsName.add(spaceshipType.getName());
-        }
-        return shipsName;
     }
 
     public boolean equals(Faction anotherFaction) {
@@ -357,46 +321,34 @@ public class Faction implements Serializable {
     }
 
     public void addStartingShipType(SpaceshipType sst) {
-        startingShipTypes.add(sst);
+        startingShipTypes.add(sst.getUuid());
     }
 
     public void addStartingBuildings(BuildingType bt) {
-        startingBuildings.add(bt);
+        startingBuildings.add(bt.getUuid());
     }
 
     public void addStartingTroop(TroopType tt) {
-        startingTroops.add(tt);
+        startingTroops.add(tt.getUuid());
     }
 
-    @JsonIgnore
-    public List<TroopType> getStartingTroops() {
+    public List<String> getStartingTroops() {
         return startingTroops;
     }
 
-    public List<String> getStartingTroopsName() {
-        List<String> troops = new ArrayList<String>();
-        for (TroopType troopType : startingTroops) {
-            troops.add(troopType.getName());
-        }
-        return troops;
-    }
-
     public void addTroopType(TroopType tt) {
-        troopTypes.add(tt.clone());
+        troopTypes.add(tt.getUuid());
     }
 
-    @JsonIgnore
-    public List<TroopType> getTroopTypes() {
+    public List<String> getTroopTypes() {
         return troopTypes;
     }
 
-    @JsonIgnore
-    public List<SpaceshipType> getStartingShipTypes() {
+    public List<String> getStartingShipTypes() {
         return startingShipTypes;
     }
 
-    @JsonIgnore
-    public List<BuildingType> getStartingBuildings() {
+    public List<String> getStartingBuildings() {
         return startingBuildings;
     }
 
@@ -416,47 +368,13 @@ public class Faction implements Serializable {
         this.nrStartingRandomVIPs = nrStartingRandomVIPs;
     }
 
-    @JsonIgnore
-    public List<VIPType> getStartingVIPTypes() {
+
+    public List<String> getStartingVIPTypes() {
         return startingVIPTypes;
     }
 
     public void addStartingVIPType(VIPType aStartingVIPType) {
-        startingVIPTypes.add(aStartingVIPType);
-    }
-
-    public TroopType getTroopTypeByName(String ttname) {
-        TroopType foundtt = null;
-        int i = 0;
-        while ((i < troopTypes.size()) & (foundtt == null)) {
-            TroopType temptt = troopTypes.get(i);
-            if (temptt.getName().equalsIgnoreCase(ttname)) {
-                foundtt = temptt;
-            } else {
-                i++;
-            }
-        }
-        Logger.finer("Faction.getTroopTypeByName, ttname:" + ttname + " -> " + foundtt);
-        return foundtt;
-    }
-
-    public SpaceshipType getSpaceshipTypeByName(String sstname) {
-        SpaceshipType foundsst = null;
-        int i = 0;
-        while ((i < spaceshipTypes.size()) & (foundsst == null)) {
-            SpaceshipType tempsst = (SpaceshipType) spaceshipTypes.get(i);
-            if (tempsst.getName().equalsIgnoreCase(sstname)) {
-                foundsst = tempsst;
-            } else {
-                i++;
-            }
-        }
-        Logger.finest("Faction.getSpaceshipTypeByName, sstname:" + sstname + " -> " + foundsst);
-        return foundsst;
-    }
-
-    public BuildingType getBuildingTypeByName(String bname) {
-        return getBuildingType(bname);
+        startingVIPTypes.add(aStartingVIPType.getUuid());
     }
 
     @JsonIgnore
@@ -579,7 +497,7 @@ public class Faction implements Serializable {
         buildings.add(buildingType);
     }
 
-    public BuildingType getBuildingType(String name){
+    public BuildingType getBuildingTypeByName(String name){
         BuildingType found = null;
         for(int i= 0; i < buildings.size();i++){
             if(buildings.get(i).getName().equalsIgnoreCase(name)){

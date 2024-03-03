@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import spaceraze.world.Faction;
 import spaceraze.world.GameWorld;
 
 import javax.persistence.Entity;
@@ -24,8 +23,8 @@ public class GameWorldDiplomacyRelation extends DiplomacyRelation  {
     @JoinColumn(name = "FK_GAME_WORLD")
     private GameWorld gameWorld;
 
-    public GameWorldDiplomacyRelation(Faction aFaction1, Faction aFaction2){
-        super(aFaction1, aFaction2);
+    public GameWorldDiplomacyRelation(String factionOne, String factionTwo){
+        super(factionOne, factionTwo);
     }
 
 

@@ -34,8 +34,8 @@ public class TroopToCarrierMovement implements Serializable{
   String destinationCarrierKey;
 
   public TroopToCarrierMovement(Troop theTroop, Spaceship destinationCarrier){
-    this.troopKey = theTroop.getKey();
-    this.destinationCarrierKey = destinationCarrier.getKey();
+    this.troopKey = theTroop.getUuid();
+    this.destinationCarrierKey = destinationCarrier.getUuid();
   }
 
   public String getDestinationCarrierKey(){

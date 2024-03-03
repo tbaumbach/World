@@ -34,18 +34,18 @@ public class VIPMovement implements Serializable {
     private String troopDestination;
 
     public VIPMovement(VIP aVIP, Planet planetDestination) {
-        this.vipKey = aVIP.getKey();
+        this.vipKey = aVIP.getUuid();
         this.planetDestination = planetDestination.getName();
     }
 
     public VIPMovement(VIP aVIP, Spaceship shipDestination) {
-        this.vipKey = aVIP.getKey();
-        this.shipDestination = shipDestination.getKey();
+        this.vipKey = aVIP.getUuid();
+        this.shipDestination = shipDestination.getUuid();
     }
 
     public VIPMovement(VIP aVIP, Troop troopDestination) {
-        this.vipKey = aVIP.getKey();
-        this.troopDestination = troopDestination.getKey();
+        this.vipKey = aVIP.getUuid();
+        this.troopDestination = troopDestination.getUuid();
     }
 
 }

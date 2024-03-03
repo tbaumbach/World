@@ -26,7 +26,7 @@ public class VIPType implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String key;
+    private String uuid;
 
     @JsonIgnore
     @ManyToOne
@@ -105,7 +105,7 @@ public class VIPType implements Serializable {
     private boolean playerUnique = false;
 
     public VIPType(String name, String shortName, Alignment alignment) {
-        this.key = UUID.randomUUID().toString();
+        this.uuid = UUID.randomUUID().toString();
         this.name = name;
         this.shortName = shortName;
         this.alignment = alignment;
@@ -117,10 +117,6 @@ public class VIPType implements Serializable {
 
     public String getAlignmentString() {
         return alignment.toString();
-    }
-
-    public String getTypeName() {
-        return getName();
     }
 
     public String getName() {

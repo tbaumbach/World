@@ -19,8 +19,8 @@ public class PlayerSpaceshipImprovement extends SpaceshipImprovements {
     private boolean availableToBuild;
     private int nrProduced = 0;
 
-    public PlayerSpaceshipImprovement(String typeId, boolean availableToBuild){
-        super(typeId);
+    public PlayerSpaceshipImprovement(String typeUuid, boolean availableToBuild){
+        super(typeUuid);
         this.availableToBuild = availableToBuild;
     }
 

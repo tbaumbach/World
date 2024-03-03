@@ -66,7 +66,7 @@ public class Message implements Serializable,Comparable<Message> {
   }
 
   public Player getRecipientPlayer(Galaxy aGalaxy){
-    return aGalaxy.getPlayer(recipientPlayer);
+    return aGalaxy.getPlayerByUserName(recipientPlayer);
   }
 
   public String getRecipientPlayer(){
@@ -74,7 +74,7 @@ public class Message implements Serializable,Comparable<Message> {
   }
 
   public Player getSender(Galaxy aGalaxy){
-    return aGalaxy.getPlayer(sender);
+    return aGalaxy.getPlayerByUserName(sender);
   }
   
   public int getTurn() {

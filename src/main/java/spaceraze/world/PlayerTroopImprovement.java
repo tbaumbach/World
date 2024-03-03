@@ -22,8 +22,8 @@ public class PlayerTroopImprovement extends TroopImprovements {
     private boolean availableToBuild;
     private int nrProduced = 0;
 
-    public PlayerTroopImprovement(String typeId, boolean availableToBuild){
-        super(typeId);
+    public PlayerTroopImprovement(String troopTypeUuid, boolean availableToBuild){
+        super(troopTypeUuid);
         this.availableToBuild = availableToBuild;
     }
 

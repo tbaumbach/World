@@ -111,7 +111,7 @@ public class DiplomacyState implements Serializable{
 		if (diplomacyGameType == DiplomacyGameType.OPEN){
 			relation.setHighestRelation(DiplomacyLevel.CONFEDERACY);
 			relation.setLowestRelation(DiplomacyLevel.ETERNAL_WAR);
-			if (relation.getFaction1() == relation.getFaction2()){
+			if (relation.getFactionOne().equals(relation.getFactionTwo())){
 				relation.setStartRelation(DiplomacyLevel.PEACE);
 				currentLevel = DiplomacyLevel.PEACE;
 			}else{
@@ -120,7 +120,7 @@ public class DiplomacyState implements Serializable{
 			}
 		}else
 		if (diplomacyGameType == DiplomacyGameType.FACTION){
-			if (relation.getFaction1() == relation.getFaction2()){
+			if (relation.getFactionOne().equals(relation.getFactionTwo())){
 				relation.setHighestRelation(DiplomacyLevel.CONFEDERACY);
 				relation.setLowestRelation(DiplomacyLevel.CONFEDERACY);
 				relation.setStartRelation(DiplomacyLevel.CONFEDERACY);

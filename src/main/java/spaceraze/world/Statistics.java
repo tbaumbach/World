@@ -20,7 +20,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity()
-@Table(name = "STATISTICS")
+@Table(name = "STATISTICS_GALAXY")
 public class Statistics implements Serializable{
     static final long serialVersionUID = 1L;
 

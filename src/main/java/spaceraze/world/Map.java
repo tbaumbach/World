@@ -28,7 +28,7 @@ public class Map implements Serializable, Comparable<Map>{
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
 	private Long id;
 
-	private String key;
+	private String uuid;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
 	@Builder.Default
@@ -76,7 +76,7 @@ public class Map implements Serializable, Comparable<Map>{
 	
 	// creating a map from a published map
 	public void initMap(String mapFileName, Properties props){
-		this.key = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID().toString();
 		Logger.finest("Init Map from mapName: " + mapFileName);
 		planets = getPlanets(props);
 		connections = getConnections(props, List.copyOf(planets));

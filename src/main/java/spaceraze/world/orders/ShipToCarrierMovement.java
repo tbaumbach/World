@@ -29,8 +29,8 @@ public class ShipToCarrierMovement implements Serializable {
     private String destinationCarrierKey;
 
     public ShipToCarrierMovement(Spaceship ss, Spaceship destinationCarrier) {
-        this.spaceShipKey = ss.getKey();
-        this.destinationCarrierKey = destinationCarrier.getKey();
+        this.spaceShipKey = ss.getUuid();
+        this.destinationCarrierKey = destinationCarrier.getUuid();
     }
 
 }

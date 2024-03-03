@@ -34,6 +34,8 @@ public class GameWorld implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //TODO check if we should use SEQUENCE or TABLE
 	private Long id;
 
+	private String uuid;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
 	@Builder.Default
 	private List<SpaceshipType> shipTypes = new ArrayList<>();
@@ -104,26 +106,46 @@ public class GameWorld implements Serializable{
 	private int baseBombardmentDamage = 1000; // default value (always kills the troop) 50% hit chance.
 	private boolean adjustScreenedStatus = true;
 
-	public void addShipType(SpaceshipType sst){
-		shipTypes.add(sst);
+	public void addShipType(SpaceshipType spaceshipType){
+		spaceshipType.setGameWorld(this);
+		shipTypes.add(spaceshipType);
+	}
+
+	public void setShipTypes(List<SpaceshipType> spaceshipTypes){
+		this.shipTypes.clear();
+		spaceshipTypes.forEach(spaceshipType -> addShipType(spaceshipType));
 	}
 
 	public void addVipType(VIPType vt){
+		vt.setGameWorld(this);
 		vipTypes.add(vt);
 	}
 
-	public void addTroopType(TroopType tt){
-		troopTypes.add(tt.clone());
+	public void setVipTypes(List<VIPType> vipTypes){
+		this.vipTypes.clear();
+		vipTypes.forEach(vipType -> addVipType(vipType));
+	}
+
+	public void addTroopType(TroopType troopType){
+		troopType.setGameWorld(this);
+		troopTypes.add(troopType);
 	}
 	
 	public List<TroopType> getTroopTypes(){
 		return troopTypes;
+	}
+
+	//TODO 2024-02-26 Tänkt att användas av rest API, fungerar det här? Används inte vid uppläsning från datbasen, vilket jag trodde den skulle göra
+	public void setTroopTypes(List<TroopType> troopTypes){
+		this.troopTypes.clear();
+		troopTypes.forEach(troopType -> addTroopType(troopType));
 	}
 	
 	public boolean isTroopGameWorld(){
 		return (troopTypes.size() > 0);
 	}
 
+	@Deprecated(forRemoval = true, since = "2024-02-25") //Använd PureFunction i stället
     public SpaceshipType getSpaceshipTypeByName(String name){
     	SpaceshipType foundsst = shipTypes.stream().filter(spaceshipType -> spaceshipType.getName().equalsIgnoreCase(name)).findAny().orElse(null);
     	
@@ -148,9 +170,10 @@ public class GameWorld implements Serializable{
     	return foundsst;
     }
 
+	@Deprecated() //Använd BuildingPureFunctions i stället
     public BuildingType getBuildingTypeByName(String btname){
-		Faction faction = factions.stream().filter(faction1 -> faction1.getBuildingType(btname) != null).findFirst().orElse(null);
-		BuildingType foundbt = faction.getBuildingType(btname);
+		Faction faction = factions.stream().filter(faction1 -> faction1.getBuildingTypeByName(btname) != null).findFirst().orElse(null);
+		BuildingType foundbt = faction.getBuildingTypeByName(btname);
     	if (foundbt != null){
         	Logger.finest("GameWorld.getBuildingTypeByName, btname:" + btname + " -> " + foundbt);
     	}else{ // om detta inträffar så finns det antagligen en felstavning av en buildingType i gameworlden
@@ -328,6 +351,11 @@ public class GameWorld implements Serializable{
 	
 	public List<Faction> getFactions() {
 		return factions;
+	}
+
+	public void setFactions(List<Faction> factions){
+		factions.forEach(faction -> faction.setGameWorld(this));
+		this.factions = factions;
 	}
 	
 	public List<SpaceshipType> getShipTypes() {

@@ -30,22 +30,22 @@ public class IncomeReportRow implements Serializable {
 	IncomeReport incomeReport;
 
 	private IncomeType type;
-	private String desc;
+	private String description;
 	private String location;
 	private int counter;
 	private int value;
 	
-	public IncomeReportRow(IncomeType type, String desc, String location, int value, int counter){
+	public IncomeReportRow(IncomeType type, String description, String location, int value, int counter){
 		this.type = type;
-		this.desc = desc;
+		this.description = description;
 		this.location = location;
 		this.value = value;
 		this.counter = counter;
 		Logger.finer("counter: " + counter);
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
 	public IncomeType getType() {

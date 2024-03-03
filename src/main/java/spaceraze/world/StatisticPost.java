@@ -25,7 +25,7 @@ public class StatisticPost implements Serializable {
     @JoinColumn(name = "FK_GALAXY")
     private Statistics statistics;
 
-    private String key;
+    private String uuid;//TODO, change to save uuid from the user instead of name
 
     @ElementCollection
     @CollectionTable(name = "STATISTIC_POST_VALUES")

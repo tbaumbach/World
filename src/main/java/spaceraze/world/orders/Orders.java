@@ -271,7 +271,7 @@ public class Orders implements Serializable {
 
         int found = -1;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (aShip.getKey() == screenedShips.get(i)) {
+            if (aShip.getUuid() == screenedShips.get(i)) {
                 found = i;
             }
         }
@@ -284,14 +284,14 @@ public class Orders implements Serializable {
         // finns det en screened ship order redan?
         int found = -1;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (aShip.getKey() == screenedShips.get(i)) {
+            if (aShip.getUuid() == screenedShips.get(i)) {
                 found = i;
             }
         }
         if (found > -1) { // ta bort den
             screenedShips.remove(found);
         } else { // annars l�gg till den
-            screenedShips.add(aShip.getKey());
+            screenedShips.add(aShip.getUuid());
         }
     }
 
@@ -453,7 +453,7 @@ public class Orders implements Serializable {
     public boolean haveSpaceshipTypeBuildOrder(SpaceshipType aSpaceshipType) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aSpaceshipType.getName().equals(tempExpense.getSpaceshipTypeName())) {
+            if (aSpaceshipType.getName().equals(tempExpense.getSpaceshipTypeUuid())) {
                 return true;
             }
         }
@@ -464,8 +464,8 @@ public class Orders implements Serializable {
     public boolean haveBuildingTypeBuildOrder(BuildingType aBuildingType, String buildingKey) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aBuildingType.getName().equals(tempExpense.getBuildingTypeName())) {
-                if (buildingKey == null || buildingKey.equalsIgnoreCase(tempExpense.getBuildingKey())) {
+            if (aBuildingType.getName().equals(tempExpense.getBuildingTypeUuid())) {
+                if (buildingKey == null || buildingKey.equalsIgnoreCase(tempExpense.getBuildingUuid())) {
                     return true;
                 }
             }
@@ -476,7 +476,7 @@ public class Orders implements Serializable {
     public boolean haveVIPTypeBuildOrder(VIPType aVIPType) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aVIPType.getKey().equals(tempExpense.getTypeVIPKey())) {
+            if (aVIPType.getUuid().equals(tempExpense.getTypeVIPUuid())) {
                 return true;
             }
         }
@@ -486,7 +486,7 @@ public class Orders implements Serializable {
     public boolean haveTroopTypeBuildOrder(TroopType aTroopType) {
         for (int i = 0; i < expenses.size(); i++) {
             Expense tempExpense = (Expense) expenses.get(i);
-            if (aTroopType.getName().equals(tempExpense.getTroopTypeName())) {
+            if (aTroopType.getName().equals(tempExpense.getTroopTypeUuid())) {
                 return true;
             }
         }
@@ -494,11 +494,11 @@ public class Orders implements Serializable {
     }
 
     public void addShipSelfDestruct(Spaceship currentss) {
-        shipSelfDestructs.add(currentss.getKey());
+        shipSelfDestructs.add(currentss.getUuid());
     }
 
     public void addTroopSelfDestruct(Troop aTroop) {
-        troopSelfDestructs.add(aTroop.getKey());
+        troopSelfDestructs.add(aTroop.getUuid());
     }
 
     public void addVIPSelfDestruct(VIP aVIP) {
@@ -506,7 +506,7 @@ public class Orders implements Serializable {
         int found = -1;
         for (int i = 0; i < VIPMoves.size(); i++) {
             VIPMovement tempVIPMove = VIPMoves.get(i);
-            if (aVIP.getKey().equalsIgnoreCase(tempVIPMove.getVipKey())) {
+            if (aVIP.getUuid().equalsIgnoreCase(tempVIPMove.getVipKey())) {
                 found = i;
             }
         }
@@ -514,12 +514,12 @@ public class Orders implements Serializable {
             VIPMoves.remove(found);
         }
 
-        VIPSelfDestructs.add(aVIP.getKey());
+        VIPSelfDestructs.add(aVIP.getUuid());
     }
 
     public void removeShipSelfDestruct(Spaceship currentss) {
         for (int i = 0; i < shipSelfDestructs.size(); i++) {
-            if (shipSelfDestructs.get(i) == currentss.getKey()) {
+            if (shipSelfDestructs.get(i) == currentss.getUuid()) {
                 shipSelfDestructs.remove(i);
             }
         }
@@ -527,7 +527,7 @@ public class Orders implements Serializable {
 
     public void removeTroopSelfDestruct(Troop aTroop) {
         for (int i = 0; i < troopSelfDestructs.size(); i++) {
-            if (troopSelfDestructs.get(i).equalsIgnoreCase(aTroop.getKey())) {
+            if (troopSelfDestructs.get(i).equalsIgnoreCase(aTroop.getUuid())) {
                 troopSelfDestructs.remove(i);
             }
         }
@@ -535,7 +535,7 @@ public class Orders implements Serializable {
 
     public void removeVIPSelfDestruct(VIP aVIP) {
         for (int i = 0; i < VIPSelfDestructs.size(); i++) {
-            if (VIPSelfDestructs.get(i) == aVIP.getKey()) {
+            if (VIPSelfDestructs.get(i) == aVIP.getUuid()) {
                 VIPSelfDestructs.remove(i);
             }
         }
@@ -543,12 +543,12 @@ public class Orders implements Serializable {
 
 
     public void addBuildingSelfDestruct(Building currentBuilding) {
-        buildingSelfDestructs.add(currentBuilding.getKey());
+        buildingSelfDestructs.add(currentBuilding.getUuid());
     }
 
     public void removeBuildingSelfDestruct(Building currentBuilding) {
         for (int i = 0; i < buildingSelfDestructs.size(); i++) {
-            if (buildingSelfDestructs.get(i).equalsIgnoreCase(currentBuilding.getKey())) {
+            if (buildingSelfDestructs.get(i).equalsIgnoreCase(currentBuilding.getUuid())) {
                 buildingSelfDestructs.remove(i);
             }
         }
@@ -592,7 +592,7 @@ public class Orders implements Serializable {
     public boolean getShipSelfDestruct(Spaceship ss) {
         boolean found = false;
         for (int i = 0; i < shipSelfDestructs.size(); i++) {
-            if (ss.getKey() == shipSelfDestructs.get(i)) {
+            if (ss.getUuid() == shipSelfDestructs.get(i)) {
                 found = true;
             }
         }
@@ -603,7 +603,7 @@ public class Orders implements Serializable {
         boolean found = false;
         for (int i = 0; i < VIPSelfDestructs.size(); i++) {
             String tempVIP = VIPSelfDestructs.get(i);
-            if (tempVIP == aVIP.getKey()) {
+            if (tempVIP == aVIP.getUuid()) {
                 found = true;
             }
         }
@@ -613,7 +613,7 @@ public class Orders implements Serializable {
     public boolean getScreenedShip(Spaceship ss) {
         boolean found = false;
         for (int i = 0; i < screenedShips.size(); i++) {
-            if (ss.getKey() == screenedShips.get(i)) {
+            if (ss.getUuid() == screenedShips.get(i)) {
                 found = true;
             }
         }
@@ -623,7 +623,7 @@ public class Orders implements Serializable {
     public boolean getBuildingSelfDestruct(Building aBuilding) {
         boolean found = false;
         for (int i = 0; i < buildingSelfDestructs.size(); i++) {
-            if (buildingSelfDestructs.get(i).equalsIgnoreCase(aBuilding.getKey())) {
+            if (buildingSelfDestructs.get(i).equalsIgnoreCase(aBuilding.getUuid())) {
                 found = true;
             }
         }

@@ -21,7 +21,7 @@ public class BuildingImprovement implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String typeUuid;
 
     private int openPlanetBonus = 0;
     private int closedPlanetBonus = 0;
@@ -43,12 +43,12 @@ public class BuildingImprovement implements Serializable {
     private int counterEspionage = 0;
     private int exterminator = 0;
 
-    public BuildingImprovement(String name){
-        this.name = name;
+    public BuildingImprovement(String typeUuid){
+        this.typeUuid = typeUuid;
     }
 
-    public String getName() {
-        return name;
+    public String getTypeUuid() {
+        return typeUuid;
     }
 
     public int getOpenPlanetBonus() {

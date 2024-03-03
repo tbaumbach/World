@@ -31,7 +31,7 @@ public class ShipMovement implements Serializable {
 	private String spaceshipKey;
 	
 	public ShipMovement(Spaceship ss, Planet destination) {
-		this.spaceshipKey = ss.getKey();
+		this.spaceshipKey = ss.getUuid();
 		this.planetName = destination.getName();
 		this.owner = ss.getOwner().getName();
 	}

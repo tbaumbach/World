@@ -22,6 +22,7 @@ public class Planet extends BasePlanet{
 	private int resistance = 0;
 	private int basePopulation = 0;
 	private boolean startPlanet = false;
+    @Column(name = "isOpen")
 	private boolean open = false;
 	private boolean besieged = false;
 

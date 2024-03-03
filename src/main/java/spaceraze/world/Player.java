@@ -3,6 +3,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.*;
 import spaceraze.util.general.Logger;
@@ -45,6 +46,9 @@ public class Player implements Serializable{
     private String name;
     private String password;
     private String governorName;
+    private String uuid;//TODO use this instead of "name"
+    //TODO Koppla ihop den här när en användare(User) joinar ett spel, använd inte namn som nyckel (använderen ska ju vara inloggad).
+    private String userUuid;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "FK_ORDERS")
@@ -61,7 +65,7 @@ public class Player implements Serializable{
     private int treasury;
     private int totalPop;
 
-    private String factionKey;
+    private String factionUuid;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
     @Builder.Default
@@ -128,6 +132,7 @@ public class Player implements Serializable{
 
     public Player(String name, String password, Galaxy g, String governorName, Faction faction, Planet homePlanet, List<PlanetOrderStatus> planetOrderStatuses){
         this(null);
+        this.uuid = UUID.randomUUID().toString();
         Logger.fine("Name: " + name + " govenorName: " + governorName +  " factionName: " + faction.getName());
     	this.name = name;
         this.password = password;
@@ -137,7 +142,7 @@ public class Player implements Serializable{
         turnInfo = new TurnInfo();
         turnInfo.newTurn();
         treasury = 0;
-        this.factionKey = faction.getKey();
+        this.factionUuid = faction.getUuid();
         this.homePlanet = homePlanet;
 
         //      Copy from Faction

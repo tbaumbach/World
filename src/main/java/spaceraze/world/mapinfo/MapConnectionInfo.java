@@ -9,9 +9,7 @@ import spaceraze.world.PlanetConnection;
 import javax.persistence.*;
 
 /**
- * Anv�nds f�r att hantera kart-informationen f�r en enskild starport-koppling mellan tv� planeter f�r ett visst drag f�r en viss spelare
- * 
- * @author Paul Bodin
+ * Används för att hantera kart-informationen för en enskild starport-koppling mellan två planeter för ett visst drag för en viss spelare. Bara egna kopplingar till att börja med
  *
  */
 
@@ -32,8 +30,10 @@ public class MapConnectionInfo implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "FK_MAP_INFO_TURN")
 	private MapInfoTurn mapInfoTurn;
-	
+
+	//@Column(name = "Planet_ONE")
 	private String planet1;
+	//@Column(name = "PLANET TWO")
 	private String planet2;
 
 	@Override

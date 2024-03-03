@@ -25,9 +25,9 @@ public class Building implements Serializable, Cloneable{
 	@JoinColumn(name = "FK_PLANET")
 	private Planet location;
 
-	private String key;
-	private String typeKey;
-	private int uniqueId;
+	private String uuid;
+	private String typeUuid;
+	private int productionNumber;
 	private boolean visibleOnMap;
 
 	private int openPlanetBonus = 0;
@@ -46,10 +46,10 @@ public class Building implements Serializable, Cloneable{
 	private int counterEspionage = 0;
 	private int exterminator = 0;
 
-    public Building(BuildingType buildingType, int uniqueId, Planet location){
-    	this.key = UUID.randomUUID().toString();
-		this.typeKey = buildingType.getKey();
-		this.uniqueId = uniqueId;
+    public Building(BuildingType buildingType, int productionNumber, Planet location){
+    	this.uuid = UUID.randomUUID().toString();
+		this.typeUuid = buildingType.getUuid();
+		this.productionNumber = productionNumber;
 		this.setLocation(location);
 
 		this.openPlanetBonus = buildingType.getOpenPlanetBonus();

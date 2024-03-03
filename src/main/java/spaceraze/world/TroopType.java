@@ -3,6 +3,7 @@ package spaceraze.world;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.enums.BlackMarketFrequency;
@@ -25,11 +26,12 @@ public class TroopType implements Serializable, Cloneable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "FK_GAME_WORLD")
 	private GameWorld gameWorld;
 
-	private String key;
+	private String uuid;
 	private String name;
 	private String shortName;
 
@@ -82,7 +84,7 @@ public class TroopType implements Serializable, Cloneable{
 	private boolean playerUnique =  false;
 	
     public TroopType(String aUniqueName, String aUniqueShortName, int aDamageCapacity, int aUpkeep, int aCostBuild, int anAttackInfantry, int anAttackArmor){
-		this.key = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID().toString();
     	this.name = aUniqueName;
     	this.shortName = aUniqueShortName;
     	this.damageCapacity = aDamageCapacity;
@@ -93,7 +95,7 @@ public class TroopType implements Serializable, Cloneable{
     }
 
     public TroopType(TroopType originalType, PlayerTroopImprovement improvement){
-    	this.key = originalType.getKey();
+    	this.uuid = originalType.getUuid();
 		this.name = originalType.getName();
 		this.shortName = originalType.getShortName();
 		this.description = originalType.getDescription();
