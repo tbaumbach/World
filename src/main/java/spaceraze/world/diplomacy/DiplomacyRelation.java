@@ -2,15 +2,13 @@ package spaceraze.world.diplomacy;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import spaceraze.world.Faction;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Handles diplomacy in gameWorld and games

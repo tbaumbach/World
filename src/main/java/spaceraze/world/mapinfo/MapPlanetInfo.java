@@ -6,7 +6,7 @@ import java.util.List;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Hanterar kart-informationen för en enskild planet för ett visst drag för en viss spelare
@@ -85,6 +85,7 @@ public class MapPlanetInfo implements Serializable {
 	@Builder.Default
 	private List<String> lastKnownBuildingsOnSurface = new ArrayList<>();
 	private boolean lastKnownRazed;
+	@Builder.Default
 	private int lastInfoTurn = 0; // används även för att lagra nuvarande turn om det finns data om en planet
 
 

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spaceraze.util.general.Logger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

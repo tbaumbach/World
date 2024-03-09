@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spaceraze.world.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 // representerar ett utlägg gjort av spelaren under sitt drag
 @Setter

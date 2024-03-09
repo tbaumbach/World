@@ -8,7 +8,7 @@ import lombok.Setter;
 import spaceraze.world.Player;
 import spaceraze.world.enums.HighlightType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

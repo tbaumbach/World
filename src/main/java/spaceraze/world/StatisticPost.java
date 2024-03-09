@@ -2,7 +2,7 @@ package spaceraze.world;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,14 +22,14 @@ public class StatisticPost implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "FK_GALAXY")
+    @JoinColumn(name = "FK_STATISTICS_GALAXY")
     private Statistics statistics;
 
     private String uuid;//TODO, change to save uuid from the user instead of name
 
     @ElementCollection
-    @CollectionTable(name = "STATISTIC_POST_VALUES")
-    @Column(name = "VALUE")
+    @CollectionTable(name = "STATISTIC_POST_VALUES", joinColumns = @JoinColumn(name = "statistic_post_id", referencedColumnName = "id"))
+    @Column(name = "value")
     @Builder.Default
     private List<Integer> values = new ArrayList<>();
 

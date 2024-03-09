@@ -13,7 +13,7 @@ import spaceraze.world.enums.BattleGroupPosition;
 import spaceraze.world.report.EventReport;
 import spaceraze.world.report.PlanetReport;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

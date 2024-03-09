@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 import spaceraze.world.report.landbattle.LandBattleReport;
 import spaceraze.world.report.spacebattle.SpaceBattleReport;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package spaceraze.world;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.StringTokenizer;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

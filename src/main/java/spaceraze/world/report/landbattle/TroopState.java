@@ -8,10 +8,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import spaceraze.world.enums.BattleGroupPosition;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
@@ -27,6 +27,7 @@ public class BasePlanet implements Serializable{
     private double y;
     private double z;
     private String name;
+    @Builder.Default
     private boolean possibleStartPlanet = true;
 
     /**

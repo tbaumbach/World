@@ -12,7 +12,7 @@ import lombok.Setter;
 import spaceraze.world.Spaceship;
 import spaceraze.world.Troop;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

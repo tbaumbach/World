@@ -1,7 +1,6 @@
 package spaceraze.world.report.spacebattle;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import spaceraze.world.report.EventReport;
 import spaceraze.world.report.PlanetReport;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

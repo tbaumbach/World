@@ -6,7 +6,7 @@ import java.util.*;
 import lombok.*;
 import spaceraze.world.Planet;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Håller all kart-information för planeter för en spelare för ett specifikt drag

@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import spaceraze.util.general.Logger;
 import spaceraze.world.report.EventReport;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

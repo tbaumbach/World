@@ -8,7 +8,7 @@ import lombok.Setter;
 import spaceraze.util.general.Logger;
 import spaceraze.world.orders.Expense;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

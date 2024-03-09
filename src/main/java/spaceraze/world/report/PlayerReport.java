@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import spaceraze.world.Player;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

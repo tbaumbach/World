@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 
 @Setter
 @Getter
@@ -35,12 +35,19 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	private String name;
 	private String description;
 
+	@Builder.Default
 	private int timeToResearch = 1;
+	@Builder.Default
 	private int researchedTurns = 0;
+	@Builder.Default
 	private int costToResearchOneTurn = 0;
+	@Builder.Default
 	private int costToResearchOneTurnInPercent = 0;
+	@Builder.Default
 	private int openPlanetBonus = 0;
+	@Builder.Default
 	private int closedPlanetBonus = 0;
+	@Builder.Default
 	private int resistanceBonus = 0;
 
 	@ElementCollection
@@ -59,10 +66,12 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	private List<String> replaceShips = new ArrayList<>();
 
 
-
+	@Builder.Default
 	private int techBonus = 0; 
-	private boolean canReconstruct = false;
+	private boolean canReconstruct;
+	@Builder.Default
 	private int reconstructCostBase = 0;
+	@Builder.Default
 	private int reconstructCostMultiplier = 0;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")

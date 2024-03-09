@@ -14,7 +14,7 @@ import spaceraze.world.orders.Orders;
 import spaceraze.world.report.PlayerReport;
 import spaceraze.world.spacebattle.ReportLevel;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

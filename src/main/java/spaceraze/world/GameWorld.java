@@ -9,13 +9,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.*;
 import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.world.diplomacy.GameWorldDiplomacy;
 import spaceraze.world.diplomacy.GameWorldDiplomacyRelation;
 import spaceraze.world.enums.InitiativeMethod;
 
-import javax.persistence.*;
+
 
 /**
  * Contains all data for one distinct game world primarily used in individual games.

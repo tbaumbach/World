@@ -5,7 +5,7 @@ package spaceraze.world;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -34,7 +34,7 @@ public class EconomyReport implements Serializable{
 	private int supportTroopsLastTurn,supportTroopsNextTurn;
 	private int supportVIPsLastTurn,supportVIPsNextTurn;
 	
-	private boolean broke = false;
+	private boolean broke;
 	
 	public int getExpensesLastTurn() {
 		return expensesLastTurn;

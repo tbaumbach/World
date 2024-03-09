@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Getter
@@ -24,6 +24,7 @@ public class UniqueIdCounter implements Serializable{
   private Galaxy galaxy;
 
   private int uniqueIdCounter = 0;
+  @Enumerated(EnumType.STRING)
   private CounterType counterType;
 
   public UniqueIdCounter(CounterType counterType){

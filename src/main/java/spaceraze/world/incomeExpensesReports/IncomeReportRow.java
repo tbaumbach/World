@@ -5,7 +5,7 @@ import java.io.Serializable;
 import lombok.*;
 import spaceraze.util.general.Logger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Contains information about one specific income

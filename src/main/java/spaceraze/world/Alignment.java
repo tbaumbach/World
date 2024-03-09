@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spaceraze.util.general.Functions;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Represents one alignment, with a text identifier/name

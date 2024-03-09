@@ -10,7 +10,7 @@ import spaceraze.world.Spaceship;
 import spaceraze.world.Troop;
 import spaceraze.world.VIP;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

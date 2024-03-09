@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.*;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Handles one type of statistics in a game

@@ -11,9 +11,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import spaceraze.world.enums.HighlightType;
 import spaceraze.util.general.Functions;
-import spaceraze.world.Highlight;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author WMPABOD

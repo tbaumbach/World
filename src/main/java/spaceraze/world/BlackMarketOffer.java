@@ -2,7 +2,7 @@ package spaceraze.world;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;

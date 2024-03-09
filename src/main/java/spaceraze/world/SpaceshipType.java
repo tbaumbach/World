@@ -14,7 +14,7 @@ import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.world.enums.SpaceshipTargetingType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Instances of this class represent one spaceship type, from which 

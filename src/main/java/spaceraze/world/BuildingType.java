@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import spaceraze.world.enums.TypeOfTroop;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

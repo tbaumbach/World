@@ -10,7 +10,7 @@ import spaceraze.world.enums.SpaceShipSize;
 import spaceraze.world.enums.SpaceshipRange;
 import spaceraze.util.general.Logger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

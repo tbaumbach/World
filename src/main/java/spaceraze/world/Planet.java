@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
@@ -18,13 +18,16 @@ import javax.persistence.*;
 public class Planet extends BasePlanet{
     static final long serialVersionUID = 1L;
 
+    @Builder.Default
 	private int population = 0;
+    @Builder.Default
 	private int resistance = 0;
+    @Builder.Default
 	private int basePopulation = 0;
-	private boolean startPlanet = false;
+	private boolean startPlanet;
     @Column(name = "isOpen")
-	private boolean open = false;
-	private boolean besieged = false;
+	private boolean open;
+	private boolean besieged;
 
 
     @ManyToOne
@@ -40,6 +43,7 @@ public class Planet extends BasePlanet{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REACH_FROM", insertable = false, updatable = false)
     private Planet reachFrom;
+    @Builder.Default
 	private boolean hasNeverSurrendered = true;
     private int rangeToClosestFriendly; // used in Galaxy when computing startplanet location
 

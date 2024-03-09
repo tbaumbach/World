@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.*;
 import spaceraze.world.enums.HighlightType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * @author WMPABOD

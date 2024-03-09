@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Setter
@@ -27,7 +24,7 @@ public abstract class SpaceshipState implements Serializable {
 	@Builder.Default
 	private int startHullStatus = 100; //in %
 	private int postBattleHullState; //in %
-	private boolean retreat = false;
+	private boolean retreat;
 	private String type;
 	private boolean screened;
 

@@ -21,7 +21,7 @@ import spaceraze.world.TroopType;
 import spaceraze.world.VIP;
 import spaceraze.world.VIPType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

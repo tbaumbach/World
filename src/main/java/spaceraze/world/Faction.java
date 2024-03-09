@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import spaceraze.util.general.Logger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
@@ -66,8 +66,11 @@ public class Faction implements Serializable {
     @Builder.Default
     private List<String> spaceshipTypes = new ArrayList<>();
 
+    @Builder.Default
     private int openPlanetBonus = 0;
+    @Builder.Default
     private int closedPlanetBonus = 0;
+    @Builder.Default
     private int resistanceBonus = 0;
 
     @JsonIgnore
@@ -84,6 +87,7 @@ public class Faction implements Serializable {
     @Builder.Default
     private List<String> startingVIPTypes = new ArrayList<>();
 
+    @Builder.Default
     private int nrStartingRandomVIPs = 1;
 
     @ElementCollection
@@ -104,7 +108,7 @@ public class Faction implements Serializable {
     @Builder.Default
     private int techBonus = 0; // %
     private boolean alien;
-    private boolean canReconstruct = false;
+    private boolean canReconstruct;
     @Builder.Default
     private int reconstructCostBase = 8;
 

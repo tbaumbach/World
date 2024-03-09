@@ -10,7 +10,7 @@ import spaceraze.world.Galaxy;
 import spaceraze.world.Player;
 import spaceraze.world.enums.DiplomacyGameType;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter

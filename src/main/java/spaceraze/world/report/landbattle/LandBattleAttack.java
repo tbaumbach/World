@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import spaceraze.util.general.Functions;
 import spaceraze.world.report.EventReport;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
@@ -37,6 +38,7 @@ public class LandBattleAttack extends EventReport implements Serializable {
 	private int damage;
 	private int counterDamage;
 	private int attMultiplier;
+	@Builder.Default
 	private int counterMultiplier = 0;
 	
 	

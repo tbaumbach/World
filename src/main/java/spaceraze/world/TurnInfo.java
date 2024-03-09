@@ -10,7 +10,7 @@ import spaceraze.world.incomeExpensesReports.IncomeReport;
 import spaceraze.world.incomeExpensesReports.IncomeType;
 import spaceraze.util.general.Logger;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 //TODO 2020-11-28 This should be replaced by EvenReport logic.
 @Setter

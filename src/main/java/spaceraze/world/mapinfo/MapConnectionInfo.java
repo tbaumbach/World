@@ -6,7 +6,7 @@ import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.world.PlanetConnection;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Används för att hantera kart-informationen för en enskild starport-koppling mellan två planeter för ett visst drag för en viss spelare. Bara egna kopplingar till att börja med

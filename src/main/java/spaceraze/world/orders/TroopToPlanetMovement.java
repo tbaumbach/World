@@ -9,8 +9,7 @@ import spaceraze.world.Galaxy;
 import spaceraze.world.Planet;
 import spaceraze.world.Troop;
 
-import javax.persistence.*;
-
+import jakarta.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor

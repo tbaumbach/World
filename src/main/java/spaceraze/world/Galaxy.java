@@ -15,7 +15,7 @@ import spaceraze.world.enums.DiplomacyGameType;
 import spaceraze.world.enums.HighlightType;
 import spaceraze.world.enums.SpaceshipRange;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
 The container for a game, the galaxy the game is played in.

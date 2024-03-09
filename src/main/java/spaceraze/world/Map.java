@@ -11,7 +11,7 @@ import lombok.*;
 import spaceraze.util.general.Logger;
 import spaceraze.util.properties.PropertiesHandler;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Setter
 @Getter
