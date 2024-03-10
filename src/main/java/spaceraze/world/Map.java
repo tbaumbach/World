@@ -17,7 +17,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "MAP")
 public class Map implements Serializable, Comparable<Map>{
@@ -31,11 +30,9 @@ public class Map implements Serializable, Comparable<Map>{
 	private String uuid;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
-	@Builder.Default
 	private List<MapPlanetConnection> connections = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "map")
-	@Builder.Default
 	private List<MapPlanet> planets = new ArrayList<>();
 
 	private int maxNrStartPlanets;

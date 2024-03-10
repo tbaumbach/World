@@ -30,29 +30,20 @@ public class Building implements Serializable, Cloneable{
 	private int productionNumber;
 	private boolean visibleOnMap;
 
-	@Builder.Default
 	private int openPlanetBonus = 0;
-	@Builder.Default
 	private int closedPlanetBonus = 0;
-	@Builder.Default
 	private int techBonus = 0;
-	@Builder.Default
 	private int wharfSize = 0; // if = cannot build ships
-	@Builder.Default
 	private int troopSize = 0; // if = cannot build troops
 	private boolean spaceport;
 
-	@Builder.Default
 	private int resistanceBonus = 0;
-	@Builder.Default
 	private int shieldCapacity = 0;
 	private int cannonDamage;
 	private int cannonRateOfFire;
 
 	private boolean alienKiller;
-	@Builder.Default
 	private int counterEspionage = 0;
-	@Builder.Default
 	private int exterminator = 0;
 
     public Building(BuildingType buildingType, int productionNumber, Planet location){

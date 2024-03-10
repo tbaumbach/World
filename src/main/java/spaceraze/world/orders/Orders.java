@@ -27,7 +27,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "ORDERS")
 public class Orders implements Serializable {
@@ -44,64 +43,49 @@ public class Orders implements Serializable {
     private boolean abandonGame;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<Expense> expenses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<ShipMovement> shipMoves = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "TOGGLE_PLANET_VISIBILITY")
-    @Builder.Default
     private List<String> planetVisibilities = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "ABANDON_PLANET")
-    @Builder.Default
     private List<String> abandonPlanets  = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_SHIP")
-    @Builder.Default
     private List<String> shipSelfDestructs = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "TOGGLE_SHIP_SCREEN")
-    @Builder.Default
     private List<String> screenedShips = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_BUILDNING")
-    @Builder.Default
     private List<String> buildingSelfDestructs = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_TROOP")
-    @Builder.Default
     private List<String> troopSelfDestructs = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name = "DESTROY_VIP")
-    @Builder.Default
     private List<String> VIPSelfDestructs = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<ResearchOrder> researchOrder = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<VIPMovement> VIPMoves = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<ShipToCarrierMovement> shipToCarrierMoves = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<TroopToCarrierMovement> troopToCarrierMoves = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<TroopToPlanetMovement> troopToPlanetMoves = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
-    @Builder.Default
     private List<PlanetNotesChange> planetNotesChanges = new ArrayList<>();
 
     public Orders(Player p) {

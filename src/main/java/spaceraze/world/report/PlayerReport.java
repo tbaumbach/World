@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-@SuperBuilder
 @Entity()
 @Table(name = "PLAYER_REPORT")
 public class PlayerReport extends EventReport {
@@ -26,7 +25,6 @@ public class PlayerReport extends EventReport {
 	private Player player;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "playerReport")
-	@Builder.Default
 	private List<PlanetReport> planetReports = new ArrayList<>();
 
 	@Override

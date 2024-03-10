@@ -17,7 +17,6 @@ import java.util.List;
  */
 @Setter
 @Getter
-@Builder
 @AllArgsConstructor
 @Entity()
 @Table(name = "INCOME_REPORT")
@@ -33,7 +32,6 @@ public class IncomeReport implements Serializable {
 	TurnInfo turnInfo;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "incomeReport")
-	@Builder.Default
 	private List<IncomeReportRow> incomeRows = new ArrayList<>();
 
 	private int counter; 

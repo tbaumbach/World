@@ -40,10 +40,7 @@ public class VIPType implements Serializable {
     @Column(length = 4000)
     private String advantages;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_ALIGNMENT")
-    private Alignment alignment = null;
+    private String alignment = null;
     // determines who can have this VIP
     // if duellist is true - determines if this duellist will
     // attack another duellist in the same system
@@ -108,16 +105,13 @@ public class VIPType implements Serializable {
         this.uuid = UUID.randomUUID().toString();
         this.name = name;
         this.shortName = shortName;
-        this.alignment = alignment;
+        this.alignment = alignment.getUuid();
     }
 
     public String getFrequencyString() {
         return frequency.toString();
     }
 
-    public String getAlignmentString() {
-        return alignment.toString();
-    }
 
     public String getName() {
         return name;
@@ -141,14 +135,6 @@ public class VIPType implements Serializable {
 
     public boolean getShowOnOpenPlanet() {
         return showOnOpenPlanet;
-    }
-
-    public Alignment getAlignment() {
-        return alignment;
-    }
-
-    public void setAlignment(Alignment alignment) {
-        this.alignment = alignment;
     }
 
     public int getAssassination() {
@@ -291,9 +277,6 @@ public class VIPType implements Serializable {
         this.frequency = newFrequency;
     }
 
-    public boolean isAlignment(Alignment anAlignment) {
-        return this.alignment == anAlignment;
-    }
 
     public boolean isCounterSpy() {
         return counterEspionage > 0;
@@ -415,8 +398,4 @@ public class VIPType implements Serializable {
         this.factionUnique = factionUnique;
     }
 
-    @JsonProperty("alignment")
-    public String getAlignmentName(){
-        return alignment.getName();
-    }
 }

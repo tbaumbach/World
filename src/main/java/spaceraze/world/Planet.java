@@ -18,11 +18,8 @@ import jakarta.persistence.*;
 public class Planet extends BasePlanet{
     static final long serialVersionUID = 1L;
 
-    @Builder.Default
 	private int population = 0;
-    @Builder.Default
 	private int resistance = 0;
-    @Builder.Default
 	private int basePopulation = 0;
 	private boolean startPlanet;
     @Column(name = "isOpen")
@@ -43,12 +40,10 @@ public class Planet extends BasePlanet{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REACH_FROM", insertable = false, updatable = false)
     private Planet reachFrom;
-    @Builder.Default
 	private boolean hasNeverSurrendered = true;
     private int rangeToClosestFriendly; // used in Galaxy when computing startplanet location
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
-    @Builder.Default
     private List<Building> buildings = new ArrayList<>();
 
     public Planet(MapPlanet planet){

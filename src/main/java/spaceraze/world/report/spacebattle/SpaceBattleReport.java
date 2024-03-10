@@ -17,7 +17,6 @@ import jakarta.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-@SuperBuilder
 @Entity()
 @Table(name = "SPACE_BATTLE_REPORT")
 public class SpaceBattleReport extends EventReport {
@@ -27,15 +26,12 @@ public class SpaceBattleReport extends EventReport {
 	private PlanetReport planetReport;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
-	@Builder.Default
 	private List<SpaceBattleAttack> spaceBattleAttacks = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
-	@Builder.Default
 	private List<OwnSpaceship> ownSpaceships = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "spaceBattleReport")
-	@Builder.Default
 	private List<EnemySpaceship> enemySpaceships = new ArrayList<>();
 
 	private String enemyName;

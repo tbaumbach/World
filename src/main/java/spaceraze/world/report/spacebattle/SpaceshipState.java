@@ -21,7 +21,6 @@ public abstract class SpaceshipState implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Builder.Default
 	private int startHullStatus = 100; //in %
 	private int postBattleHullState; //in %
 	private boolean retreat;

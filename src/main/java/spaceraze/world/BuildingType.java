@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.*;
 import spaceraze.world.enums.TypeOfTroop;
 
@@ -59,19 +57,14 @@ public class BuildingType implements Serializable, Cloneable{
 	private int cannonRateOfFire = 0;
 	private int cannonHitChance = 50;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "BUILDNING_TYPE_TO_VIP_TYPE",
-			joinColumns = @JoinColumn(name = "BUILDNING_ID"),
-			inverseJoinColumns = @JoinColumn(name = "VIP_ID"))
-	@Builder.Default
-	private List<VIPType> buildVIPTypes = new ArrayList<>();
+	@ElementCollection
+	@CollectionTable(name = "BUILDNING_TYPE_TO_VIP_TYPE")
+	private List<String> vipTypes = new ArrayList<>();
 
 	@ElementCollection // TODO do we need to use (fetch = FetchType.EAGER) ?
 	@Enumerated(EnumType.STRING)
-	@Builder.Default
 	private List<TypeOfTroop> typeOfTroop = new ArrayList<>(); // infantry, armored or support
-	private String parentBuildingTypeName;
+	private String parentBuildingType;
 	
 	private boolean alienKiller;
 	private int counterEspionage = 0;
@@ -80,7 +73,7 @@ public class BuildingType implements Serializable, Cloneable{
 
 	public BuildingType(BuildingType original, PlayerBuildingImprovement improvement){
 		this.uuid = original.getUuid();
-		this.buildVIPTypes = new ArrayList<>();
+		this.vipTypes = new ArrayList<>();
 		this.typeOfTroop = new ArrayList<>();
 		this.setName(original.getName());
 		this.setDescription(original.getDescription());
@@ -110,9 +103,9 @@ public class BuildingType implements Serializable, Cloneable{
 		this.setCannonRateOfFire(original.getCannonRateOfFire() + improvement.getCannonRateOfFire());
 		this.setCannonHitChance(original.getCannonHitChance());
 
-		this.setBuildVIPTypes(original.getBuildVIPTypes());
+		this.setVipTypes(original.getVipTypes());
 		this.getTypeOfTroop().addAll(original.getTypeOfTroop());
-		this.setParentBuildingTypeName(original.getParentBuildingName());
+		this.setParentBuildingType(original.getParentBuildingType());
 
 		this.setAlienKiller(improvement.isChangeAlienKiller() ? improvement.isAlienKiller() : original.isAlienKiller());
 		this.setCounterEspionage(original.getCounterEspionage() + improvement.getCounterEspionage());
@@ -123,15 +116,15 @@ public class BuildingType implements Serializable, Cloneable{
 	
 	public BuildingType(String name, String shortName, int buildCost){
 		this.uuid = UUID.randomUUID().toString();
-		this.buildVIPTypes = new ArrayList<>();
+		this.vipTypes = new ArrayList<>();
 		this.typeOfTroop = new ArrayList<>();
 		setName(name);
 		setShortName(shortName);
 		setBuildCost(buildCost);
 	}
 
-	public void setParentBuildingTypeName(String parentBuildingTypeName){
-		this.parentBuildingTypeName = parentBuildingTypeName;
+	public void setParentBuildingType(String parentBuildingTypeName){
+		this.parentBuildingType = parentBuildingTypeName;
 	}
 
 	public int getClosedPlanetBonus() {
@@ -198,10 +191,6 @@ public class BuildingType implements Serializable, Cloneable{
 		this.openPlanetBonus = openPlanetBonus;
 	}
 
-	public String getParentBuildingName() {
-		return parentBuildingTypeName;
-	}
-
 	public int getResistanceBonus() {
 		return resistanceBonus;
 	}
@@ -246,17 +235,8 @@ public class BuildingType implements Serializable, Cloneable{
 		this.autoDestructWhenConquered = autoDestructWhenConquered;
 	}
 
-	@JsonIgnore
-	public List<VIPType> getBuildVIPTypes() {
-		return buildVIPTypes;
-	}
-
-	public void setBuildVIPTypes(List<VIPType> buildVIPTypes) {
-		this.buildVIPTypes = buildVIPTypes;
-	}
-	
-	public void addBuildVIPType(VIPType buildVIPType) {
-		this.buildVIPTypes.add(buildVIPType);
+	public void addBuildVIPType(VIPType vipType) {
+		this.vipTypes.add(vipType.getUuid());
 	}
 
 	public boolean isFactionUnique() {

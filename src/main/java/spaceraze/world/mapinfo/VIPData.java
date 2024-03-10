@@ -30,7 +30,6 @@ public class VIPData implements Serializable{
 
 	@ElementCollection
 	@CollectionTable(name = "VIP_SHORT_NAME")
-	@Builder.Default
 	private List<String> vipShortNames = new ArrayList<>();
 
 	@Transient

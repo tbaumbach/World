@@ -14,7 +14,6 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "RESEARCH_ADVANTAGE")
 public class ResearchAdvantage implements Serializable, Cloneable  {
@@ -35,75 +34,55 @@ public class ResearchAdvantage implements Serializable, Cloneable  {
 	private String name;
 	private String description;
 
-	@Builder.Default
 	private int timeToResearch = 1;
-	@Builder.Default
 	private int researchedTurns = 0;
-	@Builder.Default
 	private int costToResearchOneTurn = 0;
-	@Builder.Default
 	private int costToResearchOneTurnInPercent = 0;
-	@Builder.Default
 	private int openPlanetBonus = 0;
-	@Builder.Default
 	private int closedPlanetBonus = 0;
-	@Builder.Default
 	private int resistanceBonus = 0;
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_CHILDREN")
-	@Builder.Default
 	private List<String> children = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_SPACESHIP")
-	@Builder.Default
 	private List<String> ships = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_SPACESHIP")
-	@Builder.Default
 	private List<String> replaceShips = new ArrayList<>();
 
 
-	@Builder.Default
 	private int techBonus = 0; 
 	private boolean canReconstruct;
-	@Builder.Default
 	private int reconstructCostBase = 0;
-	@Builder.Default
 	private int reconstructCostMultiplier = 0;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
-	@Builder.Default
 	private List<ResearchUpgradeShip> researchUpgradeShip = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_TROOP")
-	@Builder.Default
 	private List<String> troops = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_TROOP")
-	@Builder.Default
 	private List<String> replaceTroops = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
-	@Builder.Default
 	private List<ResearchUpgradeTroop> researchUpgradeTroop = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_BUILDINGS")
-	@Builder.Default
 	private List<String> buildings = new ArrayList<>();
 
 	@ElementCollection
 	@CollectionTable(name = "RESEARCH_ADVANTAGE_TO_REPLACE_BUILDING")
-	@Builder.Default
 	private List<String> replaceBuildings = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "researchAdvantage")
-	@Builder.Default
 	private List<ResearchUpgradeBuilding> researchUpgradeBuilding = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)

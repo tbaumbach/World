@@ -20,7 +20,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "PLAYER")
 public class Player implements Serializable{
@@ -35,13 +34,10 @@ public class Player implements Serializable{
     private Galaxy galaxy;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlayerSpaceshipImprovement> spaceshipImprovements = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlayerTroopImprovement> troopImprovements = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlayerBuildingImprovement> buildingImprovements = new ArrayList<>();
     private String name;
     private String password;
@@ -68,7 +64,6 @@ public class Player implements Serializable{
     private String factionUuid;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlanetInformation> planetInformations = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -80,7 +75,6 @@ public class Player implements Serializable{
     private int nrTurnsBroke;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<ResearchProgress> researchProgresses = new ArrayList<>();
 
     private int openPlanetBonus = 0;
@@ -99,7 +93,6 @@ public class Player implements Serializable{
     private ReportLevel reportLevel;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlanetOrderStatus> planetOrderStatuses = new ArrayList<>();
     private MapInfos mapPlanetInfos;
 
@@ -111,7 +104,6 @@ public class Player implements Serializable{
     
     //TODO 2019-12-20 lade till nya sättet att rapportera ett drag, med utbruten kopplingar till spel objekten som Spaceship, troop, VIP mm.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    @Builder.Default
     private List<PlayerReport>  playerReports = new ArrayList<>();
     
     public Player(String errormessage){

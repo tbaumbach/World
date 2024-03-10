@@ -18,7 +18,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "STATISTICS_GALAXY")
 public class Statistics implements Serializable{
@@ -36,7 +35,6 @@ public class Statistics implements Serializable{
 	private StatisticType statisticType;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "statistics")
-	@Builder.Default
 	private List<StatisticPost> statisticPosts = new ArrayList<>();
 
 	public Statistics(StatisticType statisticType){

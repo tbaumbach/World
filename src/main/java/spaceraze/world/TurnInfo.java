@@ -28,43 +28,33 @@ public class TurnInfo implements Serializable {
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoGeneralReport")
-    @Builder.Default
     private List<Report> generalReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoExpenseReports")
-    @Builder.Default
     private List<Report> expenseReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoVIPReports")
-    @Builder.Default
     private List<Report> VIPReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoBlackMarketReports")
-    @Builder.Default
     private List<Report> blackMarketReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoCivilianReports")
-    @Builder.Default
     private List<Report>civilianReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoResearchReports")
-    @Builder.Default
     private List<Report>researchReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoBuildingReports")
-    @Builder.Default
     private List<Report>buildingReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfoDiplomacyReports")
-    @Builder.Default
     private List<Report> diplomacyReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfo")
-    @Builder.Default
     private List<EconomyReport> economyReports = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "turnInfo")
-    @Builder.Default
     private List<IncomeReport> incomeReports = new ArrayList<>();
 
     @Transient

@@ -55,46 +55,32 @@ public class TroopType implements Serializable, Cloneable{
 	private int attackArtillery;
 	// other abilities
 	private int damageCapacity;
-	@Builder.Default
 	private int dropPenalty = 1; // lowers the number of attacks on the first turn when dropped on a planet
-	@Builder.Default
 	private int firingBackPenalty = 10;  // lowers the damage roll when firing back when under attack
-	@Builder.Default
 	private int nrAttacks = 3; // number of attacks each turn
 	@Enumerated(EnumType.STRING)
-	@Builder.Default
 	private TypeOfTroop typeOfTroop = TypeOfTroop.INFANTRY; // infantry, armored or support
-	@Builder.Default
 	private boolean spaceshipTravel = true; // if false a unit can't leave the planet where it is built
 	@Enumerated(EnumType.STRING)
 	private BlackMarketFrequency blackMarketFrequency = BlackMarketFrequency.COMMON;
-	@Builder.Default
 	private int blackmarketFirstTurn = 0;
 	
 	
 	//	private boolean attackScreened;  // if true unit can be set to flanker
 	@Enumerated(EnumType.STRING)
-	@Builder.Default
 	private BattleGroupPosition defaultPosition = BattleGroupPosition.FIRST_LINE;
-	@Builder.Default
 	private boolean canBuild = true; // determines if a player with this trooptype can build this type
-	@Builder.Default
 	private boolean visible = true; // if false other players cannot see the troop on the
-	@Builder.Default
 	private boolean canAppearOnBlackMarket = true;
 	@Enumerated(EnumType.STRING)
-	@Builder.Default
 	private TroopTargetingType targetingType = TroopTargetingType.ALLROUND;
 	private int landBattleGroupAttacksBonus;
 	// costs
 	private int costBuild;
 	private int upkeep; // count against each planet's individual upkeep value (=production)
 	//	worldUnigue=  only one in the world, factionUnigue= only one at faction, playerUnique =  only one at player.
-	@Builder.Default
 	private boolean worldUnique = false;
-	@Builder.Default
 	private boolean factionUnique = false;
-	@Builder.Default
 	private boolean playerUnique =  false;
 	
     public TroopType(String aUniqueName, String aUniqueShortName, int aDamageCapacity, int aUpkeep, int aCostBuild, int anAttackInfantry, int anAttackArmor){

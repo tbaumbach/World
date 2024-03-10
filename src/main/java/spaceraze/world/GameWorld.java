@@ -25,7 +25,6 @@ import spaceraze.world.enums.InitiativeMethod;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity(name="GameWorld")
 @Table(name = "GAME_WORLD")
 public class GameWorld implements Serializable{
@@ -38,19 +37,15 @@ public class GameWorld implements Serializable{
 	private String uuid;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<SpaceshipType> shipTypes = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<VIPType> vipTypes = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<Faction> factions = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<TroopType> troopTypes = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -95,13 +90,11 @@ public class GameWorld implements Serializable{
 	private int razedPlanetChance = 0; // %
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<Alignment> alignments = new ArrayList<>();
 
 	private String versionId = "1"; // should be increased every time a new version of a GameWorld is published
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "gameWorld")
-	@Builder.Default
 	private List<GameWorldDiplomacyRelation> gameWorldDiplomacyRelations = new ArrayList<>();
 	private GameWorldDiplomacy diplomacy;
 	private int baseBombardmentDamage = 1000; // default value (always kills the troop) 50% hit chance.

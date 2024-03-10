@@ -24,7 +24,6 @@ The container for a game, the galaxy the game is played in.
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity()
 @Table(name = "GALAXY")
 public class Galaxy implements Serializable {
@@ -48,31 +47,23 @@ public class Galaxy implements Serializable {
 	private String mapFullName;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<PlanetConnection> planetConnections = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	public List<VIP> allVIPs = new ArrayList<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	public List<Player> players = new ArrayList<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	public List<Planet> planets = new ArrayList<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<Spaceship> spaceships = new ArrayList<>();
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<Troop> troops = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<UniqueIdCounter> uniqueIdCounters = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<BlackMarketOffer> currentOffers = new ArrayList<>();
 
 	@Column(name="last_updated")
@@ -125,14 +116,12 @@ public class Galaxy implements Serializable {
 	private int endTurn = 0;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<Statistics> allStatistics = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	private StatisticGameType statisticGameType;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "galaxy")
-	@Builder.Default
 	private List<DiplomacyState> diplomacyStates = new ArrayList<>(); // current states between all players
 
 	@Enumerated(EnumType.STRING)
@@ -1003,7 +992,7 @@ public class Galaxy implements Serializable {
 	public List<VIPType> getVIPType(Alignment findAlignment) {
 		List<VIPType> vipTypes = new LinkedList<>();
 		for (VIPType aVipType : gameWorld.getVipTypes()) {
-			if (aVipType.getAlignment() == findAlignment) {
+			if (aVipType.getAlignment().equals(findAlignment.getUuid())) {
 				vipTypes.add(aVipType);
 			}
 		}

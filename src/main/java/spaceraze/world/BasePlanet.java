@@ -27,7 +27,6 @@ public class BasePlanet implements Serializable{
     private double y;
     private double z;
     private String name;
-    @Builder.Default
     private boolean possibleStartPlanet = true;
 
     /**

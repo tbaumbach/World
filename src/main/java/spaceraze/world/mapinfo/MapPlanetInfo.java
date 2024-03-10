@@ -18,7 +18,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "MAP_PLANET_INFO")
 public class MapPlanetInfo implements Serializable {
@@ -39,11 +38,9 @@ public class MapPlanetInfo implements Serializable {
 	private String owner; // namnet på gov som äger planeten, "neutral" om neutral. Kan visas i lagpartier?
 	@ElementCollection
 	@CollectionTable(name = "BUILDINGS_HIDDEN")
-	@Builder.Default
 	private List<String> buildingsHidden = new ArrayList<>();
 	@ElementCollection
 	@CollectionTable(name = "BUILDINGS_VISIBLE")
-	@Builder.Default
 	private List<String> buildingsVisible = new ArrayList<>(); // alla buildings tillhör ägaren av planeten
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -55,11 +52,9 @@ public class MapPlanetInfo implements Serializable {
 	private VIPData otherVIPs; // det kan aldrig vara vippar från mer än en annan spelare än sina egna vippar
 	@ElementCollection
 	@CollectionTable(name = "SHIPS_OWN")
-	@Builder.Default
 	private List<String> shipsOwn = new ArrayList<>(); // gäller endast egna skepp, varje skeppssträng kan börja med en siffra för hur många skepp det är av den typen
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "mapPlanetInfo")
-	@Builder.Default
 	private List<FleetData> fleetsOther = new ArrayList<>(); // max size f�r neutrala och andra flottor, inkl civila skepp
 	private boolean razed;
 	@Column(name = "isOpen")
@@ -78,14 +73,11 @@ public class MapPlanetInfo implements Serializable {
 	private String lastKnownMaxShipSize; // visa bara en grå storlek även om det fanns flera flottor vid planeten. Inkluderar info om civila skepp, t.ex. "small+civ"
 	@ElementCollection
 	@CollectionTable(name = "LAST_KNOWN_BUILDINGS_IN_ORBITE")
-	@Builder.Default
 	private List<String> lastKnownBuildingsInOrbit = new ArrayList<>();
 	@ElementCollection
 	@CollectionTable(name = "LAST_KNOWN_BUILDINGS_ON_SURFACE")
-	@Builder.Default
 	private List<String> lastKnownBuildingsOnSurface = new ArrayList<>();
 	private boolean lastKnownRazed;
-	@Builder.Default
 	private int lastInfoTurn = 0; // används även för att lagra nuvarande turn om det finns data om en planet
 
 

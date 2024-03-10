@@ -23,7 +23,6 @@ import jakarta.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity()
 @Table(name = "REPORT")
 public class Report implements Serializable {
@@ -68,21 +67,17 @@ public class Report implements Serializable {
     // All information about last turn is stored in this vector
     @ElementCollection
     @CollectionTable(name = "REPORT_INFORMATIONS")
-    @Builder.Default
     List<String> infoStrings = new ArrayList<>();
     // important information from last turn will also be stored in this vector
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "report")
-    @Builder.Default
     List<Highlight> highlights = new ArrayList<>();
 
     //TODO 2020-11-28 This should be replaced by EvenReport logic. So add the lost ships to the new specific created Report (for the typ of event) extending EvenReport. Try to reuse the EnemySpaceship and OwnSpaceship
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reportLostShips")
-    @Builder.Default
     List<CanBeLostInSpace> shipsLostInSpace = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "reportLostTroops")
-    @Builder.Default
     List<CanBeLostInSpace> troopsLostInSpace = new ArrayList<>();
 
 

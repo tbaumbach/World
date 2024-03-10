@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity()
 @Table(name = "BLACK_MARKET_OFFER")
 public class BlackMarketOffer implements Serializable {
@@ -47,7 +46,6 @@ public class BlackMarketOffer implements Serializable {
   int hotStuffAmount;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "blackMarketOffer")
-  @Builder.Default
   List<BlackMarketBid> blackMarketBids = new ArrayList<>();
 
   private int lastTurnAction = 0;

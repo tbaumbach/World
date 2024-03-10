@@ -25,11 +25,9 @@ public class PlanetReport extends EventReport{
 	private PlayerReport playerReport;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "planetReport")
-	@Builder.Default
 	private List<SpaceBattleReport> spaceBattleReports = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "planetReport")
-	@Builder.Default
 	private List<LandBattleReport> landBattleReports = new ArrayList<>();
 
 	private String planetName;

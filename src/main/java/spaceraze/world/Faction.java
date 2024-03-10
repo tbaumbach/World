@@ -23,7 +23,6 @@ import jakarta.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity()
 @Table(name = "FACTION")
 public class Faction implements Serializable {
@@ -63,53 +62,39 @@ public class Faction implements Serializable {
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_SHIP_TYPE")
-    @Builder.Default
     private List<String> spaceshipTypes = new ArrayList<>();
 
-    @Builder.Default
     private int openPlanetBonus = 0;
-    @Builder.Default
     private int closedPlanetBonus = 0;
-    @Builder.Default
     private int resistanceBonus = 0;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_ALIGNMENT") //@JoinColumn(name = "FK_ALIGNMENT", insertable = false, updatable = false)
-    private Alignment alignment; // must be set
+    private String alignment; // must be set
 
-    @OneToOne()//@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_VIP_TYPE_GOVERNOR") //@JoinColumn(name = "FK_VIP_TYPE_GOVERNOR", insertable = false, updatable = false)
-    private VIPType governorVIPType;
+    //@OneToOne()//@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "FK_VIP_TYPE_GOVERNOR") //@JoinColumn(name = "FK_VIP_TYPE_GOVERNOR", insertable = false, updatable = false)
+    private String governorVIPType;
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_STARTING_VIP_TYPE")
-    @Builder.Default
     private List<String> startingVIPTypes = new ArrayList<>();
 
-    @Builder.Default
     private int nrStartingRandomVIPs = 1;
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_STARTING_SHIP_TYPE")
-    @Builder.Default
     private List<String> startingShipTypes = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_STARTING_TROOP_TYPE")
-    @Builder.Default
     private List<String> startingTroops = new ArrayList<>(); // players shall start with troops of the trooptypes in this list
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_TROOP_TYPE")
-    @Builder.Default
     private List<String> troopTypes = new ArrayList<>(); // these trooptypes is available to build by new players
 
-    @Builder.Default
     private int techBonus = 0; // %
     private boolean alien;
     private boolean canReconstruct;
-    @Builder.Default
     private int reconstructCostBase = 8;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -117,12 +102,10 @@ public class Faction implements Serializable {
             name = "FACTION_TO_BUILDING_TYPE",
             joinColumns = @JoinColumn(name = "FK_FACTION"),
             inverseJoinColumns = @JoinColumn(name = "FK_BUILDNING_TYPE"))
-    @Builder.Default
     private List<BuildingType> buildings = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "FACTION_TO_STARTING_BUILDNING_TYPE")
-    @Builder.Default
     private List<String> startingBuildings = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -130,7 +113,6 @@ public class Faction implements Serializable {
     CorruptionPoint corruptionPoint;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "faction", fetch = FetchType.EAGER)
-    @Builder.Default
     private List<ResearchAdvantage> researchAdvantages = new ArrayList<>();
 
     private int numberOfSimultaneouslyResearchAdvantages = 1;
@@ -139,7 +121,7 @@ public class Faction implements Serializable {
         this.uuid = UUID.randomUUID().toString();
         this.name = newName;
         this.colorHexValue = colorHexValue;
-        this.alignment = alignment;
+        this.alignment = alignment.getUuid();
         spaceshipTypes = new ArrayList<>();
         researchAdvantages = new ArrayList<>();
         buildings = new ArrayList<>();
@@ -306,22 +288,13 @@ public class Faction implements Serializable {
         return getName().equalsIgnoreCase(anotherFaction.getName());
     }
 
-    @JsonProperty("alignment")
-    public Alignment getAlignmentName() {
-        return alignment;
-    }
 
-    @JsonIgnore
-    public VIPType getGovernorVIPType() {
+    public String getGovernorVIPType() {
         return governorVIPType;
     }
 
-    public String getGovernorVIPTypeName() {
-        return governorVIPType.getName();
-    }
-
     public void setGovernorVIPType(VIPType governorVIPType) {
-        this.governorVIPType = governorVIPType;
+        this.governorVIPType = governorVIPType.getUuid();
     }
 
     public void addStartingShipType(SpaceshipType sst) {
@@ -511,97 +484,6 @@ public class Faction implements Serializable {
         return found;
     }
 
-    @JsonIgnore
-    public static String getHTMLHeaderRow() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<tr>");
-        sb.append("<td>Name</td>");
-        sb.append("<td>Alignment</td>");
-        sb.append("<td>Open<br>Planet<br>Bonus</td>");
-        sb.append("<td>Closed<br>Planet<br>Bonus</td>");
-        sb.append("<td>Resistance<br>Bonus</td>");
-        sb.append("<td>PsychWarfare<br>Bonus</td>");
-		/*  sb.append("<td>Starting<br>Wharf<br>Size</td>");
-		  sb.append("<td>Wharf<br>Build<br>Cost</td>");
-		  sb.append("<td>Wharf<br>Upgrade<br>Costs<br>(m/l/h)</td>");*/
-        sb.append("<td>Start<br>with<br>Space<br>Station</td>");
-        sb.append("<td>Tech<br>Bonus</td>");
-        sb.append("<td>Build<br>Space<br>Station<br>Base<br>Cost</td>");
-        sb.append("<td>Build<br>Space<br>Station<br>Cost<br>Mulitplier</td>");
-        sb.append("<td>Nr<br>Starting<br>Random<br>VIPs</td>");
-        sb.append("<td>Nr<br>Starting<br>Specific<br>VIPTypes</td>");
-        sb.append("<td>View Details</td>");
-        sb.append("</tr>\n");
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public String getHTMLTableRow(String gameWorldName) {
-        Logger.finer("getHTMLTableRow: " + gameWorldName);
-        StringBuffer sb = new StringBuffer();
-        sb.append("<tr>");
-        sb.append("<td><font color=#\"" + colorHexValue + "\">" + name + "</font></td>");
-        sb.append("<td>" + alignment.toString() + "</td>");
-        sb.append("<td>" + openPlanetBonus + "</td>");
-        sb.append("<td>" + closedPlanetBonus + "</td>");
-        sb.append("<td>" + resistanceBonus + "</td>");
-        sb.append("<td>" + techBonus + "</td>");
-        sb.append("<td>" + nrStartingRandomVIPs + "</td>");
-        sb.append("<td>" + startingVIPTypes.size() + "</td>");
-        sb.append("<td><a href=\"faction.jsp?gameworldfilename=" + gameWorldName + "&factionname=" + name + "\">View Details</a></td>");
-        sb.append("</tr>\n");
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public static String getHTMLHeaderRowNO() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<tr class='ListheaderRow'>");
-        sb.append("<td class='ListHeader'></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Name</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Alignment</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Open<br>Planet<br>Bonus</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Closed<br>Planet<br>Bonus</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Resistance<br>Bonus</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Besiege<br>Bonus</div></td>");
-		/*  sb.append("<td>Starting<br>Wharf<br>Size</td>");
-		  sb.append("<td>Wharf<br>Build<br>Cost</td>");
-		  sb.append("<td>Wharf<br>Upgrade<br>Costs<br>(m/l/h)</td>");*/
-//		  sb.append("<td class='ListHeader'><div class='SolidText'>Start<br>with<br>Space<br>Station</div></td>");
-        sb.append("<td class='ListHeader'><div class='SolidText'>Tech<br>Bonus</div></td>");
-//		  sb.append("<td class='ListHeader'><div class='SolidText'>Build<br>Space<br>Station<br>Base<br>Cost</div></td>");
-//		  sb.append("<td class='ListHeader'><div class='SolidText'>Build<br>Space<br>Station<br>Cost<br>Mulitplier</div></td>");
-//		  sb.append("<td class='ListHeader'><div class='SolidText'>VIP's</div></td>");
-//		  sb.append("<td class='ListHeader'><div class='SolidText'>Nr<br>Starting<br>Specific<br>VIPTypes</div></td>");
-        //sb.append("<td class='ListHeader'><div class='SolidText'>View Details</div></td>");
-        sb.append("</tr>\n");
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public String getHTMLTableRowNO(String gameWorldName, String RowName, int i) {
-        Logger.finer("getHTMLTableRow: " + gameWorldName);
-        StringBuffer sb = new StringBuffer();
-        sb.append("<tr class='ListTextRow' valign='middle'  onMouseOver=\"TranparentRow('" + RowName + "',8,1);\" onMouseOut=\"TranparentRow('" + RowName + "',8,0);\">");
-        sb.append("<td class='ListText' id='" + RowName + "1'></td>");
-        sb.append("<td class='ListText' id='" + RowName + "2'><div class='SolidText'><font color=#\"" + colorHexValue + "\">" + name + "</font></div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "3'><div class='SolidText'>" + alignment.toString() + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "4'><div class='SolidText'>" + openPlanetBonus + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "5'><div class='SolidText'>" + closedPlanetBonus + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "6'><div class='SolidText'>" + resistanceBonus + "</div></td>");
-		/*  sb.append("<td>" + OrbitalWharf.getSizeString(startingWharfSize) + "</td>");
-		  sb.append("<td>" + wharfBuildCost + "</td>");
-		  sb.append("<td>" + getWharfUpgradeCostsString() + "</td>");*/
-//		  sb.append("<td class='ListText' id='" + RowName + "8'><div class='SolidText'>" + Functions.getYesNo(startWithSS) + "</div></td>");
-        sb.append("<td class='ListText' id='" + RowName + "8'><div class='SolidText'>" + techBonus + "</div></td>");
-//		  sb.append("<td class='ListText' id='" + RowName + "9'><div class='SolidText'>" + buildOrbitalStructureCostBase + "</div></td>");
-//		  sb.append("<td class='ListText' id='" + RowName + "9'><div class='SolidText'>" + buildOrbitalStructureCostMulitplier + "</div></td>");
-//		  sb.append("<td class='ListText' id='" + RowName + "9'><div class='SolidText'>" + nrStartingRandomVIPs + "</div></td>");
-//		  sb.append("<td class='ListText' id='" + RowName + "12'><div class='SolidText'>" + startingVIPTypes.size() + "</div></td>");
-        //sb.append("<td class='ListText' id='" + RowName + "14'><div class='SolidText'><a href=\"faction.jsp?gameworldfilename=" + gameWorldName + "&factionname=" + name + "\">View Details</a></div></td>");
-        sb.append("</tr>\n");
-        return sb.toString();
-    }
 
     @JsonIgnore
     public String getHTMLCheckbox() {
