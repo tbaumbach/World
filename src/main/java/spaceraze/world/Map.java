@@ -76,7 +76,10 @@ public class Map implements Serializable, Comparable<Map>{
 		this.uuid = UUID.randomUUID().toString();
 		Logger.finest("Init Map from mapName: " + mapFileName);
 		planets = getPlanets(props);
-		connections = getConnections(props, List.copyOf(planets));
+		planets.stream().forEach(planet -> planet.setMap(this));
+		connections = getConnections(props, planets);
+		connections.stream().forEach(connection -> connection.setMap(this));
+		//connections = getConnections(props, List.copyOf(planets));
 //		distanceTable = getDistanceTable(props);
 		name = props.getProperty("mapName");
 		String tmpVersion = props.getProperty("version");
